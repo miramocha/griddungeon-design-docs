@@ -30,10 +30,10 @@
 
 | Source | Example |
 |--------|---------|
-| **Stratum progress** | Beat Stratum 1 boss → unlock Scout Navigator |
-| **Side quests** | Rescue NPC → unlock Hierophant |
-| **Events** | Story scene after floor gimmick → unlock Tactician |
-| **Optional milestones** | 100% map on B2F, FOE codex entries, etc. |
+| **Stratum progress** | Beat Stratum 1 boss → unlock **Sync Relay** |
+| **Side quests** | Rescue NPC → unlock **Wellness Lead** |
+| **Events** | Story scene after floor gimmick → unlock **Route Analyst** |
+| **Optional milestones** | 100% map on B2F, FOE codex entries → **Ledger Chief**, etc. |
 
 - Each Navigator has an `unlockCondition` in data (flag, quest id, stratum id).
 - **Starting Navigator:** one Navigator available from game start (tutorial default).
@@ -43,16 +43,19 @@
 
 While a Navigator is active, the **core six** receive that Navigator’s **aura** — always on in combat and exploration.
 
-| Example Navigator | Aura (draft) |
-|-------------------|--------------|
-| **Tactician** | +5% accuracy to core |
-| **Hierophant** | −5% MP cost on core heals |
-| **Scout** | +3% Synchro bar gain from core actions |
-| **Quartermaster** | +8% gold from battles |
+| Example Navigator | `navigator_id` | Aura (draft) | Notes |
+|-------------------|----------------|--------------|-------|
+| **Sortie Lead** | `guild_handler` | +5% Synchro bar gain (MVP1 starter) | Expedition flight lead; executes [Protocol](synchro-protocol.md) |
+| **Route Analyst** | `route_analyst` | +5% accuracy to core | Course / grid planning — not combat targeting |
+| **Wellness Lead** | `wellness_lead` | −5% MP cost on core heals | Crew care; pairs with **Medic** kits, not the `medic` class |
+| **Sync Relay** | `sync_relay` | +3% Synchro bar gain from core actions | Comms loop for team Synchro; stratum unlock candidate |
+| **Ledger Chief** | `ledger_chief` | +8% gold from battles | Post-sortie accounts / manifest payouts |
+
+Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same hub-lead layer as [party classes](party-and-classes.md) field jobs — do not reuse core `class_id` labels (`tactician`, `medic`, …).
 
 - Auras stack only from **one** Navigator (no multi-navigator stack).
 - **Fixed per Navigator** — no levels, tiers, or upgrades. New power only by **unlocking a different Navigator**.
-- **Starter:** one Navigator at new game with a simple +max HP aura; more unlock via strata / quests / events.
+- **Starter:** **Sortie Lead** (`guild_handler`) at new game; more unlock via strata / quests / events.
 
 ## Protocol execution
 
@@ -110,7 +113,7 @@ No recruitment, no skill points, no equipment — unlock + assign only.
 
 | Navigator | Unlock | Aura (MVP1) |
 |-----------|--------|-------------|
-| `guild_handler` | Day one | Synchro gain +5% |
+| **Sortie Lead** (`guild_handler`) | Day one | Synchro gain +5% |
 
 Additional Navigators unlock via strata/quests post-MVP1.
 
