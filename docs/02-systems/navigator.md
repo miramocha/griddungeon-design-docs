@@ -22,9 +22,9 @@
 
 ## Active Navigator
 
-- Exactly **one** Navigator is **active** per labyrinth dive (selected at hub with party).
-- **Unlock pool:** Navigators are **not recruited**. New Navigators **unlock** as the campaign progresses; unlocked Navigators are available to assign at hub.
-- **Switch:** **hub only** — assign active Navigator before entering or when returning to hub. **No** mid-dungeon switch (no camp/inn swap in labyrinth).
+- Exactly **one** Navigator is **active** per labyrinth dive (assigned at **Navigator Office** before entry).
+- **Unlock pool:** Navigators are **not recruited** at Explorers Guild. New Navigators **unlock** as the campaign progresses; unlocked Navigators are listed at **Navigator Office**.
+- **Switch:** **hub only** (Navigator Office) — assign active Navigator before entering or when returning to hub. **No** mid-dungeon switch (no camp/inn swap in labyrinth).
 
 ### How Navigators unlock
 
@@ -37,7 +37,7 @@
 
 - Each Navigator has an `unlockCondition` in data (flag, quest id, stratum id).
 - **Starting Navigator:** one Navigator available from game start (tutorial default).
-- Locked Navigators are visible at hub as **silhouettes + unlock hint** (optional UX).
+- Locked Navigators are visible at **Navigator Office** as **silhouettes + unlock hint** (optional UX).
 
 ## Passive buffs (auras)
 
@@ -87,14 +87,18 @@ Navigators do **not** progress like core party members:
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
-## Hub
+## Hub — Navigator Office
 
-| Service | Action |
-|---------|--------|
-| **Guild** | View **unlocked** Navigators; assign **active** Navigator for next dive |
+Separate from **Explorers Guild** ([hub & services](hub-and-services.md)). Guild handles core six; Navigator Office handles party leads only.
+
+| Action | Detail |
+|--------|--------|
+| **Browse** | All Navigators — unlocked (selectable) vs locked (silhouette + hint) |
+| **Assign** | Set **active** Navigator for the next labyrinth dive |
+| **Preview** | Aura summary on core six; list of Union skills in this Navigator’s kit |
 | **Switch** | Change active Navigator among unlocked pool — **hub only** |
 
-No recruitment flow — only unlock + assign.
+No recruitment, no skill points, no equipment — unlock + assign only.
 
 ## UI
 
@@ -114,7 +118,7 @@ Additional Navigators unlock via strata/quests post-MVP1.
 
 - [ ] One default Navigator + one aura
 - [ ] Navigator selects Union skill in Union phase
-- [ ] Hub: pick active Navigator from **unlocked** pool (starter + 1 stratum unlock)
+- [ ] **Navigator Office:** pick active Navigator from **unlocked** pool (starter + 1 stratum unlock)
 - [ ] Not in formation rows or AGI queue
 
 ## Resolved decisions

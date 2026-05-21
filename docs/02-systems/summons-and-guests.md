@@ -28,16 +28,45 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 | Property | Rule |
 |----------|------|
-| **Source** | Class skills (e.g. Alchemist, future summoner), items, boss mechanics |
+| **Source** | **Summoner class only** (deploy skills); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
-| **Commands** | Player-issued each turn while alive (same command set as party, skill list per summon) |
-| **AGI** | Summon has own AGI; enters turn queue |
+| **Commands (MVP1)** | **Scripted only** — fixed action/skills per turn; **no** player command menu ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Commands (later)** | **TBD** — full player control vs stance hybrid vs keep scripted |
+| **AGI** | Summon has own AGI; enters turn queue; turn **auto-resolves** in MVP1 |
 | **XP** | No XP to summons |
 | **Death** | Disappears; no hospital revive |
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
 **Stacking:** One summon per aux slot. New summon on occupied aux slot replaces old (or skill fails — tune per skill).
+
+### MVP1 action script (simple)
+
+Each `SummonDefinition` includes a short **`actionScript`** — resolved top to bottom each summon turn (first valid step wins, or by turn index — pick one pattern in data).
+
+**Example — MVP1 test drone (Summoner skill `deploy_test_drone`):**
+
+| Step | Action | Target |
+|------|--------|--------|
+| 1 | `volt_burst` (skill) | Random enemy |
+| 2+ | `attack` | Lowest HP enemy in reach |
+
+```yaml
+summon_id: test_drone
+duration_turns: 3
+action_script:
+  - turn: 1
+    action: skill
+    skill_id: volt_burst
+    target: random_enemy
+  - turn: default
+    action: attack
+    target: lowest_hp_enemy
+```
+
+**UI on summon turn:** highlight aux portrait → play VFX → combat log line → next queue entry (no input wait).
+
+**Union bar:** Summon actions do **not** charge Union ([union](union.md)).
 
 ## Guests
 
@@ -56,7 +85,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 - Aux slots count as **front** or **back** for melee reach and row skills.
 - Enemy melee without pierce targets **front row** (core + aux front) before any back slot.
-- **Protector**-style guard skills affect allies in same row including aux.
+- **Vanguard**-style guard skills affect allies in same row including aux.
 - If aux front is empty, behavior matches classic 3+3.
 
 ## UI
@@ -69,7 +98,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 | Phase | Scope |
 |-------|--------|
-| **MVP1** | Combat layout reserves aux slots; one test **summon** skill (aux back, 3 turns) |
+| **MVP1** | Aux slots + one test summon — **scripted** actions only ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **MVP1+** | One scripted **guest** on a quest fight |
 | **Later** | Multiple summon skills, enemy summons, guest roster |
 
@@ -78,3 +107,4 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 004 — Auxiliary slots](../../decisions/004-auxiliary-slots.md)
+- [ADR 016 — Summon control MVP1](../../decisions/016-summon-control-mvp1.md)

@@ -14,7 +14,7 @@
 2. Navigator **executes** Union skills in Union phase; core six **participate** only.
 3. Navigator grants **passive auras** to core six while active.
 4. **Unlock pool** — Navigators unlock via strata, side quests, events (not recruitment).
-5. **Switch** among unlocked Navigators at **hub only** — no mid-dungeon swap.
+5. **Switch** among unlocked Navigators at **Navigator Office** (hub) only — not at Explorers Guild; no mid-dungeon swap.
 6. Navigator **no AGI turn**, **not on exploration grid**.
 7. Navigator **not targetable** — no enemy or boss may directly interact with Navigator in combat (no HP, damage, status).
 8. **Fixed package per Navigator** — aura + Union kit in data; **no** XP, levels, skill points, aura tiers, or equipment.

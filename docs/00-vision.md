@@ -22,7 +22,7 @@ Chart an unknown labyrinth from the first person — one grid step at a time. Th
 
 ## Player fantasy
 
-- **Pathfinder** — Read the auto-map, thread FOE patrols, find shortcuts.
+- **Pathfinder** (player fantasy) — Read the auto-map, thread FOE patrols, find shortcuts. *(Class: Marksman for ranged/control.)*
 - **Guildmaster** — Curate six party slots and skill builds for each stratum.
 - **Survivor** — Know when to dive deeper vs return to hub.
 

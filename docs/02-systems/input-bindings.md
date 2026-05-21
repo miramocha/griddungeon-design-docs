@@ -117,7 +117,8 @@ Standard PC UI:
 |--------|-------|
 | Navigate | Mouse, `Up`/`Down`, `Enter` |
 | Back | `Esc` or mouse |
-| Assign Navigator / party | Mouse at guild screen |
+| Assign party / skills | Mouse at **Explorers Guild** |
+| Assign Navigator | Mouse at **Navigator Office** |
 
 No grid movement in hub.
 

@@ -3,7 +3,7 @@
 ## Macro loop (EO-style)
 
 ```
-Guild hub (save, heal, shop, recruit)
+Hub (Explorers Guild, Navigator Office, save, heal, shop)
     → Enter labyrinth at deepest unlocked floor
     → Explore: step grid + auto-map reveals + avoid/bait FOEs
     → Random battles + FOE fights + loot
@@ -39,7 +39,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 
 | Phase | Player focus |
 |-------|----------------|
-| Hub prep (10 min) | Skills, gear, consumables, quest pick |
+| Hub prep (10 min) | Party/skills, active Navigator, gear, consumables, quest pick |
 | Floor push (30–60 min) | Map new area, FOE routing, resource spend |
 | Retreat (5 min) | Reach safe stairs or use return item |
 | Hub payout (10 min) | Heal, shop, skill allocation, save |
@@ -64,7 +64,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | **Exploration** | FPV dungeon + read-only map panel |
 | **Combat** | Turn UI; exploration frozen |
 | **Map view** | Larger read-only map (pan/zoom) |
-| **Hub menus** | Guild, shop, hospital, inn save |
+| **Hub menus** | Explorers Guild, Navigator Office, shop, hospital, inn save |
 | **Gather / fish** (**MVP2**) | Minigame at dungeon nodes → materials — [gathering & fishing](02-systems/gathering-and-fishing.md) |
 
 ## Win / lose

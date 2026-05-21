@@ -39,7 +39,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 
 ```
 GameState (hub | exploration | combat)
-├── HubServices          — guild, shop, hospital, inn save
+├── HubServices          — explorers guild, navigator office, shop, hospital, inn save
 ├── DungeonExplorer      — grid step, facing, interact
 ├── DungeonView          — FPV cell rendering (hidden during combat)
 ├── CombatSceneController — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
@@ -166,6 +166,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 - `PartyRuntime` — 6 core, always
 - `CombatController` — spawns aux from skills/scripts; clears on battle end
+- `ResolveSummonTurn()` — run `SummonDefinition.actionScript`; no input ([ADR 016](../decisions/016-summon-control-mvp1.md))
 
 ## Performance
 

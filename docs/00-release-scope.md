@@ -21,7 +21,7 @@ MVP2 adds dungeon-side resource play without blocking MVP1.
 | FOE step patrol + contact fights ([ADR 003](../decisions/003-foe-step-patrol.md)) | [FOE combat patrol](../decisions/005-foe-combat-patrol.md) + [mid-battle join](../decisions/010-chain-foe-battle.md) (**MVP2**) |
 | AGI combat, 6 core + aux layout, team Union bar | Synthesis hub |
 | Navigator + Union ([ADR 006](../decisions/006-union-team-bar.md), [007](../decisions/007-navigator-role.md)) | Full status roster ([combat-status-and-buffs](02-systems/combat-status-and-buffs.md) — subset only) |
-| Hub: guild, shop, hospital, inn save | 3D hub walk |
+| Hub: Explorers Guild, Navigator Office, shop, hospital, inn save | 3D hub walk |
 | Chest loot; gather **instant loot** (no minigame) | Fishing + gather **minigame** (MVP2) |
 | PC input defaults ([ADR 009](../decisions/009-input-bindings-pc.md)) | Rebind UI (can ship defaults only) |
 
@@ -45,6 +45,10 @@ MVP2 adds dungeon-side resource play without blocking MVP1.
 **Still optional in MVP2:** [cinematic + QTE skills](02-systems/combat-presentation.md), full ailment list, gamepad.
 
 ---
+
+## Post-MVP1 class unlocks
+
+- **Elementalist**, **Saboteur**, **Overdriver** ([party & classes](02-systems/party-and-classes.md))
 
 ## Later (after MVP2)
 

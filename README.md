@@ -31,7 +31,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |
-| [02 — Hub & services](docs/02-systems/hub-and-services.md) | Draft | Guild, shop, hospital, save |
+| [02 — Hub & services](docs/02-systems/hub-and-services.md) | Draft | Explorers Guild, Navigator Office, shop, hospital, save |
 | [02 — Combat](docs/02-systems/combat.md) | Draft | AGI turn order, rows |
 | [02 — Combat status & buffs](docs/02-systems/combat-status-and-buffs.md) | Draft | Ailments, binds, Boost/Down, ticks |
 | [02 — Combat scene](docs/02-systems/combat-scene.md) | Accepted | Battle arena + slots; not in-world FPV |
@@ -62,6 +62,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 013 — Combat scene rendering](decisions/013-combat-scene-rendering.md) | Accepted | Battle arena backdrop; enemies on slots |
 | [ADR 014 — MVP1 exploration & map](decisions/014-mvp1-exploration-map.md) | Accepted | Wall reveal, map input, persist, gather stub |
 | [ADR 015 — MVP1 combat](decisions/015-mvp1-combat.md) | Accepted | Damage, single enemy row, status subset |
+| [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 scripted actions; player control TBD |
 
 ## Resolved
 

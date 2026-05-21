@@ -56,11 +56,11 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 ## Commands (summon / guest)
 
-| Command | Notes |
-|---------|-------|
-| Attack / Skill | Per entity definition |
-| Guard | If granted |
-| — | Guests flagged **NPC** use AI instead of player input |
+| Unit | MVP1 control |
+|------|----------------|
+| **Summon** | **Scripted** — fixed `actionScript` each turn; no player menu ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Guest** | Player commands by default; **NPC guest** = AI script |
+| **Summon (later)** | Player control vs hybrid vs scripted — **decide later** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 
 ## Commands (enemy)
 
@@ -153,7 +153,7 @@ PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [inpu
 - Turn order strip — core, aux, enemies mixed by AGI
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
-- Command phase: one action per living **player-controlled** combatant per round
+- Command phase: one action per **player-controlled** core combatant; summons **auto-resolve** in MVP1
 - Target selection with valid highlights
 - Combat log
 - Enemy weakness icons when identified

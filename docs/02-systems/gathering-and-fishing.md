@@ -64,7 +64,7 @@ Single reusable **GatherMinigame** controller; skin per node type.
 | OK | 1–2 standard materials |
 | Great | 2–3 + rare roll on table |
 
-**Optional class hook:** Survivalist passive +1 tier step (MVP2 nice-to-have).
+**Optional class hook:** Marksman passive +1 tier step (MVP2 nice-to-have).
 
 ### UX
 
@@ -189,7 +189,7 @@ Combat map not used during minigame.
 | Fishing | — | Pond/stream nodes |
 | Synthesis hub | — | Enabled |
 | Gather quests | — | Quest counter |
-| Survivalist gather bonus | — | Optional |
+| Marksman gather bonus | — | Optional |
 
 ---
 

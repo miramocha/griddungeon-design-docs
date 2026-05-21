@@ -48,13 +48,13 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
 | ✅ | FOE combat patrol **off** (MVP2) | [ADR 005](../decisions/005-foe-combat-patrol.md) deferred |
 | ⬜ | 8 enemy types + 1 boss encounter group | content |
-| ⬜ | One summon test skill (aux back, 3 turns) | [summons](02-systems/summons-and-guests.md) |
+| ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [party classes](02-systems/party-and-classes.md#summon-skills--summoner-only), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 
 ### Hub & progression
 
 | # | Requirement | Doc |
 |---|-------------|-----|
-| ✅ | Inn save, hospital, shop, guild party | [hub](02-systems/hub-and-services.md) |
+| ✅ | Inn save, hospital, shop, Guild + **Navigator Office** | [hub](02-systems/hub-and-services.md) |
 | ✅ | 6 classes day one; skill points at hub | [party](02-systems/party-and-classes.md) |
 | ✅ | Stats: HP, MP, STR, TEC, AGI, VIT, LUC | [progression](02-systems/character-progression.md) |
 | ✅ | 1 Navigator + 2 Union skills (MVP1 kit) | [navigator](02-systems/navigator.md), [union](02-systems/union.md) |

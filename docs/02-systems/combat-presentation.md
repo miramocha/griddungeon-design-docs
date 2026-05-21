@@ -202,7 +202,7 @@ Each skill references a **presentation profile**:
 
 ```yaml
 
-skill_id: alchemist_fire_burst
+skill_id: elementalist_fire_burst
 
 presentation: Fixed
 
@@ -212,7 +212,7 @@ zoom_to_target: true
 
 
 
-skill_id: landsknecht_blade_storm
+skill_id: breaker_blade_storm
 
 presentation: CinematicQTE
 

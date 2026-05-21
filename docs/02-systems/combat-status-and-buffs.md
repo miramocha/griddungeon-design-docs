@@ -52,7 +52,7 @@ Order at **end of combat round** (after last AGI turn):
 | **Ailment — DoT** | Poison, Burn | One slot per **DoT type** (Poison + Burn OK) |
 | **Stat buff** | Offense Up, Defense Up, Speed Up | Same stat: **refresh** duration, no magnitude stack |
 | **Stat debuff** | Offense Down, Defense Down, Blind | Same stat: refresh; Blind uses debuff slot |
-| **Battle modifier** | Guard, Charge (Ronin), Taunt (future) | Skill-defined; may coexist with stats |
+| **Battle modifier** | Guard, Charge (Overdriver), Taunt (future) | Skill-defined; may coexist with stats |
 
 ---
 
@@ -142,7 +142,7 @@ Applied by **commands or skills**, separate from Boost/Down table.
 | Source | Effect | Expires |
 |--------|--------|---------|
 | **Guard** | Damage taken **×0.5** (tune) until actor’s **next turn** starts | Consumed on hit or turn start |
-| **Charge** (Ronin, etc.) | Next attack **×1.5** damage | Until released or turn skipped |
+| **Charge** (Overdriver, etc.) | Next attack **×1.5** damage | Until released or turn skipped |
 | **Taunt** (future) | AI targets this slot | 1–2 turns |
 
 These live in `BattleModifier` list, not the ailment control slot.
@@ -246,7 +246,7 @@ Skills reference `inflictStatusId`, `chance`, `durationOverride`. Skills tag `bo
 | Blind | Curse, petrify, charm |
 | End-of-round tick + duration | Speed Boost in queue ([combat](combat.md) optional note) |
 | Hospital full cure | Field items mid-dungeon |
-| Medic cleanse skill (1–2) | Full EO bind + leg skill trees |
+| Medic cleanse skill (1–2) | Full bind + leg skill trees |
 
 ---
 
