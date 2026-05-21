@@ -18,7 +18,7 @@ Some floors need **height bands** (upper walkways, pits, jump pads) while keepin
    - **Drop / pit** (optional) — explicit one-way down or hazard tile; never implicit “fall” from walking.
 5. **No under floors:** horizontal moves that would put the party **under** blocking upper geometry are **illegal**, even if a lower `level` exists at the same `(x, y)`. Designers block with **overhang / low-ceiling** flags or absent lower walkability — not player skill.
 6. **FOEs, encounters, map reveal** use full `(x, y, level)` — patrol and icons are on one level; step events fire on entering a new cell including level changes via connectors.
-7. **Minimap ([ADR 002](002-mapping-model.md)):** MVP1 shows the **party’s current `level`** layer in the proxy rig / RT; other levels hidden until visited (optional floor-layer toggle post-MVP1).
+7. **Map HUD ([ADR 002](002-mapping-model.md)):** MVP1 2D map shows the **party’s current `level`** slice; other levels when visited (optional layer toggle post-MVP1).
 
 ## Movement validation (Core)
 
@@ -43,13 +43,13 @@ Some floors need **height bands** (upper walkways, pits, jump pads) while keepin
 | Free 3D movement / jumping without grid | Breaks EO step, FOE, map ([ADR 001](001-grid-movement.md)) |
 | Walking “under” bridges or ledges | Violates Doom-style readability and map clarity |
 | Implicit fall between levels | Only explicit pits / stairs / pads |
-| Full 3D minimap | MVP1: one **level** slice in RT; 2D chart per band |
+| Full 3D minimap camera | Deferred; 2D chart per **level** band |
 
 ## Consequences
 
 - `GridPosition` gains `Level` in Core; saves and `FloorMapState` key reveal by `(x, y, level)` (or per-level 2D layers).
 - Floor content adds `level` to spawn paths, FOE placement, jump-pad / stair `FeatureType` data.
-- `MapProxy` authoring: separate Y offset or sub-root per `level` in the Editor (stacked preview).
+- Floor painter: per-`level` layer in the grid canvas; FPV scene may use stacked roots per band for art preview.
 - MVP1 **content** may ship flat floors first; verticality is **structure-ready** when a floor uses it.
 
 ## Related

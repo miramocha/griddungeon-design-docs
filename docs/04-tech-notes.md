@@ -114,20 +114,20 @@ GameState (composition root)
 - **UI:** read-only grid; pan/zoom; no edit raycasts
 - `MapReveal.OnPartyEnteredCell`, `OnBumpWall(side)`, `OnInteract(type)`
 
-### Map proxy + minimap camera ([ADR 002](../decisions/002-mapping-model.md#technical-notes-unity--map-proxy--minimap-camera))
+### Map authoring & HUD ([ADR 002](../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map))
 
 | Concern | Approach |
 |---------|----------|
-| **Authoring** | Per-floor **map proxy rig**: flat-color **cubes** on layer **`MapProxy`**, grid-aligned with FPV layout so designers preview overlap in the Editor |
-| **FPV vs map** | Exploration / dungeon meshes on non-`MapProxy` layers; **minimap ortho culling mask = `MapProxy` only** |
-| **Main camera** | FPV camera **excludes** `MapProxy` (or proxies hidden from player view) — player never sees schematic cubes in corridor view |
-| **Output** | Minimap camera → `RenderTexture` → UI Toolkit map panel; refresh on `MapSystem` reveal dirty, not per frame |
-| **Fog** | Hide/disable proxies or shader clip from `FloorMapState.Visited` / `WallMask` |
-| **Party / FOE** | `MapProxy` quads on `PartyPose` / `FOEPose`; live RT while minimap cam on |
-| **Verticality** | Cell `(x,y,level)`; jump pads / stairs in content; no walk-under ([ADR 019](../decisions/019-floor-verticality.md)) |
-| **Runtime type** | `MapView` binds `IReadOnlyFloorMapState`, triggers proxy/RT refresh; `MapSystem` applies `MapRevealCalculator` |
+| **Authoring (primary)** | **Floor level painter** (Unity Editor) → exports **`StratumFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol |
+| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map |
+| **Runtime HUD (primary)** | **`MapView`** — 2D UI Toolkit grid or blitted `Texture2D` from `StratumFloor` + `FloorMapState` reveal; refresh on dirty |
+| **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
+| **Party / FOE** | Icons on 2D map at `(x, y, level)`; patrol updates view without RT |
+| **Verticality** | Cell `(x,y,level)`; jump pads / stairs in painter data ([ADR 019](../decisions/019-floor-verticality.md)) |
+| **Collision** | Same `StratumFloor` truth as painter output — `MapSystem` / `FloorCollisionQuery`, not HUD drawables |
+| **Deferred** | MapProxy + minimap camera → RT (optional 3D debug preview only) |
 
-**Folder convention (game repo):** e.g. `Assets/.../Floors/{floorId}/MapProxy.prefab` or proxy children under floor root; document in floor authoring checklist when content pipeline exists.
+**Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
 
 ## Gathering & fishing (MVP2)
 
@@ -243,7 +243,8 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
-- [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (post-MVP1 tooling)
+- [ ] **Floor level painter** → `StratumFloor` export (primary map authoring; MVP1 may hand-fill one test floor)
+- [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)
 
 ## Related docs
 

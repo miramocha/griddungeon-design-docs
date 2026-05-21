@@ -20,67 +20,68 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 
 | Option | Why |
 |--------|-----|
-| Manual wall/door/icon drawing | Explicitly excluded from project scope |
+| Manual wall/door/icon drawing **in-game** | Explicitly excluded from project scope |
 | Bump-assist one-click stamp | Was a drawing aid; redundant with auto-wall on bump |
 | Free-text map notes | Annotation tool; cut with drawing scope |
 | Full floor reveal on entry | No fog tension |
+| **Minimap camera → `RenderTexture` as primary HUD** | Superseded by floor painter + 2D map ([amendment 2026-05-21](#technical-notes-unity--authoring--runtime-map)) |
 
 ## Consequences
 
 - Save stores `revealedMapLayer` per floor (bitmasks + feature flags), not player strokes
 - No map tool tutorial; tutorial teaches **reading** map + FOE icons
 - EO "mapping as skill" shifts to **pathfinding / FOE routing** rather than pen accuracy
-- Floor scenes include a **map proxy rig** (simple geometry) co-located with FPV layout for editor preview; FPV art is **not** drawn into the minimap
+- **Floor layout** is authored in a **level painter** → `StratumFloor` assets; runtime HUD is **2D** from data + reveal state
+- **FPV dungeon scenes** remain separate presentation; they do not feed the player map texture
 
-## Technical notes (Unity) — map proxy + minimap camera
+## Technical notes (Unity) — authoring & runtime map
 
-**Goal:** EO-style auto-map in the HUD without rendering the FPV dungeon mesh into the minimap.
+**Goal:** EO-style auto-map in the HUD — schematic 2D chart, not a render of the FPV corridor.
 
-### Map proxy rig (authoring)
+### Authoring — floor level painter (primary)
 
 | Piece | Rule |
 |-------|------|
-| **Geometry** | Per-cell **cubes** (or quads) with **flat unlit colors** — floor, wall segment, door, stairs, etc. |
-| **Layer** | **`MapProxy`** only (project layer name; all proxy objects on this layer) |
-| **Placement** | **Same grid** as exploration collision / `DungeonView` — designers **overlap** proxy and FPV layout in the Editor and see alignment in Scene view |
-| **FPV environment** | Walls, props, lighting on **other layers** (`Default`, dungeon/FPV layers) — **excluded** from minimap camera culling mask |
+| **Tool** | Unity **Editor** floor painter (custom window) — design-time only; not player-facing |
+| **Output** | `StratumFloor` ScriptableObject per floor (`gridWidth`/`gridHeight`, tiles, **edge walls**, features, FOE spawns, patrol paths) |
+| **Preview** | 2D grid canvas inside the painter (walkable, walls, icons) — **single source of truth** for layout QA |
+| **FPV scene** | Optional separate scene/prefab for corridor art; aligned to the same grid, **not** baked into the HUD map |
 
-Proxies are **schematic**, not a second art pass: solid colors, no PBR. Optional shared prefab per cell type (`MapCell_Floor`, `MapCell_WallN`, …).
+Painter replaces hand-editing huge tile arrays in the Inspector and replaces **MapProxy + minimap camera** as the main authoring/preview path.
 
-### Minimap camera → HUD
+**MVP1:** one test floor may be filled manually in a `StratumFloor` asset until the painter ships; runtime still uses **2D `MapView`**, not RT.
 
-1. **Orthographic camera** (north-up, 1 unit = 1 cell) renders **only `MapProxy`** into a `RenderTexture`.
-2. **Fog / reveal:** `MapSystem` drives proxy visibility (enable renderer, material alpha, or shader mask from `Visited` / `WallMask`) — state stays in Core; proxies are view targets.
-3. **UI Toolkit** shows the RT in the exploration HUD; pan/zoom on the UI element and/or ortho size ([ADR 014](014-mvp1-exploration-map.md)).
-4. Minimap camera **enabled while map is visible** (continuous RT); optional on-demand render when map hidden for perf.
+### Runtime — 2D map HUD (primary)
 
-### Party / FOE markers
+1. **`MapSystem`** holds revealed state (`Visited`, `WallMask`, features, `FoeIcons`) — unchanged authority.
+2. **`MapView`** (UI Toolkit) draws the chart from `IReadOnlyFloorMapState` + floor style from `ContentDatabase` / `StratumFloor`:
+   - **Cells/edges:** floor tiles and wall segments revealed so far (fog hides unrevealed).
+   - **Party / FOE:** icons at grid `(x, y, level)` — UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) — MVP1 shows party’s **current `level`**).
+3. **Refresh on dirty:** rebuild or patch the 2D view when reveal changes, party moves, or FOE updates — **no** minimap `RenderTexture` in the main path.
+4. **Pan/zoom** on the map `VisualElement` ([ADR 014](014-mvp1-exploration-map.md)).
 
-**Party arrow** and **FOE icons** are **flat quads** on `MapProxy`, parented to **`PartyPose` / `FOEPose`** at `(x, y, level)` (same pipeline as wall cubes). Minimap camera renders them into the RT; UI Toolkit displays the live RT ([ADR 019](019-floor-verticality.md) — map shows **current `level`** slice in MVP1).
+Implementation options (either is fine): per-cell `VisualElement` grid, or one `Texture2D` blit from a cell atlas — pick per perf/style in the game repo.
 
-### HUD
+### Collision alignment
 
-UI Toolkit **`Background.FromRenderTexture`** (or equivalent) on the map panel. While the minimap camera is enabled, the texture **updates every frame** — no manual rebake per patrol step.
+Walkability and wall blocking use the **same `StratumFloor` data** the painter writes (`DungeonExplorer` → `IsWalkable` / edge query) — not mesh colliders, not the 2D HUD ([dungeon navigation](../docs/02-dungeon-navigation.md)).
 
-### Editor preview
+### Deferred — MapProxy + minimap camera (optional)
 
-- Scene view: proxy cubes + FPV geometry visible together for layout QA.
-- Play Mode / minimap: only **minimap camera** output reaches the HUD; player never sees proxy cubes in the main FPV view (FPV camera excludes `MapProxy`, or proxies are disabled/hidden for main camera).
+Orthographic camera rendering **`MapProxy`** cubes into a `RenderTexture` for the HUD is **deferred / debug-only**:
+
+- Optional 3D schematic preview in Scene view
+- **Not** required for shipping map UI once the floor painter + 2D `MapView` exist
+
+If used: `MapProxy` layer, FPV excludes it; same grid alignment rules as before.
 
 ### Authority (unchanged)
 
-`MapRevealCalculator` + `MapSystem` own reveal rules and save data. Proxies and RT are **presentation** only — see [04 — Tech notes § Map system](../docs/04-tech-notes.md#map-system).
-
-### Rejected for this pipeline
-
-| Option | Why |
-|--------|-----|
-| Minimap renders full FPV meshes | Cost, lighting clutter, wrong scale for EO-style chart |
-| Player-editable proxy geometry | Read-only map (decision 5 above) |
-| Saving `RenderTexture` to disk | Save bitmasks only |
+`MapRevealCalculator` + `MapSystem` own reveal rules and save data. Painter and `MapView` are **authoring / presentation** only — see [04 — Tech notes § Map system](../docs/04-tech-notes.md#map-system).
 
 ## Related
 
 - [Mapping system](../docs/02-systems/mapping.md)
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [ADR 019 — Floor verticality](019-floor-verticality.md)
+- [MVP1 spec](../docs/mvp1-spec.md)

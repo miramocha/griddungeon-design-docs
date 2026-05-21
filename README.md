@@ -29,6 +29,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [MVP1 spec](docs/mvp1-spec.md) | Active | MVP1 checklist + locked rules |
 | [00 — Release scope](docs/00-release-scope.md) | Draft | MVP1, MVP2, later |
 | [00 — Vision](docs/00-vision.md) | Draft | EO-first pillars, inspirations |
+| [00 — Game references](docs/00-game-references.md) | Draft | EO + Mary Skelter, etc. — future design reference |
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |

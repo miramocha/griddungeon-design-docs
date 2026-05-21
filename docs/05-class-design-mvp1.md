@@ -296,7 +296,7 @@ class StratumFloor : ScriptableObject
     GridPosition partyEntryPoint;
 }
 
-struct FloorTileData  { bool IsWalkable; bool HasGatherNode; string ChestItemId; }
+struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string ChestItemId; }  // edges: painter + collision
 struct FoeSpawnConfig { string foeId; GridPosition spawnCell; GridPosition[] patrolPath; int stepsPerMove; }
 struct EncounterTable { EncounterWeight[] Entries; }
 struct EncounterWeight { string groupId; float weight; }
@@ -1068,14 +1068,21 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
     EnemySlotsView     EnemySlots;
 }
 
+// GridDungeon.Editor — floor level painter → StratumFloor.asset (ADR 002)
+class FloorPainterWindow : EditorWindow
+{
+    void PaintCell(int x, int y, int level, FloorPaintTool tool);
+    void ExportToStratumFloor(StratumFloor target);
+}
+
 class MapView : MonoBehaviour
 {
-    // Minimap ortho cam → RenderTexture on UIToolkit; MapProxy layer cubes only (ADR 002)
+    // 2D schematic from StratumFloor + IReadOnlyFloorMapState (ADR 002); not minimap RT
     // Fullscreen overlay; input passes through to ExplorationInputHandler (ADR 014)
     void Show(); void Hide();
     void RenderFloor(IReadOnlyFloorMapState state, GridPosition partyCell, FacingDirection facing);
     void UpdateFoeIcons(IReadOnlyList<FoeInstance> visible);
-    void RefreshMapTexture();   // when MapSystem reveal dirty
+    void RefreshMap();   // on MapSystem reveal / party / FOE dirty
 }
 
 class PartyStripView : MonoBehaviour

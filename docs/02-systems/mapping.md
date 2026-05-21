@@ -17,7 +17,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 ## Map UI
 
-- **Presentation:** schematic **map proxy** cubes (`MapProxy` layer) rendered by a **minimap ortho camera** into a HUD `RenderTexture` — not a capture of the FPV corridor mesh ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--map-proxy--minimap-camera)).
+- **Presentation:** **2D schematic** in UI Toolkit from `StratumFloor` + revealed state — authored via **floor level painter** → SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
 - Grid 1:1 with dungeon cells at the party’s current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle post-MVP1 optional.

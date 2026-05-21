@@ -17,8 +17,11 @@ Chart an unknown labyrinth from the first person — one grid step at a time. Th
 | Game | Take |
 |------|------|
 | ***Etrian Odyssey*** | **Primary:** auto-map presentation, FOEs, strata, guild classes, AGI combat, synthesis |
+| ***Mary Skelter: Nightmares*** | **Secondary:** FPV tower crawl, map threats, reactive combat read, hub-between-floors — future reference only ([game references](00-game-references.md)) |
 | *Wizardry* | Brutal identity optional; we use EO death/save model instead |
 | *SMT / dungeon crawlers* | Weaknesses and buff stacking (light touch, later) |
+
+Full reference notes (scratchpad, not scope authority): **[00 — Game references](00-game-references.md)**.
 
 ## Player fantasy
 
@@ -64,6 +67,7 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 
 ## Related docs
 
+- [00 — Game references](00-game-references.md)
 - [01 — Core loop](01-core-loop.md)
 - [02 — Mapping](02-systems/mapping.md)
 - [02 — Dungeon navigation](02-dungeon-navigation.md)

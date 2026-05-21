@@ -35,7 +35,8 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | FOE contact → fight; flee + retreat cell | [ADR 011](../decisions/011-foe-flee-retreat.md) |
 | ✅ | FOE respawn on hub return | [ADR 008](../decisions/008-campaign-defaults.md) |
 | ✅ | Gather node: one-click instant loot (no minigame) | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
-| ⬜ | One test floor 20×20 + stairs | [dungeons & encounters](03-content/dungeons-and-encounters.md) |
+| ⬜ | One test floor 20×20 + stairs (`StratumFloor` asset) | [dungeons & encounters](03-content/dungeons-and-encounters.md), [ADR 002](../decisions/002-mapping-model.md) |
+| ⬜ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md) |
 | ⬜ | Floor verticality + jump pads (Doom-style; flat B1F–B3F OK for first ship) | [ADR 019](../decisions/019-floor-verticality.md) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
@@ -111,7 +112,9 @@ Full Navigator roster unlocks post-MVP1.
 | Leg bind, paralysis, burn, speed buffs | Post-MVP1 |
 | Traps, encounter suppress | Post-MVP1 |
 | Guest (`MVP1+`) | Stretch |
-| Multi-level minimap layer toggle | Post-MVP1 |
+| Floor level painter (Editor → `StratumFloor`) | Post-MVP1; MVP1 may hand-author one test floor |
+| Multi-level map layer toggle in HUD | Post-MVP1 |
+| MapProxy + minimap camera (debug 3D preview) | Deferred / optional |
 | Setting name / tone brief | Parallel art |
 
 ---
