@@ -227,6 +227,8 @@ class EncounterGroup : ScriptableObject
     EnemySlotConfig[] frontRow;  // ≤3 enemy slots
     EnemySlotConfig[] backRow;   // ≤2 enemy slots
     BattleBackgroundId background;
+    bool tutorialUnbeatable;     // enemies cannot die; HP floor at 1
+    bool noFlee;
 }
 
 struct EnemySlotConfig { string enemyDefinitionId; bool isRequired; }
@@ -291,16 +293,44 @@ class StratumFloor : ScriptableObject
     FoeSpawnConfig[] foeSpawns;
     EncounterTable randomEncounters;
     float baseEncounterRate;
-    GridPosition stairsDown;
-    GridPosition stairsUp;
-    GridPosition partyEntryPoint;
+    GridPosition stairsDown;      // next floor, same stratum
+    StairsUpLink[] stairsUpLinks; // mouth + any same-stratum up links
+    GridPosition partyEntryIntro; // Act 1 cold start (optional)
+    GridPosition partyEntryMouth; // hub re-entry / stratum mouth
+    TutorialBlocker[] tutorialBlockers; // cleared when s1_tutorial_dive_started
 }
 
-struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string ChestItemId; }  // edges: painter + collision
+enum StairsUpTargetKind { SameStratumFloor, Hub, PreviousStratumDeepest }
+
+struct StairsUpLink
+{
+    GridPosition cell;
+    StairsUpTargetKind targetKind;
+    string targetFloorId;         // SameStratumFloor only, e.g. "B1F"
+}
+
+struct TutorialBlocker
+{
+    GridPosition cell;            // door edge or cell flag
+    string requiredSaveFlag;      // e.g. "s1_tutorial_dive_started"
+}
+
+struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string ChestItemId; }
 struct FoeSpawnConfig { string foeId; GridPosition spawnCell; GridPosition[] patrolPath; int stepsPerMove; }
 struct EncounterTable { EncounterWeight[] Entries; }
 struct EncounterWeight { string groupId; float weight; }
+
+// StratumDefinition (ContentDatabase)
+class StratumDefinition
+{
+    string stratumId;
+    bool hasWarpGate;             // false for s1
+    string warpFloorId;           // entrance floor when hasWarpGate
+    GridPosition warpGateCell;
+}
 ```
+
+**Authoring rules:** [dungeons — entry & S1 intro](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 
@@ -810,6 +840,8 @@ enum CombatPhase { Idle, TurnPhase, EndOfRound }
 
 // Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
 
+enum TutorialCombatKind { None, SynchroFirstFoe }
+
 class CombatEntryContext
 {
     FoeInstance? Foe;          // null = random encounter
@@ -817,6 +849,7 @@ class CombatEntryContext
     string BattleBackgroundId;
     GridPosition FightAnchor;
     FacingDirection PartyFacing;
+    TutorialCombatKind TutorialKind;  // SynchroFirstFoe: mid-fight unlock + forced protocol_strike
 }
 
 class CombatAction

@@ -11,7 +11,7 @@ Need a party-wide burst/coordination mechanic distinct from per-character MP ski
 ## Decision
 
 1. **Single Synchro bar** (0–100%) shared by the core party.
-2. **100% at hub exit**; persists across fights on a floor; **0% after** any Protocol use until recharged in combat.
+2. **100% at hub exit** (when Synchro is unlocked); persists across fights on a floor; **0% after** any Protocol use until recharged in combat. **S1 tutorial exception:** locked until mid-fight unlock in unbeatable first FOE on B2F — see [synchro-protocol § S1 gating](../docs/02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe).
 3. **Charge** from core members’ combat actions and events (attack, skill, guard, damage taken, kills — see [synchro-protocol.md](../docs/02-systems/synchro-protocol.md)).
 4. **Protocol as a core turn action** when bar is **100%** (optional); uses that character’s AGI turn; Navigator executes ([issue #10](https://github.com/miramocha/griddungeon-game/issues/10)).
 5. **Participants** — living core members only; skill defines count; aux excluded in MVP1.

@@ -153,11 +153,13 @@ sequenceDiagram
 
 | Trigger | Requested phase | Caller |
 |---------|-----------------|--------|
-| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` |
+| **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)) |
+| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate |
+| First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GamePhaseController` |
 | FOE same cell as party | Combat | `FoeSystem` → `GameState` |
 | Random encounter on step | Combat | `EncounterTrigger` → `GameState` |
 | Battle won or flee success | Exploration | `CombatController` |
-| Return to surface / hub menu | Hub | Hub UI / stairs up |
+| Return to surface / hub menu | Hub | Mouth **stairs up**, Return thread, or hub UI |
 | Party wipe | Hub | Wipe flow → load save → Hub |
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).

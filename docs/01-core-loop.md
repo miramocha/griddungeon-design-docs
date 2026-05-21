@@ -3,16 +3,15 @@
 ## Macro loop (EO-style)
 
 ```
-Hub (Explorers Guild, Navigator Office, save, heal, shop)
-    → Enter labyrinth at deepest unlocked floor
-    → Explore: step grid + auto-map reveals + avoid/bait FOEs
-    → Random battles + FOE fights + loot
-    → Retreat (stairs up / return item) when resources low
-    → Hub: sell, synthesize (**MVP2**), allocate skill points
-    → Push next floor or next stratum
+[New game] Stratum 1 movement tutorial on B1F (no combat) → mouth stairs → hub
+    → Hub: recruit 6 core, Navigator, equip (Stratum 1 Act 2)
+    → Enter Stratum 1 at B1F mouth → explore B1F–B3F
+[Loop] Hub → enter stratum (warp gate S2+; S1 walk-in at mouth) → explore → fight → loot
+    → Retreat via first-floor stairs up (hub or previous stratum deepest) / return item
+    → Hub: heal, save, skill points → repeat
 ```
 
-See [Hub & services](02-systems/hub-and-services.md) for facility list.
+See [Hub & services](02-systems/hub-and-services.md) (incl. [S1 intro](02-systems/hub-and-services.md#stratum-1-intro-three-acts)) and [dungeons — entry & mouth stairs](03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked).
 
 ## Micro loop (exploration)
 

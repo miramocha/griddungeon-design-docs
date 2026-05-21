@@ -62,8 +62,9 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 - [ ] Explore a test floor in FPV; **map auto-reveals** floor and walls on bump
 - [ ] **FOE** appears on map when visible; combat on contact
 - [ ] Win a fight with **6 party members** and **AGI turn order** visible
-- [ ] Return to hub, save, heal, spend **skill point**, re-enter with **map intact**
-- [ ] **Union bar** fills in combat; use one Union skill at 100% before AGI round
+- [ ] New game: B1F movement tutorial → hub party setup → tutorial dive from B1F mouth
+- [ ] Return to hub via mouth stairs, save, heal, spend **skill point**, re-enter with **map intact**
+- [ ] **Synchro** tutorial: unbeatable first FOE on B2F; mid-fight unlock + forced `protocol_strike`
 
 ## Related docs
 

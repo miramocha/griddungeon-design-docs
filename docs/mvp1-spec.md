@@ -7,11 +7,12 @@ Single checklist for the **first playable**. Locked exploration/combat rules: [A
 ## 1. Player-facing loop (MVP1)
 
 ```
-Hub (inn save, guild 6, hospital, shop)
-  → Enter Stratum 1 (Synchro bar 100%)
-  → Explore B1F–B3F (FPV + auto-map + FOE on grid)
+New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs → hub)
+  → Hub Act 2: Guild party (6 core), Navigator, save
+  → Enter Stratum 1 at B1F mouth (no warp gate; Synchro taught on **unbeatable** B2F FOE)
+  → Explore B1F–B3F (FPV + auto-map + FOE on B2F+)
   → Random fights + FOE contact → battle arena
-  → Win / flee → loot / XP → skill points at hub
+  → Win / flee → loot / XP → retreat via mouth stairs → hub
   → Defeat stratum 1 boss on B3F (MVP1 vertical slice goal)
   → Hub heal / save / equip
 ```
@@ -35,7 +36,7 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | FOE contact → fight; flee + retreat cell | [ADR 011](../decisions/011-foe-flee-retreat.md) |
 | ✅ | FOE respawn on hub return | [ADR 008](../decisions/008-campaign-defaults.md) |
 | ✅ | Gather node: one-click instant loot (no minigame) | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
-| ⬜ | One test floor 20×20 + stairs (`StratumFloor` asset) | [dungeons & encounters](03-content/dungeons-and-encounters.md), [ADR 002](../decisions/002-mapping-model.md) |
+| ⬜ | `StratumFloor` assets for **B1F–B3F** (20×20 each; layouts in content doc) | [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f), [ADR 002](../decisions/002-mapping-model.md) |
 | ⬜ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md) |
 | ⬜ | Floor verticality + jump pads (Doom-style; flat B1F–B3F OK for first ship) | [ADR 019](../decisions/019-floor-verticality.md) |
 
@@ -53,6 +54,8 @@ Hub (inn save, guild 6, hospital, shop)
 | ⬜ | 8 enemy types + 1 boss encounter group | content |
 | ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [party classes](02-systems/party-and-classes.md#summon-skills--summoner-only), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | ⬜ | Reactive HUD — hub / explore / combat; **blocking** UI feedback on state changes | [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity) |
+| ⬜ | S1 intro: Act 1 movement → hub party → Act 3 mouth entry; tutorial blockers on `s1_B1F` | [dungeons — S1 intro](03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map), [hub](02-systems/hub-and-services.md#stratum-1-intro-three-acts) |
+| ⬜ | Synchro unlocks **mid** first FOE; FOE **unbeatable**; forced `protocol_strike` in same fight | [synchro-protocol — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
 
 ### Hub & progression
 
@@ -80,9 +83,11 @@ Hub (inn save, guild 6, hospital, shop)
 
 | Floor | Goal |
 |-------|------|
-| **B1F** | Tutorial layout, 0–1 FOE, stairs down |
+| **B1F** | Shared map: Act 1 movement (0 enemies, blockers); Act 3 mouth entry, **0 FOE**, stairs down |
 | **B2F** | First bind/poison enemies, 1 FOE |
 | **B3F** | Stratum boss FOE + stairs (MVP1 “win”) |
+
+**Layouts (ASCII + YAML):** [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) · [S1 three-act intro](03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map) · [hub S1 intro](02-systems/hub-and-services.md#stratum-1-intro-three-acts) · [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1).
 
 Defer B4F–B5F polish until loop proven.
 

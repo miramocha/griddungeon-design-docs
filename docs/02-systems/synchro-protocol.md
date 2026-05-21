@@ -17,8 +17,30 @@ Party-wide **Synchro** meter for coordinated **Protocol** skills, executed by th
 
 ### When leaving hub
 
-- Bar set to **100%** when party enters the labyrinth from hub (ready for first Protocol of the dive).
-- Navigator auras may modify gain rate (e.g. `guild_handler` +5%).
+- Bar set to **100%** when party enters the labyrinth from hub — **except** before Stratum 1 Synchro tutorial ([§ S1 tutorial gating](#s1-tutorial-gating-first-foe)).
+- Navigator auras may modify gain rate (e.g. `guild_handler` +5%) — only while Synchro is **unlocked**.
+
+### S1 tutorial gating (first FOE)
+
+**Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
+
+| State | Synchro bar | Charge in combat | Protocol (`U` / core turn) | Hub → labyrinth |
+|-------|-------------|------------------|----------------------------|-----------------|
+| **Before first FOE contact** | Hidden / locked | **No gain** | **Disabled** | **0%** |
+| **First FOE phase A** (start) | Locked | No gain | Disabled | — |
+| **First FOE phase B** (mid unlock) | **100%** | Yes | **Forced** `protocol_strike` only | — |
+| **After tutorial complete** | Normal | Normal | Normal | **100%** on hub exit |
+
+**First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
+
+1. **Act 3 path** — block B3F until `s1_first_foe_tutorial_complete`.
+2. **`noFlee: true`** — cannot skip the lesson.
+3. **Unbeatable FOE** — tutorial enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); fight does not end on normal damage.
+4. **Phase A** — Synchro locked for first core turns (or until trigger).
+5. **Phase B (mid-fight)** — on trigger (e.g. 2 core turns or first party HP loss): set `s1_synchro_unlocked`, bar **100%**, Navigator prompt; next core turn **must** use **`protocol_strike`**.
+6. **End** — on Protocol resolve: scripted FOE retreat, victory, set `s1_synchro_protocol_tutorial_done` + `s1_first_foe_tutorial_complete`.
+
+Random fights before this FOE contact: Synchro **locked**. `CombatEntryContext.tutorialKind = SynchroFirstFoe` in implementation ([combat](combat.md)).
 
 ### During combat
 
@@ -38,8 +60,8 @@ While bar is below 100%, **core formation members** add to the shared bar:
 - **Navigator** does not act in AGI queue — does not directly add bar.
 - **No gain** from aux summons/guests or enemy actions.
 - Bar cannot exceed 100%.
-- **Between battles** on the same floor: bar **persists**.
-- **Return to hub:** bar reset to 100%.
+- **Between battles** on the same floor: bar **persists** (if unlocked).
+- **Return to hub:** bar reset to **100%** when unlocked; **0%** and locked when `s1_synchro_unlocked` false.
 
 Exploration steps do **not** charge Synchro.
 
@@ -92,6 +114,7 @@ Combat round:
 - [x] Synchro bar + Protocol on core turn at 100%
 - [x] Default Navigator: **Protocol Strike**, **Protocol Mend** (`protocol_strike`, `protocol_mend`)
 - [x] Core actions charge bar; Navigator off-formation
+- [ ] S1 gate: unlock Synchro **mid** first FOE; unbeatable FOE; forced `protocol_strike` **in that fight**
 
 ## Not in scope (MVP1)
 

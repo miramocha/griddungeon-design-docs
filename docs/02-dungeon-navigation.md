@@ -67,8 +67,13 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 - Doors, keys, one-way passages
 - Chests (**MVP1**); gather / fish nodes (**MVP2** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
-- Stairs up/down (stratum transitions)
-- **Return thread** item — teleport party to hub once (consumable, EO Ariadne analogue)
+- **Stairs down (`v`)** — next floor in the **same stratum** (paired `stairsUp` on floor below).
+- **Stairs up (`^`) on first floor of stratum (mouth)** — not the same as mid-stratum stairs:
+  - → **Hub** (Exploration → Hub phase; EO “return to camp”).
+  - → **Previous stratum, deepest unlocked floor** (stratum 2+ only; stratum 1: hub only).
+- **Stairs up on B2F+** — previous floor in same stratum only.
+- **Stratum 1:** no warp gate; new game starts on B1F intro path before hub ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)).
+- **Return thread** item — instant hub once (consumable); does not replace mouth stairs.
 
 ## Party on the grid
 

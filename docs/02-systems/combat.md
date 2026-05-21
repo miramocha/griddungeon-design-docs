@@ -37,7 +37,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
 2. Display queue icons (portraits; aux uses distinct frame).
-3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Synchro bar](synchro-protocol.md) is 100%, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions charge the Synchro bar when below 100%.
+3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Synchro bar](synchro-protocol.md) is 100% and **unlocked**, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions charge the bar when below 100%. **S1 first FOE:** scripted encounter — enemies **unbeatable**; Synchro unlocks **mid-fight**; forced `protocol_strike` ends the battle ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 4. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
 
 **Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).

@@ -5,7 +5,7 @@ Content structured like **Etrian Odyssey strata** — themed zones with multiple
 ## Stratum structure
 
 ```
-Stratum 1: Fallen District (B1F–B5F) → Stratum boss
+Stratum 1: Fallen District (B1F–B5F full arc; **MVP1: B1F–B3F** + boss on B3F) → Stratum boss
 Stratum 2: Sand Ruins (B6F–B10F) → …
 ```
 
@@ -28,11 +28,320 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 | Floor | Theme | FOE teaching | Gimmick |
 |-------|-------|--------------|---------|
-| B1F | Outskirts gate | None / 1 weak stationary FOE | Tutorial walls + stairs |
+| B1F | Outskirts gate | None on B1F; FOE from B2F | S1 intro: blocked path → hub; shared map Acts 1 & 3 |
 | B2F | Collapsed avenues | 2 FOEs, green tier; 1 step-patrol (`stepsPerMove: 4`) | Key door loop |
 | B3F | Flooded underpass | Yellow-tier patrol FOE, narrower paths | Damage floor tiles (post-MVP1) |
 | B4F | Ruined plaza | Red-tier FOE guards chest | **MVP2:** salvage pile + flooded cistern |
 | B5F | Civic fortress | Stratum boss FOE | Boss room, stairs to Stratum 2 |
+
+**MVP1 vertical slice** stops at **B3F** with the stratum boss and win condition ([mvp1-spec §3](../mvp1-spec.md#3-content-slice-stratum-1-mvp1)). B4F–B5F stay in the full-game arc table above; do not block MVP1 on them. Authoritative MVP1 layouts: [§ MVP1 — Stratum 1 (B1F–B3F)](#mvp1--stratum-1-b1fb3f).
+
+---
+
+## MVP1 — Stratum 1 (B1F–B3F)
+
+**Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
+**Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design-mvp1.md#mvp1-content-ids-locked) (save/map/FOE state)  
+**Grid:** **20×20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) — no jump pads in MVP1 slice)  
+**Implementation:** hand-fill `StratumFloor` ScriptableObjects until the floor painter ships ([ADR 002](../../decisions/002-mapping-model.md)); game path `Assets/Content/Floors/s1_B1F.asset` etc. ([04 — Tech notes](../04-tech-notes.md#map-system))
+
+### Stratum entry & first-floor stairs (locked)
+
+| Stratum | **Warp gate** | **Hub → labyrinth** | **First-floor `stairsUp`** |
+|---------|---------------|----------------------|----------------------------|
+| **`s1` (MVP1)** | **None** | Act 1: cold start on B1F; Act 3+: **Enter Stratum 1** → **B1F mouth** only (no warp) | **Hub only** (no previous stratum) |
+| **`s2`+** | Yes — hub teleports to authored gate cell on entrance floor | Warp to gate, then explore | **Hub** or **deepest unlocked floor of previous stratum** |
+
+**Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
+
+**First floor of each stratum** = stratum **mouth**. `stairsUp` at the mouth is how the party **returns to camp** (→ Hub phase) or **climbs back** to the previous stratum’s deepest saved floor. Visually this is “exit stairs” — one feature, multiple targets ([05 — Class design](../05-class-design-mvp1.md#floors--stratum)).
+
+**Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace mouth stairs.
+
+### Stratum 1 intro — three acts (same `s1_B1F` map)
+
+Act 1 and Act 3 share **one** `s1_B1F` layout; behavior is gated by save flags and blockers ([hub — S1 intro](../02-systems/hub-and-services.md#stratum-1-intro-three-acts)).
+
+| Act | Phase | Map | Enemies | Paths / spawns |
+|-----|-------|-----|---------|----------------|
+| **1 — Movement** | Exploration | `s1_B1F` | **Off** — `baseEncounterRate: 0`, `foeSpawns: []` | **Intro spawn** `(4, 2)`; **blockers** funnel to mouth; **`v` to B2F blocked** |
+| **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster ([hub](../02-systems/hub-and-services.md)) |
+| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro locked until B2F FOE contact | **Mandatory** unbeatable `foe_alley_stalker`; Synchro + Protocol **in that fight** |
+
+**Save flags (campaign):**
+
+| Flag | Set when |
+|------|----------|
+| `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at mouth |
+| `s1_party_ready` | Act 2: guild party requirement met |
+| `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
+| `s1_synchro_unlocked` | Mid-fight during `foe_alley_stalker` tutorial ([synchro S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)) |
+| `s1_synchro_protocol_tutorial_done` | Forced `protocol_strike` completed in that fight |
+| `s1_first_foe_tutorial_complete` | Tutorial encounter ended; B3F open |
+
+**First post–Act 2 entry (locked):** always **B1F mouth** `(10, 2)`, not intro cell and not “resume deepest” until tutorial complete (tune later for repeat play).
+
+### MVP1 floor summary
+
+| Floor ID | Theme | Spawns | Stairs (mouth / links) | FOEs | Random encounters |
+|----------|-------|--------|------------------------|------|-------------------|
+| `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,2)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** (Act 1 & B1F layout) | Act 1: **0**; Act 3: low chaff |
+| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,17)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
+| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** boss FOE | Mixed |
+
+**Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp gates and inter-stratum mouth stairs are out of MVP1 scope.
+
+### Map legend (ASCII blockouts)
+
+| Symbol | Meaning |
+|--------|---------|
+| `#` | Non-walkable (perimeter / room wall) |
+| `.` | Walkable floor |
+| `E` | Intro spawn — Act 1 only (`partyEntryIntro`) |
+| `M` | Mouth spawn — hub re-entry / Act 3 (`partyEntryMouth`) |
+| `^` | `stairsUp` — mouth: hub (S1) or hub **or** prev-stratum deepest (S2+) |
+| `v` | `stairsDown` — next floor **in same stratum** |
+| `F` | FOE spawn |
+| `C` | Chest |
+| `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) |
+| `X` | Blocked passage (Act 1 — opens Act 3) |
+
+**Coordinates:** `(x, y)` with **x** west→east `0…19`, **y** south→north `0…19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
+
+Internal walls are **edge walls** on `FloorTileData.SolidEdges`, not separate tile types; ASCII shows room shells only—implementation fills north/east/south/west bits per cell.
+
+### MVP1 enemy & encounter IDs (locked names)
+
+Locked in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-locked): **floors + status** (`bind_head`, `bind_arm`, `poison`). Enemy and group IDs below are **locked for MVP1 content** ([mvp1-spec](../mvp1-spec.md) “8 types + 1 boss”); add rows to the class-design table when enemy SOs land in the game repo.
+
+| Enemy ID | Role | MVP1 status teaching |
+|----------|------|----------------------|
+| `stray_hound` | Chaff melee | — |
+| `rust_mite` | Chaff weak | — |
+| `gutter_crow` | Chaff flyer | — |
+| `scrapling` | Chaff swarm | — |
+| `shackle_rat` | Control | `bind_arm` |
+| `venom_slime` | DoT | `poison` |
+| `alley_thug` | Mid bruiser | — |
+| `rubble_guard` | FOE escort | — |
+| `s1_warden` | **Stratum boss** | `bind_head`, `poison` (scripted opens) |
+
+**Encounter groups** (referenced by FOE + random tables):
+
+| Group ID | Slots |
+|----------|-------|
+| `grp_alley_stalker` | `alley_thug`, `scrapling` |
+| `grp_alley_stalker_tutorial` | `alley_thug` (tutorialUnbeatable) — first FOE only |
+| `grp_s1_warden` | `s1_warden` (boss; front row) |
+| `grp_b2_bind_poison` | mix entries below |
+
+### `s1_B1F` — Outskirts gate (intro + mouth)
+
+**One asset, two modes.** Act 1 uses a **blocked subgraph** to the camp mouth; Act 3 opens the full floor and enables `v` → B2F.
+
+| Field | Act 1 (movement) | Act 3 (tutorial dive) |
+|-------|------------------|------------------------|
+| `partyEntryIntro` | `(4, 2)`, facing **N** | — |
+| `partyEntryMouth` | — | `(10, 2)`, facing **N** (hub **Enter Stratum 1**) |
+| `baseEncounterRate` | `0` | `0.05` |
+| `foeSpawns` | `[]` | `[]` (FOE from B2F) |
+| `stairsUp` (mouth `^`) | → **Hub** | → **Hub** |
+| `stairsDown` `v` | **Blocked** (`X` / door flag) | Open → `s1_B2F` `(10, 2)` |
+| Tutorial blockers `D`/`X` | **Closed** east/north shortcuts | **Open** |
+
+**Random encounters (Act 3 only):**
+
+```yaml
+baseEncounterRate: 0.05   # 0 in Act 1
+entries:
+  - { groupId: grp_b1_chaff_hound, weight: 60 }
+  - { groupId: grp_b1_chaff_mite,   weight: 40 }
+```
+
+**ASCII (20×20)** — `X` = blocked until Act 3; intro path E → ^ at mouth:
+
+```
+####################
+#..................#
+#..................#
+#......#######.....#
+#......#..v..#.....#
+#......#.....#.....#
+#......###X###.....#
+#........#.#.......#
+#....C...#.#...G...#
+#........#.#.......#
+#........#M#.......#
+#........#.^.......#
+#......###.###.....#
+#......#.....#.....#
+#......#.....#.....#
+#......#######.....#
+#..................#
+#...E..............#
+####################
+```
+
+- **E** `(4, 2)` — Act 1 intro spawn; funnel north/east to mouth.
+- **M** `(10, 10)` — mouth landing (fiction: camp threshold); pair with **^** `(10, 11)` → hub.
+- **v** `(10, 17)` — to B2F; blocked in Act 1.
+- **X** — tutorial blockers on shortcuts to `v` and wide loops.
+
+**Act 1 beats:** move from **E** → bump walls on side alcoves → **G** / **C** on route → **^** → hub (sets `s1_intro_movement_complete`).
+
+**Act 3 beats:** hub party ready → spawn **M** → clear blockers → optional B1F chaff fights → **v** → B2F FOE tutorial ([`s1_B2F`](#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
+
+---
+
+### `s1_B2F` — Collapsed avenues (bind / poison + patrol FOE)
+
+**Goals:** first **bind** and **poison** random fights; one **step-patrol** FOE ([ADR 003](../../decisions/003-foe-step-patrol.md)); simple **loop** so map literacy matters.
+
+| Field | Value |
+|-------|-------|
+| `baseEncounterRate` | `0.10` |
+| `partyEntryPoint` | `(10, 2)`, facing **N** (from B1F `stairsDown`) |
+| `stairsUp` | `(10, 2)` |
+| `stairsDown` | `(10, 17)` |
+
+**FOE (required) — Synchro tutorial (unbeatable, mid-fight unlock):**
+
+```yaml
+foeId: foe_alley_stalker
+spawnCell: [14, 11]
+patrolPath: [[14, 11], [14, 12], [15, 12], [15, 11]]
+stepsPerMove: 4
+tier: green
+encounterGroup: grp_alley_stalker_tutorial   # tutorial variant; enemies tutorialUnbeatable
+tutorialFirstFoe: true
+noFlee: true
+encounterTags: [tutorial_synchro, unbeatable]
+synchroUnlockTrigger: after_core_turns_2      # or on_first_party_damage — tune in data
+```
+
+- **Unbeatable:** encounter enemies cannot die; HP floors at 1 (or damage ignored at 0). Fight ends only after forced **`protocol_strike`** ([synchro § S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
+- **Synchro:** locked at fight start; **unlocks mid-fight** at trigger → bar **100%** → forced Protocol on next core turn → scripted FOE retreat / victory.
+- **Progression:** path to `s1_B3F` blocked until `s1_first_foe_tutorial_complete`.
+- Prior combats (B1F random): Synchro still locked.
+
+Patrol blocks the **shortcut** from east loop to north stairs until the party times a gap or fights. Main safe route: west loop `(4–6, *)` → north → east only after FOE clears.
+
+**Random encounters (bind / poison teaching):**
+
+```yaml
+entries:
+  - { groupId: grp_b2_chaff,        weight: 35 }  # stray_hound | gutter_crow
+  - { groupId: grp_b2_shackle_rat, weight: 35 }  # shackle_rat (+ optional scrapling)
+  - { groupId: grp_b2_venom_slime, weight: 30 }  # venom_slime
+```
+
+**ASCII (20×20):**
+
+```
+####################
+#..................#
+#..................#
+#......#######.....#
+#......#..v..#.....#
+#......#.....#.....#
+#......#.....#.....#
+#....####.####.....#
+#....#.......#.....#
+#....#..C....#.....#
+#....#.......#.....#
+#....###...####.....#
+#.......#.#........#
+#.......#F#........#
+#.......#.#........#
+#....####.####.....#
+#....#.......#.....#
+#....#.......#.....#
+#....#.......#.....#
+#....####^####.....#
+####################
+```
+
+`^` and `v` share column **10**; entry from B1F lands on **^** cell. East loop `(14–16, 10–13)` intersects FOE patrol.
+
+---
+
+### `s1_B3F` — Flooded underpass (stratum boss)
+
+**Goals:** MVP1 **win** fight; boss room telegraph; narrower paths; no damage-floor tiles (post-MVP1 gimmick from full-game B3F row).
+
+| Field | Value |
+|-------|-------|
+| `baseEncounterRate` | `0.12` |
+| `partyEntryPoint` | `(10, 2)`, facing **N** |
+| `stairsUp` | `(10, 2)` |
+| `stairsDown` | — (slice end; placeholder wall north of boss) |
+
+**Boss FOE:**
+
+```yaml
+foeId: foe_s1_warden
+spawnCell: [10, 16]
+patrolPath: [[10, 16]]
+stepsPerMove: 0
+tier: red
+encounterGroup: grp_s1_warden
+noFlee: true
+```
+
+Boss room: cells `(8–12, 15–18)` with single **south** entrance at `(10, 14)` — party sees room on map before commit. Optional pre-boss **C** at `(4, 10)` (reward, not gating).
+
+**Random encounters:**
+
+```yaml
+entries:
+  - { groupId: grp_b3_mix_hounds, weight: 45 }
+  - { groupId: grp_b3_rubble_pair, weight: 35 }  # rubble_guard + scrapling
+  - { groupId: grp_b3_control,     weight: 20 }  # shackle_rat | venom_slime
+```
+
+**ASCII (20×20):**
+
+```
+####################
+#..................#
+#......#####.......#
+#......#...#.......#
+#......# F #.......#
+#......#...#.......#
+#......#####.......#
+#........#.........#
+#........#.........#
+#....#########.....#
+#....#.......#.....#
+#....#.......#.....#
+#....#.......#.....#
+#....####^####.....#
+#........#.........#
+#....C...#.........#
+#........#.........#
+#........#.........#
+#........#.........#
+#........#.........#
+####################
+```
+
+Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall cheeks — teaches FOE routing from B2F.
+
+**Post-boss (MVP1):** set stratum-1-cleared flag; return via mouth **stairs up** → hub or **Return thread**. Do not require `stairsDown` on B3F for MVP1 completion.
+
+---
+
+### MVP1 `StratumFloor` export checklist
+
+- [ ] `s1_B1F.asset` — grid 20×20, intro + mouth spawns, mouth `stairsUp`→hub, tutorial blockers, Act 1/3 flags
+- [ ] `s1_B2F.asset` — patrol path indices match `foe_alley_stalker` YAML
+- [ ] `s1_B3F.asset` — boss `noFlee` on encounter group / fight tag
+- [ ] `EncounterGroup` + `EnemyDefinition` SOs for provisional IDs (game repo)
+- [ ] Playtest: B1F tutorial ≤ 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1–3 attempts at level 5–8
+- [ ] `foe_alley_stalker`: tutorial unbeatable FOE, mid-fight Synchro unlock, forced `protocol_strike` in-fight, B3F block until `s1_first_foe_tutorial_complete`
+
+---
 
 ## Encounter types
 

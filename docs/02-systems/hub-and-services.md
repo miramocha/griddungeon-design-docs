@@ -45,17 +45,38 @@ Prepare at **both** before entering the stratum (order in UI flexible).
 
 ```
 Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
-    → Enter stratum (Union bar 100%) at saved floor
+    → Enter stratum — spawn rule per stratum; Synchro **100%** on exit except S1 before first FOE ([synchro](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe))
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
-    → Retreat via stairs or Ariadne thread (return item) when low
+    → Retreat via first-floor stairs up (mouth) or Return thread when low
     → Hospital + shop + guild + Navigator Office → Repeat
 ```
+
+**New game exception:** Stratum 1 starts with **Act 1 on `s1_B1F`** (movement, no hub yet) — see [S1 intro](#stratum-1-intro-three-acts).
+
+## Stratum 1 intro — three acts
+
+| Act | Phase | What happens |
+|-----|-------|----------------|
+| **1 — Movement** | Exploration on `s1_B1F` | Same map as full B1F; **no enemies**; **blocked paths** lead to mouth **stairs up → hub** ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)) |
+| **2 — Party** | **Hub** (this doc) | First camp visit: story, unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`; inn save; enable **Enter Stratum 1** when `s1_party_ready` |
+| **3 — Tutorial dive** | Exploration | **Enter Stratum 1** → always **B1F mouth** `(10, 2)` — full paths, combat/tutorials, descend B2F–B3F |
+
+Act 2 is **only hub menus** — no labyrinth grid, no combat.
+
+**Stratum 1 entry rules (locked):**
+
+- **No warp gate** on any `s1_*` floor.
+- **No** hub teleport to wilderness intro cell after Act 1.
+- **First** Act 3 entry: **mouth only** (not resume-deepest).
+- Later repeat dives: resume policy TBD post-MVP1 ([dungeons — entry table](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked)).
 
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
-- Example: Stratum 1 "Fallen District" — floors B1F–B5F, then stratum boss.
-- Hub stair **remembers deepest unlocked floor** per stratum.
+- Example: Stratum 1 "Fallen District" — floors B1F–B5F (MVP1: B1F–B3F + boss on B3F).
+- **Stratum 2+:** hub **Enter Stratum** warps to that stratum’s **warp gate** on its entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked)).
+- **First floor mouth stairs up:** return to **hub**, or to **deepest unlocked floor of the previous stratum** (S1 mouth: hub only).
+- Hub may **remember deepest unlocked floor** per stratum for resume after tutorial (post-MVP1 tuning).
 
 ## Quests (optional MVP1)
 

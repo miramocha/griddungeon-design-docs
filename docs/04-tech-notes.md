@@ -166,6 +166,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - `SynchroBar` float 0–1 on `PartyRuntime`
 - `ProtocolSystem` — bar fill from core actions; spend on `CombatCommand.Protocol`
 - Core turn at Synchro == 1: player picks `protocol_strike` / `protocol_mend` from Navigator kit
+- S1: tutorial FOE unbeatable; `s1_synchro_unlocked` mid-fight; forced `protocol_strike` ends encounter ([synchro-protocol](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe))
 - `ProtocolSkillDefinition` — participant count, effect, presentation id
 - Save: `unionBar` + `activeNavigatorId` per dive
 - FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter

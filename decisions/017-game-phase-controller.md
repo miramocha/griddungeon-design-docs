@@ -31,7 +31,7 @@ Requirements:
 
 | From | To | Typical trigger |
 |------|-----|-----------------|
-| Hub | Exploration | `HubController.LeaveHub(stratum, floor)` |
+| Hub | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** after Act 2; S2+: warp gate; new game: Act 1 intro spawn ([hub § S1 intro](../docs/02-systems/hub-and-services.md#stratum-1-intro-three-acts)) |
 | Exploration | Combat | FOE contact, random encounter roll |
 | Combat | Exploration | Victory, successful flee |
 | Exploration | Hub | Stairs to surface / retreat item / designer exit |
