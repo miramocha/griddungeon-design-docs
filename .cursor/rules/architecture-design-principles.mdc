@@ -18,6 +18,7 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP
 | Grid step / facing | `DungeonExplorer` |
 | Map reveal state | `MapSystem` + `MapRevealCalculator` (Core) |
 | FOE patrol / contact | `FoeSystem` |
+| FOE flee retreat cell (walkable?) | `RetreatCellCalculator` (Core); `FoeSystem.CanRetreatFromFoe` delegates |
 | Damage / hit / status math | Core simulators (`DamageCalculator`, `StatusSystem`, …) |
 | Scene composition / lifetime refs | `GameState` (composition root, not phase logic) |
 | Battle arena visuals | `CombatScenePresenter` (not `CombatController`) |
@@ -46,7 +47,7 @@ Architecture docs should name **who initiates transitions** and **who owns state
 ## Be consistent
 
 - Match locked ADRs and [mvp1-spec](../../docs/mvp1-spec.md); if class design contradicts an ADR, fix class design.
-- Use the same type names across `game-phase.md`, `05-class-design-mvp1.md`, and `04-tech-notes.md` (`CombatScenePresenter`, not `CombatSceneController`, unless ADR 013 is updated).
+- Use the same type names across `game-phase.md`, `05-class-design-mvp1.md`, and `04-tech-notes.md` (`CombatScenePresenter`, not `CombatSceneController`).
 
 ## When proposing new types
 

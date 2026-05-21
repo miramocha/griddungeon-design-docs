@@ -157,7 +157,8 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 
 ## Tech (Unity 6)
 
-- `CombatSceneController` — owns backdrop instance, slot rig, enemy spawn
+- **`CombatScenePresenter`** — owns backdrop instance, slot rig, enemy spawn (presentation only; [ADR 017](../../decisions/017-game-phase-controller.md))
+- Invoked from **`CombatPhaseController.OnEnter`**; torn down on `OnExit`
 - `CombatEntryContext` → `ResolveBackground()`, `SpawnEncounter(EncounterGroup)`
 - `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
 - Additive scene `CombatArena` or enabled root under `GameRoot`

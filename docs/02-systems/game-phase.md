@@ -162,6 +162,11 @@ sequenceDiagram
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).
 
+### Encounter priority (same step)
+
+1. **FOE contact** — if party cell equals FOE cell after step, request Combat immediately; **no random encounter roll**.
+2. **Random encounter** — `EncounterTrigger` rolls only when step completed and no FOE contact fired.
+
 ## Exploration step flow
 
 While `Current == Exploration`, `ExplorationPhaseController` owns event subscriptions. A single step can end in map reveal, FOE patrol, contact combat, or a random encounter.
@@ -186,8 +191,11 @@ sequenceDiagram
   Foe->>Foe: Advance patrol
   alt FOE same cell
     Foe->>GS: RequestTransition(Combat)
-  else random encounter roll
-    Enc->>GS: RequestTransition(Combat)
+  else if no contact
+    Enc->>Enc: TryRollRandomEncounter
+    opt roll succeeded
+      Enc->>GS: RequestTransition(Combat)
+    end
   end
 ```
 
@@ -223,8 +231,13 @@ sequenceDiagram
     CC->>EOR: Execute end-of-round
     CC->>CC: Victory / wipe / continue
   end
-  CC->>CP: OnBattleEnded
-  CP->>GS: RequestTransition(Exploration)
+  alt victory or flee
+    CC->>CP: OnBattleEnded
+    CP->>GS: RequestTransition(Exploration)
+  else wipe
+    CC->>CP: OnBattleEnded
+    CP->>GS: RequestTransition(Hub)
+  end
 ```
 
 See [combat](combat.md) for command tables and damage pipeline.
@@ -236,8 +249,8 @@ See [combat](combat.md) for command tables and damage pipeline.
 - Show hub UI (menu tree MVP1)
 - `InputRouter` → UI / hub map only
 - `SaveSystem` ready for inn save
-- `FoeSystem.ResetFloor` for floors when returning from a dive (ADR 008)
-- `SaveSystem.ClearExplorationState`
+- **If `from == Exploration`** (return from labyrinth, ADR 008): `FoeSystem.ResetFloor` for active stratum floors; `SaveSystem.ClearExplorationState`
+- **If `from == Hub` or boot** — no FOE reset (inn menu reopen only)
 
 ### Hub `OnExit`
 
@@ -312,7 +325,7 @@ sealed class GameState : MonoBehaviour
 | Exploration | `Exploration`, `Map` (map overlay pass-through per ADR 014) |
 | Combat | `Combat`, `UI` |
 
-Implemented in `InputRouter` (UI assembly or Runtime — see [class design MVP1](../05-class-design-mvp1.md)).
+Implemented in **`GridDungeon.UI`**: `InputRouter` subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)).
 
 ## Visual Scripting (post-MVP1 optional)
 

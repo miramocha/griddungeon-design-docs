@@ -107,7 +107,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 ## Combat
 
 - `TurnQueueBuilder.Build(combatants)` sorted by AGI (+ Speed Up/Down from [status system](02-systems/combat-status-and-buffs.md))
-- `StatusSystem` — apply/refresh/tick/cleanse; `StatusDefinition` ScriptableObjects; limb bind filters skill `bodyPart`
+- `StatusSystem` (Core) — apply/refresh/tick/cleanse using `StatusData` DTOs; SO `StatusDefinition` in Runtime via `ContentDatabase.ToStatusData`
 - `EndOfRoundPipeline` — regen → DoT → decrement durations → FOE patrol (optional)
 - UI binds to queue head; advance on action complete
 - `CombatSimulator` pure C# for tests (status inflict + tick unit tests)

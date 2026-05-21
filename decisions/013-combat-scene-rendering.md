@@ -38,7 +38,7 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 
 ## Consequences
 
-- `GameState.Combat` loads `BattleScene` (additive) or enables `CombatLayer` on same Unity scene.
+- **`CombatPhaseController.OnEnter`** calls **`CombatScenePresenter`** to load `BattleScene` (additive) or enable `CombatLayer` on the same Unity scene ([ADR 017](017-game-phase-controller.md)).
 - `DungeonExplorer` pauses; grid position unchanged until fight ends.
 - FOE mid-battle join ([ADR 010](010-chain-foe-battle.md)) = new enemy **slides into empty slot** on arena, not walking into FPV cell.
 - FOE flee retreat ([ADR 011](011-foe-flee-retreat.md)) applies to **grid** after transition out — no need for enemy mesh on exploration grid during fight.
@@ -50,3 +50,5 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 - [Combat presentation](../docs/02-systems/combat-presentation.md)
 - [Combat](../docs/02-systems/combat.md)
 - [04 — Tech notes](../docs/04-tech-notes.md)
+- [ADR 017 — Game phase controller](017-game-phase-controller.md)
+- [Game phase](../docs/02-systems/game-phase.md)

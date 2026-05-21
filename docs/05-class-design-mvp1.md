@@ -359,23 +359,73 @@ class EquipmentLoadout
 }
 ```
 
+### Battle state (combat-only)
+
+Owned by `CombatController` for the duration of a fight. Not a `GamePhase`.
+
+```csharp
+class BattleState
+{
+    Combatant[] CoreSlots;       // 6
+    Combatant?[] AuxSlots;       // 2
+    Combatant[] EnemySlots;      // 5 max, sparse
+    TurnQueue Queue;
+    int Round;
+    CombatEntryContext Entry;
+    bool FleeEnabled;            // retreat cell + encounter noFlee
+    float UnionBar;              // copy from PartyRuntime at StartBattle
+}
+
+class RoundSnapshot
+{
+    BattleState State;
+    IReadOnlyDictionary<string, SkillData> Skills;
+    IReadOnlyDictionary<string, StatusData> Statuses;
+}
+```
+
+### Core content DTOs (no Unity)
+
+Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase` maps SO → DTO when loading content or starting battle. **Simulators and tests use only these types.**
+
+```csharp
+readonly record struct SkillData(
+    string Id, SkillType Type, DamageElement Element, BodyPart BodyPart,
+    int MpCost, float Power, TargetingRule Targeting, StatusInflict? Inflict);
+
+readonly record struct StatusData(
+    string Id, StatusCategory Category, int DefaultDurationTurns,
+    float Magnitude, BodyPart BindPart, bool RemovedOnDamage);
+
+readonly record struct NavigatorData(string Id, AuraModifiers Aura, string[] UnionSkillIds);
+
+readonly record struct UnionSkillData(
+    string Id, UnionEffectType EffectType, float Power, int ParticipantCount);
+
+readonly record struct EnemyData(
+    string Id, CharacterBaseStats Stats, ElementResistances Resistances,
+    string[] SkillIds, bool NoFlee, string[] StatusImmuneTags);
+
+readonly record struct SummonData(
+    string Id, CharacterBaseStats Stats, int DurationRounds,
+    FormationRow AuxRow, SummonAction[] ActionScript);
+```
+
 ### Simulators (stateless, testable)
 
 ```csharp
-// CombatSimulator.cs — entry point for unit tests
 static class CombatSimulator
 {
-    // Runs a full round against snapshots; returns log of events
     static RoundResult SimulateRound(RoundSnapshot snapshot);
 }
 
 static class DamageCalculator
 {
     static int CalculatePhysical(Combatant attacker, Combatant defender,
-                                  SkillDefinition skill, IReadOnlyList<BattleModifier> mods);
+        SkillData skill, IReadOnlyList<BattleModifier> mods);
     static int CalculateElemental(Combatant attacker, Combatant defender,
-                                   SkillDefinition skill, ElementResistances resistances);
-    static int CalculateHeal(Combatant caster, SkillDefinition skill);
+        SkillData skill, ElementResistances resistances);
+    static int CalculateHeal(Combatant caster, SkillData skill);
 }
 
 static class HitChanceCalculator
@@ -385,24 +435,34 @@ static class HitChanceCalculator
 
 static class TurnQueueBuilder
 {
-    // Sorts by effective AGI (with Speed Up/Down applied)
-    static List<Combatant> Build(IEnumerable<Combatant> combatants);
+    static List<Combatant> Build(IEnumerable<Combatant> combatants,
+        IReadOnlyDictionary<string, StatusData> statuses);
 }
 
 static class StatusSystem
 {
-    static void Apply(Combatant target, StatusInstance instance, StatusDefinition def);
+    static void Apply(Combatant target, StatusInstance instance, StatusData def);
     static void Refresh(Combatant target, string statusId, int newDuration);
-    static void Tick(Combatant target, IReadOnlyDictionary<string, StatusDefinition> defs);
+    static void Tick(Combatant target, IReadOnlyDictionary<string, StatusData> defs);
     static void Cleanse(Combatant target, StatusCategory category);
-    static bool IsBlocked(Combatant actor, SkillDefinition skill);  // bind filter
+    static bool IsBlocked(Combatant actor, SkillData skill);
+}
+
+static class RetreatCellCalculator
+{
+    static GridPosition GetRetreatCell(GridPosition partyCell, FacingDirection facing);
+    static bool IsRetreatCellWalkable(GridPosition retreatCell, FloorCollisionQuery collision);
 }
 
 static class MapRevealCalculator
 {
-    // Returns edges to mark as revealed based on bump or perimeter rule (ADR 014)
     static IEnumerable<CellEdge> RevealOnEnterCell(GridPosition cell, int gridWidth, int gridHeight);
     static IEnumerable<CellEdge> RevealOnBump(GridPosition fromCell, FacingDirection bumpSide);
+}
+
+static class SummonScriptRunner
+{
+    static CombatAction ResolveNext(SummonData summon, int turnIndex, BattleState state);
 }
 ```
 
@@ -506,7 +566,7 @@ interface IPhaseController
 sealed class HubPhaseController : IPhaseController
 {
     HubController Hub;
-    // OnEnter: hub UI, FOE reset on return (ADR 008), clear exploration save
+    // OnEnter(from): hub UI; if from == Exploration → FOE reset (ADR 008), ClearExplorationState
     // OnExit: hide hub UI
 }
 
@@ -629,11 +689,26 @@ class FoeSystem : MonoBehaviour
     // Listens to DungeonExplorer.OnPartyStep
     void OnPartyStep();
 
+    // Delegates to RetreatCellCalculator (Core); used for flee UI enable
     bool CanRetreatFromFoe(GridPosition fightAnchor, FacingDirection facing);
 
     // Fires when FOE cell == party cell → triggers combat transition
     event Action<FoeInstance> OnFoeContact;
     event Action<FoeInstance> OnFoeVisible;  // for map icon update
+}
+
+class EncounterTrigger
+{
+    // Called from ExplorationPhaseController on DungeonExplorer.OnPartyStep
+    // After FoeSystem handles contact; no random roll if combat already requested
+    bool TryRollRandomEncounter(EncounterTable table, float baseEncounterRate,
+        out string encounterGroupId);
+}
+
+class GatherInteractor
+{
+    // TryInteract on gather node — instant loot (MVP1, no minigame)
+    bool TryGather(GridPosition cell, FloorMapState map, PartyRuntime party);
 }
 ```
 
@@ -674,8 +749,7 @@ class NavigatorRuntime : MonoBehaviour
 
 static class AuraSystem
 {
-    // Called on combat start and navigator swap
-    static void ApplyPassives(IReadOnlyList<Combatant> coreSix, NavigatorDefinition nav);
+    static void ApplyPassives(IReadOnlyList<Combatant> coreSix, NavigatorData nav);
     static void RemovePassives(IReadOnlyList<Combatant> coreSix);
 }
 ```
@@ -689,7 +763,7 @@ class UnionSystem : MonoBehaviour
     void OnCoreActed(Combatant actor, NavigatorDefinition nav);
 
     // Called by CombatController at round start when bar == 1
-    bool TryBeginUnionPhase(string unionSkillId, out UnionSkillDefinition skill);
+    bool TryBeginUnionPhase(string unionSkillId, out UnionSkillData skill);
 
     void SpendBar();   // → 0 after Union phase
 }
@@ -700,6 +774,7 @@ class UnionSystem : MonoBehaviour
 ```csharp
 class CombatController : MonoBehaviour
 {
+    BattleState State { get; }
     CombatPhase CurrentPhase { get; private set; }
 
     void StartBattle(CombatEntryContext context);
@@ -771,7 +846,7 @@ class EndOfRoundPipeline
     // Returns log entries for combat log
     IEnumerable<string> Execute(
         IReadOnlyList<Combatant> allCombatants,
-        IReadOnlyDictionary<string, StatusDefinition> statusDefs,
+        IReadOnlyDictionary<string, StatusData> statusDefs,
         int round);
 }
 ```
@@ -847,6 +922,7 @@ class CodexSystem : MonoBehaviour
 // Single ScriptableObject; populated in editor via asset references
 class ContentDatabase : ScriptableObject
 {
+    // Runtime SO lookup (editor assets)
     EnemyDefinition      GetEnemy(string id);
     EncounterGroup       GetEncounterGroup(string id);
     StratumFloor         GetFloor(string stratumId, string floorId);
@@ -858,6 +934,14 @@ class ContentDatabase : ScriptableObject
     SummonDefinition     GetSummon(string summonId);
     EquipmentDefinition  GetEquipment(string equipId);
     ItemDefinition       GetItem(string itemId);
+
+    // Core DTO mapping (call before simulators / combat start)
+    SkillData      ToSkillData(SkillDefinition so);
+    StatusData     ToStatusData(StatusDefinition so);
+    NavigatorData  ToNavigatorData(NavigatorDefinition so);
+    UnionSkillData ToUnionSkillData(UnionSkillDefinition so);
+    EnemyData      ToEnemyData(EnemyDefinition so);
+    SummonData     ToSummonData(SummonDefinition so);
 }
 ```
 
@@ -889,11 +973,12 @@ Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers.
 ### Input routing
 
 ```csharp
-// Sits on GameState; listens to Input System action maps
+// GridDungeon.UI — subscribes to GameState.PhaseChanged on enable
 class InputRouter : MonoBehaviour
 {
-    void OnGamePhaseChanged(GamePhase phase);
-    // Enables/disables action maps: Exploration, Combat, Map, UI
+    void Bind(GameState gameState);  // PhaseChanged += OnPhaseChanged
+    void OnPhaseChanged(GamePhase previous, GamePhase next);
+    // Enables/disables Input System maps: Exploration, Combat, Map, UI
 }
 
 // Stateless handlers — convert raw actions to system calls
@@ -1020,6 +1105,16 @@ interface IReadOnlyFloorMapState
 // IPhaseController — defined under Game phase above; OnEnter(from) / OnExit(to)
 ```
 
+### CombatantFactory (Runtime)
+
+```csharp
+static class CombatantFactory
+{
+    static Combatant FromCharacterSave(CharacterSaveData save, ClassDefinition classDef, ContentDatabase db);
+    static Combatant FromEnemyData(EnemyData data, FormationRow row, int slotIndex);
+}
+```
+
 ---
 
 ## Folder structure (Unity Assets)
@@ -1028,8 +1123,9 @@ interface IReadOnlyFloorMapState
 Assets/
 ├── Scripts/
 │   ├── Core/                     GridDungeon.Core.asmdef
-│   │   ├── Models/               Combatant.cs, FoeInstance.cs, FloorMapState.cs, ...
-│   │   ├── Simulators/           DamageCalculator.cs, TurnQueueBuilder.cs, StatusSystem.cs, ...
+│   │   ├── Models/               Combatant.cs, BattleState.cs, FoeInstance.cs, FloorMapState.cs, ...
+│   │   ├── Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
+│   │   ├── Simulators/           DamageCalculator.cs, RetreatCellCalculator.cs, TurnQueueBuilder.cs, ...
 │   │   ├── SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...
 │   │   └── Enums/                GamePhase.cs, CombatantKind.cs, ...
 │   ├── Runtime/                  GridDungeon.Runtime.asmdef
@@ -1040,7 +1136,7 @@ Assets/
 │   │   │                         EncounterTrigger.cs, GatherInteractor.cs
 │   │   ├── Map/                  MapSystem.cs
 │   │   ├── Combat/               CombatController.cs, CombatScenePresenter.cs, TurnQueue.cs, …
-│   │   ├── Party/                PartyRuntime.cs, NavigatorRuntime.cs, AuraSystem.cs
+│   │   ├── Party/                PartyRuntime.cs, CombatantFactory.cs, NavigatorRuntime.cs, AuraSystem.cs
 │   │   ├── Union/                UnionSystem.cs
 │   │   ├── Hub/                  HubController.cs, InnService.cs, HospitalService.cs, ...
 │   │   ├── Codex/                CodexSystem.cs
