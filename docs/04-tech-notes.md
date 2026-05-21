@@ -51,6 +51,8 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 - Import **DOTween** from the Asset Store into `Assets/Plugins/Demigiant/DOTween/`; enable modules needed at setup (UI, 2D, etc.).
 - Game runtime assemblies reference `DOTween` / `DOTween.Modules` as needed; no tween logic in `CombatSimulator` (pure C# tests).
 - Prefer `Sequence` / `Tween` over hand-rolled lerps; kill or complete tweens on scene unload, combat end, and explorer disable (`DOTween.Kill` on owning transforms).
+- Exploration input: poll movement/turn `IsPressed` when explorer lerp completes for hold-to-repeat; displacement priority over turn; no buffered input during lerp ([ADR 001](../decisions/001-grid-movement.md)).
+- Exploration lerp durations: four presets (Slow / Normal / Fast / Very Fast); default Normal 0.28s step ([ADR 018](../decisions/018-exploration-animation-speed.md)).
 - **Timeline** stays the source of truth for sparse cinematic skills; do not duplicate the same beat in both Timeline and DOTween unless one drives the other.
 
 ## High-level modules

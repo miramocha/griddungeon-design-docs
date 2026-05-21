@@ -50,7 +50,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |
 | [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
-| [ADR 001 — Grid movement](decisions/001-grid-movement.md) | Accepted | Step lerp, strafe, turn rules |
+| [ADR 001 — Grid movement](decisions/001-grid-movement.md) | Accepted | Step lerp, hold-to-repeat, strafe, turn rules |
 | [ADR 002 — Mapping model](decisions/002-mapping-model.md) | Accepted | Auto-reveal; drawing tools out of scope |
 | [ADR 003 — FOE step patrol](decisions/003-foe-step-patrol.md) | Accepted | FOEs advance on party steps |
 | [ADR 004 — Auxiliary slots](decisions/004-auxiliary-slots.md) | Accepted | +1 summon/guest per row |
@@ -67,12 +67,13 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 015 — MVP1 combat](decisions/015-mvp1-combat.md) | Accepted | Damage, single enemy row, status subset |
 | [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 scripted actions; player control TBD |
 | [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
+| [ADR 018 — Exploration animation speed](decisions/018-exploration-animation-speed.md) | Accepted | Slow / Normal / Fast / Very Fast lerp presets |
 
 ## Resolved
 
 - **Party:** 6 core (3+3) + aux; Navigator off-formation ([ADR 004](decisions/004-auxiliary-slots.md), [007](decisions/007-navigator-role.md))
 - **Mapping:** Auto-reveal; no drawing tools ([ADR 002](decisions/002-mapping-model.md))
-- **Movement:** Discrete steps, strafe, ~0.2s lerp ([ADR 001](decisions/001-grid-movement.md))
+- **Movement:** Discrete steps, strafe, ~0.28s lerp (Normal), hold-to-repeat, speed presets ([ADR 001](decisions/001-grid-movement.md), [018](decisions/018-exploration-animation-speed.md))
 - **FOE patrol:** Party step-based ([ADR 003](decisions/003-foe-step-patrol.md)); **respawn on hub return** ([ADR 008](decisions/008-campaign-defaults.md))
 - **Exploration:** **Unlimited steps** — no TP limit ([ADR 008](decisions/008-campaign-defaults.md))
 - **Platform:** **PC** ([ADR 008](decisions/008-campaign-defaults.md))

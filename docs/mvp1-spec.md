@@ -26,7 +26,8 @@ Hub (inn save, guild 6, hospital, shop)
 
 | # | Requirement | Doc |
 |---|-------------|-----|
-| ✅ | WASD + QE strafe/turn, ~0.2s step lerp | [ADR 001](../decisions/001-grid-movement.md) |
+| ✅ | WASD + QE strafe/turn, ~0.28s step lerp (Normal), hold-to-repeat | [ADR 001](../decisions/001-grid-movement.md) |
+| ⬜ | Exploration animation speed preset (Slow / Normal / Fast / Very Fast) | [ADR 018](../decisions/018-exploration-animation-speed.md) |
 | ✅ | Auto-map, no drawing | [ADR 002](../decisions/002-mapping-model.md) |
 | ✅ | Wall: bump + cell perimeter reveal | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
 | ✅ | Map fullscreen — movement pass-through | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
@@ -103,6 +104,7 @@ Full Navigator roster unlocks post-MVP1.
 | Gather/fish **minigame**, synthesis | MVP2 |
 | Cinematic / QTE skills | MVP2 optional |
 | Gamepad, rebind UI | Post-MVP1 |
+| Exploration animation speed UI (presets in [ADR 018](../decisions/018-exploration-animation-speed.md)) | Post-MVP1 |
 | Leg bind, paralysis, burn, speed buffs | Post-MVP1 |
 | Traps, encounter suppress | Post-MVP1 |
 | Guest (`MVP1+`) | Stretch |

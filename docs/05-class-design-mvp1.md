@@ -635,11 +635,17 @@ class DungeonExplorer : MonoBehaviour
     GridPosition Cell    { get; private set; }
     FacingDirection Facing { get; private set; }
 
-    // Called by ExplorationInputHandler
-    void TryStep();          // WASD forward/back
-    void TryStrafe(int dir); // QE
-    void TryTurn(int dir);
+    // Called by ExplorationInputHandler (hold IsPressed; repeat after lerp — ADR 001)
+    void TryStepForward();   // WASD displacement
+    void TryStepBack();
+    void TryStrafeLeft();
+    void TryStrafeRight();
+    void TryTurnLeft();      // Q/E — hold repeat after turn lerp; no step events
+    void TryTurnRight();
     void TryInteract();
+    void StopMovement();     // kill tweens on combat exit
+    event Action AnimationCompleted;  // input re-checks hold for repeat
+    // Lerp durations from ExplorationAnimationDurations (ADR 018 preset)
 
     // Fired after each successful step; FoeSystem listens to advance patrol
     event Action OnPartyStep;
@@ -647,6 +653,14 @@ class DungeonExplorer : MonoBehaviour
     event Action<GridPosition> OnPartyEnteredCell;
     // Fired when step blocked by wall; MapSystem listens
     event Action<FacingDirection> OnBumpWall;
+}
+
+enum ExplorationAnimationSpeed { Slow, Normal, Fast, VeryFast }
+
+static class ExplorationAnimationDurations
+{
+    static (float step, float turn, float bumpSegment) Get(ExplorationAnimationSpeed speed);
+    // Normal: 0.28s / 0.26s / 0.10s — see ADR 018
 }
 
 class DungeonView : MonoBehaviour

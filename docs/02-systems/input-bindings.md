@@ -32,7 +32,14 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 
 **Arrow keys** duplicate `W/A/S/D` + `Q/E` (accessibility).
 
-While **step lerp** is playing (~0.2s): buffer **one** additional movement input ([ADR 001](../../decisions/001-grid-movement.md)); ignore further until ready.
+**Movement (W/A/S/D and arrow duplicates)** and **turn (Q/E and arrow duplicates)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
+
+- While an explorer **lerp** is playing (durations per [ADR 018](../../decisions/018-exploration-animation-speed.md) preset; Normal: step ~0.28s, turn ~0.26s): **no** new commit of that action type and **no** buffered input.
+- When the lerp **ends**, re-check `IsPressed` on held actions; if a movement key is still held, take **one** displacement (priority over turn); else if a turn key is still held, take **one** 90° turn.
+- A tap during lerp only leads to another step/turn if the key is **still held** when the lerp finishes (no mid-lerp queue).
+- **Turn** does not fire step events (no FOE tick, no random encounter).
+
+**Settings (deferred):** Exploration animation speed — Slow / Normal / Fast / Very Fast ([ADR 018](../../decisions/018-exploration-animation-speed.md)); stored in player prefs when the settings UI ships.
 
 ---
 
@@ -168,4 +175,5 @@ Ship PC first. Later: left stick = forward/back strafe optional; right stick dis
 - [02 — Mapping](mapping.md)
 - [04 — Tech notes](../04-tech-notes.md)
 - [ADR 001 — Grid movement](../../decisions/001-grid-movement.md)
+- [ADR 018 — Exploration animation speed](../../decisions/018-exploration-animation-speed.md)
 - [ADR 008 — Campaign defaults](../../decisions/008-campaign-defaults.md)
