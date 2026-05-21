@@ -66,7 +66,7 @@ Hub (inn save, guild 6, hospital, shop)
 | # | Requirement |
 |---|-------------|
 | ✅ | Unity 6 + URP + Input System + Shader Graph–first |
-| ⬜ | `GamePhaseController` + hub / explore / combat phase controllers ([ADR 017](../decisions/017-game-phase-controller.md)) |
+| ✅ | `GamePhaseController` + hub / explore / combat phase controllers ([ADR 017](../decisions/017-game-phase-controller.md)) |
 | ⬜ | `CombatSimulator` unit tests for damage + AGI order |
 | ⬜ | PC default bindings shipped |
 
