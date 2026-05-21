@@ -65,6 +65,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | **Map view** | Larger read-only map (pan/zoom) |
 | **Hub menus** | Explorers Guild, Navigator Office, shop, hospital, inn save |
 | **Gather / fish** (**MVP2**) | Minigame at dungeon nodes → materials — [gathering & fishing](02-systems/gathering-and-fishing.md) |
+| **Autopilot** (**MVP2**) | Pathfind to discovered map tile — [autopilot](02-systems/autopilot.md) |
 
 ## Win / lose
 

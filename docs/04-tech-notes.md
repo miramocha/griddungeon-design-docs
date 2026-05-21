@@ -129,6 +129,13 @@ GameState (composition root)
 
 **Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
 
+## Autopilot (MVP2)
+
+- `AutopilotController` — BFS/A* on **revealed walkable** cells for current `level`; emits next segment (turn + displacement); `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
+- `MapView` — `LMB` destination, path overlay, invalid-click feedback
+- Input: `MapSetAutopilotDestination`, `CancelAutopilot` (`Esc` + manual actions cancel)
+- Cancel on combat, hub, minigame, blocked path, FOE/encounter, or manual input
+
 ## Gathering & fishing (MVP2)
 
 - `MinigameController` — `Gather` | `Fish`; pauses exploration + FOE step tick

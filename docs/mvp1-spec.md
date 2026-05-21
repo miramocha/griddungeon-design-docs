@@ -17,7 +17,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
   → Hub heal / save / equip
 ```
 
-**Not in MVP1:** synthesis, gather **minigame**, fishing, **FOE combat patrol / mid-battle join**, cinematics, gamepad, 3D hub walk, multiplayer.
+**Not in MVP1:** synthesis, gather **minigame**, fishing, **FOE combat patrol / mid-battle join**, **autopilot**, cinematics, gamepad, 3D hub walk, multiplayer.
 
 ---
 
@@ -109,6 +109,7 @@ Full Navigator roster unlocks post-MVP1.
 | Item | When |
 |------|------|
 | FOE combat patrol + mid-battle join ([005](../decisions/005-foe-combat-patrol.md), [010](../decisions/010-chain-foe-battle.md)) | MVP2 |
+| **Autopilot** — pathfind on discovered tiles ([ADR 021](../decisions/021-autopilot-mvp2.md)) | MVP2 |
 | Gather/fish **minigame**, synthesis | MVP2 |
 | Cinematic / QTE skills | MVP2 optional |
 | Gamepad, rebind UI | Post-MVP1 |

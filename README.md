@@ -20,7 +20,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | Milestone | Focus |
 |-----------|--------|
 | **MVP1** | Hub loop, explore, FOE, AGI combat, Synchro Protocol, auto-map |
-| **MVP2** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join |
+| **MVP2** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join, autopilot |
 
 ## Document index
 
@@ -49,6 +49,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [05 — Class design MVP1](docs/05-class-design-mvp1.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |
+| [02 — Autopilot](docs/02-systems/autopilot.md) | MVP2 | Pathfind to discovered tile on map |
 | [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; B1F–B3F MVP1 layouts |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
@@ -71,6 +72,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 scripted actions; player control TBD |
 | [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
 | [ADR 018 — Exploration animation speed](decisions/018-exploration-animation-speed.md) | Accepted | Slow / Normal / Fast / Very Fast lerp presets |
+| [ADR 021 — Autopilot MVP2](decisions/021-autopilot-mvp2.md) | Accepted | Pathfind on revealed tiles; no path drawing |
 
 ## Resolved
 
@@ -94,6 +96,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - [Gathering & fishing minigames](docs/02-systems/gathering-and-fishing.md) — chop/mine/forage + fish nodes in labyrinth; feeds synthesis
 - Hub **synthesis** + gather quests ([release scope](docs/00-release-scope.md))
 - [FOE combat patrol](decisions/005-foe-combat-patrol.md) + [mid-battle join](decisions/010-chain-foe-battle.md)
+- [Autopilot](docs/02-systems/autopilot.md) — pathfind to discovered tiles; no map drawing ([ADR 021](decisions/021-autopilot-mvp2.md))
 - Optional: [cinematic QTE skills](docs/02-systems/combat-presentation.md)
 
 ## Open questions

@@ -5,11 +5,11 @@ Phased delivery for **Grid Dungeon**.
 | Term | Meaning |
 |------|---------|
 | **MVP1** | First playable — core EO loop |
-| **MVP2** | Gathering/fishing minigames, synthesis, FOE combat patrol + mid-battle join |
+| **MVP2** | Gathering/fishing minigames, synthesis, FOE combat patrol + mid-battle join, autopilot |
 
 Future milestones follow the same pattern (**MVP3**, …) if needed.
 
-MVP2 adds dungeon-side resource play without blocking MVP1.
+MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered map tiles) without blocking MVP1.
 
 ## MVP1 (first playable)
 
@@ -41,8 +41,9 @@ MVP2 adds dungeon-side resource play without blocking MVP1.
 | Gather/fish nodes on map after use | [mapping](02-systems/mapping.md) |
 | Gather quests + material drops | [dungeons & encounters](../docs/03-content/dungeons-and-encounters.md) |
 | **FOE combat patrol** + **mid-battle join** | [ADR 005](../decisions/005-foe-combat-patrol.md), [ADR 010](../decisions/010-chain-foe-battle.md) |
+| **Autopilot** — pathfind to discovered map tile | [autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md) |
 
-**Still optional in MVP2:** [cinematic + QTE skills](02-systems/combat-presentation.md), full ailment list, gamepad.
+**Still optional in MVP2:** [cinematic + QTE skills](02-systems/combat-presentation.md), full ailment list, gamepad, pathfind **avoid FOE cells**.
 
 ---
 

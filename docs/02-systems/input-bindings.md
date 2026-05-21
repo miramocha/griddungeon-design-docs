@@ -41,6 +41,13 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 
 **Settings (deferred):** Exploration animation speed — Slow / Normal / Fast / Very Fast ([ADR 018](../../decisions/018-exploration-animation-speed.md)); stored in player prefs when the settings UI ships.
 
+### Autopilot (MVP2)
+
+| Action | Input | Notes |
+|--------|-------|-------|
+| **Set destination** | `LMB` on revealed walkable map cell | Pathfind + walk ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)) |
+| **Cancel autopilot** | `Esc`, any move/turn/interact, or `LMB` party cell | Immediate |
+
 ---
 
 ## Map (read-only)
@@ -137,6 +144,7 @@ Exploration
   MoveForward, MoveBack, StrafeLeft, StrafeRight
   TurnLeft, TurnRight
   Interact, ToggleMap, PartyMenu, Pause
+  MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
 
 Combat
   ProtocolMenu, ProtocolSkill1..9, ConfirmProtocol
@@ -147,6 +155,7 @@ Combat
 
 Map
   Pan, Zoom, RecenterParty
+  SetAutopilotDestination   # MVP2 — LMB on revealed walkable cell
 
 UI
   Navigate, Submit, Cancel, Point, Click
@@ -175,4 +184,6 @@ Ship PC first. Later: left stick = forward/back strafe optional; right stick dis
 - [04 — Tech notes](../04-tech-notes.md)
 - [ADR 001 — Grid movement](../../decisions/001-grid-movement.md)
 - [ADR 018 — Exploration animation speed](../../decisions/018-exploration-animation-speed.md)
+- [ADR 021 — Autopilot MVP2](../../decisions/021-autopilot-mvp2.md)
+- [Autopilot (MVP2)](autopilot.md)
 - [ADR 008 — Campaign defaults](../../decisions/008-campaign-defaults.md)

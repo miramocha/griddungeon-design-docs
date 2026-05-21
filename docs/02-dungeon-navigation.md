@@ -84,6 +84,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 - Short step lerp (~0.28s at **Normal** speed) via **DOTween**; logic commits at step start ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md)).
 - **Hold-to-repeat:** holding a displacement key walks one cell per lerp cycle; holding a turn key rotates 90° per turn lerp; no new commit while a step, turn, or bump lerp is in progress ([ADR 001](../decisions/001-grid-movement.md)).
+- **Autopilot (MVP2):** map click → pathfind over **discovered** walkable tiles → auto-walk path; same step events as manual ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md)).
 - Bump feedback when movement blocked — **auto-stamp wall** on that edge ([mapping](02-systems/mapping.md)).
 
 ## Input
@@ -97,4 +98,6 @@ PC defaults: `W/S/A/D` move, `Q/E` turn, `Space` interact — see [input binding
 - [ADR 001](../decisions/001-grid-movement.md)
 - [ADR 019](../decisions/019-floor-verticality.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
+- [Autopilot (MVP2)](02-systems/autopilot.md)
+- [ADR 021](../decisions/021-autopilot-mvp2.md)
 - [03 — Dungeons & encounters](03-content/dungeons-and-encounters.md)

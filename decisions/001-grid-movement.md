@@ -37,3 +37,4 @@ EO uses discrete grid steps with light animation. Movement must stay compatible 
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [ADR 003 — FOE step patrol](003-foe-step-patrol.md)
 - [ADR 018 — Exploration animation speed](018-exploration-animation-speed.md)
+- [ADR 021 — Autopilot MVP2](021-autopilot-mvp2.md) — deferred; path steps use same lerp/step rules

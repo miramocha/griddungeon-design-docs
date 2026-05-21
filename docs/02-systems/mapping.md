@@ -96,9 +96,16 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest **A** vs **C** before writing a new ADR. If threat read is sufficient with pings, prefer **D** over full side panel.
 
+## Autopilot (MVP2)
+
+**Map click** on a **revealed walkable** cell sets destination; party **pathfinds** over discovered floor on the current `level` and walks the route ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)). Uses charted map state only — no player path drawing ([ADR 002](../../decisions/002-mapping-model.md)).
+
+---
+
 ## Related docs
 
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
+- [Autopilot (MVP2)](autopilot.md)
 - [FOE encounters](foe-encounters.md) · [Chain / mid-battle FOE](chain-foe-battle.md)
 - [Combat scene](combat-scene.md) · [Game phase](game-phase.md)
 - [ADR 002 — Mapping model](../../decisions/002-mapping-model.md)
