@@ -1,0 +1,56 @@
+---
+description: When and how to comment C# in Unity projects
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# Comments (Unity style guide)
+
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Prefer clear names and small methods first; comment what code cannot say on its own.
+
+## Dos and don'ts
+
+| Don't | Do instead |
+|-------|------------|
+| Comment to **excuse unclear code** | **Rename, extract a method, or simplify** so the code explains itself |
+| Restate what the next line obviously does | Explain **why** — constraints, order, Unity lifecycle, ticket link |
+| Leave **commented-out** code in place | Delete it; git history retains old versions |
+| Let comments **rot** when behaviour changes | Update or remove comments in the **same PR** as the code |
+| Narrate authorship or dates in-line | Use **git blame** and commit messages |
+
+**Don't add comments to replace bad code.** If you need a comment to explain what a block does, refactor until the names and structure are clear; then comment only what is still non-obvious (usually *why*).
+
+```csharp
+// ❌ BAD — comment patches unclear code
+// Check if player is dead and destroy enemies
+if (hp <= 0) { … }
+
+// ✅ GOOD — code speaks; comment only leftover why
+if (m_hp <= 0)
+{
+    EnterDeathState();
+}
+// Death state suppresses respawn until revive UI completes (GD-88)
+```
+
+## When to comment
+
+- **Non-obvious intent** — business rules, Unity quirks, performance tradeoffs.
+- **Public API** — `///` XML on types and members other systems consume.
+- **Temporary gaps** — `TODO` / `FIXME` with ticket; remove when done.
+
+## XML documentation
+
+Use `///` summary (and param/returns when helpful) for `public` / `protected` surfaces in shared assemblies, extension utilities, and generated-doc targets. Skip XML noise on private helpers.
+
+## TODO / FIXME
+
+```csharp
+// TODO(GD-42): Replace FindObjectOfType with injected reference when bootstrap lands
+```
+
+One line, actionable, traceable.
+
+**Unity notes** (when not obvious): script execution order, serialization limits, editor-only code paths.
+
+Match surrounding comment style in legacy files unless you are refactoring that area.

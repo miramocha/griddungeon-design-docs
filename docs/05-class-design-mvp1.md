@@ -19,6 +19,8 @@ Concrete classes, interfaces, and enums for the MVP1 implementation. Derived fro
 
 Phase diagrams, exploration/combat sequences, and Enter/Exit checklists: **[game phase](02-systems/game-phase.md)**.
 
+**Cursor rules:** Shared Unity principles from `griddungeon-game` (hard-linked under [`.cursor/rules/`](../.cursor/rules/)); architecture-specific mapping in [`architecture-design-principles.mdc`](../.cursor/rules/architecture-design-principles.mdc).
+
 ---
 
 ## Assembly structure

@@ -3,6 +3,8 @@
 **Engine:** **Unity 6** (6000.x) + **URP** ([ADR 012](../decisions/012-unity-6-stack.md)).  
 **Platform:** PC Standalone ([ADR 008](../decisions/008-campaign-defaults.md), [input bindings](02-systems/input-bindings.md)).
 
+**Cursor / clean code:** Unity rules in `griddungeon-game/.cursor/rules/` are **hard-linked** into this repo at [`.cursor/rules/`](../.cursor/rules/) (see README there). Architecture work also applies [`architecture-design-principles.mdc`](../.cursor/rules/architecture-design-principles.mdc).
+
 ## Engine stack (locked)
 
 | Layer | Choice |

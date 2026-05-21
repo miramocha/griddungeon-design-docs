@@ -1,0 +1,189 @@
+---
+description: Unity 6 C# naming and serialization conventions
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# Unity C# naming
+
+Based on [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6) and [naming article](https://unity.com/how-to/naming-and-code-style-tips-c-scripting-unity).
+
+## Identifiers
+
+An **identifier** is any name for a type (class, interface, struct, delegate, enum), member, variable, or namespace. C# cannot use spaces in names; use PascalCase or camelCase for compound phrases.
+
+- **ASCII letters, digits, underscore only** — no backslashes, symbols, or Unicode (breaks some Unity command-line tools).
+- **C# only**: camelCase / PascalCase — not `snake_case`, `kebab-case`, or Hungarian (`strName`). **UI Toolkit UXML/USS classes**: BEM (`block__element--modifier`) — see `unity-ui-toolkit`.
+- **Readable word order**: `HorizontalAlignment` over `AlignmentHorizontal`; `CanScrollHorizontally` over `ScrollableX`.
+- **Pronounceable and searchable**; no joke or pun names (`infiniteMonkeys`).
+
+## Conventions
+
+| Kind | Convention | Example |
+|------|------------|---------|
+| Types | PascalCase noun/phrase | `PlayerController` |
+| Interfaces | `I` + PascalCase | `IDamageable` |
+| Public fields / properties | PascalCase, no prefix | `MaxHealth` |
+| Private instance fields | `m_` + camelCase | `m_movementSpeed` |
+| Static fields | `s_` + camelCase | `s_instance` |
+| Constants | `k_` + PascalCase | `k_DefaultSpeed` |
+| Parameters, locals | camelCase, no prefix | `targetPosition` |
+| Booleans | verb prefix | `isDead`, `hasKey` |
+| Methods | verb phrase; bool = question | `GetDirection`, `IsGameOver` |
+| Enums | PascalCase singular; PascalCase values | `GameState.Playing` |
+| Events | verb phrase; invoker `On…` | `DoorOpened`, `OnDoorOpened()` |
+| Namespaces | PascalCase; mirror folders | `GridDungeon.Combat` |
+
+## Fields and variables
+
+- **Nouns** for fields, properties, and locals (they represent state or data). **Bools** are the exception: prefix with a verb that reads as a question — `isDead`, `isWalking`, `hasDamageMultiplier`, `canJump`.
+- **Prefer properties** with a public getter over public fields when exposing state; use `[SerializeField]` on private fields for the Inspector instead of `public` fields.
+- **Member prefixes**: `m_` private instance, `s_` static, `k_` constants; camelCase after the prefix (`m_movementSpeed`, not `m_MovementSpeed`). Locals and parameters stay unprefixed camelCase.
+- Use **`this.`** when a field and local share a naming need; prefixes are preferred for members at a glance.
+- **Default initialization**: numeric fields → `0`, references → `null`, bools → `false`. Omit redundant `= 0`, `= null`, `= false` unless required.
+- **`protected`** when a subclass must access the field; do not widen to `public` later as a shortcut.
+- **Access modifiers**: pick one team style — explicit `private` everywhere, or omit the default — and stay consistent.
+- **No abbreviations** except single-letter loop/math names (`i`, `j`, `x`, `y`). Clarity beats brevity.
+- **`var`**: only for locals when the type is obvious; avoid when it hides the type or for primitives outside tight loops.
+- **One declaration per line.** Trim redundant type prefixes inside the owning type (`Player.m_score` → `m_score`).
+
+## Enums
+
+Enums are value types made of named constants. By default those constants are `int`, assigned from `0` upward.
+
+- **PascalCase** for the enum type and every value.
+- **Singular noun** for the type name — it holds one value from a set (`GameState`, not `GameStates`). No prefix or suffix on the type or values.
+- **Global enums**: `public` enums may live outside a class when shared across assemblies.
+- **`[Flags]` exception**: bitwise flag enums represent combined values — use a **plural** type name (`WeaponTypes`, `InputActions`) and document flag combinations.
+
+```csharp
+public enum GameState { Menu, Playing, Paused }
+
+[Flags]
+public enum InputActions { None = 0, Jump = 1, Attack = 2 }
+```
+
+## Classes and interfaces
+
+- **Classes**: PascalCase **nouns** or noun phrases (`PlayerController`, `InventorySlot`) — types describe things; methods describe actions.
+- **Interfaces**: `I` + PascalCase **adjective** describing capability (`IDamageable`, `IInteractable`).
+- **MonoBehaviour files**: one `MonoBehaviour` per `.cs` file; the **filename must match** the behaviour class. Other helper types in the same file are fine. **Member section order**: `unity-csharp-formatting` (Fields → Properties → Events → lifecycle → public → private).
+
+## Methods
+
+In C#, callable code lives on **methods** (not standalone functions).
+
+- The name should **reflect what it does** — readers should not need to open the body to guess behaviour.
+- Start with a **verb** or verb phrase; add context when the short name is ambiguous — `GetDirection`, `FindTarget`, `ApplyDamage`.
+- **Extra specificity** when the project has multiple conventions: `GetDistanceToTargetInMeters` beats `GetDistanceToTarget` if distances can be in cells, world units, or meters.
+- **Parameters**: camelCase, same as locals (no `m_` prefix).
+- **`bool` returns**: phrase as a yes/no question — `IsGameOver`, `HasStartedTurn`, `CanAfford`.
+
+```csharp
+float GetDistanceToTarget(Transform target) { … }
+float GetDistanceToTargetInMeters(Transform target) { … } // when units vary in the project
+
+public bool IsGameOver() => m_isDead;
+void ApplyDamage(int amount, GameObject source) { … }
+```
+
+## Extension methods
+
+Use extensions to add behaviour to types you **do not own** (often sealed Unity types) without subclassing. Keep them focused — a thin layer over `UnityEngine` APIs, not a home for unrelated helpers.
+
+**Definition**
+
+- `public static` method in a `public static class`
+- First parameter: `this {Type} name` — the type being extended
+- Container class name: **`{Type}Extensions`** (e.g. `TransformExtensions`), usually in its own file
+
+**Naming**
+
+- Same verb rules as ordinary methods — `ResetTransformation`, not `Reset` alone if unclear
+- Method name describes the operation on the extended instance
+
+```csharp
+public static class TransformExtensions
+{
+    public static void ResetTransformation(this Transform transform)
+    {
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+    }
+}
+
+// usage
+target.ResetTransformation();
+```
+
+- Prefer **instance methods on your own types** when you control the class; extensions are for third-party or sealed types.
+- Null-check the `this` target when the API can receive null references.
+
+## Events and event handlers
+
+Events use the **observer pattern**: a subject (publisher) notifies subscribers without tight coupling. Pick one delegate style as a team and stay consistent.
+
+### Event names
+
+- **Verb phrase** in PascalCase that states the state change.
+- **Present participle** ≈ about to happen (`OpeningDoor`); **past participle** ≈ already happened (`DoorOpened`).
+
+### Delegates
+
+- Prefer **`Action` / `Action<T>`** for most gameplay callbacks (void return, 0–16 parameters).
+- `EventHandler` / `EventHandler<TEventArgs>` are fine when the team standardizes on them — do not mix styles ad hoc.
+
+### Who names what
+
+| Role | Naming | Example |
+|------|--------|---------|
+| Event field | verb phrase | `DoorOpened` |
+| Publisher invoke method | `On` + event name | `OnDoorOpened()` |
+| Subscriber handler (optional) | `{Subject}_` + event name | `GameEvents_DoorOpened` |
+
+- **Custom `EventArgs`**: only when you need structured payload beyond `Action<T>` parameters; inherit `EventArgs` or use a dedicated struct.
+
+```csharp
+public event Action DoorOpened;
+
+protected virtual void OnDoorOpened() => DoorOpened?.Invoke();
+
+// subscriber
+void GameEvents_DoorOpened() { … }
+```
+
+## Namespaces
+
+Namespaces avoid clashes with the global namespace, other assemblies, and Asset Store packages.
+
+- **PascalCase** segments separated by `.` — no underscores or special symbols (`GridDungeon.Combat`, not `grid_dungeon`).
+- **Mirror folder structure** so layout matches code (`Assets/GridDungeon/Combat/` → `GridDungeon.Combat`).
+- Use **sub-namespaces** for logical areas — `GridDungeon.GameFlow`, `GridDungeon.AI`, `GridDungeon.UI`.
+- Put **`using`** directives at the top of the file to avoid repeating the full prefix.
+- When two namespaces define the same short type name, **fully qualify** one side (`Player.Controller` vs `Enemy.Controller`) or alias with `using` — do not rely on ambiguous bare names.
+
+```csharp
+namespace GridDungeon.Combat
+{
+    public class DamageResolver { … }
+}
+
+// other file
+using GridDungeon.Combat;
+```
+
+## Serialization (naming)
+
+Inspector exposure and `[Serializable]` layout: see **`unity-csharp-formatting`**. Here: use `[SerializeField]` on private `m_` fields, not `public` serialized fields.
+
+```csharp
+// ❌ BAD
+public float speed;
+
+// ✅ GOOD
+[SerializeField] float m_speed;
+public float Speed => m_speed;
+```
+
+Match existing file style unless you are refactoring that area.

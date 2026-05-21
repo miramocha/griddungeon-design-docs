@@ -1,0 +1,39 @@
+---
+description: Code smells and common Unity pitfalls (Unity style guide)
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# Common pitfalls (Unity style guide)
+
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6).
+
+Clean code is **deliberate teamwork**, not accident. Unclean code still happens — stay on the hunt. A **code smell** is a warning sign, not always a bug. Investigate when you see these:
+
+| Smell | What to check | See |
+|-------|----------------|-----|
+| **Enigmatic naming** | Names should state intent without a comment | `unity-csharp-naming` |
+| **Needless complexity** | God types, long methods, over-anticipating future needs | Split into focused classes — SRP in `unity-clean-code-principles` |
+| **Inflexibility** | One small change forces edits everywhere | Often multiple responsibilities on one type — SRP |
+| **Fragility** | Tiny change breaks unrelated systems | Hidden coupling; missing tests; shared mutable state |
+| **Immobility** | Code cannot be reused without dragging many dependencies | Inject or narrow interfaces; decouple from scene singletons |
+| **Duplicate code** | Copy-paste blocks diverge over time | Extract once, call many — DRY in `unity-clean-code-principles` |
+| **Excessive commentary** | Line-by-line narration of obvious code | Rename/refactor/split; comment **why** only — `unity-csharp-comments` |
+
+Smells overlap (a God class is often fragile *and* inflexible). Fix the underlying design, not the symptom alone.
+
+## Unity-specific traps
+
+Worth extra scrutiny in this project:
+
+| Trap | Prefer |
+|------|--------|
+| `Find*` / `GetComponent` every frame | Resolve once; cache references |
+| Listeners, coroutines, tweens after disable | Clean up in `OnDisable` / `OnDestroy` |
+| `public` fields for Inspector only | `[SerializeField]` + `m_` fields |
+| Shared `ScriptableObject` mutated at runtime | Instances or explicit runtime data objects |
+| `tag == "Player"` | `CompareTag("Player")` |
+| Editor APIs in player builds | `#if UNITY_EDITOR` or Editor assemblies |
+| UI: per-frame `Q()`, inline styles | Cached queries; BEM in USS — `unity-ui-toolkit` |
+
+When touching legacy code, address smells in the area you are already changing — avoid unplanned repo-wide cleanups.

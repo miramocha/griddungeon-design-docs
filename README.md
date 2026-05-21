@@ -7,6 +7,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 ## How to use these docs
 
+- **Cursor rules** — [`.cursor/rules/`](.cursor/rules/) — Unity clean-code rules (hard-linked from `griddungeon-game`) plus [architecture-design-principles](.cursor/rules/architecture-design-principles.mdc) for class/phase design in this repo
 - **Vision & loop** — why the game exists and what one session feels like
 - **Systems** — rules engines (movement, mapping, combat, party, hub)
 - **Content** — strata, floors, monsters, FOE placement

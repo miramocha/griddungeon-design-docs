@@ -1,0 +1,79 @@
+---
+description: Unity clean-code principles (SRP, DRY, KISS, YAGNI, consistency)
+alwaysApply: true
+---
+
+# Clean code principles (Unity style guide)
+
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Complements `unity-csharp-naming`, `unity-csharp-formatting`, `unity-csharp-comments`, and `unity-common-pitfalls`.
+
+## Single responsibility (SRP)
+
+**Keep classes short.** Each module, class, or method should have **one reason to change** — one clear job.
+
+- Split by concept, not by file size alone: a Pong-style game gets `Paddle`, `Ball`, `Wall` — not one `GameManager` that moves paddles, bounces the ball, draws UI, and plays audio.
+- When a `MonoBehaviour` accumulates unrelated duties (input, scoring, VFX, save/load), **extract types** instead of growing sections or adding `#region` (see `unity-csharp-formatting` class organization).
+- Apply SRP to methods too: if a function name needs "And" in the middle, consider a second function or class.
+
+```csharp
+// ❌ BAD — one type owns unrelated concerns
+class GameManager : MonoBehaviour
+{
+    void Update() { ReadInput(); MovePaddles(); CheckScore(); }
+}
+
+// ✅ GOOD — focused types
+class Paddle : MonoBehaviour { … }
+class Ball : MonoBehaviour { … }
+class ScoreKeeper : MonoBehaviour { … }
+```
+
+## DRY — don't repeat yourself
+
+Every piece of knowledge should have **one authoritative place**. Copy-pasted logic diverges; fix bugs once in a shared path.
+
+- Extract **repeated C#** into methods, shared static helpers, base classes, or `ScriptableObject` data — not a third nearly identical `MonoBehaviour`.
+- Reuse **Unity assets** (prefabs, materials, animation clips) instead of duplicating hierarchy setup in multiple scenes.
+- **Rule of three**: tolerate a single duplication; refactor when the same pattern appears again and the abstraction is obvious.
+- **Balance with YAGNI/KISS**: do not build a generic framework for one call site. DRY applies to *stable* duplication, not speculative reuse.
+
+```csharp
+// ❌ BAD — same damage math in two types
+void PlayerHit() { health -= amount * multiplier; }
+void EnemyHit()  { health -= amount * multiplier; }
+
+// ✅ GOOD — one implementation
+int ApplyDamage(int health, int amount, float multiplier) => …;
+```
+
+## KISS — keep it simple
+
+Choose the simplest solution that solves the problem. Avoid unnecessary abstraction, indirection, or cleverness. Computing is hard enough without over-engineering.
+
+## YAGNI — you aren't gonna need it
+
+Implement features when you need them, not when you might need them later. Build the smallest thing that works now.
+
+Reuse Unity and .NET built-ins when they fit (Tilemaps, `UnityEngine.Pool`, etc.) instead of rewriting. The best code is code you do not write.
+
+## Fix causes, not symptoms
+
+Understand the problem before coding. Do not patch around bugs (e.g. a null-guard at the top of a method) without finding why the bad state exists. Ask *why* it happens; trace callers and data flow to the root cause.
+
+## Improve incrementally
+
+Clean code is ongoing maintenance, not a one-time pass. Budget small, regular cleanup. Expect the codebase to drift; prune and refactor as part of normal work.
+
+## Good enough, not perfect
+
+Ship when code meets production standards. Balance new features with cleanup. Refactor when it helps you or the team—not for its own sake.
+
+## Plan, but adapt
+
+Treat the project like a garden, not a fixed blueprint. Designs change as the game grows. Expect to revise, replace, and reorganize code as requirements become clear.
+
+## Be consistent
+
+Once you pick an approach, use it the same way everywhere: naming, casing, folder layout, patterns. Agree as a team, document it (see naming/formatting rules), and follow it in new and touched code.
+
+When editing legacy code, match surrounding style unless you are already refactoring that area.

@@ -1,0 +1,188 @@
+---
+description: Unity 6 C# formatting and layout conventions
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# Unity C# formatting
+
+Based on [Unity's formatting article](https://unity.com/how-to/formatting-best-practices-c-scripting-unity). Apply rules uniformly; resolve disagreements from this guide. IDE enforcement: root `.editorconfig`.
+
+## Properties
+
+Properties expose state through **get/set accessors** (often backed by a private field). Use them to encapsulate data, validate input, or convert units — not as a public field shortcut.
+
+| Style | When | Example |
+|-------|------|---------|
+| Expression-bodied | Single-line **read-only** | `public float Speed => m_speed;` |
+| Auto-implemented | No custom backing field logic | `public int Score { get; private set; }` |
+| Full accessors | Validation, side effects, or multi-line logic | see below |
+
+- **Read-only exposure**: expression-bodied getter returning a backing field, or `{ get; }` / `{ get; private set; }`.
+- **Restrict writes**: `private set` (or `init` when appropriate) instead of public setters you do not need.
+- **Everything else**: `{ get; set; }` blocks — not expression-bodied setters. Align closing braces with opening braces on multi-line property bodies.
+
+```csharp
+float m_health;
+
+// read-only
+public float Health => m_health;
+
+// controlled write
+public int Score { get; private set; }
+
+// validation / multi-line
+public float HealthClamped
+{
+    get => m_health;
+    set => m_health = Mathf.Max(0f, value);
+}
+```
+
+## Class organization
+
+**Goal: short, focused classes** (single responsibility — see `unity-clean-code-principles`). If a type needs many unrelated sections, split it before the file becomes a "god class."
+
+Standardize each type with **member sections** in this order (blank line between sections — see Vertical spacing):
+
+1. **Fields** — constants (`k_`), static (`s_`), then instance (`m_`)
+2. **Properties**
+3. **Events / delegates**
+4. **Unity lifecycle** — `Awake`, `OnEnable`, `Start`, `Update`, `FixedUpdate`, `LateUpdate`, `OnDisable`, `OnDestroy`, etc.
+5. **Public methods**
+6. **Private methods**
+
+**Files:** one `MonoBehaviour` per `.cs` file; **filename = behaviour class name**. Other helper types may live in the same file. Multiple behaviours in one file only if separated by namespaces (unusual — prefer one behaviour per file). Naming details: `unity-csharp-naming`.
+
+```csharp
+public class PlayerController : MonoBehaviour
+{
+    const int k_MaxHp = 100;
+    [SerializeField] float m_speed;
+
+    public float Speed => m_speed;
+    public event Action Died;
+
+    void Awake() { … }
+    void OnEnable() { … }
+    void Update() { … }
+    void OnDisable() { … }
+
+    public void TakeDamage(int amount) { … }
+    void RefreshUI() { … }
+}
+```
+
+## Serialization
+
+Unity serializes object state for scenes, prefabs, and assets. It differs from typical .NET serialization — follow the [Script Serialization](https://docs.unity3d.com/Manual/script-Serialization.html) manual for supported types.
+
+- **Inspector fields**: `public` **or** `[SerializeField]` on private/protected fields — prefer `[SerializeField]` + `m_` naming (see `unity-csharp-naming`).
+- **Not serialized**: `static`, `const`, and `readonly` fields.
+- **`[Range(min, max)]`**: clamp numeric Inspector values; shows as a slider.
+- **Inspector groups**: `[Serializable]` class/struct with public fields, referenced from a behaviour — collapsible sections in the Inspector.
+
+```csharp
+[SerializeField] float m_speed;
+[SerializeField, Range(0f, 100f)] float m_health;
+
+[Serializable]
+public struct CombatStats
+{
+    public float attack;
+    public float defense;
+}
+
+[SerializeField] CombatStats m_stats;
+```
+
+## Braces and indentation
+
+Pick **one** brace style for the whole team — this project uses **Allman** (opening `{` on its own line), per Microsoft / Unity examples. Do not mix **K&R** (brace on same line as header).
+
+- **4 spaces**, spaces not tabs (convert tabs in IDE settings).
+- **Never omit braces**, even for single-line `if`/`for`/`while` — easier breakpoints and safe edits when adding lines later.
+- **Nested blocks**: keep braces on multiline nests even when C# allows omission — avoids dangling-else confusion.
+- **`switch`**: indent `case` bodies; include `default` even when enum cases look exhaustive (guards unexpected values).
+
+```csharp
+// ❌ BAD — K&R and no braces
+for (int i = 0; i < n; i++)
+    DoThing(i);
+
+// ✅ GOOD — Allman + braces
+for (int i = 0; i < n; i++)
+{
+    DoThing(i);
+}
+
+switch (state)
+{
+    case GameState.Playing:
+        Tick();
+        break;
+    default:
+        break;
+}
+```
+
+## Horizontal spacing
+
+Whitespace separates tokens on a line — use it consistently so density stays readable. Prefer **string interpolation** over concatenation or `string.Format`.
+
+| Rule | Do | Don't |
+|------|-----|-------|
+| Commas | `Foo(a, b, c)` | `Foo(a,b,c)` |
+| Method call | `DoThing(arg)` | `DoThing (arg)` |
+| After `(` in call | no space before args | `Foo( arg )` |
+| Brackets | `array[0]` | `array[ 0 ]` when avoidable |
+| Flow keywords | `if (x == 0)` | `if(x==0)` |
+| Comparisons | `a == b`, `i < n` | `a==b` |
+| Line width | break near **80–120** chars | one endless line |
+
+- **Indentation** expresses hierarchy (see Braces) — do not rely on column-aligning variable names across declarations; pairing type and name gets harder.
+- **Column alignment** is optional only for dense structs, flag blocks, or similar — formatters may reflow it.
+
+```csharp
+// ❌ BAD
+Calculate (m_health,m_armor);
+if(count>0)Process();
+items[ index ];
+
+// ✅ GOOD
+Calculate(m_health, m_armor);
+if (count > 0)
+{
+    Process();
+}
+items[index];
+```
+
+## Vertical spacing and regions
+
+Use blank lines to show structure — keep related code together, separate unrelated blocks.
+
+- **Group related methods** so readers do not jump around the file (`Tick`, `FixedTick`, `LateTick` adjacent).
+- **Separate major sections** with one or two blank lines when it helps (follow **Class organization** order):
+  - fields → properties → events → lifecycle → methods
+  - nested types / interfaces in the same file
+  - long `if` / `else` chains (sparingly)
+- Use vertical space **minimally** — only where it aids scanning; document team habits if you standardize double blanks anywhere.
+
+### `#region`
+
+`#region` collapses hunks in the IDE but hides structure. **Prefer smaller classes** over regions when a file grows. If the team allows regions, use them rarely and name them clearly; many teams treat regions as a smell — this project **defaults to no `#region`**.
+
+```csharp
+[SerializeField] float m_speed;
+[SerializeField] float m_health;
+
+void Update()
+{
+    TickMovement();
+    TickCombat();
+}
+
+void TickMovement() { … }
+void TickCombat() { … }
+```

@@ -1,0 +1,94 @@
+---
+description: UI Toolkit UXML, USS, and C# binding conventions
+globs: "**/*.{uxml,uss}"
+alwaysApply: false
+---
+
+# UI Toolkit (Unity style guide)
+
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). C# scripts: `unity-csharp-naming` + `unity-csharp-formatting`. **UXML/USS class names use BEM**, not C# PascalCase.
+
+## Separation of concerns
+
+| Layer | Responsibility |
+|-------|----------------|
+| **UXML** | Structure, hierarchy, `name` hooks for queries — minimal inline style |
+| **USS** | Layout, colors, states, responsive rules |
+| **C#** | Behaviour, data binding, events — `MonoBehaviour` / presenter beside `UIDocument` |
+
+Do not embed game logic in UXML. Do not hardcode colours in UXML when a USS class exists.
+
+## BEM naming (UXML + USS classes)
+
+Unity recommends **Block Element Modifier (BEM)** for classes in UXML and USS (same spirit as modern CSS).
+
+Pattern: `block-name__element-name--modifier-name`
+
+| Part | Meaning | Example |
+|------|---------|---------|
+| **Block** | Standalone UI component | `combat-log` |
+| **Element** | Part of a block (`__`) | `combat-log__entry` |
+| **Modifier** | Variant/state (`--`) | `combat-log--collapsed`, `combat-log__entry--selected` |
+
+Use **kebab-case** within each segment. A BEM name should convey **what** it is, **where** it lives, and **how** it differs from siblings.
+
+- Apply BEM to **`class`** attributes in UXML and selectors in USS — not to C# type names.
+- **UXML `name`** (for `Q()`): stable kebab-case id per element — may mirror the element segment (`combat-log__round` → `name="combat-log-round"`) but need not duplicate every modifier class.
+- **C# types**: PascalCase — `CombatLogView`
+- **Assets**: `CombatHud.uxml`, `CombatHud.uss`, `CombatHudView.cs`
+
+## UXML
+
+- One root screen / panel per primary UXML; reuse **templates** (`<ui:Instance>` / UXML templates) for repeated chunks.
+- Assign every element you query in code a **`name`**; avoid querying by fragile class-only paths across refactors.
+- Prefer **USS classes** over duplicated inline `style=""` attributes.
+
+```xml
+<!-- ✅ GOOD — BEM classes -->
+<ui:VisualElement name="combat-log" class="combat-log">
+    <ui:Label name="combat-log-round" class="combat-log__round" text="Round 1" />
+    <ui:ScrollView class="combat-log__entries combat-log__entries--dense" />
+</ui:VisualElement>
+```
+
+## USS
+
+- Selectors target **BEM classes** — `.combat-log { }`, `.combat-log__entry { }`, `.combat-log__entry--selected { }`
+- **Theme / variables** for shared colours, spacing, fonts — `var(--spacing-md)` on blocks.
+- Prefer **modifiers** (`--selected`, `--disabled`) over ad-hoc class names like `.selected-red`.
+- Pseudo-states: `:hover`, `:active` on BEM blocks/elements where USS supports them.
+- Keep selectors **shallow** — prefer one BEM class per node over long descendant chains.
+
+## C# bindings
+
+- Cache `VisualElement` / control references in `OnEnable` or after `rootVisualElement` is ready — no per-frame `Q` unless necessary.
+- Subscribe in `OnEnable` / `RegisterCallback`, **unsubscribe** in `OnDisable` / `UnregisterCallback`.
+- Toggle state with **BEM modifier classes** (`element.AddToClassList("combat-log__entry--selected")`) before inline styles.
+- Custom controls: inherit `VisualElement`, use `UxmlElement` / `UxmlFactory` + `UxmlTraits` (Unity 6) for designer-friendly UXML.
+
+```csharp
+// naming: PascalCase type; query by kebab-case name matching UXML name=""
+public class CombatHudView : MonoBehaviour
+{
+    Label m_roundLabel;
+
+    void OnEnable()
+    {
+        var root = GetComponent<UIDocument>().rootVisualElement;
+        m_roundLabel = root.Q<Label>("combat-log-round");
+    }
+}
+```
+
+## Project layout (recommended)
+
+```
+Assets/.../UI/
+  Screens/       — feature UXML/USS pairs
+  Themes/        — default Theme StyleSheet, tokens
+  Scripts/       — views / presenters
+```
+
+Align namespaces with folders (`GridDungeon.UI.Combat`). Match existing layout if the repo already defines one.
+
+When editing legacy UI, match surrounding UXML/USS patterns unless refactoring that screen.
