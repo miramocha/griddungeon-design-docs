@@ -23,7 +23,7 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 ## Test plan (verified YYYY-MM-DD)
 
 ### Automated
-- [ ] Unity Test Runner → Edit Mode → `<TestClass>` — all green
+- [ ] Unity Test Runner → Edit Mode → `<Category>` → `<TestClass>` — all green (categories: game repo [Assets/Tests/README.md](../../../griddungeon-game/Assets/Tests/README.md))
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
