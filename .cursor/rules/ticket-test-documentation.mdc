@@ -43,9 +43,9 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 
 ## Grid Dungeon defaults (exploration)
 
-Unless the ticket changes timings, assume **Normal** preset ([ADR 018](../decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../decisions/001-grid-movement.md).
+Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 018](../../griddungeon-design-docs/decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../../griddungeon-design-docs/decisions/001-grid-movement.md).
 
-**Dev bootstrap:** implemented in `griddungeon-game` — menu **GridDungeon → Scenes → Create Dev Bootstrap**; **F2** Exploration.
+**Dev bootstrap:** `GridDungeon → Scenes → Create Dev Bootstrap` if scene refs are stale; **F1** Hub / **F2** Exploration / **F3** Combat.
 
 ## Agent / PR workflow
 

@@ -30,6 +30,8 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 | `unity-ui-toolkit.mdc` | UI Toolkit bindings |
 | `architecture-design-principles.mdc` | **Design-docs only** — maps principles → MVP1 architecture types |
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
+| `pre-commit-csharp-code-review.mdc` | **Shared** — review C# diff before agent-created commits (skipped in docs-only repos) |
+| `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before review/commit |
 
 ## Architecture mapping
 

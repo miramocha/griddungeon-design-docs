@@ -21,7 +21,9 @@ $ruleNames = @(
     "unity-csharp-formatting.mdc",
     "unity-csharp-naming.mdc",
     "unity-ui-toolkit.mdc",
-    "ticket-test-documentation.mdc"
+    "ticket-test-documentation.mdc",
+    "pre-commit-csharp-code-review.mdc",
+    "pre-commit-csharpier-format.mdc"
 )
 
 foreach ($name in $ruleNames) {
