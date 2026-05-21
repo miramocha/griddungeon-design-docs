@@ -54,21 +54,19 @@ Exploration steps do **not** charge Union.
 | **Aux** | Do not participate (MVP1) |
 | **Skill list** | Navigator kit + guild-unlocked common Union skills |
 
-### Timing — start of combat round
+### Timing — core turn action (MVP1)
 
-**Union phase** runs before AGI turn phase:
+When the Union bar is **100%**, a **core member** on their AGI turn may use **Union** instead of attack/guard/skill/item:
 
-1. If bar is 100%, player picks a Union skill from **Navigator’s** available list.
-2. Navigator executes; living core members join per skill rules.
-3. Resolve effects; bar → 0%.
-4. Begin **AGI turn phase** (core, aux, enemies only — Navigator has no turn).
+1. Player picks a Union skill from the **Navigator’s** available list (Navigator executes; living core join per skill rules).
+2. Resolve effects; bar → **0%**; that character’s turn ends (normal queue advance).
+3. Other core/enemy/summon turns continue in AGI order.
 
-Only **one Union skill** per combat round.
+Only **one Union use** while the bar is full (spend resets the bar).
 
 ```
 Combat round:
-  Union phase (Navigator, optional, bar = 100%)
-  → AGI turn phase (core + aux + enemies)
+  AGI turn phase (core may choose Union when bar = 100%)
   → End of round
 ```
 

@@ -24,6 +24,7 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 |------|---------|
 | `unity-clean-code-principles.mdc` | SRP, DRY, KISS, YAGNI (always apply) |
 | `unity-csharp-naming.mdc` | Names for C# sketches in class design docs |
+| `unity-csharp-language.mdc` | C# 9 subset — no `init`, `record`, etc. |
 | `unity-csharp-formatting.mdc` | Layout / class organization |
 | `unity-csharp-comments.mdc` | Comment style |
 | `unity-common-pitfalls.mdc` | Unity gotchas |

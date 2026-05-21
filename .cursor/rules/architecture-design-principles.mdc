@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Architecture design principles (MVP1)
 
-Applies when editing **design docs** and **class architecture** in this repo. Implementation C# follows the shared Unity rules (`unity-clean-code-principles.mdc`, hard-linked from `griddungeon-game`).
+Applies when editing **design docs** and **class architecture** in this repo. Implementation C# follows the shared Unity rules (`unity-clean-code-principles.mdc`, `unity-csharp-language.mdc`, hard-linked from `griddungeon-game`).
 
 Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP1](../../docs/05-class-design-mvp1.md), [ADR 017](../../decisions/017-game-phase-controller.md).
 

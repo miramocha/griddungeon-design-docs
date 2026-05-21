@@ -1,0 +1,66 @@
+---
+description: Unity 6 C# language subset — avoid unsupported or polyfill-only syntax
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# Unity 6 C# language subset
+
+Unity **6000.x** compiles with **C# 9.0** (Roslyn), not the latest .NET SDK. The runtime is **not** .NET 5+ — types like `IsExternalInit` are missing unless you add a polyfill per assembly.
+
+**Authority:** [C# compiler and language version (Unity 6)](https://docs.unity3d.com/6000.4/Documentation/Manual/csharp-compiler.html)
+
+## Do not use (unsupported or breaks asmdefs)
+
+| Feature | Why | Use instead |
+|---------|-----|-------------|
+| `init` accessors | CS0518 / listed unsupported | `set`, constructor, or factory |
+| `record` / `record struct` | Needs `IsExternalInit`; poor fit for Unity serialization | `sealed class` / `struct` DTOs |
+| `required` members | Newer C# / runtime gaps | Constructor validation, `[SerializeField]` + defaults |
+| File-scoped namespaces | Not in Unity’s supported subset | Block `namespace { }` |
+| Module initializers, covariant returns, etc. | [Listed unsupported](https://docs.unity3d.com/6000.4/Documentation/Manual/csharp-compiler.html) | Supported alternatives only |
+
+## Prefer for DTOs and results
+
+```csharp
+// ❌ BAD — init / record
+public sealed record UnionResolveResult
+{
+    public IReadOnlyList<CombatActionResult> TargetResults { get; init; }
+}
+
+// ✅ GOOD — classic property + object initializer
+public sealed class UnionResolveResult
+{
+    public IReadOnlyList<CombatActionResult> TargetResults { get; set; } =
+        Array.Empty<CombatActionResult>();
+}
+```
+
+## Nullable, async, pattern matching
+
+- **Nullable reference types** — OK; project enables `-nullable:enable` in `Assets/csc.rsp`.
+- **Async/await** — OK where Unity APIs allow; don’t assume full .NET BCL on all targets.
+- **Pattern matching, switch expressions, `readonly struct`** — OK when they compile under C# 9.
+
+## Custom asmdefs (`GridDungeon.Core`, tests)
+
+Separate assemblies do **not** inherit Unity’s default polyfills. If code must use `init`/`record` (discouraged), add **one** internal polyfill **per asmdef**:
+
+```csharp
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit { }
+}
+```
+
+Default team choice: **avoid** `init`/`record` rather than maintaining polyfills.
+
+## Do not “upgrade” language version casually
+
+- Do **not** set `-langVersion:10` (or higher) in `csc.rsp` without team agreement and full recompile/IL2CPP smoke tests.
+- Changing **API Compatibility Level** is a separate, higher-risk migration — it does not make `init` officially supported.
+
+## Agent / codegen
+
+When generating C# under `Assets/Scripts` or `Assets/Tests`, use this subset. Complements `unity-csharp-naming`, `unity-csharp-formatting`, `unity-clean-code-principles`.

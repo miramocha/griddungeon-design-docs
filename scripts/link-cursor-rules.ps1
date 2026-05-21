@@ -20,6 +20,7 @@ $ruleNames = @(
     "unity-csharp-comments.mdc",
     "unity-csharp-formatting.mdc",
     "unity-csharp-naming.mdc",
+    "unity-csharp-language.mdc",
     "unity-ui-toolkit.mdc",
     "ticket-test-documentation.mdc",
     "pre-commit-csharp-code-review.mdc",

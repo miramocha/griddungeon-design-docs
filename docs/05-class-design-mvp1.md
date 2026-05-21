@@ -779,9 +779,9 @@ class UnionSystem : MonoBehaviour
     void OnCoreActed(Combatant actor, NavigatorDefinition nav);
 
     // Called by CombatController at round start when bar == 1
-    bool TryBeginUnionPhase(string unionSkillId, out UnionSkillData skill);
+    bool TryUseUnionSkill(string unionSkillId, out UnionSkillData skill);
 
-    void SpendBar();   // → 0 after Union phase
+    void SpendBar();   // → 0 after Union use
 }
 ```
 
@@ -806,7 +806,9 @@ class CombatController : MonoBehaviour
     event Action<BattleResult> OnBattleEnded;
 }
 
-enum CombatPhase { Idle, UnionPhase, TurnPhase, EndOfRound }
+enum CombatPhase { Idle, TurnPhase, EndOfRound }
+
+// Union: CombatCommand.Union + SkillId (union_strike / union_mend) on core turn when bar == 1
 
 class CombatEntryContext
 {
@@ -825,7 +827,7 @@ class CombatAction
     string? TargetId;          // combatant id
 }
 
-enum CombatCommand { Attack, Guard, Skill, Item, Flee }
+enum CombatCommand { Attack, Guard, Skill, Item, Union, Flee }
 
 class CombatActionResult
 {

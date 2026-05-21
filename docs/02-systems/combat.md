@@ -35,11 +35,10 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 ### Round flow
 
-1. **Union phase** (optional) — if [Union bar](union.md) is 100%, **[Navigator](navigator.md)** invokes one Union skill; core participate; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)).
-2. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
-3. Display queue icons (portraits; aux uses distinct frame).
-4. **Turn phase** — each actor takes one action in AGI order (actions charge Union bar when below 100%).
-5. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
+1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
+2. Display queue icons (portraits; aux uses distinct frame).
+3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Union bar](union.md) is 100%, player may use **Union** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions charge the Union bar when below 100%.
+4. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
 
 **Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).
 
@@ -52,7 +51,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 | Skill | Class skill; may **place summon** in aux slot |
 | Item | Usable consumables |
 | Flee | May fail; see [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) for retreat cell rule |
-| Union | **Navigator only**; bar 100%; Union phase (not an AGI turn) |
+| Union | **Navigator executes**; bar 100%; uses the acting **core** member’s AGI turn (`CombatCommand.Union` + skill id) |
 
 ## Commands (summon / guest)
 
