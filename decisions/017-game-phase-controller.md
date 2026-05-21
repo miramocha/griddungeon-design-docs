@@ -5,7 +5,7 @@
 
 ## Context
 
-MVP1 alternates between **hub**, **exploration**, and **combat** ([mvp1-spec](../docs/mvp1-spec.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (Union → AGI turns → end of round).
+MVP1 alternates between **hub**, **exploration**, and **combat** ([mvp1-spec](../docs/mvp1-spec.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
 
 Requirements:
 
@@ -24,7 +24,7 @@ Requirements:
    - `ExplorationPhaseController` — `DungeonExplorer`, `MapSystem`, `FoeSystem`, gather, random encounters
    - `CombatPhaseController` — `CombatController`, `CombatScenePresenter`; hides exploration view
 5. **`GameState`** (Runtime `MonoBehaviour`) is the **composition root** on a persistent `Game` object: holds subsystem references, owns `GamePhaseController`, delegates transitions; does **not** embed all phase logic inline.
-6. **Combat sub-phases** (`UnionPhase`, `TurnPhase`, `EndOfRound`) stay on **`CombatController`** only — not on `GamePhaseController`.
+6. **Combat sub-phases** (`TurnPhase`, `EndOfRound`; Protocol via `CombatCommand.Protocol` on a core turn) stay on **`CombatController`** only — not on `GamePhaseController`.
 7. **Optional later:** thin UVS graph that **reacts** to `PhaseChanged` for fades/camera only; must not decide transitions or game rules.
 
 ## Transition table (macro)

@@ -40,7 +40,7 @@ Applies to: basic attacks, common elemental spells, heals, buffs, most enemy ski
 
 
 
-**Some spells** use **dynamic animation and camera** — boss attacks, ultimates, key Union moments, rare party skills.
+**Some spells** use **dynamic animation and camera** — boss attacks, ultimates, key Protocol moments, rare party skills.
 
 
 
@@ -54,11 +54,11 @@ Cinematics are **sparse** (a few per stratum) so they stay special. Two profiles
 
 | **`Cinematic`** | Watch (optional skip) | Story beats, enemy telegraphs, first-time spectacle |
 
-| **`CinematicQTE`** | **Button prompts** during sequence | Party ultimates, climax boss skills, high-impact Union |
+| **`CinematicQTE`** | **Button prompts** during sequence | Party ultimates, climax boss skills, high-impact Protocol |
 
 
 
-**Design intent for QTE:** Make cinematics **meaningful**, not a passive cutscene. Input is **bonus**, not gate — the skill **always resolves** at base power; prompts reward timing with extra damage, crit chance, or a small rider effect (extra hit, buff tick, Union charge bump).
+**Design intent for QTE:** Make cinematics **meaningful**, not a passive cutscene. Input is **bonus**, not gate — the skill **always resolves** at base power; prompts reward timing with extra damage, crit chance, or a small rider effect (extra hit, buff tick, Synchro charge bump).
 
 
 
@@ -130,7 +130,7 @@ Prompts reuse [combat input](input-bindings.md#cinematic-qte) keys where possibl
 
 |--------|------|-------|
 
-| **Party / Union** | Optional per skill (`CinematicQTE`) | Yes — `Esc` or `Space` hold after first clear |
+| **Party / Protocol** | Optional per skill (`CinematicQTE`) | Yes — `Esc` or `Space` hold after first clear |
 
 | **Enemy / boss** | **No** player QTE (watch telegraph) | Yes — always skippable to base damage resolution |
 
@@ -352,7 +352,7 @@ Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowe
 
 | **MVP2** | 1 party `CinematicQTE` + 1 boss `Cinematic` (no QTE); pipeline + UI |
 
-| **Later** | More skills; hold/mouse prompt types; Union cinematic QTE |
+| **Later** | More skills; hold/mouse prompt types; Protocol cinematic QTE |
 
 
 
@@ -372,7 +372,7 @@ See [release scope](../00-release-scope.md). Optional in MVP2 alongside gather/f
 
 - [Input bindings — cinematic QTE](input-bindings.md#cinematic-qte)
 
-- [Union](synchro-protocol.md) — candidate for `CinematicQTE` finishers
+- [Synchro Protocol](synchro-protocol.md) — candidate for `CinematicQTE` finishers
 
 - [04 — Tech notes](../04-tech-notes.md)
 

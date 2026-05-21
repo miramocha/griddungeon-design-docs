@@ -15,7 +15,7 @@ Combat formation extends the core **3+3 guild party** with **one auxiliary slot 
 
 | Slot type | Count | Who |
 |-----------|-------|-----|
-| **Navigator** | 1 active | Party lead; Union + passives; **not** in 3+3 ([navigator](navigator.md)) |
+| **Navigator** | 1 active | Party lead; Synchro Protocol + passives; **not** in 3+3 ([navigator](navigator.md)) |
 | **Core** | 3 front + 3 back | Guild roster; persistent; explore as one party blob |
 | **Aux front** | 1 | One **summon** or **guest** (not both) |
 | **Aux back** | 1 | One **summon** or **guest** (not both) |
@@ -66,7 +66,7 @@ action_script:
 
 **UI on summon turn:** highlight aux portrait → play VFX → combat log line → **presentation lock** releases → next queue entry ([combat UI motion](combat.md#ui-motion--feedback), [tech notes](../04-tech-notes.md#ui-reactivity)).
 
-**Union bar:** Summon actions do **not** charge Union ([union](synchro-protocol.md)).
+**Synchro bar:** Summon actions do **not** charge Synchro ([synchro-protocol](synchro-protocol.md)).
 
 ## Guests
 

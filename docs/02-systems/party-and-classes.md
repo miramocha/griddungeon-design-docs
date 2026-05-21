@@ -6,7 +6,7 @@
 
 **Locked — combat aux:** **+1 front / +1 back** for **summon or guest** only ([summons & guests](summons-and-guests.md), [ADR 004](../../decisions/004-auxiliary-slots.md)).
 
-**Locked — Navigator:** **1 active party lead** off-formation; Union + passives ([navigator.md](navigator.md), [ADR 007](../../decisions/007-navigator-role.md)). **Not** one of the six grid/combat line slots.
+**Locked — Navigator:** **1 active party lead** off-formation; Synchro Protocol + passives ([navigator.md](navigator.md), [ADR 007](../../decisions/007-navigator-role.md)). **Not** one of the six grid/combat line slots.
 
 | Row | Core slots | Aux slot |
 |-----|------------|----------|
@@ -56,11 +56,11 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 
 ## Navigator
 
-See [navigator.md](navigator.md). Swappable party lead; executes [Union](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (MVP1).
+See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (MVP1).
 
-## Union skills
+## Protocol skills (Synchro)
 
-Coordinated team skills via [Union bar](synchro-protocol.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Union kit; guild-common Union skills may unlock via quests/strata (separate from Navigator unlocks).
+Coordinated team skills via [Synchro bar](synchro-protocol.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Protocol kit; guild-common Protocol skills may unlock via quests/strata (separate from Navigator unlocks).
 
 ## Skill trees (EO model)
 
@@ -94,7 +94,7 @@ See [character progression](character-progression.md).
 
 - [Navigator](navigator.md)
 - [Summons & guests](summons-and-guests.md)
-- [Union (team bar)](synchro-protocol.md)
+- [Synchro Protocol (team bar)](synchro-protocol.md)
 - [Combat](combat.md)
 - [Character progression](character-progression.md)
 - [Hub & services](hub-and-services.md)

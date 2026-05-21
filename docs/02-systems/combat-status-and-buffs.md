@@ -1,6 +1,6 @@
 # Combat Status, Buffs & Debuffs
 
-Rules for **ailments**, **stat modifiers**, and **battle modifiers** during AGI combat. EO-first: limb **binds**, turn-skipping control, timed **Boost/Down** stats, end-of-round ticks. **Boost/Break** (EO2 Force) remains out of scope — see [Union](synchro-protocol.md).
+Rules for **ailments**, **stat modifiers**, and **battle modifiers** during AGI combat. EO-first: limb **binds**, turn-skipping control, timed **Boost/Down** stats, end-of-round ticks. **Boost/Break** (EO2 Force) remains out of scope — see [Synchro Protocol](synchro-protocol.md).
 
 ## Who can be affected
 
@@ -163,7 +163,7 @@ skill.InflictStatus?
 
 - **Chance:** skill defines `inflictChance` (0–100%) and `duration` (turns).
 - **Boss immunity:** `StatusImmune: sleep, panic` flags per encounter.
-- **Cleanse:** Medic skills, items, Union skills (if designed) remove by category or specific ID.
+- **Cleanse:** Medic skills, items, Protocol skills (if designed) remove by category or specific ID.
 
 ### Resistance sources
 
@@ -183,7 +183,7 @@ Resist reduces **inflict chance**, not damage (unless a debuff specifically says
 | System | Interaction |
 |--------|-------------|
 | **AGI queue** | Speed Up/Down recalculates **effective AGI** when queue is built each round |
-| **Union phase** | Union skills can buff party before AGI turns; not stripped by Panic (Navigator not panicking) |
+| **Protocol (core turn)** | Protocol skills on a core turn when Synchro is 100%; Navigator executes; not stripped by Panic (Navigator not panicking) |
 | **Targeting** | Sleep/Paralysis: target still **valid** but skips turn; dead excluded |
 | **FOE mid-battle join** | Joining enemy enters with **no** party debuffs; can be buffed by enemy skills same round |
 | **Flee** | Allowed unless Panic randomizes away; binds do not block Flee |

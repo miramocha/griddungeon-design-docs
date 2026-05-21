@@ -9,7 +9,7 @@ Chart an unknown labyrinth from the first person — one grid step at a time. Th
 1. **Living map** — Floor, walls, doors, stairs, and FOEs reveal through exploration; map UI is read-only (no drawing tools).
 2. **Grid exploration** — Discrete steps and turns; no action combat. Dungeon view + map panel work together.
 3. **FOE tension** — Visible threats on the grid; routing around stronger FOEs is valid play.
-4. **Guild party build** — Six core slots (3+3), aux summons/guests, swappable **Navigator** (Union + passives, off-formation).
+4. **Guild party build** — Six core slots (3+3), aux summons/guests, swappable **Navigator** (Synchro Protocol + passives, off-formation).
 5. **Hub pacing** — Town services between dives; depth is a deliberate choice, not a marathon.
 
 ## Inspirations
@@ -34,16 +34,16 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 - **Manual map drawing tools** (walls, icons, notes, eraser)
 - Action combat, QTEs, or real-time party control in battles
 - Full 3D hub walk (menu hub is fine for MVP1)
-- **Boost/Break** — out of scope; [Union](02-systems/synchro-protocol.md) covers team burst
+- **Boost/Break** — out of scope; [Synchro Protocol](02-systems/synchro-protocol.md) covers team burst
 - Subclass systems until core loop is proven
 - **Dungeon gather / fishing minigames** — **MVP2** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))
-- Per-character Union gauges (using **team Union bar** instead — see [union](02-systems/synchro-protocol.md))
+- Per-character burst gauges (using **team Synchro bar** instead — see [synchro-protocol](02-systems/synchro-protocol.md))
 - Navigator leveling, equipment, or aura tiers ([navigator](02-systems/navigator.md) is unlock-only)
 
 ## Out of scope (project)
 
 - **Online multiplayer, co-op, and async shared play** — single-player only
-- **Boost/Break** (EO2 Force-style) — replaced by Union + Navigator
+- **Boost/Break** (EO2 Force-style) — replaced by Synchro Protocol + Navigator
 - **Exploration TP / step limits** (EO2-style) — unlimited labyrinth movement
 - **Console/mobile** as primary — **PC first** ([ADR 008](../decisions/008-campaign-defaults.md))
 

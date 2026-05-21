@@ -24,13 +24,13 @@ Unity **6000.x** compiles with **C# 9.0** (Roslyn), not the latest .NET SDK. The
 
 ```csharp
 // ❌ BAD — init / record
-public sealed record UnionResolveResult
+public sealed record ProtocolResolveResult
 {
     public IReadOnlyList<CombatActionResult> TargetResults { get; init; }
 }
 
 // ✅ GOOD — classic property + object initializer
-public sealed class UnionResolveResult
+public sealed class ProtocolResolveResult
 {
     public IReadOnlyList<CombatActionResult> TargetResults { get; set; } =
         Array.Empty<CombatActionResult>();

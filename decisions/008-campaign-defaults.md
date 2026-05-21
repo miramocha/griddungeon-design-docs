@@ -8,7 +8,7 @@
 1. **FOE respawn:** When party **returns to hub** and re-enters a floor, **FOEs respawn** to authored positions (map progress persists).
 2. **Exploration limits:** **Unlimited steps** — no TP/food clock for labyrinth movement (EO2-style limits out of scope).
 3. **Target platform:** **PC** first (keyboard + mouse; gamepad optional later).
-4. **Boost/Break:** **Out of scope** — [Union team bar](006-union-team-bar.md) + [Navigator](007-navigator-role.md) cover team burst.
+4. **Boost/Break:** **Out of scope** — [Synchro Protocol](006-union-team-bar.md) + [Navigator](007-navigator-role.md) cover team burst.
 
 ## Related
 

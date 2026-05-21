@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-21  
-**Supersedes working name in:** [ADR 006 — Union team bar](006-union-team-bar.md) (mechanics unchanged)
+**Supersedes working name in:** [ADR 006 — Team burst bar](006-union-team-bar.md) (mechanics unchanged)
 
 ## Context
 

@@ -93,7 +93,7 @@ Sequence:
 2. Hide or dim `DungeonView` (disable FPV camera, optional blur on last frame capture — cosmetic).
 3. Enable `CombatLayer`: load backdrop, spawn enemies on slots from `EncounterGroup`.
 4. Fade in battle UI + `BattleCameraRig` default pose.
-5. Start Union phase or AGI round.
+5. Start AGI round (Protocol on core turn when Synchro is 100%).
 
 ### Exit
 

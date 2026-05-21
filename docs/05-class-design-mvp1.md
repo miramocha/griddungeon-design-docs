@@ -1265,7 +1265,7 @@ These string IDs must be stable across code and SO assets.
 | Type | ID | Notes |
 |------|----|-------|
 | Class | `vanguard`, `breaker`, `medic`, `summoner`, `marksman`, `tactician` | Day-one roster |
-| Navigator | `guild_handler` | Unlocked day one; aura: `unionGainBonus = 0.05` |
+| Navigator | `guild_handler` | Unlocked day one; aura: `synchroGainBonus = 0.05` |
 | Protocol skill | `protocol_strike`, `protocol_mend` | Damage all / heal all |
 | Summon | `test_drone` | Summoner-only; 3 turns; scripted |
 | Summon skill | `deploy_test_drone` | Uses `SummonDefinition.test_drone`, aux back |

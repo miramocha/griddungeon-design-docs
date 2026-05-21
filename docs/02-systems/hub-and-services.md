@@ -7,7 +7,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | Service | Function |
 |---------|----------|
 | **Explorers Guild** | Create/recruit **core** characters; register **6-member** party; allocate **skill points**; view class skill trees |
-| **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Union kit ([navigator](navigator.md)) |
+| **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit ([navigator](navigator.md)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
 | **Inn / Camp desk** | Save game (primary save point) |
@@ -36,8 +36,8 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 |---|---------------------|------------------------|
 | **Who** | Six **core** guild members | **Navigators** (party leads, off-formation) |
 | **Recruitment** | Yes — create/recruit core roster | **No** — unlock via strata / quests / events |
-| **Party prep** | Formation, equipment, skill trees | Pick **one active** Navigator + aura/Union preview |
-| **In labyrinth** | Fight, explore, earn XP | Union execution + passives only |
+| **Party prep** | Formation, equipment, skill trees | Pick **one active** Navigator + aura/Protocol preview |
+| **In labyrinth** | Fight, explore, earn XP | Protocol execution + passives only |
 
 Prepare at **both** before entering the stratum (order in UI flexible).
 
@@ -90,5 +90,5 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 - [01 — Core loop](../01-core-loop.md)
 - [Character progression](character-progression.md)
 - [Navigator](navigator.md)
-- [Union (team bar)](synchro-protocol.md)
+- [Synchro Protocol (team bar)](synchro-protocol.md)
 - [03 — Dungeons & encounters](../03-content/dungeons-and-encounters.md)

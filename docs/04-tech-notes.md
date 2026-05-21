@@ -26,7 +26,7 @@ Third-party plugins and asset store packs must declare **Unity 6 + URP** compati
 | FPV dungeon walls/floor/doors | Custom fullscreen blit with no graph equivalent |
 | Battle arena backdrop & slot lighting | Compute-style pass (if used) |
 | Character/enemy sprites — lit/unlit | Extremely hot path after profiling |
-| Hit flash, poison tint, Union burst VFX | Porting legacy `.shader` until rebuilt in Graph |
+| Hit flash, poison tint, Synchro burst VFX | Porting legacy `.shader` until rebuilt in Graph |
 | UI-adjacent fullscreen tints | |
 
 **Conventions**
@@ -42,7 +42,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 
 | Use DOTween | Use Timeline |
 |-------------|--------------|
-| Grid step lerp, bump nudge, FOE slide-in | Boss / Union `Cinematic` beats |
+| Grid step lerp, bump nudge, FOE slide-in | Boss / Protocol `Cinematic` beats |
 | UI fades, map pan, combat log pop | `CinematicQTE` authored camera + timing |
 | Fixed-skill target zoom punch, hit flash, light screen shake | Anything needing keyed tracks / multiple actors |
 
@@ -65,7 +65,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 | **DOTween on Toolkit** | Short tweens on `VisualElement` style/transform (fade, scale punch, slide, fill lerp). Enable DOTween **UI** module. No tween logic in `GridDungeon.Core`. |
 | **State first, motion second** | Apply authoritative values immediately (HP, map cells, queue order); animate **from** the previous visual state. |
 | **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock — play the full highlight → VFX → log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted — pick one per beat in the phase doc tables. |
-| **Duration** | Typical UI feedback **0.1–0.4s**; Union bar fill and HP drops may use **0.2–0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
+| **Duration** | Typical UI feedback **0.1–0.4s**; Synchro bar fill and HP drops may use **0.2–0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
 | **Cleanup** | `Kill` / complete tweens on `OnDisable`, phase exit, and combat end (see [Animation](#animation-dotween--timeline) above). |
 
 **MVP1 checklists by phase:**
@@ -156,7 +156,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Navigator
 
-- `NavigatorDefinition` — aura modifiers, union skill ids, `unlockCondition`
+- `NavigatorDefinition` — aura modifiers, protocol skill ids, `unlockCondition`
 - `PartyRuntime.ActiveNavigatorId`; `UnlockedNavigatorIds` (flags from strata/quests/events)
 - `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
 - Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
@@ -168,7 +168,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - Core turn at Synchro == 1: player picks `protocol_strike` / `protocol_mend` from Navigator kit
 - S1: tutorial FOE unbeatable; `s1_synchro_unlocked` mid-fight; forced `protocol_strike` ends encounter ([synchro-protocol](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe))
 - `ProtocolSkillDefinition` — participant count, effect, presentation id
-- Save: `unionBar` + `activeNavigatorId` per dive
+- Save: `synchroBar` + `activeNavigatorId` per dive
 - FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter
 
 ## Combat scene
