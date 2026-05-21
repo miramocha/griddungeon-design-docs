@@ -52,11 +52,15 @@ Proxies are **schematic**, not a second art pass: solid colors, no PBR. Optional
 1. **Orthographic camera** (north-up, 1 unit = 1 cell) renders **only `MapProxy`** into a `RenderTexture`.
 2. **Fog / reveal:** `MapSystem` drives proxy visibility (enable renderer, material alpha, or shader mask from `Visited` / `WallMask`) — state stays in Core; proxies are view targets.
 3. **UI Toolkit** shows the RT in the exploration HUD; pan/zoom on the UI element and/or ortho size ([ADR 014](014-mvp1-exploration-map.md)).
-4. **Re-render when dirty** on reveal events, not every frame.
+4. Minimap camera **enabled while map is visible** (continuous RT); optional on-demand render when map hidden for perf.
 
-### Overlays (not in RT)
+### Party / FOE markers
 
-Party arrow, facing, and **FOE icons** stay **UIToolkit overlays** on grid coordinates (patrol slide without full RT rebuild). See [mapping — Map UI motion](../docs/02-systems/mapping.md#map-ui-motion).
+**Party arrow** and **FOE icons** are **flat quads** on `MapProxy`, parented to **`PartyPose` / `FOEPose`** at `(x, y, level)` (same pipeline as wall cubes). Minimap camera renders them into the RT; UI Toolkit displays the live RT ([ADR 019](019-floor-verticality.md) — map shows **current `level`** slice in MVP1).
+
+### HUD
+
+UI Toolkit **`Background.FromRenderTexture`** (or equivalent) on the map panel. While the minimap camera is enabled, the texture **updates every frame** — no manual rebake per patrol step.
 
 ### Editor preview
 
@@ -79,3 +83,4 @@ Party arrow, facing, and **FOE icons** stay **UIToolkit overlays** on grid coord
 
 - [Mapping system](../docs/02-systems/mapping.md)
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
+- [ADR 019 — Floor verticality](019-floor-verticality.md)

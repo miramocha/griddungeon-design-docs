@@ -11,10 +11,17 @@
 | Property | Value |
 |----------|-------|
 | Cell size | 1 unit = 1 cell |
-| Coordinates | `(x, y)` + `facing` (N/E/S/W) |
-| Floors | `B1F`, `B2F`, … per stratum |
+| Coordinates | `(x, y, level)` + `facing` (N/E/S/W) — `level` is walkable height band in the floor ([ADR 019](../decisions/019-floor-verticality.md)) |
+| Stratum floors | `B1F`, `B2F`, … per stratum (dungeon floor id, not height `level`) |
 | Doors | Edge or cell flag; player marks on map when found |
-| Special | Stairs, chests, gather points, stratum boss room |
+| Special | Stairs (stratum / height), **jump pads**, chests, gather points, stratum boss room |
+
+### Verticality (Doom-style)
+
+- Multiple **levels** can share the same `(x, y)`; each is a distinct cell.
+- Party moves on one **walkable surface** at a time; **cannot walk under** upper floors / overhangs.
+- **Level changes** only via stairs, ramps, jump pads, or explicit pits — not by normal strafe/forward into “empty air under a bridge.”
+- Example jump pad: **+2 cells forward** (relative to facing), **+1 level up** — one landing step for FOE/encounter rules.
 
 ## Movement rules
 
@@ -83,5 +90,6 @@ PC defaults: `W/S/A/D` move, `Q/E` turn, `Space` interact — see [input binding
 - [Input bindings](02-systems/input-bindings.md)
 - [Mapping](02-systems/mapping.md)
 - [ADR 001](../decisions/001-grid-movement.md)
+- [ADR 019](../decisions/019-floor-verticality.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
 - [03 — Dungeons & encounters](03-content/dungeons-and-encounters.md)

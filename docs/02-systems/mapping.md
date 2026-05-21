@@ -20,7 +20,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 - **Presentation:** schematic **map proxy** cubes (`MapProxy` layer) rendered by a **minimap ortho camera** into a HUD `RenderTexture` — not a capture of the FPV corridor mesh ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--map-proxy--minimap-camera)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
-- Grid 1:1 with dungeon cells; north up.
+- Grid 1:1 with dungeon cells at the party’s current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle post-MVP1 optional.
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
 
@@ -70,4 +70,5 @@ If mapping feels too easy, tune **fog strictness** or **FOE icon fade** — not 
 
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [ADR 002 — Mapping model](../../decisions/002-mapping-model.md)
+- [ADR 019 — Floor verticality](../../decisions/019-floor-verticality.md)
 - [04 — Tech notes](../04-tech-notes.md)

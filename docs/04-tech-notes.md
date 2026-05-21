@@ -123,7 +123,8 @@ GameState (composition root)
 | **Main camera** | FPV camera **excludes** `MapProxy` (or proxies hidden from player view) — player never sees schematic cubes in corridor view |
 | **Output** | Minimap camera → `RenderTexture` → UI Toolkit map panel; refresh on `MapSystem` reveal dirty, not per frame |
 | **Fog** | Hide/disable proxies or shader clip from `FloorMapState.Visited` / `WallMask` |
-| **Party / FOE** | UIToolkit overlays on grid coords; FOE patrol animates overlay without rebaking RT |
+| **Party / FOE** | `MapProxy` quads on `PartyPose` / `FOEPose`; live RT while minimap cam on |
+| **Verticality** | Cell `(x,y,level)`; jump pads / stairs in content; no walk-under ([ADR 019](../decisions/019-floor-verticality.md)) |
 | **Runtime type** | `MapView` binds `IReadOnlyFloorMapState`, triggers proxy/RT refresh; `MapSystem` applies `MapRevealCalculator` |
 
 **Folder convention (game repo):** e.g. `Assets/.../Floors/{floorId}/MapProxy.prefab` or proxy children under floor root; document in floor authoring checklist when content pipeline exists.

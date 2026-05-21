@@ -36,6 +36,7 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | FOE respawn on hub return | [ADR 008](../decisions/008-campaign-defaults.md) |
 | ✅ | Gather node: one-click instant loot (no minigame) | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
 | ⬜ | One test floor 20×20 + stairs | [dungeons & encounters](03-content/dungeons-and-encounters.md) |
+| ⬜ | Floor verticality + jump pads (Doom-style; flat B1F–B3F OK for first ship) | [ADR 019](../decisions/019-floor-verticality.md) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
 
@@ -110,6 +111,7 @@ Full Navigator roster unlocks post-MVP1.
 | Leg bind, paralysis, burn, speed buffs | Post-MVP1 |
 | Traps, encounter suppress | Post-MVP1 |
 | Guest (`MVP1+`) | Stretch |
+| Multi-level minimap layer toggle | Post-MVP1 |
 | Setting name / tone brief | Parallel art |
 
 ---

@@ -81,7 +81,7 @@ enum SkillPresentation { Fixed, Cinematic, CinematicQTE }
 ### Value structs
 
 ```csharp
-readonly struct GridPosition { int X; int Y; /* + operator, Equals */ }
+readonly struct GridPosition { int X; int Y; int Level; /* + operator, Equals; ADR 019 */ }
 readonly struct CellEdge     { GridPosition Cell; FacingDirection Side; }
 ```
 
@@ -486,7 +486,9 @@ class FeatureState
     bool IsInteracted;             // door opened, chest looted
 }
 
-enum FeatureType { StairsDown, StairsUp, Door, Chest, GatherNode }
+enum FeatureType { StairsDown, StairsUp, Door, Chest, GatherNode, JumpPad, HeightStairs }
+
+class JumpPadData { int DeltaForward; int DeltaLevel; }   // e.g. 2 forward, +1 level
 ```
 
 ### FOE instance
