@@ -100,7 +100,7 @@ Full rules: **[combat status & buffs](combat-status-and-buffs.md)**.
 
 | Category | Examples | When it matters |
 |----------|----------|-----------------|
-| **Control ailments** | Sleep, Panic, Paralysis | Turn start — skip or randomize action |
+| **Control ailments** | Sleep, Panic, Paralysis (post-MVP1) | Turn start — skip or randomize action |
 | **Limb binds** | Head / Arm / Leg | Block skills by `Body` tag; Attack blocked if Arm bind |
 | **DoT** | Poison, Burn | End of combat round — HP tick |
 | **Stat mods** | Offense/Defense/Magic/Speed Up & Down, Blind | Damage + AGI queue; refresh same ID, no stack |

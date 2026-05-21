@@ -23,7 +23,7 @@ How encounters **leave exploration FPV** and present **enemies** during AGI comb
 | | Exploration | Combat |
 |---|-------------|--------|
 | **World** | Real floor cells | **Abstract stage** — not the cell mesh |
-| **Enemies** | FOE icon/mesh on **grid cell** | Enemy art on **slot anchors** (0–5) |
+| **Enemies** | FOE icon/mesh on **grid cell** | Enemy art on **slot anchors** (0–4) |
 | **Party** | Abstract (6 as one anchor) | Portraits + optional 3D silhouettes on UI row |
 | **Camera** | Step/turn FPV | Fixed battle camera |
 

@@ -89,7 +89,7 @@ Defer B4F–B5F polish until loop proven.
 | Asset | MVP1 |
 |-------|------|
 | **Navigator** | `guild_handler` — unlocked day one; aura: Union gain +5% |
-| **Union skills** | `union_strike` (damage), `union_guard` (party Defense Up 3 turns) |
+| **Union skills** | `union_strike` (damage), `union_mend` (heal all living core) |
 
 Full Navigator roster unlocks post-MVP1.
 

@@ -5,7 +5,7 @@ Content structured like **Etrian Odyssey strata** — themed zones with multiple
 ## Stratum structure
 
 ```
-Stratum 1: Emerald Grove (B1F–B5F) → Stratum boss
+Stratum 1: Fallen District (B1F–B5F) → Stratum boss
 Stratum 2: Sand Ruins (B6F–B10F) → …
 ```
 
@@ -28,11 +28,11 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 | Floor | Theme | FOE teaching | Gimmick |
 |-------|-------|--------------|---------|
-| B1F | Forest entrance | None / 1 weak stationary FOE | Tutorial walls + stairs |
-| B2F | Dense thicket | 2 FOEs, green tier | Key door loop |
-| B3F | Stream crossing | First step-patrol FOE (`stepsPerMove: 4`) | Damage floor tiles optional |
-| B4F | Old growth | Red-tier FOE guards chest | **MVP2:** chop + first fish pond |
-| B5F | Guardian hall | Stratum boss FOE | Boss room, stairs to Stratum 2 |
+| B1F | Outskirts gate | None / 1 weak stationary FOE | Tutorial walls + stairs |
+| B2F | Collapsed avenues | 2 FOEs, green tier; 1 step-patrol (`stepsPerMove: 4`) | Key door loop |
+| B3F | Flooded underpass | Yellow-tier patrol FOE, narrower paths | Damage floor tiles (post-MVP1) |
+| B4F | Ruined plaza | Red-tier FOE guards chest | **MVP2:** salvage pile + flooded cistern |
+| B5F | Civic fortress | Stratum boss FOE | Boss room, stairs to Stratum 2 |
 
 ## Encounter types
 
@@ -48,16 +48,16 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 ```yaml
 floor: B3F
 foes:
-  - id: forest_stalker
+  - id: alley_stalker
     cell: [12, 8]
     patrol: [[12,8], [12,9], [13,9]]
     stepsPerMove: 3
     tier: yellow
     group: [stalker]
-  - id: ent_guard
+  - id: rubble_guard
     cell: [4, 15]
     tier: red
-    group: [ent, sapling]
+    group: [rubble_guard, scrapling]
 ```
 
 **Tier colors (EO-like):** green (easy), yellow (caution), red (avoid until ready).
@@ -69,18 +69,18 @@ floor: B3F
 rate: 0.12  # per step
 entries:
   - weight: 50
-    group: [forest_rabbit, forest_rabbit]
+    group: [stray_hound, stray_hound]
   - weight: 30
-    group: [venomfly]
+    group: [rust_mite]
   - weight: 20
-    group: [wood_owl, forest_rabbit]
+    group: [gutter_crow, stray_hound]
 ```
 
 ## Traps & gathers
 
 | Type | EO parallel | Scope |
 |------|-------------|-------|
-| Damage tile | Slip roots, thorns | MVP1 |
+| Damage tile | Broken glass, exposed rebar | Post-MVP1 |
 | Gather / mine / forage | Chopping/mining — **minigame** | **MVP2** |
 | Fish | Pond/stream — **fishing minigame** | **MVP2** |
 | Chest | Loot; auto-marks on map when opened | MVP1 |
@@ -92,14 +92,14 @@ Gather and fish nodes **respawn on hub return**; depleted during one dive. Detai
 - [ ] Visible on map approach (room scale telegraph)
 - [ ] Weakness discovery via Codex or Analysis
 - [ ] Drops unlock stratum or synthesis tier
-- [x] FOE respawn on hub return ([ADR 008](../decisions/008-campaign-defaults.md))
+- [x] FOE respawn on hub return ([ADR 008](../../decisions/008-campaign-defaults.md))
 
 ## FOE respawn (locked)
 
 When the party **returns to hub** and later **re-enters** a floor:
 
 - **FOEs respawn** to authored spawn positions and patrol indices (fresh floor state for FOEs).
-- **Player map**, **open doors**, and **looted chests** persist; **FOEs reset** ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
+- **Player map**, **open doors**, and **looted chests** persist; **FOEs reset** ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
 
 Between fights on the same dive **without** hub visit: FOE positions **persist** (defeated FOEs stay down until respawn trigger above).
 

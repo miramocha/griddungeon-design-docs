@@ -42,13 +42,13 @@ Turns in place skip steps 2–4 (no step counter increment).
 
 - FOEs appear as **visible entities** in the dungeon (sprite/mesh) and on the map when in sight.
 - **Contact** with FOE cell → FOE combat ([foe-encounters](02-systems/foe-encounters.md)); fight plays on **battle arena**, not in FPV cell ([combat scene](02-systems/combat-scene.md)).
-- **Flee** from FOE fight: allowed if **1 cell back** (opposite facing) is walkable; **disabled** if backed to a wall ([ADR 011](decisions/011-foe-flee-retreat.md)).
+- **Flee** from FOE fight: allowed if **1 cell back** (opposite facing) is walkable; **disabled** if backed to a wall ([ADR 011](../decisions/011-foe-flee-retreat.md)).
 - **Strength cue** — color/icon tier vs average party level.
 - **Patrol** — FOEs advance every N **party steps** (any displacement: forward, back, strafe); see [ADR 003](../decisions/003-foe-step-patrol.md). Stationary FOE = single-cell path.
 
 Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/loot.
 
-**Optional later:** FOEs move **1 grid per combat round** during fights ([ADR 005](../decisions/005-foe-combat-patrol.md)); may **[join the battle](../../docs/02-systems/chain-foe-battle.md)** one at a time if they reach the party cell ([ADR 010](../decisions/010-chain-foe-battle.md)).
+**Optional later:** FOEs move **1 grid per combat round** during fights ([ADR 005](../decisions/005-foe-combat-patrol.md)); may **[join the battle](02-systems/chain-foe-battle.md)** one at a time if they reach the party cell ([ADR 010](../decisions/010-chain-foe-battle.md)).
 
 ## Random encounters
 

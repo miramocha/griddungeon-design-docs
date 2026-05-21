@@ -40,7 +40,7 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
-- Example: Stratum 1 "Emerald Grove" — floors B1F–B5F, then stratum boss.
+- Example: Stratum 1 "Fallen District" — floors B1F–B5F, then stratum boss.
 - Hub stair **remembers deepest unlocked floor** per stratum.
 
 ## Quests (optional MVP1)
