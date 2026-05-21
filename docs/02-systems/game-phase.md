@@ -328,7 +328,7 @@ Implemented in **`GridDungeon.UI`**: `InputRouter` subscribes to `GameState.Phas
 
 ## Dev bootstrap HUD (UI Toolkit)
 
-MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo).
+MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo — run after clone).
 
 | Piece | Location | Role |
 |-------|----------|------|

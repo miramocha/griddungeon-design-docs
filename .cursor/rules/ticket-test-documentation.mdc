@@ -27,7 +27,7 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
-- **Scene:** `<e.g. DevBootstrap.unity>`
+- **Scene:** `DevBootstrap.unity` (local only — **GridDungeon → Scenes → Create Dev Bootstrap** after clone)
 - **Setup:** `<F2 Exploration, InputRouter wired, …>`
 - **Steps:**
   1. …

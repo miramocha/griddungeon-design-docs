@@ -101,7 +101,7 @@ GameState (composition root)
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
 ```
 
-**Dev bootstrap:** `DevBootstrap.unity` + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
+**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
 
 ## Map system
 

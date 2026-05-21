@@ -1045,7 +1045,7 @@ class GamePhaseDevHudView : MonoBehaviour
 }
 ```
 
-Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.unity`).
+Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.unity`, not in git — regenerate after clone).
 
 ### View controllers
 
