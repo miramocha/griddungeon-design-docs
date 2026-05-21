@@ -8,7 +8,7 @@ These goals drive the split between **macro phases** (this doc), **assemblies** 
 
 | Goal | How the architecture supports it |
 |------|-----------------------------------|
-| **Test damage + AGI without Unity** | Rules live in `GridDungeon.Core` (`DamageCalculator`, `TurnQueueBuilder`, …); `GridDungeon.Tests` references Core only |
+| **Test damage + AGI without Unity** | Rules live in `GridDungeon.Core` (`DamageCalculator`, `TurnQueueBuilder`, …); `GridDungeon.Tests` references Core (and Runtime for `GamePhaseController` phase tests) |
 | **Hub ↔ explore ↔ combat loop** | `GamePhase` enum + `GamePhaseController.TryTransitionTo` + three `IPhaseController` Enter/Exit hooks |
 | **Spec-locked combat flow** | Union → AGI queue → end-of-round stays on `CombatController`; not duplicated in phase controllers |
 | **Content in data, not code** | ScriptableObjects in Runtime; Core uses DTOs at boundaries (no `SkillDefinition` in simulators) |
@@ -326,6 +326,21 @@ sealed class GameState : MonoBehaviour
 | Combat | `Combat`, `UI` |
 
 Implemented in **`GridDungeon.UI`**: `InputRouter` subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)).
+
+## Dev bootstrap HUD (UI Toolkit)
+
+MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo).
+
+| Piece | Location | Role |
+|-------|----------|------|
+| `GamePhaseDevHud.uxml` / `.uss` | `Assets/UI/Screens/Dev/` | BEM layout: current phase label, transition buttons, flee (combat only) |
+| `GamePanelSettings.asset` | `Assets/UI/Settings/` | Shared UI Toolkit **Panel Settings** — wired on `UIDocument` (created by dev bootstrap menu if missing) |
+| `GamePhaseDevHudView` | `GridDungeon.UI` / `Dev/` | `UIDocument` presenter; button `clicked` → `GameState.RequestTransition` / `RequestCombat`; subscribes to `PhaseChanged` |
+| Keyboard | F1–F4 | Same actions as buttons (Input System `Keyboard`, not legacy `Input`) |
+
+**Play-mode loop:** F1 Hub → F2 Exploration → F3 Combat → F4 flee (→ Exploration) → F1 Hub.
+
+Dev UI is **not** authoritative — it only calls `GameState` APIs. Production hub/explore/combat HUDs replace this panel later; see [class design MVP1](../05-class-design-mvp1.md#ui-layer).
 
 ## Visual Scripting (post-MVP1 optional)
 

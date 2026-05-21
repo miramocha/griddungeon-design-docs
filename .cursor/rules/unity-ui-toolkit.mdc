@@ -84,9 +84,10 @@ public class CombatHudView : MonoBehaviour
 
 ```
 Assets/.../UI/
+  Settings/      — GamePanelSettings.asset (shared Panel Settings for UIDocument)
   Screens/       — feature UXML/USS pairs
   Themes/        — default Theme StyleSheet, tokens
-  Scripts/       — views / presenters
+  Scripts/       — views / presenters (under Assets/Scripts/UI/)
 ```
 
 Align namespaces with folders (`GridDungeon.UI.Combat`). Match existing layout if the repo already defines one.

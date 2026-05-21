@@ -1007,6 +1007,28 @@ class MapInputHandler
 }
 ```
 
+### Dev phase HUD (bootstrap scene)
+
+UI Toolkit panel for **issue #1** macro-phase smoke test. Not shipped in production UI.
+
+| Asset / type | Path |
+|--------------|------|
+| `GamePhaseDevHud.uxml`, `GamePhaseDevHud.uss` | `Assets/UI/Screens/Dev/` (BEM: `game-phase-dev`, `game-phase-dev__button`, …) |
+| `GamePhaseDevHudView` | `Assets/Scripts/UI/Dev/` — `[RequireComponent(typeof(UIDocument))]` |
+
+```csharp
+// GridDungeon.UI.Dev — DevBootstrap scene only
+class GamePhaseDevHudView : MonoBehaviour
+{
+    GameState       GameState;       // serialized
+    CombatController Combat;        // serialized
+    // OnEnable: Q<> cached labels/buttons; PhaseChanged += Refresh
+    // Buttons / F1–F4 → RequestTransition / RequestCombat / EndBattle(Flee)
+}
+```
+
+Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.unity`).
+
 ### View controllers
 
 ```csharp
@@ -1143,8 +1165,15 @@ Assets/
 │   │   ├── Content/              ContentDatabase.cs
 │   │   └── Save/                 SaveSystem.cs
 │   └── UI/                       GridDungeon.UI.asmdef
+│       ├── Dev/                  GamePhaseDevHudView.cs (dev bootstrap only)
+│       ├── Game/                 GameBootstrap.cs
 │       ├── Input/                InputRouter.cs, ExplorationInputHandler.cs, ...
 │       └── Views/                ExplorationHUD.cs, CombatHUD.cs, MapView.cs, ...
+├── UI/
+│   ├── Settings/                 GamePanelSettings.asset (shared UIDocument panel)
+│   ├── Themes/                   Theme StyleSheets (optional)
+│   └── Screens/
+│       └── Dev/                  GamePhaseDevHud.uxml, GamePhaseDevHud.uss
 ├── Content/
 │   ├── Classes/                  *.asset (ClassDefinition SOs)
 │   ├── Skills/                   *.asset (SkillDefinition SOs)
