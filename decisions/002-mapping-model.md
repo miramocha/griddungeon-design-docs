@@ -1,6 +1,6 @@
 # ADR 002 — Mapping Model
 
-**Status:** Accepted (amended 2026-05-20)  
+**Status:** Accepted (amended 2026-05-21)  
 **Aligns with:** *Etrian Odyssey* presentation; **without** manual drawing tools
 
 ## Context
@@ -30,6 +30,50 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 - Save stores `revealedMapLayer` per floor (bitmasks + feature flags), not player strokes
 - No map tool tutorial; tutorial teaches **reading** map + FOE icons
 - EO "mapping as skill" shifts to **pathfinding / FOE routing** rather than pen accuracy
+- Floor scenes include a **map proxy rig** (simple geometry) co-located with FPV layout for editor preview; FPV art is **not** drawn into the minimap
+
+## Technical notes (Unity) — map proxy + minimap camera
+
+**Goal:** EO-style auto-map in the HUD without rendering the FPV dungeon mesh into the minimap.
+
+### Map proxy rig (authoring)
+
+| Piece | Rule |
+|-------|------|
+| **Geometry** | Per-cell **cubes** (or quads) with **flat unlit colors** — floor, wall segment, door, stairs, etc. |
+| **Layer** | **`MapProxy`** only (project layer name; all proxy objects on this layer) |
+| **Placement** | **Same grid** as exploration collision / `DungeonView` — designers **overlap** proxy and FPV layout in the Editor and see alignment in Scene view |
+| **FPV environment** | Walls, props, lighting on **other layers** (`Default`, dungeon/FPV layers) — **excluded** from minimap camera culling mask |
+
+Proxies are **schematic**, not a second art pass: solid colors, no PBR. Optional shared prefab per cell type (`MapCell_Floor`, `MapCell_WallN`, …).
+
+### Minimap camera → HUD
+
+1. **Orthographic camera** (north-up, 1 unit = 1 cell) renders **only `MapProxy`** into a `RenderTexture`.
+2. **Fog / reveal:** `MapSystem` drives proxy visibility (enable renderer, material alpha, or shader mask from `Visited` / `WallMask`) — state stays in Core; proxies are view targets.
+3. **UI Toolkit** shows the RT in the exploration HUD; pan/zoom on the UI element and/or ortho size ([ADR 014](014-mvp1-exploration-map.md)).
+4. **Re-render when dirty** on reveal events, not every frame.
+
+### Overlays (not in RT)
+
+Party arrow, facing, and **FOE icons** stay **UIToolkit overlays** on grid coordinates (patrol slide without full RT rebuild). See [mapping — Map UI motion](../docs/02-systems/mapping.md#map-ui-motion).
+
+### Editor preview
+
+- Scene view: proxy cubes + FPV geometry visible together for layout QA.
+- Play Mode / minimap: only **minimap camera** output reaches the HUD; player never sees proxy cubes in the main FPV view (FPV camera excludes `MapProxy`, or proxies are disabled/hidden for main camera).
+
+### Authority (unchanged)
+
+`MapRevealCalculator` + `MapSystem` own reveal rules and save data. Proxies and RT are **presentation** only — see [04 — Tech notes § Map system](../docs/04-tech-notes.md#map-system).
+
+### Rejected for this pipeline
+
+| Option | Why |
+|--------|-----|
+| Minimap renders full FPV meshes | Cost, lighting clutter, wrong scale for EO-style chart |
+| Player-editable proxy geometry | Read-only map (decision 5 above) |
+| Saving `RenderTexture` to disk | Save bitmasks only |
 
 ## Related
 

@@ -1068,10 +1068,12 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
 
 class MapView : MonoBehaviour
 {
+    // Minimap ortho cam → RenderTexture on UIToolkit; MapProxy layer cubes only (ADR 002)
     // Fullscreen overlay; input passes through to ExplorationInputHandler (ADR 014)
     void Show(); void Hide();
     void RenderFloor(IReadOnlyFloorMapState state, GridPosition partyCell, FacingDirection facing);
     void UpdateFoeIcons(IReadOnlyList<FoeInstance> visible);
+    void RefreshMapTexture();   // when MapSystem reveal dirty
 }
 
 class PartyStripView : MonoBehaviour

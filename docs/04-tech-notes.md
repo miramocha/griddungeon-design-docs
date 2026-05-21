@@ -114,6 +114,20 @@ GameState (composition root)
 - **UI:** read-only grid; pan/zoom; no edit raycasts
 - `MapReveal.OnPartyEnteredCell`, `OnBumpWall(side)`, `OnInteract(type)`
 
+### Map proxy + minimap camera ([ADR 002](../decisions/002-mapping-model.md#technical-notes-unity--map-proxy--minimap-camera))
+
+| Concern | Approach |
+|---------|----------|
+| **Authoring** | Per-floor **map proxy rig**: flat-color **cubes** on layer **`MapProxy`**, grid-aligned with FPV layout so designers preview overlap in the Editor |
+| **FPV vs map** | Exploration / dungeon meshes on non-`MapProxy` layers; **minimap ortho culling mask = `MapProxy` only** |
+| **Main camera** | FPV camera **excludes** `MapProxy` (or proxies hidden from player view) — player never sees schematic cubes in corridor view |
+| **Output** | Minimap camera → `RenderTexture` → UI Toolkit map panel; refresh on `MapSystem` reveal dirty, not per frame |
+| **Fog** | Hide/disable proxies or shader clip from `FloorMapState.Visited` / `WallMask` |
+| **Party / FOE** | UIToolkit overlays on grid coords; FOE patrol animates overlay without rebaking RT |
+| **Runtime type** | `MapView` binds `IReadOnlyFloorMapState`, triggers proxy/RT refresh; `MapSystem` applies `MapRevealCalculator` |
+
+**Folder convention (game repo):** e.g. `Assets/.../Floors/{floorId}/MapProxy.prefab` or proxy children under floor root; document in floor authoring checklist when content pipeline exists.
+
 ## Gathering & fishing (MVP2)
 
 - `MinigameController` — `Gather` | `Fish`; pauses exploration + FOE step tick
