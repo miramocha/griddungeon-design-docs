@@ -29,6 +29,7 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 | `unity-common-pitfalls.mdc` | Unity gotchas |
 | `unity-ui-toolkit.mdc` | UI Toolkit bindings |
 | `architecture-design-principles.mdc` | **Design-docs only** — maps principles → MVP1 architecture types |
+| `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 
 ## Architecture mapping
 

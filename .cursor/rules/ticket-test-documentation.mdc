@@ -1,0 +1,54 @@
+---
+description: When closing or updating GitHub issues, document how the work was verified (tests + manual steps).
+alwaysApply: true
+---
+
+# Ticket test documentation
+
+When you **complete**, **hand off**, or **close** work tied to a GitHub issue (or PR that fixes an issue), add a **Test plan** section so the next person can reproduce verification without re-deriving steps from the diff.
+
+## Where to document
+
+| Location | When |
+|----------|------|
+| **GitHub issue comment** | Default — post before close or with final PR link |
+| **PR description** | Include the same checklist under `## Test plan` |
+| **ADR / design doc** | Only for locked acceptance criteria — link issue; do not duplicate full play steps |
+
+Do not mark an exploration/combat issue done without at least one **automated** or **manual** verification path recorded.
+
+## Test plan template
+
+```markdown
+## Test plan (verified YYYY-MM-DD)
+
+### Automated
+- [ ] Unity Test Runner → Edit Mode → `<TestClass>` — all green
+- [ ] (optional) Play Mode / CI — note job or N/A
+
+### Manual (Play Mode)
+- **Scene:** `<e.g. DevBootstrap.unity>`
+- **Setup:** `<F2 Exploration, InputRouter wired, …>`
+- **Steps:**
+  1. …
+  2. …
+- **Expected:** …
+
+### Regressions checked
+- [ ] …
+
+### Spec / ADRs
+- [ADR 001](link), [ADR 018](link), …
+```
+
+## Grid Dungeon defaults (exploration)
+
+Unless the ticket changes timings, assume **Normal** preset ([ADR 018](../decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../decisions/001-grid-movement.md).
+
+**Dev bootstrap:** implemented in `griddungeon-game` — menu **GridDungeon → Scenes → Create Dev Bootstrap**; **F2** Exploration.
+
+## Agent / PR workflow
+
+1. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules.
+2. After implementation, **post the filled template** to the issue via `gh issue comment` (or PR body).
+3. If the user verified in-editor, incorporate their notes; do not invent results you did not run.

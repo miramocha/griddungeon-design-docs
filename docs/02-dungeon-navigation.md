@@ -70,7 +70,8 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 ## Feel & animation
 
-- Short step lerp (~0.2s) via **DOTween**; logic commits at step start ([ADR 001](../decisions/001-grid-movement.md)).
+- Short step lerp (~0.28s at **Normal** speed) via **DOTween**; logic commits at step start ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md)).
+- **Hold-to-repeat:** holding a displacement key walks one cell per lerp cycle; holding a turn key rotates 90° per turn lerp; no new commit while a step, turn, or bump lerp is in progress ([ADR 001](../decisions/001-grid-movement.md)).
 - Bump feedback when movement blocked — **auto-stamp wall** on that edge ([mapping](02-systems/mapping.md)).
 
 ## Input

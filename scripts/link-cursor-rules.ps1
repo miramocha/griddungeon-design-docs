@@ -20,7 +20,8 @@ $ruleNames = @(
     "unity-csharp-comments.mdc",
     "unity-csharp-formatting.mdc",
     "unity-csharp-naming.mdc",
-    "unity-ui-toolkit.mdc"
+    "unity-ui-toolkit.mdc",
+    "ticket-test-documentation.mdc"
 )
 
 foreach ($name in $ruleNames) {
