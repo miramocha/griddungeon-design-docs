@@ -63,6 +63,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 014 — MVP1 exploration & map](decisions/014-mvp1-exploration-map.md) | Accepted | Wall reveal, map input, persist, gather stub |
 | [ADR 015 — MVP1 combat](decisions/015-mvp1-combat.md) | Accepted | Damage, single enemy row, status subset |
 | [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 scripted actions; player control TBD |
+| [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
 
 ## Resolved
 

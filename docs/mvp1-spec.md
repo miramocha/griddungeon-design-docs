@@ -66,7 +66,7 @@ Hub (inn save, guild 6, hospital, shop)
 | # | Requirement |
 |---|-------------|
 | ✅ | Unity 6 + URP + Input System + Shader Graph–first |
-| ⬜ | `GameState` hub / explore / combat |
+| ⬜ | `GamePhaseController` + hub / explore / combat phase controllers ([ADR 017](../decisions/017-game-phase-controller.md)) |
 | ⬜ | `CombatSimulator` unit tests for damage + AGI order |
 | ⬜ | PC default bindings shipped |
 
@@ -122,4 +122,6 @@ Numbers can move in data without ADR change:
 
 - [00 — Release scope](00-release-scope.md)
 - [00 — Vision](00-vision.md) — success criteria
+- [05 — Class design MVP1](05-class-design-mvp1.md) — concrete classes, assembly layout, folder structure
+- [Game phase](02-systems/game-phase.md) — design goals, diagrams, macro phase flow ([ADR 017](../decisions/017-game-phase-controller.md))
 - [README](../README.md)

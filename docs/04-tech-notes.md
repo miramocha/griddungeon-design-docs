@@ -54,11 +54,15 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 ## High-level modules
 
 ```
-GameState (hub | exploration | combat)
+GameState (composition root)
+├── GamePhaseController  — Hub | Exploration | Combat ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md))
+│   ├── HubPhaseController
+│   ├── ExplorationPhaseController
+│   └── CombatPhaseController
 ├── HubServices          — explorers guild, navigator office, shop, hospital, inn save
 ├── DungeonExplorer      — grid step, facing, interact
 ├── DungeonView          — FPV cell rendering (hidden during combat)
-├── CombatSceneController — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
+├── CombatScenePresenter — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 ├── MapSystem            — auto-reveal layer, fog, read-only UI
 ├── FoeSystem            — spawn, visibility, step patrol, contact
 ├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
@@ -199,6 +203,8 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 ## Related docs
 
+- [05 — Class design MVP1](05-class-design-mvp1.md) — full class hierarchy, assembly layout, folder structure
+- [Game phase](02-systems/game-phase.md) — design goals, diagrams, `GamePhaseController` + phase controllers ([ADR 017](../decisions/017-game-phase-controller.md))
 - [Mapping](02-systems/mapping.md)
 - [ADR 002](../decisions/002-mapping-model.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
