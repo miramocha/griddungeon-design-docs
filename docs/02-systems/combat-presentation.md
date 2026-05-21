@@ -372,7 +372,7 @@ See [release scope](../00-release-scope.md). Optional in MVP2 alongside gather/f
 
 - [Input bindings — cinematic QTE](input-bindings.md#cinematic-qte)
 
-- [Union](union.md) — candidate for `CinematicQTE` finishers
+- [Union](synchro-protocol.md) — candidate for `CinematicQTE` finishers
 
 - [04 — Tech notes](../04-tech-notes.md)
 

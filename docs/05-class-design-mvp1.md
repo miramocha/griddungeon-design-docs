@@ -232,7 +232,7 @@ class EncounterGroup : ScriptableObject
 struct EnemySlotConfig { string enemyDefinitionId; bool isRequired; }
 ```
 
-### Navigator & Union
+### Navigator & Synchro Protocol
 
 ```csharp
 // Assets/Content/Navigators/
@@ -240,24 +240,24 @@ class NavigatorDefinition : ScriptableObject
 {
     string navigatorId;           // "guild_handler"
     string displayName;
-    AuraModifiers aura;           // e.g. unionGainBonus = 0.05
-    string[] unionSkillIds;       // ["union_strike", "union_mend"]
+    AuraModifiers aura;           // e.g. synchroGainBonus = 0.05
+    string[] protocolSkillIds;    // ["protocol_strike", "protocol_mend"]
     string unlockCondition;       // "" = day one; otherwise quest/stratum id
 }
 
-struct AuraModifiers { float UnionGainBonus; /* expand post-MVP1 */ }
+struct AuraModifiers { float SynchroGainBonus; /* expand post-MVP1 */ }
 
-class UnionSkillDefinition : ScriptableObject
+class ProtocolSkillDefinition : ScriptableObject
 {
-    string unionSkillId;
+    string protocolSkillId;
     string displayName;
-    UnionEffectType effectType;   // DamageAllEnemies, HealAllAllies, …
+    ProtocolEffectType effectType;   // DamageAllEnemies, HealAllAllies, …
     float power;
     int participantCount;         // how many core must be alive to activate
     string presentationId;
 }
 
-enum UnionEffectType { DamageAllEnemies, HealAllAllies }
+enum ProtocolEffectType { DamageAllEnemies, HealAllAllies }
 ```
 
 ### Summons
@@ -373,7 +373,7 @@ class BattleState
     int Round;
     CombatEntryContext Entry;
     bool FleeEnabled;            // retreat cell + encounter noFlee
-    float UnionBar;              // copy from PartyRuntime at StartBattle
+    float SynchroBar;              // copy from PartyRuntime at StartBattle
 }
 
 class RoundSnapshot
@@ -397,10 +397,10 @@ readonly record struct StatusData(
     string Id, StatusCategory Category, int DefaultDurationTurns,
     float Magnitude, BodyPart BindPart, bool RemovedOnDamage);
 
-readonly record struct NavigatorData(string Id, AuraModifiers Aura, string[] UnionSkillIds);
+readonly record struct NavigatorData(string Id, AuraModifiers Aura, string[] ProtocolSkillIds);
 
-readonly record struct UnionSkillData(
-    string Id, UnionEffectType EffectType, float Power, int ParticipantCount);
+readonly record struct ProtocolSkillData(
+    string Id, ProtocolEffectType EffectType, float Power, int ParticipantCount);
 
 readonly record struct EnemyData(
     string Id, CharacterBaseStats Stats, ElementResistances Resistances,
@@ -513,7 +513,7 @@ class FoeInstance
     HubSaveData Hub;
     CharacterSaveData[] Party;     // 6 characters
     string ActiveNavigatorId;
-    float UnionBar;
+    float SynchroBar;
     Dictionary<string, FloorMapStateSave> Maps;   // key: "s1_B1F"
     Dictionary<string, FoeStateSave[]>   FoeState;
     ExplorationStateSave? Exploration;             // null when in hub
@@ -615,7 +615,7 @@ sealed class GameState : MonoBehaviour
     FoeSystem Foes;
     PartyRuntime Party;
     NavigatorRuntime Navigator;
-    UnionSystem Union;
+    ProtocolSystem Protocol;
     CodexSystem Codex;
     ContentDatabase Content;
     SaveSystem Save;
@@ -737,7 +737,7 @@ class PartyRuntime : MonoBehaviour
     Combatant[] CoreSlots   { get; }   // length 6
     Combatant?[] AuxSlots   { get; }   // length 2 (front/back); null = empty
     string ActiveNavigatorId { get; set; }
-    float UnionBar           { get; set; }  // 0..1
+    float SynchroBar           { get; set; }  // 0..1
 
     // All combatants eligible for AGI queue (core + non-null aux + enemies added by CombatController)
     IReadOnlyList<Combatant> AllPartyCombatants { get; }
@@ -770,18 +770,18 @@ static class AuraSystem
 }
 ```
 
-### Union system
+### Synchro Protocol system
 
 ```csharp
-class UnionSystem : MonoBehaviour
+class ProtocolSystem : MonoBehaviour
 {
     // Called by CombatController after each core combatant action (below 100%)
     void OnCoreActed(Combatant actor, NavigatorDefinition nav);
 
-    // Called by CombatController at round start when bar == 1
-    bool TryUseUnionSkill(string unionSkillId, out UnionSkillData skill);
+    // Core turn when Synchro bar == 1: CombatCommand.Protocol + skill id
+    bool TryUseProtocolSkill(string protocolSkillId, out ProtocolSkillData skill);
 
-    void SpendBar();   // → 0 after Union use
+    void SpendBar();   // → 0 after Protocol use
 }
 ```
 
@@ -808,7 +808,7 @@ class CombatController : MonoBehaviour
 
 enum CombatPhase { Idle, TurnPhase, EndOfRound }
 
-// Union: CombatCommand.Union + SkillId (union_strike / union_mend) on core turn when bar == 1
+// Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
 
 class CombatEntryContext
 {
@@ -827,7 +827,7 @@ class CombatAction
     string? TargetId;          // combatant id
 }
 
-enum CombatCommand { Attack, Guard, Skill, Item, Union, Flee }
+enum CombatCommand { Attack, Guard, Skill, Item, Protocol, Flee }
 
 class CombatActionResult
 {
@@ -839,7 +839,7 @@ class CombatActionResult
     string? StatusApplied;
     string? StatusCleansed;
     bool TargetDied;
-    float UnionBarDelta;
+    float SynchroBarDelta;
 }
 ```
 
@@ -948,7 +948,7 @@ class ContentDatabase : ScriptableObject
     ClassDefinition      GetClass(string classId);
     StatusDefinition     GetStatus(string statusId);
     NavigatorDefinition  GetNavigator(string navigatorId);
-    UnionSkillDefinition GetUnionSkill(string skillId);
+    ProtocolSkillDefinition GetProtocolSkill(string skillId);
     SummonDefinition     GetSummon(string summonId);
     EquipmentDefinition  GetEquipment(string equipId);
     ItemDefinition       GetItem(string itemId);
@@ -957,7 +957,7 @@ class ContentDatabase : ScriptableObject
     SkillData      ToSkillData(SkillDefinition so);
     StatusData     ToStatusData(StatusDefinition so);
     NavigatorData  ToNavigatorData(NavigatorDefinition so);
-    UnionSkillData ToUnionSkillData(UnionSkillDefinition so);
+    ProtocolSkillData ToProtocolSkillData(ProtocolSkillDefinition so);
     EnemyData      ToEnemyData(EnemyDefinition so);
     SummonData     ToSummonData(SummonDefinition so);
 }
@@ -1012,7 +1012,7 @@ class ExplorationInputHandler
 class CombatInputHandler
 {
     void OnCommand(int slot);    // 1–5 → Attack/Guard/Skill/Item/Flee
-    void OnUnion();              // U key at round start
+    void OnProtocolMenu();       // U when Synchro == 100% on core turn
     void OnSelectTarget(string combatantId);
     void OnConfirm(); void OnCancel();
 }
@@ -1065,7 +1065,7 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
     CommandPanelView   Commands;
     TargetSelectorView Targets;
     NavigatorView      Navigator;
-    UnionBarView       UnionBar;
+    SynchroBarView       SynchroBar;
     CombatLogView      Log;
     EnemySlotsView     EnemySlots;
 }
@@ -1113,7 +1113,7 @@ class TargetSelectorView : MonoBehaviour
     event Action<string> OnTargetSelected;
 }
 
-class UnionBarView : MonoBehaviour
+class SynchroBarView : MonoBehaviour
 {
     void SetValue(float normalized);  // 0..1
 }
@@ -1121,7 +1121,7 @@ class UnionBarView : MonoBehaviour
 class NavigatorView : MonoBehaviour
 {
     void Bind(NavigatorDefinition def);
-    void SetUnionReady(bool ready);
+    void SetProtocolReady(bool ready);
 }
 
 class CombatLogView : MonoBehaviour
@@ -1187,7 +1187,7 @@ Assets/
 │   │   ├── Map/                  MapSystem.cs
 │   │   ├── Combat/               CombatController.cs, CombatScenePresenter.cs, TurnQueue.cs, …
 │   │   ├── Party/                PartyRuntime.cs, CombatantFactory.cs, NavigatorRuntime.cs, AuraSystem.cs
-│   │   ├── Union/                UnionSystem.cs
+│   │   ├── Protocol/             ProtocolSystem.cs
 │   │   ├── Hub/                  HubController.cs, InnService.cs, HospitalService.cs, ...
 │   │   ├── Codex/                CodexSystem.cs
 │   │   ├── Content/              ContentDatabase.cs
@@ -1211,7 +1211,7 @@ Assets/
 │   ├── Enemies/                  *.asset (EnemyDefinition SOs)
 │   ├── Encounters/               *.asset (EncounterGroup SOs)
 │   ├── Navigators/               *.asset (NavigatorDefinition SOs)
-│   ├── UnionSkills/              *.asset (UnionSkillDefinition SOs)
+│   ├── ProtocolSkills/           *.asset (ProtocolSkillDefinition SOs)
 │   ├── Summons/                  *.asset (SummonDefinition SOs)
 │   └── Dungeons/
 │       └── Stratum01/            B1F.asset, B2F.asset, B3F.asset
@@ -1233,7 +1233,7 @@ These string IDs must be stable across code and SO assets.
 |------|----|-------|
 | Class | `vanguard`, `breaker`, `medic`, `summoner`, `marksman`, `tactician` | Day-one roster |
 | Navigator | `guild_handler` | Unlocked day one; aura: `unionGainBonus = 0.05` |
-| Union skill | `union_strike`, `union_mend` | Damage all / heal all |
+| Protocol skill | `protocol_strike`, `protocol_mend` | Damage all / heal all |
 | Summon | `test_drone` | Summoner-only; 3 turns; scripted |
 | Summon skill | `deploy_test_drone` | Uses `SummonDefinition.test_drone`, aux back |
 | Stratum | `s1` | Stratum 1 |
@@ -1259,4 +1259,4 @@ These string IDs must be stable across code and SO assets.
 - [Character progression](02-systems/character-progression.md)
 - [FOE encounters](02-systems/foe-encounters.md)
 - [Navigator](02-systems/navigator.md)
-- [Union](02-systems/union.md)
+- [Synchro Protocol](02-systems/synchro-protocol.md)

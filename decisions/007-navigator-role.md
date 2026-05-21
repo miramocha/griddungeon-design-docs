@@ -42,5 +42,5 @@
 ## Related
 
 - [Navigator](../docs/02-systems/navigator.md)
-- [Union](../docs/02-systems/union.md)
+- [Union](../docs/02-systems/synchro-protocol.md)
 - [ADR 006 — Union team bar](006-union-team-bar.md)

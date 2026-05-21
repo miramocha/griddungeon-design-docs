@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Clean code principles (Unity style guide)
 
-From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Complements `unity-csharp-naming`, `unity-csharp-formatting`, `unity-csharp-comments`, and `unity-common-pitfalls`.
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Complements `unity-csharp-naming`, `unity-csharp-language`, `unity-csharp-formatting`, `unity-csharp-comments`, and `unity-common-pitfalls`.
 
 ## Single responsibility (SRP)
 

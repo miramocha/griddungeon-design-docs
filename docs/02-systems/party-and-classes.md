@@ -56,11 +56,11 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 
 ## Navigator
 
-See [navigator.md](navigator.md). Swappable party lead; executes [Union](union.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (MVP1).
+See [navigator.md](navigator.md). Swappable party lead; executes [Union](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (MVP1).
 
 ## Union skills
 
-Coordinated team skills via [Union bar](union.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Union kit; guild-common Union skills may unlock via quests/strata (separate from Navigator unlocks).
+Coordinated team skills via [Union bar](synchro-protocol.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Union kit; guild-common Union skills may unlock via quests/strata (separate from Navigator unlocks).
 
 ## Skill trees (EO model)
 
@@ -94,7 +94,7 @@ See [character progression](character-progression.md).
 
 - [Navigator](navigator.md)
 - [Summons & guests](summons-and-guests.md)
-- [Union (team bar)](union.md)
+- [Union (team bar)](synchro-protocol.md)
 - [Combat](combat.md)
 - [Character progression](character-progression.md)
 - [Hub & services](hub-and-services.md)

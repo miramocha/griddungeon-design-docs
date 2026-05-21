@@ -19,7 +19,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 | Milestone | Focus |
 |-----------|--------|
-| **MVP1** | Hub loop, explore, FOE, AGI combat, Union, auto-map |
+| **MVP1** | Hub loop, explore, FOE, AGI combat, Synchro Protocol, auto-map |
 | **MVP2** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join |
 
 ## Document index
@@ -41,8 +41,8 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Party & classes](docs/02-systems/party-and-classes.md) | Draft | 6 core (3+3) + aux slots |
 | [02 — Summons & guests](docs/02-systems/summons-and-guests.md) | Draft | +1 front / +1 back aux |
 | [02 — Progression](docs/02-systems/character-progression.md) | Draft | Skill points, synthesis |
-| [02 — Navigator](docs/02-systems/navigator.md) | Draft | Off-formation lead; Union + auras |
-| [02 — Union (team bar)](docs/02-systems/union.md) | Draft | Team bar; Navigator executes |
+| [02 — Navigator](docs/02-systems/navigator.md) | Draft | Off-formation lead; Protocol + auras |
+| [02 — Synchro Protocol](docs/02-systems/synchro-protocol.md) | Draft | Synchro bar; Navigator Protocols |
 | [02 — Input bindings](docs/02-systems/input-bindings.md) | Draft | PC keyboard + mouse defaults |
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
@@ -56,8 +56,9 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 003 — FOE step patrol](decisions/003-foe-step-patrol.md) | Accepted | FOEs advance on party steps |
 | [ADR 004 — Auxiliary slots](decisions/004-auxiliary-slots.md) | Accepted | +1 summon/guest per row |
 | [ADR 005 — FOE combat patrol](decisions/005-foe-combat-patrol.md) | Deferred | 1 FOE cell / combat round (**MVP2**) |
-| [ADR 006 — Union team bar](decisions/006-union-team-bar.md) | Accepted | Shared Union bar; EO-style timing |
-| [ADR 007 — Navigator role](decisions/007-navigator-role.md) | Accepted | Off-formation; runs Union |
+| [ADR 006 — Team burst bar](decisions/006-union-team-bar.md) | Accepted | Synchro bar mechanics |
+| [ADR 020 — Team burst naming](decisions/020-team-burst-naming.md) | Accepted | Retire “Union”; use Synchro Protocol |
+| [ADR 007 — Navigator role](decisions/007-navigator-role.md) | Accepted | Off-formation; runs Protocol |
 | [ADR 008 — Campaign defaults](decisions/008-campaign-defaults.md) | Accepted | FOE respawn, unlimited explore, PC |
 | [ADR 009 — Input bindings](decisions/009-input-bindings-pc.md) | Accepted | WASD + QE, combat 1–5, mouse targets |
 | [ADR 010 — FOE mid-battle join](decisions/010-chain-foe-battle.md) | Accepted | 1 FOE joins current fight per round (with ADR 005) |
@@ -80,9 +81,9 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Platform:** **PC** ([ADR 008](decisions/008-campaign-defaults.md))
 - **Engine:** **Unity 6 + URP**; shaders **Shader Graph** default, HLSL when needed ([ADR 012](decisions/012-unity-6-stack.md))
 - **Death:** GAME OVER → hub save; map kept
-- **Union + Navigator:** Team bar; Navigator executes; unlock-only ([006](decisions/006-union-team-bar.md), [007](decisions/007-navigator-role.md))
+- **Synchro Protocol + Navigator:** Team bar; Navigator executes; unlock-only ([006](decisions/006-union-team-bar.md), [007](decisions/007-navigator-role.md), [020](decisions/020-team-burst-naming.md))
 - **Multiplayer:** Out of scope
-- **Boost/Break:** Out of scope — Union covers team burst ([ADR 008](decisions/008-campaign-defaults.md))
+- **Boost/Break:** Out of scope — Synchro Protocol covers team burst ([ADR 008](decisions/008-campaign-defaults.md))
 - **Input:** PC defaults ([input bindings](docs/02-systems/input-bindings.md), [ADR 009](decisions/009-input-bindings-pc.md))
 - **FOE mid-battle join:** MVP2 with combat patrol ([ADR 005](decisions/005-foe-combat-patrol.md), [010](decisions/010-chain-foe-battle.md)); **off in MVP1**
 - **FOE flee:** Escapable; success → **1 cell back**; **disabled** if wall behind ([ADR 011](decisions/011-foe-flee-retreat.md))

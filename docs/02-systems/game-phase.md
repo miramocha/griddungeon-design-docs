@@ -208,25 +208,24 @@ sequenceDiagram
   participant GS as GameState
   participant CP as CombatPhaseController
   participant CC as CombatController
-  participant Union as UnionSystem
+  participant Protocol as ProtocolSystem
   participant TQ as TurnQueueBuilder
   participant EOR as EndOfRoundPipeline
 
   CP->>CC: StartBattle(context)
   loop each combat round
-    alt Union bar == 100%
-      CC->>Union: TryBeginUnionPhase
-    end
     CC->>TQ: Build AGI queue
     loop each AGI turn
-      alt player core
+      alt player core and Synchro == 100%
+        CC->>Protocol: TryUseProtocolSkill via SubmitPlayerAction
+      else player core
         CC->>CC: Wait SubmitPlayerAction
       else MVP1 summon
         CC->>CC: ResolveSummonTurn
       else enemy
         CC->>CC: Run AI
       end
-      CC->>Union: OnCoreActed
+      CC->>Protocol: OnCoreActed (bar fill below 100%)
     end
     CC->>EOR: Execute end-of-round
     CC->>CC: Victory / wipe / continue

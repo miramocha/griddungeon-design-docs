@@ -78,5 +78,5 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
 - [01 — Core loop](../01-core-loop.md)
 - [Character progression](character-progression.md)
 - [Navigator](navigator.md)
-- [Union (team bar)](union.md)
+- [Union (team bar)](synchro-protocol.md)
 - [03 — Dungeons & encounters](../03-content/dungeons-and-encounters.md)
