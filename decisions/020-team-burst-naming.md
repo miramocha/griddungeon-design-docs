@@ -26,7 +26,7 @@ MVP1 team burst uses a shared 0–100% bar and Navigator-executed skills ([synch
 | **UI bar label** | Synchro |
 | **Content ID prefix** | `protocol_` |
 | **C# module folder / root type** | `Protocol` (`ProtocolSystem`, `ProtocolResolver`, …) |
-| **Save field** | `SynchroBar` (migrate from `UnionBar`) |
+| **Save field** | `SynchroBar` (migrate from `UnionBar`; `FormerlySerializedAs` on `PartyRuntime` / scene refs) |
 | **MVP1 skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
 
 Presentation:

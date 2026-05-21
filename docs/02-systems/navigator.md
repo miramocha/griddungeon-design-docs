@@ -72,7 +72,7 @@ Navigators are **never combat targets**:
 - **Not targetable** by enemies — normal attacks, skills, and **boss** abilities.
 - **No direct combat interaction** — no HP, no damage, no status, no heals aimed at Navigator.
 - **No AGI turn** — enemies and allies do not “hit” or buff Navigator in the turn system.
-- UI: Navigator portrait **without HP bar**; present for Union + aura only.
+- UI: Navigator portrait **without HP bar**; present for Protocol + aura only.
 
 Bosses cannot bypass this with “hit all party” — those effects apply to **core (+ aux)** only.
 
@@ -82,7 +82,7 @@ Navigators do **not** progress like core party members:
 
 - **No XP**, **no levels**, **no skill points**, **no aura tiers**
 - **No equipment**
-- Each Navigator is a **fixed package**: one aura + fixed Union skill list, defined in data
+- Each Navigator is a **fixed package**: one aura + fixed Protocol skill list, defined in data
 - **Only growth path:** unlock another Navigator with different aura/skills
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
@@ -95,7 +95,7 @@ Separate from **Explorers Guild** ([hub & services](hub-and-services.md)). Guild
 |--------|--------|
 | **Browse** | All Navigators — unlocked (selectable) vs locked (silhouette + hint) |
 | **Assign** | Set **active** Navigator for the next labyrinth dive |
-| **Preview** | Aura summary on core six; list of Union skills in this Navigator’s kit |
+| **Preview** | Aura summary on core six; list of Protocol skills in this Navigator’s kit |
 | **Switch** | Change active Navigator among unlocked pool — **hub only** |
 
 No recruitment, no skill points, no equipment — unlock + assign only.
@@ -104,20 +104,20 @@ No recruitment, no skill points, no equipment — unlock + assign only.
 
 - Navigator **portrait + name** above or beside formation (not in front/back rows).
 - Aura icons on core portraits (small badge from active Navigator).
-- Union phase: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Union list.
+- Protocol use: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Protocol list.
 
 ## MVP1 content (placeholder)
 
 | Navigator | Unlock | Aura (MVP1) |
 |-----------|--------|-------------|
-| `guild_handler` | Day one | Union gain +5% |
+| `guild_handler` | Day one | Synchro gain +5% |
 
 Additional Navigators unlock via strata/quests post-MVP1.
 
 ## MVP1
 
 - [ ] One default Navigator + one aura
-- [ ] Navigator selects Union skill in Union phase
+- [ ] Navigator selects Protocol skill when Synchro is 100%
 - [ ] **Navigator Office:** pick active Navigator from **unlocked** pool (starter + 1 stratum unlock)
 - [ ] Not in formation rows or AGI queue
 
@@ -129,7 +129,7 @@ Additional Navigators unlock via strata/quests post-MVP1.
 
 ## Related docs
 
-- [Union (team bar)](synchro-protocol.md)
+- [Synchro Protocol (team bar)](synchro-protocol.md)
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
