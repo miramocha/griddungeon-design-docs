@@ -129,7 +129,7 @@ Deferred unless a future **“immersive combat”** experiment flag is approved.
 | **Cinematic QTE** | Full-stage Timeline; backdrop can dim UI edges |
 | **FOE mid-battle join** | Spawn into slot; no FPV FOE walk-in |
 | **Summons** | Aux slot in UI + optional sprite on party side of stage |
-| **Map** | `M` still shows read-only floor map (exploration data), not live arena |
+| **Map** | MVP1: `M` toggles read-only floor map (exploration data), not live arena — persistent map during fight **not locked** ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
 
 ---
 

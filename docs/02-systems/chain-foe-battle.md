@@ -49,7 +49,7 @@ If **multiple FOEs** share the cell same round: **one joins**; others wait for a
 | **Loot / XP** | Included in encounter rewards on victory |
 | **Codex** | Counts as FOE fight for drops/XP tuning |
 | **UI** | Combat log: `«FOE name» joined the battle!` ; portrait slides in |
-| **Map** | FOE icon on map follows “in combat” state or hides until resolved |
+| **Map** | FOE icon on map follows “in combat” state or hides until resolved — **visibility during fight** under explore ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
 
 ## End-of-round order (updated)
 

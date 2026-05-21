@@ -23,6 +23,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 - Grid 1:1 with dungeon cells at the party’s current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle post-MVP1 optional.
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
+- **Combat (MVP1):** Map **not** in the default combat layout; **`M`** toggles read-only floor map ([game phase](game-phase.md), [input bindings](input-bindings.md)). See [§ Consider / explore — map during combat](#consider--explore--map-during-combat).
 
 ### Map UI motion
 
@@ -62,13 +63,45 @@ MVP1 minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto
 
 On party wipe: **keep revealed map** for that floor (unchanged). Optional hard mode: map wipe — not default.
 
-## Difficulty (future)
+## Consider / explore — map during combat
 
-If mapping feels too easy, tune **fog strictness** or **FOE icon fade** — not manual drawing.
+**Status:** Not locked — MVP1 ships **toggle-only** (`M`); showing the map **by default** during fights is under evaluation.
+
+### Why explore this
+
+When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-battle join](chain-foe-battle.md) ship (MVP2+), FOEs can **advance on the grid each combat round** while the party fights. With the map hidden, players may miss:
+
+- A second FOE **creeping toward** the fight anchor
+- Whether **flee** is still viable relative to walls and incoming patrol ([foe-encounters](foe-encounters.md#flee-from-foe-fights-locked))
+- EO-style tension: “another stalker on the map” while you are already in a fight
+
+**MVP1:** Patrol + mid-battle join are **off** ([ADR 015](../../decisions/015-mvp1-combat.md)) — ambient grid threat is low, so a combat-only `M` toggle is acceptable for scope.
+
+### Options (not decided)
+
+| Option | Pros | Cons |
+|--------|------|------|
+| **A — Persistent side map** (exploration-style panel) | Always-on FOE icons and party anchor; strongest threat read | Shrinks combat command/arena space; FPV is already hidden — panel may feel disconnected from the arena |
+| **B — Compact tactical strip** | Small schematic + party/FOE dots only | Extra layout + art; may duplicate arena focus |
+| **C — `M` toggle only (current MVP1)** | Clean combat HUD; no layout cost | Easy to forget; no ambient “incoming FOE” read |
+| **D — Threat ping only** | Badge/icon when a FOE is within N cells of anchor | Minimal chrome; weak for route and flee planning |
+
+### Implementation notes (if we adopt A or B)
+
+- `MapView` today lives on **`ExplorationHUD`** only ([class design § View controllers](../05-class-design-mvp1.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
+- FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
+- Arena stays **slot-based** ([combat scene](combat-scene.md)) — map shows **grid** threat, not live battle positions.
+
+### Recommendation for next pass
+
+Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest **A** vs **C** before writing a new ADR. If threat read is sufficient with pings, prefer **D** over full side panel.
 
 ## Related docs
 
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
+- [FOE encounters](foe-encounters.md) · [Chain / mid-battle FOE](chain-foe-battle.md)
+- [Combat scene](combat-scene.md) · [Game phase](game-phase.md)
 - [ADR 002 — Mapping model](../../decisions/002-mapping-model.md)
+- [ADR 005 — FOE combat patrol](../../decisions/005-foe-combat-patrol.md) · [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)
 - [ADR 019 — Floor verticality](../../decisions/019-floor-verticality.md)
 - [04 — Tech notes](../04-tech-notes.md)

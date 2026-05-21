@@ -243,6 +243,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 - [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
+- [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping — [mapping § Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
 - [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
 - [ ] **Floor level painter** → `StratumFloor` export (primary map authoring; MVP1 may hand-fill one test floor)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)

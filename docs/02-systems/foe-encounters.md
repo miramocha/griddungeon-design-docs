@@ -95,6 +95,7 @@ Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1]
 ## Related docs
 
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
+- [Mapping — map during combat (consider / explore)](mapping.md#consider--explore--map-during-combat)
 - [02 — Combat](combat.md)
 - [FOE mid-battle join](chain-foe-battle.md)
 - [ADR 011 — FOE flee retreat](../../decisions/011-foe-flee-retreat.md)
