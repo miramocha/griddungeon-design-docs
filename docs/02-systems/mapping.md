@@ -104,6 +104,7 @@ Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest
 
 ## Related docs
 
+- [Map reveal save format](map-reveal-save-format.md) — packing visited cells and wall bitmasks for `SaveGame`
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [Autopilot (MVP2)](autopilot.md)
 - [FOE encounters](foe-encounters.md) · [Chain / mid-battle FOE](chain-foe-battle.md)

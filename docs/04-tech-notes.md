@@ -113,6 +113,7 @@ GameState (composition root)
 - **Truth layer** — designer collision (editor only); never sent to client as full download
 - **UI:** read-only grid; pan/zoom; no edit raycasts
 - `MapReveal.OnPartyEnteredCell`, `OnBumpWall(side)`, `OnInteract(type)`
+- **Save packing:** [map-reveal-save-format.md](02-systems/map-reveal-save-format.md) — `FloorMapStateCodec` (`Visited` / `Walls` packed ints, features/FOE structs)
 
 ### Map authoring & HUD ([ADR 002](../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map))
 

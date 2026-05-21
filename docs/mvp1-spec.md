@@ -37,7 +37,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | FOE respawn on hub return | [ADR 008](../decisions/008-campaign-defaults.md) |
 | ✅ | Gather node: one-click instant loot (no minigame) | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
 | ⬜ | `StratumFloor` assets for **B1F–B3F** (20×20 each; layouts in content doc) | [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f), [ADR 002](../decisions/002-mapping-model.md) |
-| ⬜ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md) |
+| ⬜ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md), [map save format](02-systems/map-reveal-save-format.md) |
 | ⬜ | Floor verticality + jump pads (Doom-style; flat B1F–B3F OK for first ship) | [ADR 019](../decisions/019-floor-verticality.md) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
