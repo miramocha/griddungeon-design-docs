@@ -2,10 +2,14 @@
 
 Turn-based battles: readable **AGI turn order**, **3+3 core rows** plus **+1+1 auxiliary** slots for summons/guests.
 
+Encounters **transition** from exploration FPV to a **battle arena** (fixed stratum backdrop, enemies on slot rig) — not in-world corridor combat ([combat scene](combat-scene.md), [ADR 013](../../decisions/013-combat-scene-rendering.md)).
+
 ## Battle layout
 
 ```
-[ Enemies — up to 5 targets, may have front/back or single row per design ]
+[ Navigator — off formation; Union + passives only ]
+
+[ Enemies — up to 5 targets, front + back rows (MVP1) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
 
 [ Core front ×3 ] [ Aux front ×1 ]   summon or guest
 [ Core back  ×3 ] [ Aux back  ×1 ]   summon or guest
@@ -31,12 +35,13 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 ### Round flow
 
-1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
-2. Display queue icons (portraits; aux uses distinct frame).
-3. **Turn phase** — each actor takes one action in AGI order.
-4. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
+1. **Union phase** (optional) — if [Union bar](union.md) is 100%, **[Navigator](navigator.md)** invokes one Union skill; core participate; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)).
+2. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
+3. Display queue icons (portraits; aux uses distinct frame).
+4. **Turn phase** — each actor takes one action in AGI order (actions charge Union bar when below 100%).
+5. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
 
-Optional later: **Speed Boost** / **Slow** modify effective AGI.
+**Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).
 
 ## Commands (core party)
 
@@ -46,7 +51,8 @@ Optional later: **Speed Boost** / **Slow** modify effective AGI.
 | Guard | Damage reduction until next turn |
 | Skill | Class skill; may **place summon** in aux slot |
 | Item | Usable consumables |
-| Flee | May fail; aux units left behind (summons dismissed; guest script TBD) |
+| Flee | May fail; see [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) for retreat cell rule |
+| Union | **Navigator only**; bar 100%; Union phase (not an AGI turn) |
 
 ## Commands (summon / guest)
 
@@ -60,25 +66,49 @@ Optional later: **Speed Boost** / **Slow** modify effective AGI.
 
 - Attack, skill, debuff, buff allies, **summon adds** (may fill enemy aux or extra slots), flee (rare).
 
-## Damage pipeline (draft)
+## Damage pipeline (MVP1)
+
+Locked for MVP1 ([ADR 015](../../decisions/015-mvp1-combat.md)). Tune constants in data; structure unchanged.
 
 ```
-hit = accuracy vs evasion (+ blind, etc.)
-if miss → end
-damage = skill/weapon base + stat − mitigation
-apply resistances (slash, pierce, fire, ice, volt, …) — start with 3 elements for MVP
-apply to HP; on-hit statuses
+hitChance = clamp( baseHit + attacker.AGI*0.5 - defender.AGI*0.3 + blindMod, 5, 95 )
+if random(100) > hitChance → MISS
+
+# Physical (Attack, slash/pierce skills)
+raw = (skillPower + STR * 0.5) * offenseMult / defenseMult
+mitigated = raw * (100 / (100 + defender.VIT))
+damage = mitigated * slashRes * pierceRes   # 1.0 default; 1.5 weak, 0.5 resist
+
+# Elemental (fire / ice / volt)
+raw = (skillPower + TEC * 0.3) * magicMult
+damage = raw * elementRes   # 1.5 weak, 0.5 resist, 2.0 null, 0.25 absorb
+
+apply Guard (×0.5) and battle modifiers
+HP -= max(1, floor(damage))   # minimum 1 on hit
+roll on-hit status inflicts
 ```
 
-## Status effects (EO starter set)
+| Tag | MVP1 |
+|-----|------|
+| Elements | fire, ice, volt |
+| Physical tags | slash, pierce (on skills) |
+| Heals | `skillPower + TEC * 0.4`, no hit roll |
 
-| Effect | Behavior |
-|--------|----------|
-| Poison | Damage each turn |
-| Sleep / Panic | Skip or random action |
-| Bind / Head bind | Disable arms / head skills |
-| Buff / Debuff | Timed stat mods |
-| Death | Core downed; summon dismissed; guest downed |
+Full rules: **[combat status & buffs](combat-status-and-buffs.md)**.
+
+## Status, buffs & debuffs (summary)
+
+| Category | Examples | When it matters |
+|----------|----------|-----------------|
+| **Control ailments** | Sleep, Panic, Paralysis | Turn start — skip or randomize action |
+| **Limb binds** | Head / Arm / Leg | Block skills by `Body` tag; Attack blocked if Arm bind |
+| **DoT** | Poison, Burn | End of combat round — HP tick |
+| **Stat mods** | Offense/Defense/Magic/Speed Up & Down, Blind | Damage + AGI queue; refresh same ID, no stack |
+| **Battle mods** | Guard, Charge | Until consumed or next turn |
+
+**End of combat round:** regen → DoT ticks → duration −1 → expire ([combat-status-and-buffs](combat-status-and-buffs.md#timing-model)).
+
+**Navigator:** no ailments ([navigator](navigator.md)). **Hospital** clears standard statuses between dives.
 
 ## FOE vs random fights
 
@@ -86,34 +116,40 @@ apply to HP; on-hit statuses
 |---|--------|-----|
 | Trigger | Step roll | Grid contact |
 | Difficulty | Floor table | Designed spawn; higher XP/drops |
-| Repeat | Common | FOE respawns on floor reset rules (TBD) |
+| Repeat | FOEs respawn when party returns to hub and re-enters floor ([ADR 008](../../decisions/008-campaign-defaults.md)) |
 
-## Optional later: FOE movement during combat
+## FOE patrol & mid-battle join (MVP2)
 
-**Not MVP.** When enabled ([ADR 005](../../decisions/005-foe-combat-patrol.md)):
+**Not MVP1** ([ADR 015](../../decisions/015-mvp1-combat.md)). When [ADR 005](../../decisions/005-foe-combat-patrol.md) enabled on floor:
 
-- Party stays on the **exploration cell** where the fight started; grid exploration remains frozen.
-- At **end of each combat round** (step 4 above — not per AGI turn), each FOE on the floor moves **1 cell** along its patrol path.
-- FOEs **do not join** the current encounter when they reach the party cell (no mid-battle merge by default).
-- After victory, optional **chain FOE battle** if an FOE shares the party cell — tune when feature ships.
+- Party frozen on fight-start cell; each **combat round** FOEs move **1 cell** on patrol.
+- FOE on party cell → **[mid-battle join](chain-foe-battle.md)** ([ADR 010](../../decisions/010-chain-foe-battle.md)): **one FOE per round** joins current fight; first turn **next combat round**.
+- No separate post-victory FOE fight for the same overlap.
 
-Exploration patrol ([ADR 003](../../decisions/003-foe-step-patrol.md)) is paused for the duration of combat; combat-round patrol replaces it.
+Exploration patrol ([ADR 003](../../decisions/003-foe-step-patrol.md)) paused until battle ends.
 
 ## Victory / defeat
 
 - **Victory:** XP to **core party only**; drops; quest progress.
 - **Wipe:** GAME OVER → hub load; see [hub](hub-and-services.md).
-- **Flee:** Return to exploration; summons end; guest per script.
+- **Flee:** Return to exploration; summons end. **FOE fights:** party pushed **1 cell back** if retreat cell open; flee **disabled** if wall behind ([foe-encounters](foe-encounters.md), [ADR 011](../../decisions/011-foe-flee-retreat.md)).
 
 ## Presentation (spells & skills)
 
-- **Most skills:** [fixed battle camera](combat-presentation.md) — same battle angle; optional slight zoom to target; no cinematic cuts.
-- **Some skills:** dynamic animation + **cinematic camera** (bosses, ultimates, highlights); longer lockout, data-flagged per skill.
+- **Most skills:** [fixed battle camera](combat-presentation.md) — same angle; optional slight zoom; fast resolve.
+- **Cinematic skills:** scripted camera + animation (boss telegraphs, spectacle) — skippable.
+- **Cinematic QTE skills (MVP2+):** same as cinematic + **timed button prompts** — bonus damage/effects on good timing; **base skill always lands** on miss.
 
 See [combat presentation](combat-presentation.md).
 
+## Input
+
+PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [input bindings](input-bindings.md).
+
 ## UI requirements
 
+- **Navigator** portrait + aura badges — [navigator](navigator.md)
+- **Union bar** (team, 0–100%) — see [union](union.md)
 - Turn order strip — core, aux, enemies mixed by AGI
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
@@ -121,9 +157,15 @@ See [combat presentation](combat-presentation.md).
 - Target selection with valid highlights
 - Combat log
 - Enemy weakness icons when identified
+- Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
 
 ## Related docs
 
+- [MVP1 spec](../mvp1-spec.md)
+- [Combat scene & enemy rendering](combat-scene.md)
+- [Combat status & buffs](combat-status-and-buffs.md)
+- [Navigator](navigator.md)
+- [Union (team bar)](union.md)
 - [Combat presentation](combat-presentation.md)
 - [Party & classes](party-and-classes.md)
 - [Summons & guests](summons-and-guests.md)

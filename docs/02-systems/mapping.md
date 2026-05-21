@@ -17,7 +17,8 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 ## Map UI
 
-- **Always available** in exploration (side panel; fullscreen view optional).
+- **Always available** in exploration (side panel; fullscreen `M`).
+- **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
 - Grid 1:1 with dungeon cells; north up.
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
@@ -27,14 +28,14 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 | Element | Revealed when |
 |---------|----------------|
 | **Floor** | Party **enters** cell |
-| **Walls** | Party **bumps** blocked side (forward, back, or strafe into wall) OR enters cell and that edge is wall (reveal adjacent wall segments along sight rules — MVP: bump + entered cell perimeter) |
+| **Walls** | **Bump** blocked side → stamp that wall; **enter cell** → reveal floor + wall on all solid edges of cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
-| **Chest / gather** | Party **opens** chest or **uses** gather node |
+| **Chest / gather / fish** | Opens chest (**MVP1**); gather/fish nodes (**MVP2**) — marks node on map |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
 | **Traps** (optional) | Party **triggers** trap on cell (mark for repeat visits) |
 
-MVP minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
+MVP1 minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
 
 ## Fog of war
 

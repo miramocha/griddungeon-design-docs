@@ -8,7 +8,7 @@ Guild hub (save, heal, shop, recruit)
     → Explore: step grid + auto-map reveals + avoid/bait FOEs
     → Random battles + FOE fights + loot
     → Retreat (stairs up / return item) when resources low
-    → Hub: sell, synthesize (later), allocate skill points
+    → Hub: sell, synthesize (**MVP2**), allocate skill points
     → Push next floor or next stratum
 ```
 
@@ -44,6 +44,10 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | Retreat (5 min) | Reach safe stairs or use return item |
 | Hub payout (10 min) | Heal, shop, skill allocation, save |
 
+## Exploration limits
+
+**Unlimited steps** in the labyrinth — no TP, food, or clock limiting grid movement ([ADR 008](../decisions/008-campaign-defaults.md)). Tension comes from FOEs, encounters, and HP/MP resources, not step count.
+
 ## Risk / reward knobs
 
 | Knob | Risk | Reward |
@@ -61,6 +65,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | **Combat** | Turn UI; exploration frozen |
 | **Map view** | Larger read-only map (pan/zoom) |
 | **Hub menus** | Guild, shop, hospital, inn save |
+| **Gather / fish** (**MVP2**) | Minigame at dungeon nodes → materials — [gathering & fishing](02-systems/gathering-and-fishing.md) |
 
 ## Win / lose
 
@@ -70,6 +75,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 
 ## Related docs
 
+- [Release scope](00-release-scope.md)
 - [Hub & services](02-systems/hub-and-services.md)
 - [Mapping](02-systems/mapping.md)
 - [02 — Dungeon navigation](02-dungeon-navigation.md)

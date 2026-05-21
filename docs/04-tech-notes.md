@@ -1,4 +1,37 @@
-# Tech Notes (Unity / URP)
+# Tech Notes (Unity 6 / URP)
+
+**Engine:** **Unity 6** (6000.x) + **URP** ([ADR 012](../decisions/012-unity-6-stack.md)).  
+**Platform:** PC Standalone ([ADR 008](../decisions/008-campaign-defaults.md), [input bindings](02-systems/input-bindings.md)).
+
+## Engine stack (locked)
+
+| Layer | Choice |
+|-------|--------|
+| Editor / runtime | Unity 6 — pin minor in `ProjectVersion.txt` when repo exists |
+| Rendering | URP (no Built-in RP) |
+| Shaders | **Shader Graph** for most materials/VFX; **HLSL** only when Graph can’t express it or perf demands a custom pass ([ADR 012](../decisions/012-unity-6-stack.md)) |
+| Input | Input System — `Exploration`, `Combat`, `Map`, `UI` action maps; rebindable player prefs when settings ship |
+| Combat cinematics | Timeline / Animation clips per skill asset |
+| Save | `JsonUtility` or custom serializer MVP1; ScriptableObjects for content DB |
+
+Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use.
+
+## Shaders (Shader Graph–first)
+
+| Use Shader Graph | Use HLSL (exception) |
+|------------------|----------------------|
+| FPV dungeon walls/floor/doors | Custom fullscreen blit with no graph equivalent |
+| Battle arena backdrop & slot lighting | Compute-style pass (if used) |
+| Character/enemy sprites — lit/unlit | Extremely hot path after profiling |
+| Hit flash, poison tint, Union burst VFX | Porting legacy `.shader` until rebuilt in Graph |
+| UI-adjacent fullscreen tints | |
+
+**Conventions**
+
+- URP **Shader Graph** assets under `Assets/Shaders/Graph/` (or project convention).
+- Handwritten shaders under `Assets/Shaders/HLSL/` — **one-line rationale** at top of file.
+- Prefer **subgraphs** for reusable noise, dissolve, hit-flash rather than copy-paste HLSL.
+- No Built-in RP shaders; no Shader Forge legacy imports.
 
 EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queue** as first-class systems. **No map drawing tools.**
 
@@ -8,11 +41,14 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 GameState (hub | exploration | combat)
 ├── HubServices          — guild, shop, hospital, inn save
 ├── DungeonExplorer      — grid step, facing, interact
-├── DungeonView          — FPV cell rendering
+├── DungeonView          — FPV cell rendering (hidden during combat)
+├── CombatSceneController — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 ├── MapSystem            — auto-reveal layer, fog, read-only UI
 ├── FoeSystem            — spawn, visibility, step patrol, contact
 ├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
-├── CombatController     — AGI queue (core + aux + enemies), turn resolution
+├── NavigatorRuntime     — active navigator, aura application, roster
+├── UnionSystem          — team bar charge/spend; Navigator invokes in Union phase
+├── CombatController     — UnionPhase → AGI queue → EndRound
 ├── CodexSystem          — enemy knowledge / weaknesses
 ├── ContentDatabase      — strata, floors, FOE, encounters
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
@@ -29,29 +65,62 @@ GameState (hub | exploration | combat)
 - **UI:** read-only grid; pan/zoom; no edit raycasts
 - `MapReveal.OnPartyEnteredCell`, `OnBumpWall(side)`, `OnInteract(type)`
 
+## Gathering & fishing (MVP2)
+
+- `MinigameController` — `Gather` | `Fish`; pauses exploration + FOE step tick
+- `GatherNodeInstance` / `FishNodeInstance` on floor; depleted flags in dive save; reset on hub respawn ([gathering & fishing](02-systems/gathering-and-fishing.md))
+
 ## FOE system
 
 - `FoeInstance` — id, grid pos, patrol path index, tier, encounter group
 - `OnPartyStep()` → increment floor step count; FOEs with `stepsPerMove` advance patrol index
 - Line-of-sight check for map icon reveal
 - Collision → `CombatController.StartBattle(foeId)`
-- **Optional later:** `TickCombatRound()` — 1 patrol cell per FOE per combat round ([ADR 005](../decisions/005-foe-combat-patrol.md)); flag-gated
+- `CanFoeFlee()` → backward retreat cell walkable ([ADR 011](../decisions/011-foe-flee-retreat.md))
+- `OnFoeFleeSuccess()` → set party exploration pos to retreat cell
+- **Optional later:** `TickCombatRound()` + `TryJoinOneFoe()` ([ADR 005](../decisions/005-foe-combat-patrol.md), [ADR 010](../decisions/010-chain-foe-battle.md)); flag-gated
 
-MVP: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
+MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
 
 ## Combat
 
-- `TurnQueueBuilder.Build(combatants)` sorted by AGI
+- `TurnQueueBuilder.Build(combatants)` sorted by AGI (+ Speed Up/Down from [status system](02-systems/combat-status-and-buffs.md))
+- `StatusSystem` — apply/refresh/tick/cleanse; `StatusDefinition` ScriptableObjects; limb bind filters skill `bodyPart`
+- `EndOfRoundPipeline` — regen → DoT → decrement durations → FOE patrol (optional)
 - UI binds to queue head; advance on action complete
-- `CombatSimulator` pure C# for tests
+- `CombatSimulator` pure C# for tests (status inflict + tick unit tests)
+
+## Navigator
+
+- `NavigatorDefinition` — aura modifiers, union skill ids, `unlockCondition`
+- `PartyRuntime.ActiveNavigatorId`; `UnlockedNavigatorIds` (flags from strata/quests/events)
+- `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
+- Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
+
+## Union (team bar)
+
+- `UnionBar` float 0–1 on `PartyRuntime`
+- `UnionSystem.OnCombatEvent` — core six only
+- `CombatController.BeginRound` → `UnionPhase` if bar == 1 && Navigator skill chosen
+- `UnionSkillDefinition` — participant count, effect, presentation id
+- Save: `unionBar` + `activeNavigatorId` per dive
+- FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter
+
+## Combat scene
+
+- `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..4` ([ADR 013](../decisions/013-combat-scene-rendering.md))
+- Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
+- Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) — separate assets per id
 
 ## Combat presentation
 
-- `BattleCameraRig` — fixed angle default ([combat presentation](02-systems/combat-presentation.md))
-- `SkillDefinition.presentation`: `Fixed` (default) | `Cinematic`
+- `BattleCameraRig` — fixed angle on arena rig ([combat presentation](02-systems/combat-presentation.md))
+- `SkillDefinition.presentation`: `Fixed` | `Cinematic` | `CinematicQTE`
 - `Fixed` — VFX at slots; optional subtle zoom to primary target, then reset
-- `Cinematic` — Timeline / scripted camera; blocks until complete or skip
-- MVP: all skills `Fixed`; cinematic pipeline stub for later
+- `Cinematic` — Timeline; skippable; enemy boss telegraphs (no player QTE)
+- `CinematicQTE` — Timeline + `QTEController` (press / chain / hold); tier → damage bonus; skill always resolves base on miss
+- MVP1: all skills `Fixed`; cinematic + QTE stubbed
+- MVP2: 1× `CinematicQTE` party skill + 1× boss `Cinematic` sample
 
 ## Grid / content
 
@@ -106,12 +175,14 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 ## Open technical decisions
 
-- [ ] Wall reveal: bump-only vs also reveal perimeter on cell entry
-- [ ] Default `stepsPerMove` per stratum (tune 2–5)
-- [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove`
+- [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
+- [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
+- [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
+- [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (post-MVP1 tooling)
 
 ## Related docs
 
 - [Mapping](02-systems/mapping.md)
 - [ADR 002](../decisions/002-mapping-model.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
+- [ADR 012 — Unity 6 stack](../decisions/012-unity-6-stack.md)

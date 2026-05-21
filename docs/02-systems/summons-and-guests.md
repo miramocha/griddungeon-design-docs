@@ -5,6 +5,8 @@ Combat formation extends the core **3+3 guild party** with **one auxiliary slot 
 ## Formation (combat only)
 
 ```
+[ Navigator — off formation; see navigator.md ]
+
 [ Enemy row ]
 
 [ Core front ×3 ] [ Aux front ×1 ]   ← summon or guest
@@ -13,11 +15,12 @@ Combat formation extends the core **3+3 guild party** with **one auxiliary slot 
 
 | Slot type | Count | Who |
 |-----------|-------|-----|
+| **Navigator** | 1 active | Party lead; Union + passives; **not** in 3+3 ([navigator](navigator.md)) |
 | **Core** | 3 front + 3 back | Guild roster; persistent; explore as one party blob |
 | **Aux front** | 1 | One **summon** or **guest** (not both) |
 | **Aux back** | 1 | One **summon** or **guest** (not both) |
 
-**Max fighters in battle:** 8 (6 core + 2 aux), if both aux slots are filled.
+**Max in battle UI:** Navigator + up to 8 (6 core + 2 aux).
 
 Auxiliary units **do not** appear on the exploration grid — only in combat.
 
@@ -62,12 +65,12 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 - Aux slots: distinct frame (e.g. border color) labeled **Summon** / **Guest**; empty aux slot hidden or shown dimmed.
 - Turn queue shows aux icons mixed with party by AGI.
 
-## MVP
+## MVP1
 
 | Phase | Scope |
 |-------|--------|
-| **MVP** | Combat layout reserves aux slots; one test **summon** skill (aux back, 3 turns) |
-| **MVP+** | One scripted **guest** on a quest fight |
+| **MVP1** | Combat layout reserves aux slots; one test **summon** skill (aux back, 3 turns) |
+| **MVP1+** | One scripted **guest** on a quest fight |
 | **Later** | Multiple summon skills, enemy summons, guest roster |
 
 ## Related docs

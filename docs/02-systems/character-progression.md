@@ -1,6 +1,6 @@
 # Character Progression
 
-## Stats (EO-aligned draft)
+## Stats (MVP1)
 
 | Stat | Affects |
 |------|---------|
@@ -24,7 +24,7 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 ## Skill points
 
 - Spent at **hub only** on class trees.
-- Respec: expensive NPC service or none in MVP.
+- Respec: expensive NPC service or none in MVP1.
 
 ## Equipment
 
@@ -32,7 +32,7 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 |------|-------|
 | Weapon | Class restrictions (sword, bow, gun, staff, …) |
 | Head / Body / Legs | Armor slots (EO three-piece + weapon) |
-| Accessory | 1–2 slots (phase 2) |
+| Accessory | **1 slot** in MVP1 |
 
 ## Identify & codex
 
@@ -41,7 +41,7 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 ## Synthesis (EO crafting)
 
-Phase 2 hub feature:
+**MVP2** hub feature ([release scope](../00-release-scope.md)); materials from [gathering & fishing](gathering-and-fishing.md):
 
 - Combine monster drops + shop materials → weapons/armor
 - Recipe list unlocks via quests and experimentation

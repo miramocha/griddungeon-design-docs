@@ -1,0 +1,21 @@
+# ADR 015 — MVP1 Combat
+
+**Status:** Accepted  
+**Date:** 2026-05-20
+
+## Decisions (MVP1)
+
+1. **Enemy layout:** **Front + back rows** (like party) — up to **5** slots total across rows per encounter design; melee targets enemy **front** before back unless pierce.
+2. **Battle camera:** **Three-quarter** fixed angle on arena rig ([ADR 013](013-combat-scene-rendering.md)).
+3. **Presentation:** All skills **`Fixed`**; cinematic/QTE stubbed ([combat presentation](../docs/02-systems/combat-presentation.md)).
+4. **ADR 005 / mid-battle join:** **Off in MVP1** — FOEs frozen on grid during fights; ships in **MVP2** ([ADR 005](005-foe-combat-patrol.md), [ADR 010](010-chain-foe-battle.md)).
+5. **Pause (`Esc` in combat):** Pause menu — **Resume** / **Settings** only. **No** abandon fight or return to hub from pause; use **Flee** command.
+6. **Random encounter flee:** Succeed/fail per roll; on success, party stays on **same cell** (no pushback). FOE flee uses [ADR 011](011-foe-flee-retreat.md).
+7. **Damage pipeline:** Locked formulas in [combat](../docs/02-systems/combat.md#damage-pipeline-mvp1) — 3 elements (fire, ice, volt); physical + pierce/slash tags; hit/evasion clamp 5–95%.
+8. **Status (MVP1 subset):** Poison, Sleep, Panic, Head Bind, Arm Bind, Offense/Defense Up & Down, Blind, Guard. **DoT can kill.** No leg bind, paralysis, burn, speed mods in MVP1.
+9. **Union tuning:** Use draft charge table in [union](../docs/02-systems/union.md) as MVP1 baseline; **one** Navigator (`guild_handler`) + **two** Union skills playable.
+
+## Related
+
+- [MVP1 spec](../docs/mvp1-spec.md)
+- [Combat status & buffs](../docs/02-systems/combat-status-and-buffs.md)

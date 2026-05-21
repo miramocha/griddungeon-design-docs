@@ -41,13 +41,14 @@ Turns in place skip steps 2–4 (no step counter increment).
 ## FOEs on the grid
 
 - FOEs appear as **visible entities** in the dungeon (sprite/mesh) and on the map when in sight.
-- **Contact** with FOE cell → combat (EO: fight or be caught).
+- **Contact** with FOE cell → FOE combat ([foe-encounters](02-systems/foe-encounters.md)); fight plays on **battle arena**, not in FPV cell ([combat scene](02-systems/combat-scene.md)).
+- **Flee** from FOE fight: allowed if **1 cell back** (opposite facing) is walkable; **disabled** if backed to a wall ([ADR 011](decisions/011-foe-flee-retreat.md)).
 - **Strength cue** — color/icon tier vs average party level.
 - **Patrol** — FOEs advance every N **party steps** (any displacement: forward, back, strafe); see [ADR 003](../decisions/003-foe-step-patrol.md). Stationary FOE = single-cell path.
 
 Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/loot.
 
-**Optional later:** During combat, FOEs may still move **1 grid per combat round** on the labyrinth ([ADR 005](../decisions/005-foe-combat-patrol.md)). Party cell is frozen until the fight ends; no mid-battle FOE join unless chain battles are added later.
+**Optional later:** FOEs move **1 grid per combat round** during fights ([ADR 005](../decisions/005-foe-combat-patrol.md)); may **[join the battle](../../docs/02-systems/chain-foe-battle.md)** one at a time if they reach the party cell ([ADR 010](../decisions/010-chain-foe-battle.md)).
 
 ## Random encounters
 
@@ -58,7 +59,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 ## Interactables
 
 - Doors, keys, one-way passages
-- Chests, mining/gather nodes (materials for synthesis)
+- Chests (**MVP1**); gather / fish nodes (**MVP2** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
 - Stairs up/down (stratum transitions)
 - **Return thread** item — teleport party to hub once (consumable, EO Ariadne analogue)
 
@@ -72,8 +73,13 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 - Short step lerp (~0.2s); logic commits at step start ([ADR 001](../decisions/001-grid-movement.md)).
 - Bump feedback when movement blocked — **auto-stamp wall** on that edge ([mapping](02-systems/mapping.md)).
 
+## Input
+
+PC defaults: `W/S/A/D` move, `Q/E` turn, `Space` interact — see [input bindings](02-systems/input-bindings.md).
+
 ## Related docs
 
+- [Input bindings](02-systems/input-bindings.md)
 - [Mapping](02-systems/mapping.md)
 - [ADR 001](../decisions/001-grid-movement.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)

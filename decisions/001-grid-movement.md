@@ -1,6 +1,6 @@
 # ADR 001 — Grid Movement Feel
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-05-20  
 **Aligns with:** *Etrian Odyssey*
 
@@ -8,7 +8,7 @@
 
 EO uses discrete grid steps with light animation. Movement must stay compatible with **per-step random encounters**, **FOE patrol ticks**, and **auto-floor mapping**.
 
-## Decision (proposed)
+## Decision
 
 1. **Displacement** — forward, backward, **strafe left**, **strafe right**: one cell, ~0.2s lerp; logic at step start; **facing unchanged**.
 2. **Turn in place** — 90°; **no step events** (no encounter, no FOE tick).

@@ -2,23 +2,23 @@
 
 Exploration alternates with a **fixed hub** at the labyrinth entrance — not an open overworld. EO's town loop: prepare, dive one stratum, return before overextending.
 
-## Hub locations (MVP)
+## Hub locations (MVP1)
 
 | Service | Function |
 |---------|----------|
-| **Explorers Guild** | Create/recruit characters, rename, register party, view class skills |
+| **Explorers Guild** | Create/recruit **core** characters; register 6-member party; view skill trees; assign **unlocked** Navigator (Navigators unlock via strata / quests / events — not recruited) |
 | **Shop** | Buy/sell weapons, armor, consumables |
-| **Hospital** | Restore HP/MP; cure status; revive fallen members (fee) |
+| **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
 | **Inn / Camp desk** | Save game (primary save point) |
-| **Quest counter** | Accept kill/gather/floor reach quests (optional MVP) |
-| **Synthesis** (phase 2) | Fuse materials → equipment (EO crafting loop) |
+| **Quest counter** | Accept kill/gather/floor reach quests (optional MVP1) |
+| **Synthesis** (**MVP2**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
 
 No real-time hub walking required for prototype — menu tree is fine.
 
 ## Macro loop (EO-aligned)
 
 ```
-Hub → Equip / skills / buy consumables → Enter stratum at saved floor
+Hub → Equip / skills / buy consumables → Enter stratum (**Union bar** 100%) at saved floor
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
     → Retreat via stairs or Ariadne thread (return item) when low
     → Hospital + shop + guild → Spend XP on skills → Repeat
@@ -30,7 +30,7 @@ Hub → Equip / skills / buy consumables → Enter stratum at saved floor
 - Example: Stratum 1 "Emerald Grove" — floors B1F–B5F, then stratum boss.
 - Hub stair **remembers deepest unlocked floor** per stratum.
 
-## Quests (optional MVP)
+## Quests (optional MVP1)
 
 | Type | Example reward |
 |------|----------------|
@@ -46,6 +46,9 @@ Hub → Equip / skills / buy consumables → Enter stratum at saved floor
 
 ## Related docs
 
+- [Release scope](../00-release-scope.md)
+- [Gathering & fishing (MVP2)](gathering-and-fishing.md)
 - [01 — Core loop](../01-core-loop.md)
 - [Character progression](character-progression.md)
+- [Union (team bar)](union.md)
 - [03 — Dungeons & encounters](../03-content/dungeons-and-encounters.md)

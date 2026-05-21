@@ -20,7 +20,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 1. **Looping paths** — shortcuts behind keys/FOE gates reward map literacy.
 2. **FOE as puzzles** — block shortest route until party ready or map route around patrol.
-3. **Gather nodes** — materials for synthesis on later floors.
+3. **Gather / fish nodes** — **MVP2** minigames → materials for synthesis ([gathering & fishing](../02-systems/gathering-and-fishing.md)).
 4. **Safe-ish rooms** — lower encounter rate (not always zero).
 5. **Landmarks** — unique art/audio cue; auto-mapped when visited.
 
@@ -31,7 +31,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 | B1F | Forest entrance | None / 1 weak stationary FOE | Tutorial walls + stairs |
 | B2F | Dense thicket | 2 FOEs, green tier | Key door loop |
 | B3F | Stream crossing | First step-patrol FOE (`stepsPerMove: 4`) | Damage floor tiles optional |
-| B4F | Old growth | Red-tier FOE guards chest | Gather: wood |
+| B4F | Old growth | Red-tier FOE guards chest | **MVP2:** chop + first fish pond |
 | B5F | Guardian hall | Stratum boss FOE | Boss room, stairs to Stratum 2 |
 
 ## Encounter types
@@ -39,7 +39,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 | Type | Trigger | Design notes |
 |------|---------|--------------|
 | **Random** | Per-step roll | Table per floor; no FOE sprite |
-| **FOE** | Grid entity contact | Authored position; patrol path optional |
+| **FOE** | Grid entity contact | Authored position; patrol path optional; flee → 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
 | **Boss FOE** | Unique spawn | Stratum gate; higher rewards |
 | **Event** | Tile script | Story fight, no flee |
 
@@ -78,28 +78,30 @@ entries:
 
 ## Traps & gathers
 
-| Type | EO parallel |
-|------|-------------|
-| Damage tile | Slip roots, thorns |
-| Gather | Chopping/mining points — respawn on return to hub |
-| Chest | Loot; auto-marks on map when opened |
+| Type | EO parallel | Scope |
+|------|-------------|-------|
+| Damage tile | Slip roots, thorns | MVP1 |
+| Gather / mine / forage | Chopping/mining — **minigame** | **MVP2** |
+| Fish | Pond/stream — **fishing minigame** | **MVP2** |
+| Chest | Loot; auto-marks on map when opened | MVP1 |
+
+Gather and fish nodes **respawn on hub return**; depleted during one dive. Details: [gathering & fishing](../02-systems/gathering-and-fishing.md).
 
 ## Boss checklist
 
 - [ ] Visible on map approach (room scale telegraph)
 - [ ] Weakness discovery via Codex or Analysis
 - [ ] Drops unlock stratum or synthesis tier
-- [ ] FOE does not respawn until stratum reset rule defined
+- [x] FOE respawn on hub return ([ADR 008](../decisions/008-campaign-defaults.md))
 
-## FOE respawn rules (TBD)
+## FOE respawn (locked)
 
-| Model | Feel |
-|-------|------|
-| Respawn on hub return | EO-like farming control |
-| One-time per save | More puzzle-like |
-| Timer respawn | High grind |
+When the party **returns to hub** and later **re-enters** a floor:
 
-**Proposal:** respawn when returning to hub and re-entering floor (EO common pattern).
+- **FOEs respawn** to authored spawn positions and patrol indices (fresh floor state for FOEs).
+- **Player map**, **open doors**, and **looted chests** persist; **FOEs reset** ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
+
+Between fights on the same dive **without** hub visit: FOE positions **persist** (defeated FOEs stay down until respawn trigger above).
 
 ## Content pipeline
 
