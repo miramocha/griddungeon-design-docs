@@ -98,7 +98,7 @@ pack   = tag | ((x & 0xFF) << 16) | ((y & 0xFF) << 8) | ((int)mask & 0xFF)
 unpack = require tag; x,y from bytes; mask from low byte
 ```
 
-**MVP1 limit:** wall packs assume **x,y ≤ 255** per floor. MVP1 floors are 20×20 — safe. Visited-only packs still use 16-bit y for headroom.
+**MVP1 limit:** wall packs assume **x,y ≤ 255** per floor (`FloorMapStateCodec.MaxWallPackExtent`; `IsGridPackable` / `LoadFloor` log error if exceeded). MVP1 floors are 20×20 — safe. Visited-only packs still use 16-bit y for headroom.
 
 **Why the tag?** An earlier layout OR'd `mask << 24` into the same word as `x << 16`, which corrupted coordinates on unpack. Tag + fixed byte lanes avoids overlap.
 
