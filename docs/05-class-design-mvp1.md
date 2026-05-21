@@ -1080,10 +1080,11 @@ class PartyStripView : MonoBehaviour
     void Refresh();
 }
 
+// Horizontal AGI queue strip; rules in combat.md § Turn order strip.
 class TurnOrderStripView : MonoBehaviour
 {
-    void Bind(TurnQueue queue);
-    void Advance();
+    void Bind(TurnQueue queue);   // TurnQueue.Ordered + Current
+    void Advance();               // highlight next slot; OnTurnStart from CombatController
 }
 
 class CommandPanelView : MonoBehaviour

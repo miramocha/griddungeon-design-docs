@@ -150,7 +150,7 @@ PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [inpu
 
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
 - **Union bar** (team, 0–100%) — see [union](union.md)
-- Turn order strip — core, aux, enemies mixed by AGI
+- **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
 - Command phase: one action per **player-controlled** core combatant; summons **auto-resolve** in MVP1
@@ -158,6 +158,30 @@ PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [inpu
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
+
+### Turn order strip (AGI queue UI)
+
+Combat must show a **horizontal strip** (left → right = soonest → latest) listing **every combatant in the current round’s AGI queue**:
+
+| Included | Excluded |
+|----------|----------|
+| Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Union only; separate portrait) |
+| | Dead / KO combatants (removed when queue rebuilds) |
+
+**Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design-mvp1.md#view-controllers)).
+
+**Visual rules (MVP1):**
+
+- **Current actor:** strong highlight (frame glow / scale); strip does not scroll away from active slot during the turn.
+- **Party vs enemy:** distinct frame or background tint; aux uses summon/guest frame ([summons & guests](summons-and-guests.md)).
+- **Enemies:** portrait or silhouette + row hint (front/back); weakness icons stay on enemy row UI, not required on every queue icon.
+- **Status:** control ailments (Sleep, etc.) show on the queue icon; skipped turns grey the slot ([status UI](combat-status-and-buffs.md#ui)).
+- **Rebuild:** full strip refresh when the queue is rebuilt (start of round, after deaths, end of round). Mid-round inserts (e.g. FOE join MVP2) update on the **next** round ([chain FOE](chain-foe-battle.md#ui--presentation)).
+- **Cinematics:** strip stays on screen, dimmed; never fully hidden ([combat presentation](combat-presentation.md#ui-during-cinematic)).
+
+**Not in MVP1 UI:** speed buff/debuff reordering ([ADR 015](../../decisions/015-mvp1-combat.md)); strip order still reflects AGI at build time once those statuses ship.
+
+**Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](mvp1-spec.md) AGI queue UI.
 
 ## Related docs
 
