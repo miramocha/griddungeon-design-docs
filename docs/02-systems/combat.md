@@ -148,6 +148,7 @@ PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [inpu
 
 ## UI requirements
 
+- **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback) and [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
 - **Union bar** (team, 0–100%) — see [union](union.md)
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
@@ -158,6 +159,27 @@ PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [inpu
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
+
+### UI motion & feedback
+
+Every row below needs a **visible** reaction (DOTween or USS transition). Pair with combat log text; log alone is insufficient for MVP1.
+
+**Blocking:** `CombatController` (or a small presentation gate) holds input until the row’s tweens finish — EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
+
+| Event | UI reaction (MVP1) | Blocks until done |
+|-------|-------------------|-------------------|
+| Turn advances | Turn strip: highlight **slides** or **pulses** to `Current`; previous slot eases to idle | Yes — next AGI turn / command |
+| Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; optional floating number near slot | Yes — next action on that beat |
+| Status applied / cleansed | Icon **pop-in** or brief tint on portrait + queue icon | Yes |
+| Death / KO | Portrait **grey + scale down** or slide out; strip slot removed on rebuild with short fade | Yes |
+| Union bar change | Fill **lerps**; at 100% brief **glow** before Union phase | Yes — Union phase entry |
+| Union phase | Navigator + participating cores **highlight** ([union](union.md)) | Yes — first AGI turn after Union |
+| Valid targeting | Enemy/portrait **outline pulse** on valid slots | No — selection is interactive; pulse loops until pick |
+| Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
+| FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
+| Combat log line | Newest entry **fade/slide in**; scroll to bottom | Bundled with the beat above (same lock) |
+
+Presenters implement motion; `CombatController` / `CombatScenePresenter` stay authoritative for rules.
 
 ### Turn order strip (AGI queue UI)
 
@@ -172,7 +194,7 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 
 **Visual rules (MVP1):**
 
-- **Current actor:** strong highlight (frame glow / scale); strip does not scroll away from active slot during the turn.
+- **Current actor:** strong highlight (frame glow / scale) with **animated handoff** when `Advance()` runs; strip does not scroll away from active slot during the turn.
 - **Party vs enemy:** distinct frame or background tint; aux uses summon/guest frame ([summons & guests](summons-and-guests.md)).
 - **Enemies:** portrait or silhouette + row hint (front/back); weakness icons stay on enemy row UI, not required on every queue icon.
 - **Status:** control ailments (Sleep, etc.) show on the queue icon; skipped turns grey the slot ([status UI](combat-status-and-buffs.md#ui)).

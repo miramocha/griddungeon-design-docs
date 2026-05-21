@@ -55,6 +55,29 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 - Exploration lerp durations: four presets (Slow / Normal / Fast / Very Fast); default Normal 0.28s step ([ADR 018](../decisions/018-exploration-animation-speed.md)).
 - **Timeline** stays the source of truth for sparse cinematic skills; do not duplicate the same beat in both Timeline and DOTween unless one drives the other.
 
+### UI reactivity
+
+**Hub, exploration, and combat** HUDs share the same MVP1 bar: when game state changes, the UI **animates or pulses** so cause → effect is obvious. Static swaps alone are not enough.
+
+| Principle | Rule |
+|-----------|------|
+| **Event-driven** | Presenters (`*View` in `GridDungeon.UI`) subscribe to controller events (`CombatController`, `HubController` services, `MapSystem`, `DungeonExplorer`, `GamePhaseController`) and play feedback; views do not poll every frame for diffs. |
+| **DOTween on Toolkit** | Short tweens on `VisualElement` style/transform (fade, scale punch, slide, fill lerp). Enable DOTween **UI** module. No tween logic in `GridDungeon.Core`. |
+| **State first, motion second** | Apply authoritative values immediately (HP, map cells, queue order); animate **from** the previous visual state. |
+| **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock — play the full highlight → VFX → log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted — pick one per beat in the phase doc tables. |
+| **Duration** | Typical UI feedback **0.1–0.4s**; Union bar fill and HP drops may use **0.2–0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
+| **Cleanup** | `Kill` / complete tweens on `OnDisable`, phase exit, and combat end (see [Animation](#animation-dotween--timeline) above). |
+
+**MVP1 checklists by phase:**
+
+| Phase | Doc |
+|-------|-----|
+| Combat | [combat — UI motion & feedback](02-systems/combat.md#ui-motion--feedback) |
+| Exploration | [mapping — Map UI motion](02-systems/mapping.md#map-ui-motion) |
+| Hub | [hub — Service UI motion](02-systems/hub-and-services.md#service-ui-motion) |
+
+**Deferred (post-MVP1):** global **reduce UI motion** accessibility toggle; keep tween durations in data/prefs so scale-to-zero is trivial later.
+
 ## High-level modules
 
 ```

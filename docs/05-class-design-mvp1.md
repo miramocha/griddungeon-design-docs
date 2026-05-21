@@ -982,7 +982,7 @@ class SaveSystem : MonoBehaviour
 
 ## UI layer
 
-Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers.
+Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** hub / explore / combat presenters subscribe to events, play DOTween feedback, and respect a **presentation lock** until beats finish — see [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [hub](02-systems/hub-and-services.md#service-ui-motion).
 
 ### Input routing
 

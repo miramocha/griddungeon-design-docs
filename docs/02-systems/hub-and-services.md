@@ -16,6 +16,20 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 
 No real-time hub walking required for prototype — menu tree is fine.
 
+### Service UI motion
+
+Hub menus use the same **reactive, blocking** bar as combat and exploration ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
+
+| Event | UI reaction (MVP1) | Blocks until done |
+|-------|-------------------|-------------------|
+| Open / close service screen | Panel **fade/slide** | No — navigation only |
+| Inn save | Brief **confirm flash** + text | Yes — before another service action |
+| Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
+| Shop buy / sell | Gold + stock row **pulse**; inventory slot update | Yes |
+| Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
+| Navigator Office pick active | Portrait **glow**; aura preview **fade in** | Yes |
+| Leave hub → stratum | Transition **fade** (pairs with phase change) | Yes — until exploration phase ready |
+
 ### Guild vs Navigator Office
 
 | | **Explorers Guild** | **Navigator Office** |

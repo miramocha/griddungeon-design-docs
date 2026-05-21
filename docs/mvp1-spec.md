@@ -50,6 +50,7 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | FOE combat patrol **off** (MVP2) | [ADR 005](../decisions/005-foe-combat-patrol.md) deferred |
 | ⬜ | 8 enemy types + 1 boss encounter group | content |
 | ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [party classes](02-systems/party-and-classes.md#summon-skills--summoner-only), [ADR 016](../decisions/016-summon-control-mvp1.md) |
+| ⬜ | Reactive HUD — hub / explore / combat; **blocking** UI feedback on state changes | [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity) |
 
 ### Hub & progression
 
@@ -105,6 +106,7 @@ Full Navigator roster unlocks post-MVP1.
 | Cinematic / QTE skills | MVP2 optional |
 | Gamepad, rebind UI | Post-MVP1 |
 | Exploration animation speed UI (presets in [ADR 018](../decisions/018-exploration-animation-speed.md)) | Post-MVP1 |
+| Reduce UI motion (accessibility) | Post-MVP1 |
 | Leg bind, paralysis, burn, speed buffs | Post-MVP1 |
 | Traps, encounter suppress | Post-MVP1 |
 | Guest (`MVP1+`) | Stretch |

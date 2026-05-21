@@ -23,6 +23,20 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
 
+### Map UI motion
+
+Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
+
+| Event | UI reaction (MVP1) | Blocks until done |
+|-------|-------------------|-------------------|
+| Floor / wall revealed | Cell or edge **fade/stamp in** on map panel | Yes — with step beat |
+| Door / stairs discovered | Icon **pop-in** on tile | Yes — with interact beat |
+| FOE enters sight | FOE marker **fade in** on map | Yes — before next step if revealed mid-step |
+| FOE patrol step | Marker **slides** to new cell | No — ambient; must not block player input |
+| Party moves | Party arrow **slides** to new cell; optional facing tick | Yes — with step lerp |
+| Chest / gather (MVP1 gather) | Node icon **flash** + loot toast | Yes — before next interact |
+| Open fullscreen map (`M`) | Panel **scale/fade** open | No — overlay only |
+
 ## Auto-reveal rules
 
 | Element | Revealed when |
