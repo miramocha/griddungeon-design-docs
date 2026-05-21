@@ -55,7 +55,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [party classes](02-systems/party-and-classes.md#summon-skills--summoner-only), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | ⬜ | Reactive HUD — hub / explore / combat; **blocking** UI feedback on state changes | [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity) |
 | ⬜ | S1 intro: Act 1 movement → hub party → Act 3 mouth entry; tutorial blockers on `s1_B1F` | [campaign/s1-intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
-| ⬜ | Synchro unlocks **mid** first FOE; FOE **unbeatable**; forced `protocol_strike` in same fight | [synchro-protocol — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
+| ⬜ | Synchro unlocks **mid** first FOE; FOE **unbeatable**; forced `protocol_strike` in same fight | [campaign/s1-intro](03-content/campaign/s1-intro.md), [synchro — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
+| ⬜ | Reactive HUD + Synchro tutorial UI (hide bar → force Protocol) | [04 — Tech notes](04-tech-notes.md#ui-reactivity), game [#19](https://github.com/miramocha/griddungeon-game/issues/19) |
 
 ### Hub & progression
 

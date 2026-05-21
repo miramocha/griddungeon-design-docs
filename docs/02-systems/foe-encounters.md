@@ -83,7 +83,7 @@ Joined FOEs are part of the same encounter; flee from an FOE fight uses the same
 
 ### Tutorial FOE (S1 — `foe_alley_stalker`)
 
-Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([synchro-protocol § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe), [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)):
+Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1](../03-content/campaign/s1-intro.md), [synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe), [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)):
 
 | Rule | Detail |
 |------|--------|

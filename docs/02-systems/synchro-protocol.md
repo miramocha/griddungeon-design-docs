@@ -31,7 +31,7 @@ Party-wide **Synchro** meter for coordinated **Protocol** skills, executed by th
 | **First FOE phase B** (mid unlock) | **100%** | Yes | **Forced** `protocol_strike` only | — |
 | **After tutorial complete** | Normal | Normal | Normal | **100%** on hub exit |
 
-**First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
+**First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([campaign S1](../03-content/campaign/s1-intro.md) · [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
 1. **Act 3 path** — block B3F until `s1_first_foe_tutorial_complete`.
 2. **`noFlee: true`** — cannot skip the lesson.
