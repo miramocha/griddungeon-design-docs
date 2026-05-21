@@ -58,28 +58,11 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace mouth stairs.
 
-### Stratum 1 intro — three acts (same `s1_B1F` map)
+### Stratum 1 campaign intro
 
-Act 1 and Act 3 share **one** `s1_B1F` layout; behavior is gated by save flags and blockers ([hub — S1 intro](../02-systems/hub-and-services.md#stratum-1-intro-three-acts)).
+**Authority:** [campaign/s1-intro.md](campaign/s1-intro.md) — three acts, save flags, entry rules, progression gates. This file owns **grids and FOE placement** only.
 
-| Act | Phase | Map | Enemies | Paths / spawns |
-|-----|-------|-----|---------|----------------|
-| **1 — Movement** | Exploration | `s1_B1F` | **Off** — `baseEncounterRate: 0`, `foeSpawns: []` | **Intro spawn** `(4, 2)`; **blockers** funnel to mouth; **`v` to B2F blocked** |
-| **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster ([hub](../02-systems/hub-and-services.md)) |
-| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro locked until B2F FOE contact | **Mandatory** unbeatable `foe_alley_stalker`; Synchro + Protocol **in that fight** |
-
-**Save flags (campaign):**
-
-| Flag | Set when |
-|------|----------|
-| `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at mouth |
-| `s1_party_ready` | Act 2: guild party requirement met |
-| `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
-| `s1_synchro_unlocked` | Mid-fight during `foe_alley_stalker` tutorial ([synchro S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)) |
-| `s1_synchro_protocol_tutorial_done` | Forced `protocol_strike` completed in that fight |
-| `s1_first_foe_tutorial_complete` | Tutorial encounter ended; B3F open |
-
-**First post–Act 2 entry (locked):** always **B1F mouth** `(10, 2)`, not intro cell and not “resume deepest” until tutorial complete (tune later for repeat play).
+Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 from **B1F mouth** → B2F tutorial FOE → B3F boss.
 
 ### MVP1 floor summary
 

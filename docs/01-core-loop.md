@@ -11,7 +11,7 @@
     → Hub: heal, save, skill points → repeat
 ```
 
-See [Hub & services](02-systems/hub-and-services.md) (incl. [S1 intro](02-systems/hub-and-services.md#stratum-1-intro-three-acts)) and [dungeons — entry & mouth stairs](03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked).
+See [campaign S1 intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md), and [dungeons — entry & mouth stairs](03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked).
 
 ## Micro loop (exploration)
 

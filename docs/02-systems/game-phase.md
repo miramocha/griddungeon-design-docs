@@ -153,7 +153,7 @@ sequenceDiagram
 
 | Trigger | Requested phase | Caller |
 |---------|-----------------|--------|
-| **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)) |
+| **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) |
 | Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate |
 | First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GamePhaseController` |
 | FOE same cell as party | Combat | `FoeSystem` → `GameState` |

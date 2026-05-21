@@ -51,24 +51,15 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
     → Hospital + shop + guild + Navigator Office → Repeat
 ```
 
-**New game exception:** Stratum 1 starts with **Act 1 on `s1_B1F`** (movement, no hub yet) — see [S1 intro](#stratum-1-intro-three-acts).
+**New game exception:** Stratum 1 starts with **Act 1 on `s1_B1F`** (movement, no hub yet) — see [S1 campaign intro](../03-content/campaign/s1-intro.md).
 
-## Stratum 1 intro — three acts
+## Stratum 1 intro
 
-| Act | Phase | What happens |
-|-----|-------|----------------|
-| **1 — Movement** | Exploration on `s1_B1F` | Same map as full B1F; **no enemies**; **blocked paths** lead to mouth **stairs up → hub** ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)) |
-| **2 — Party** | **Hub** (this doc) | First camp visit: story, unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`; inn save; enable **Enter Stratum 1** when `s1_party_ready` |
-| **3 — Tutorial dive** | Exploration | **Enter Stratum 1** → always **B1F mouth** `(10, 2)` — full paths, combat/tutorials, descend B2F–B3F |
+Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03-content/campaign/s1-intro.md)**.
 
-Act 2 is **only hub menus** — no labyrinth grid, no combat.
+**Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable **Enter Stratum 1** when `s1_party_ready`. Hub only — no labyrinth grid, no combat.
 
-**Stratum 1 entry rules (locked):**
-
-- **No warp gate** on any `s1_*` floor.
-- **No** hub teleport to wilderness intro cell after Act 1.
-- **First** Act 3 entry: **mouth only** (not resume-deepest).
-- Later repeat dives: resume policy TBD post-MVP1 ([dungeons — entry table](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked)).
+**Act 3 from hub:** **Enter Stratum 1** → always **B1F mouth** `(10, 2)`; Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 
 ## Stratum structure
 

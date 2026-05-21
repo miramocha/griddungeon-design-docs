@@ -72,7 +72,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
   - → **Hub** (Exploration → Hub phase; EO “return to camp”).
   - → **Previous stratum, deepest unlocked floor** (stratum 2+ only; stratum 1: hub only).
 - **Stairs up on B2F+** — previous floor in same stratum only.
-- **Stratum 1:** no warp gate; new game starts on B1F intro path before hub ([dungeons § S1 intro](../03-content/dungeons-and-encounters.md#stratum-1-intro--three-acts-same-s1_b1f-map)).
+- **Stratum 1:** no warp gate; new game starts on B1F intro path before hub ([campaign S1 intro](../03-content/campaign/s1-intro.md)).
 - **Return thread** item — instant hub once (consumable); does not replace mouth stairs.
 
 ## Party on the grid

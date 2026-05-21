@@ -330,7 +330,7 @@ class StratumDefinition
 }
 ```
 
-**Authoring rules:** [dungeons — entry & S1 intro](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
+**Authoring rules:** [dungeons — entry](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked), [campaign S1 intro](../03-content/campaign/s1-intro.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 
