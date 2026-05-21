@@ -22,7 +22,7 @@ Implementation will live in a **Unity** project. Engine version and render pipel
 |------|------|
 | **Project template** | 3D (URP) or URP Empty; no Built-in RP |
 | **Shaders** | URP Shader Graph default; document HLSL exceptions in asset README or comment header |
-| **Packages** | Input System, URP, Shader Graph (included with URP), Timeline; Addressables when content scale warrants |
+| **Packages** | Input System, URP, Shader Graph (included with URP), Timeline; **DOTween** (Asset Store) for runtime tweens; Addressables when content scale warrants |
 | **Testing** | `CombatSimulator` as pure C# where possible; Unity Test Framework for playmode/integration |
 | **Editor tooling** | Custom inspectors for FOE patrol / `stepsPerMove` ([04 — Tech notes](../docs/04-tech-notes.md)) |
 | **Version drift** | Upgrade Unity 6 minor releases in a dedicated branch; re-run FPV + map + combat smoke |

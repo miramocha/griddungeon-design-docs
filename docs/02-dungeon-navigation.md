@@ -70,7 +70,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 ## Feel & animation
 
-- Short step lerp (~0.2s); logic commits at step start ([ADR 001](../decisions/001-grid-movement.md)).
+- Short step lerp (~0.2s) via **DOTween**; logic commits at step start ([ADR 001](../decisions/001-grid-movement.md)).
 - Bump feedback when movement blocked — **auto-stamp wall** on that edge ([mapping](02-systems/mapping.md)).
 
 ## Input

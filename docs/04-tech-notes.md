@@ -11,10 +11,11 @@
 | Rendering | URP (no Built-in RP) |
 | Shaders | **Shader Graph** for most materials/VFX; **HLSL** only when Graph can’t express it or perf demands a custom pass ([ADR 012](../decisions/012-unity-6-stack.md)) |
 | Input | Input System — `Exploration`, `Combat`, `Map`, `UI` action maps; rebindable player prefs when settings ship |
-| Combat cinematics | Timeline / Animation clips per skill asset |
+| Runtime animation | **DOTween** (Demigiant) — exploration step lerp, UI, camera punch, Fixed-skill VFX timing |
+| Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
 | Save | `JsonUtility` or custom serializer MVP1; ScriptableObjects for content DB |
 
-Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use.
+Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`).
 
 ## Shaders (Shader Graph–first)
 
@@ -34,6 +35,21 @@ Third-party plugins and asset store packs must declare **Unity 6 + URP** compati
 - No Built-in RP shaders; no Shader Forge legacy imports.
 
 EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queue** as first-class systems. **No map drawing tools.**
+
+## Animation (DOTween + Timeline)
+
+| Use DOTween | Use Timeline |
+|-------------|--------------|
+| Grid step lerp, bump nudge, FOE slide-in | Boss / Union `Cinematic` beats |
+| UI fades, map pan, combat log pop | `CinematicQTE` authored camera + timing |
+| Fixed-skill target zoom punch, hit flash, light screen shake | Anything needing keyed tracks / multiple actors |
+
+**Conventions**
+
+- Import **DOTween** from the Asset Store into `Assets/Plugins/Demigiant/DOTween/`; enable modules needed at setup (UI, 2D, etc.).
+- Game runtime assemblies reference `DOTween` / `DOTween.Modules` as needed; no tween logic in `CombatSimulator` (pure C# tests).
+- Prefer `Sequence` / `Tween` over hand-rolled lerps; kill or complete tweens on scene unload, combat end, and explorer disable (`DOTween.Kill` on owning transforms).
+- **Timeline** stays the source of truth for sparse cinematic skills; do not duplicate the same beat in both Timeline and DOTween unless one drives the other.
 
 ## High-level modules
 

@@ -18,7 +18,7 @@ How skills look and feel in battle — camera, animation, VFX, and **cinematic p
 
 - Camera **does not** cut, orbit, or change angle per cast.
 
-- Optional **slight zoom** toward the primary enemy target on hit — subtle punch-in, then ease back to default framing before the next action.
+- Optional **slight zoom** toward the primary enemy target on hit — subtle punch-in via **DOTween**, then ease back to default framing before the next action.
 
 - No dramatic camera moves; zoom is short and repeatable (tuned per skill or global default).
 
