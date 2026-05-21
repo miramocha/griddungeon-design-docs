@@ -1,40 +1,41 @@
-# ADR 006 — Union Team Bar
+# ADR 006 — Team burst bar (Synchro Protocol)
 
 **Status:** Accepted  
 **Date:** 2026-05-20  
-**Working name:** Union (rename later)
+**Display name:** [Synchro Protocol](020-team-burst-naming.md) (locked 2026-05-21; was working name **Union**)
 
 ## Context
 
-Need a party-wide burst/coordination mechanic distinct from per-character MP skills and deferred Boost/Break. *Etrian Odyssey V* Union skills inspire timing and participant rules; UI uses one **team bar** instead of six personal gauges.
+Need a party-wide burst/coordination mechanic distinct from per-character MP skills and deferred Boost/Break. *Etrian Odyssey V* Union skills inspire timing and participant rules; UI uses one **team bar** (**Synchro**) instead of six personal gauges.
 
 ## Decision
 
-1. **Single Union bar** (0–100%) shared by the core party.
-2. **100% at hub exit**; persists across fights on a floor; **0% after** any Union skill use until recharged in combat.
-3. **Charge** from core members’ combat actions and events (attack, skill, guard, damage taken, kills — see [union.md](../docs/02-systems/union.md)).
-4. **Union as a core turn action** when bar is **100%** (optional); uses that character’s AGI turn; Navigator executes ([revision 2026-05-21](https://github.com/miramocha/griddungeon-game/issues/10) — was round-start Union phase).
+1. **Single Synchro bar** (0–100%) shared by the core party.
+2. **100% at hub exit**; persists across fights on a floor; **0% after** any Protocol use until recharged in combat.
+3. **Charge** from core members’ combat actions and events (attack, skill, guard, damage taken, kills — see [synchro-protocol.md](../docs/02-systems/synchro-protocol.md)).
+4. **Protocol as a core turn action** when bar is **100%** (optional); uses that character’s AGI turn; Navigator executes ([issue #10](https://github.com/miramocha/griddungeon-game/issues/10)).
 5. **Participants** — living core members only; skill defines count; aux excluded in MVP1.
-6. **Navigator** ([ADR 007](007-navigator-role.md)) **executes** Union; off-formation; not combat-targetable.
-7. **Boost/Break** is **out of scope** ([ADR 008](008-campaign-defaults.md)); Union is the team-layer system.
+6. **Navigator** ([ADR 007](007-navigator-role.md)) **executes** Protocols; off-formation; not combat-targetable.
+7. **Boost/Break** is **out of scope** ([ADR 008](008-campaign-defaults.md)); Synchro Protocol is the team-layer system.
 
 ## Rejected (for now)
 
 | Option | Why |
 |--------|-----|
-| Six personal Union gauges | Higher UI/UX cost; user asked for team bar |
-| Union only at round start (EO-style) | MVP1 uses mid-queue on a core turn when bar is full |
+| Six personal burst gauges | Higher UI/UX cost; user asked for team bar |
+| Burst only at round start (EO-style) | MVP1 uses mid-queue on a core turn when bar is full |
 | Exploration charging | Keeps tension inside fights |
 
 ## Consequences
 
-- `UnionBar` on `PartyRuntime`; `UnionSystem` hooks combat events
-- Combat round flow: `TurnPhase` (core may `CombatCommand.Union` when bar full) → `EndRound`
-- `UnionSkillDefinition` — participant min/max, effect script
+- `SynchroBar` on `PartyRuntime`; `ProtocolSystem` hooks combat events
+- Combat round flow: `TurnPhase` (core may `CombatCommand.Protocol` when bar full) → `EndRound`
+- `ProtocolSkillDefinition` — participant min/max, effect script
 
 ## Related
 
-- [Union system](../docs/02-systems/union.md)
+- [Synchro Protocol](../docs/02-systems/synchro-protocol.md)
+- [ADR 020 — Naming](020-team-burst-naming.md)
 - [Navigator](../docs/02-systems/navigator.md)
 - [ADR 007 — Navigator role](007-navigator-role.md)
 - [Combat](../docs/02-systems/combat.md)

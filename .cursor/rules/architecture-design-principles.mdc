@@ -14,7 +14,7 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP
 | Concern | One owner — do not merge |
 |---------|---------------------------|
 | Macro phase (Hub / Exploration / Combat) | `GamePhaseController` + one `IPhaseController` per phase |
-| Combat round (Union → AGI → end-of-round) | `CombatController` only |
+| Combat round (Protocol on core turn → AGI → end-of-round) | `CombatController` only |
 | Grid step / facing | `DungeonExplorer` |
 | Map reveal state | `MapSystem` + `MapRevealCalculator` (Core) |
 | FOE patrol / contact | `FoeSystem` |

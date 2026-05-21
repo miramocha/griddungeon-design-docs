@@ -8,7 +8,7 @@ Single checklist for the **first playable**. Locked exploration/combat rules: [A
 
 ```
 Hub (inn save, guild 6, hospital, shop)
-  → Enter Stratum 1 (Union bar 100%)
+  → Enter Stratum 1 (Synchro bar 100%)
   → Explore B1F–B3F (FPV + auto-map + FOE on grid)
   → Random fights + FOE contact → battle arena
   → Win / flee → loot / XP → skill points at hub
@@ -45,7 +45,7 @@ Hub (inn save, guild 6, hospital, shop)
 |---|-------------|-----|
 | ✅ | Battle arena + enemy slots (not FPV fight) | [ADR 013](../decisions/013-combat-scene-rendering.md) |
 | ✅ | 6 core + 0–2 aux; Navigator off-formation | [ADR 004](../decisions/004-auxiliary-slots.md), [007](../decisions/007-navigator-role.md) |
-| ✅ | AGI queue UI; Union phase at 100% | [ADR 006](../decisions/006-union-team-bar.md) |
+| ✅ | AGI queue UI; Protocol on core turn at Synchro 100% | [ADR 006](../decisions/006-union-team-bar.md), [ADR 020](../decisions/020-team-burst-naming.md) |
 | ✅ | Enemy front + back rows (5 slots max) | [ADR 015](../decisions/015-mvp1-combat.md) |
 | ✅ | Fixed camera + Fixed skills only | [combat presentation](02-systems/combat-presentation.md) |
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
@@ -61,7 +61,7 @@ Hub (inn save, guild 6, hospital, shop)
 | ✅ | Inn save, hospital, shop, Guild + **Navigator Office** | [hub](02-systems/hub-and-services.md) |
 | ✅ | 6 classes day one; skill points at hub | [party](02-systems/party-and-classes.md) |
 | ✅ | Stats: HP, MP, STR, TEC, AGI, VIT, LUC | [progression](02-systems/character-progression.md) |
-| ✅ | 1 Navigator + 2 Union skills (MVP1 kit) | [navigator](02-systems/navigator.md), [union](02-systems/union.md) |
+| ✅ | 1 Navigator + 2 Protocol skills (MVP1 kit) | [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md) |
 | ⬜ | 3 skills per class minimum | content |
 | ⬜ | Weapon + 3 armor + 1 accessory | [progression](02-systems/character-progression.md) |
 
@@ -88,12 +88,12 @@ Defer B4F–B5F polish until loop proven.
 
 ---
 
-## 4. MVP1 Navigator & Union (placeholder content)
+## 4. MVP1 Navigator & Synchro Protocol
 
 | Asset | MVP1 |
 |-------|------|
-| **Navigator** | `guild_handler` — unlocked day one; aura: Union gain +5% |
-| **Union skills** | `union_strike` (damage), `union_mend` (heal all living core) |
+| **Navigator** | `guild_handler` — unlocked day one; aura: Synchro gain +5% |
+| **Protocol skills** | `protocol_strike` (damage), `protocol_mend` (heal all living core) |
 
 Full Navigator roster unlocks post-MVP1.
 
@@ -123,7 +123,7 @@ Full Navigator roster unlocks post-MVP1.
 
 Numbers can move in data without ADR change:
 
-- Union % per action, skill power, encounter rates, `stepsPerMove`, shop prices.
+- Synchro % per action, Protocol skill power, encounter rates, `stepsPerMove`, shop prices.
 
 ---
 

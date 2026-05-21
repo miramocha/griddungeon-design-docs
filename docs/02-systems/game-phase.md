@@ -10,7 +10,7 @@ These goals drive the split between **macro phases** (this doc), **assemblies** 
 |------|-----------------------------------|
 | **Test damage + AGI without Unity** | Rules live in `GridDungeon.Core` (`DamageCalculator`, `TurnQueueBuilder`, …); `GridDungeon.Tests` references Core (and Runtime for `GamePhaseController` phase tests) |
 | **Hub ↔ explore ↔ combat loop** | `GamePhase` enum + `GamePhaseController.TryTransitionTo` + three `IPhaseController` Enter/Exit hooks |
-| **Spec-locked combat flow** | Union → AGI queue → end-of-round stays on `CombatController`; not duplicated in phase controllers |
+| **Spec-locked combat flow** | Protocol (core turn) → AGI queue → end-of-round stays on `CombatController`; not duplicated in phase controllers |
 | **Content in data, not code** | ScriptableObjects in Runtime; Core uses DTOs at boundaries (no `SkillDefinition` in simulators) |
 | **FOE + map + flee rules** | `ExplorationPhaseController` wires `DungeonExplorer` events → `MapSystem`, `FoeSystem`; combat entry via `GameState.RequestTransition` |
 | **Clear input per mode** | `InputRouter` reacts to `PhaseChanged`; one authoritative phase enum for UI and action maps |
@@ -71,7 +71,7 @@ flowchart TB
 |------|--------|--------|
 | **Game phase** | Hub, Exploration, Combat | `GamePhaseController` |
 | **Combat round** | One full AGI cycle + end-of-round ticks | `CombatController` |
-| **Combat sub-phase** | Union → turn → end-of-round within one battle | `CombatController` (`CombatPhase` enum) |
+| **Combat sub-phase** | AGI turn (incl. Protocol on core turn) → end-of-round within one battle | `CombatController` (`CombatPhase` enum) |
 
 Do not conflate **game phase** with **combat sub-phase**.
 
@@ -114,7 +114,7 @@ InputRouter                      ← enables action maps from PhaseChanged
 | **`HubPhaseController`** | Enter hub UI/services; exit clears exploration-only listeners |
 | **`ExplorationPhaseController`** | Wire `DungeonExplorer` events → `MapSystem`, `FoeSystem`, `EncounterTrigger`; show FPV |
 | **`CombatPhaseController`** | Start/end battle presentation; disable exploration input; call `CombatController` |
-| **`CombatController`** | Union bar round flow, AGI queue, flee, victory — **unchanged by this doc** |
+| **`CombatController`** | Synchro bar + Protocol, AGI queue, flee, victory — **unchanged by this doc** |
 
 ## Phase diagram
 
@@ -208,25 +208,24 @@ sequenceDiagram
   participant GS as GameState
   participant CP as CombatPhaseController
   participant CC as CombatController
-  participant Union as UnionSystem
+  participant Protocol as ProtocolSystem
   participant TQ as TurnQueueBuilder
   participant EOR as EndOfRoundPipeline
 
   CP->>CC: StartBattle(context)
   loop each combat round
-    alt Union bar == 100%
-      CC->>Union: TryBeginUnionPhase
-    end
     CC->>TQ: Build AGI queue
     loop each AGI turn
-      alt player core
+      alt player core and Synchro == 100%
+        CC->>Protocol: TryUseProtocolSkill via SubmitPlayerAction
+      else player core
         CC->>CC: Wait SubmitPlayerAction
       else MVP1 summon
         CC->>CC: ResolveSummonTurn
       else enemy
         CC->>CC: Run AI
       end
-      CC->>Union: OnCoreActed
+      CC->>Protocol: OnCoreActed (bar fill below 100%)
     end
     CC->>EOR: Execute end-of-round
     CC->>CC: Victory / wipe / continue
@@ -329,7 +328,7 @@ Implemented in **`GridDungeon.UI`**: `InputRouter` subscribes to `GameState.Phas
 
 ## Dev bootstrap HUD (UI Toolkit)
 
-MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo).
+MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo — run after clone).
 
 | Piece | Location | Role |
 |-------|----------|------|

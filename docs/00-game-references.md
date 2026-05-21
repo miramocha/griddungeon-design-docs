@@ -8,7 +8,7 @@ Curated titles for **future design and tone checks**. **MVP1 authority** stays *
 
 | Game | Use in Grid Dungeon |
 |------|---------------------|
-| ***Etrian Odyssey*** (series) | Auto-map (no player drawing), FOEs, strata/floors, guild party, AGI combat, hub between dives, Union-style team burst ([union](02-systems/union.md)) |
+| ***Etrian Odyssey*** (series) | Auto-map (no player drawing), FOEs, strata/floors, guild party, AGI combat, hub between dives, Union-style team burst ([union](02-systems/synchro-protocol.md)) |
 
 ---
 

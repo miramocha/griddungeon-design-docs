@@ -61,16 +61,15 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ## Combat
 
-### Union phase (round start)
+### Protocol (core turn, Synchro 100%)
 
-Only when Union bar = 100%.
+Only when **Synchro bar = 100%** on a **core** combatant’s turn ([synchro-protocol](synchro-protocol.md)).
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Open Union menu** | `U` | Lists Navigator Union skills |
-| **Select Union skill** | `1`–`9` or mouse click | |
-| **Confirm Union** | `Enter` | Resolve; bar → 0% |
-| **Skip Union** | `Esc` or `Backspace` | Proceed to AGI phase |
+| **Open Protocol menu** | `U` | Lists Navigator Protocol skills |
+| **Select Protocol skill** | `1`–`9` or mouse click | MVP1 dev HUD: `U` strike, `M` mend |
+| **Confirm Protocol** | `Enter` | Resolve; bar → 0% |
 
 ### AGI turn phase (per actor)
 
@@ -140,7 +139,7 @@ Exploration
   Interact, ToggleMap, PartyMenu, Pause
 
 Combat
-  UnionMenu, UnionSkill1..9, ConfirmUnion, SkipUnion
+  ProtocolMenu, ProtocolSkill1..9, ConfirmProtocol
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee
   CycleTarget, Confirm, Cancel
   QTEPrompt, SkipCinematic

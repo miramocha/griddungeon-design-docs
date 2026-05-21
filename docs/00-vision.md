@@ -34,10 +34,10 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 - **Manual map drawing tools** (walls, icons, notes, eraser)
 - Action combat, QTEs, or real-time party control in battles
 - Full 3D hub walk (menu hub is fine for MVP1)
-- **Boost/Break** — out of scope; [Union](02-systems/union.md) covers team burst
+- **Boost/Break** — out of scope; [Union](02-systems/synchro-protocol.md) covers team burst
 - Subclass systems until core loop is proven
 - **Dungeon gather / fishing minigames** — **MVP2** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))
-- Per-character Union gauges (using **team Union bar** instead — see [union](02-systems/union.md))
+- Per-character Union gauges (using **team Union bar** instead — see [union](02-systems/synchro-protocol.md))
 - Navigator leveling, equipment, or aura tiers ([navigator](02-systems/navigator.md) is unlock-only)
 
 ## Out of scope (project)

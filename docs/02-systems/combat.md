@@ -7,7 +7,7 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 ## Battle layout
 
 ```
-[ Navigator — off formation; Union + passives only ]
+[ Navigator — off formation; Synchro Protocol + passives only ]
 
 [ Enemies — up to 5 targets, front + back rows (MVP1) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
 
@@ -37,7 +37,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
 2. Display queue icons (portraits; aux uses distinct frame).
-3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Union bar](union.md) is 100%, player may use **Union** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions charge the Union bar when below 100%.
+3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Synchro bar](synchro-protocol.md) is 100%, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; bar → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions charge the Synchro bar when below 100%.
 4. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
 
 **Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).
@@ -51,7 +51,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 | Skill | Class skill; may **place summon** in aux slot |
 | Item | Usable consumables |
 | Flee | May fail; see [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) for retreat cell rule |
-| Union | **Navigator executes**; bar 100%; uses the acting **core** member’s AGI turn (`CombatCommand.Union` + skill id) |
+| Protocol | **Navigator executes**; Synchro 100%; uses the acting **core** member’s AGI turn (`CombatCommand.Protocol` + skill id) |
 
 ## Commands (summon / guest)
 
@@ -143,13 +143,13 @@ See [combat presentation](combat-presentation.md).
 
 ## Input
 
-PC: combat commands `1`–`5`, mouse targets, `U` Union at round start — [input bindings](input-bindings.md).
+PC: combat commands `1`–`5`, mouse targets, `U` Protocol when Synchro 100% on core turn — [input bindings](input-bindings.md).
 
 ## UI requirements
 
 - **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback) and [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
-- **Union bar** (team, 0–100%) — see [union](union.md)
+- **Synchro bar** (team, 0–100%) — see [synchro-protocol](synchro-protocol.md)
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
@@ -171,8 +171,8 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; optional floating number near slot | Yes — next action on that beat |
 | Status applied / cleansed | Icon **pop-in** or brief tint on portrait + queue icon | Yes |
 | Death / KO | Portrait **grey + scale down** or slide out; strip slot removed on rebuild with short fade | Yes |
-| Union bar change | Fill **lerps**; at 100% brief **glow** before Union phase | Yes — Union phase entry |
-| Union phase | Navigator + participating cores **highlight** ([union](union.md)) | Yes — first AGI turn after Union |
+| Synchro bar change | Fill **lerps**; at 100% brief **glow** before Protocol use | Yes — Protocol command on core turn |
+| Protocol use | Navigator + participating cores **highlight** ([synchro-protocol](synchro-protocol.md)) | Yes — same core turn continues after resolve |
 | Valid targeting | Enemy/portrait **outline pulse** on valid slots | No — selection is interactive; pulse loops until pick |
 | Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
 | FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
@@ -186,7 +186,7 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 
 | Included | Excluded |
 |----------|----------|
-| Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Union only; separate portrait) |
+| Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Protocol only; separate portrait) |
 | | Dead / KO combatants (removed when queue rebuilds) |
 
 **Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design-mvp1.md#view-controllers)).
@@ -210,7 +210,7 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 - [Combat scene & enemy rendering](combat-scene.md)
 - [Combat status & buffs](combat-status-and-buffs.md)
 - [Navigator](navigator.md)
-- [Union (team bar)](union.md)
+- [Synchro Protocol (team bar)](synchro-protocol.md)
 - [Combat presentation](combat-presentation.md)
 - [Party & classes](party-and-classes.md)
 - [Summons & guests](summons-and-guests.md)

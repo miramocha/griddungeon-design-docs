@@ -1,6 +1,6 @@
 # Navigator
 
-**Party lead** who sits **outside** the 3+3 combat formation. They command [Union](union.md) skills and provide **passive buffs** to the active core six. Working role name; may rename with setting.
+**Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
 ## Role summary
 
@@ -8,13 +8,13 @@
 |---|-----------|----------------|------------------|
 | **Formation** | Off-formation | 3 front + 3 back | +1 front / +1 back |
 | **AGI turns** | No | Yes | Yes (if living) |
-| **Union skills** | **Executes** when bar 100% | **Participate** per skill rules | No |
+| **Protocol skills** | **Executes** when Synchro 100% | **Participate** per skill rules | No |
 | **Passive buffs** | **Grants** to core six | Receive | No (MVP1) |
 | **Exploration grid** | No | Yes (party blob) | No |
 | **Swappable** | **Hub only** | Hub bench (core) | N/A |
 
 ```
-[ Navigator — off formation, portrait + passives + Union command ]
+[ Navigator — off formation, portrait + passives + Protocol command ]
 
 [ Core front ×3 ] [ Aux front ×1 ]
 [ Core back  ×3 ] [ Aux back  ×1 ]
@@ -47,23 +47,23 @@ While a Navigator is active, the **core six** receive that Navigator’s **aura*
 |-------------------|--------------|
 | **Tactician** | +5% accuracy to core |
 | **Hierophant** | −5% MP cost on core heals |
-| **Scout** | +3% Union bar gain from core actions |
+| **Scout** | +3% Synchro bar gain from core actions |
 | **Quartermaster** | +8% gold from battles |
 
 - Auras stack only from **one** Navigator (no multi-navigator stack).
 - **Fixed per Navigator** — no levels, tiers, or upgrades. New power only by **unlocking a different Navigator**.
 - **Starter:** one Navigator at new game with a simple +max HP aura; more unlock via strata / quests / events.
 
-## Union execution
+## Protocol execution
 
-Only the **active Navigator** initiates Union during [Union phase](union.md):
+Only the **active Navigator** executes Protocol skills when [Synchro](synchro-protocol.md) is full:
 
-1. Union bar must be **100%**.
-2. Player picks a Union skill from the Navigator’s **Union kit** (plus shared guild Union skills unlocked globally).
-3. Navigator “calls” the skill; living **core** members participate per skill min/max.
+1. Synchro bar must be **100%** on a **core** combatant’s turn.
+2. Player picks a Protocol skill from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` in MVP1).
+3. Navigator “calls” the protocol; living **core** members participate per skill min/max.
 4. Bar → 0%; Navigator does not consume an AGI turn.
 
-Navigator **does not** fill the Union bar themselves (no combat turns). Core six actions still charge the team bar.
+Navigator **does not** fill the Synchro bar themselves (no combat turns). Core six actions still charge the team bar.
 
 ## Combat targeting (locked)
 
@@ -72,7 +72,7 @@ Navigators are **never combat targets**:
 - **Not targetable** by enemies — normal attacks, skills, and **boss** abilities.
 - **No direct combat interaction** — no HP, no damage, no status, no heals aimed at Navigator.
 - **No AGI turn** — enemies and allies do not “hit” or buff Navigator in the turn system.
-- UI: Navigator portrait **without HP bar**; present for Union + aura only.
+- UI: Navigator portrait **without HP bar**; present for Protocol + aura only.
 
 Bosses cannot bypass this with “hit all party” — those effects apply to **core (+ aux)** only.
 
@@ -82,7 +82,7 @@ Navigators do **not** progress like core party members:
 
 - **No XP**, **no levels**, **no skill points**, **no aura tiers**
 - **No equipment**
-- Each Navigator is a **fixed package**: one aura + fixed Union skill list, defined in data
+- Each Navigator is a **fixed package**: one aura + fixed Protocol skill list, defined in data
 - **Only growth path:** unlock another Navigator with different aura/skills
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
@@ -95,7 +95,7 @@ Separate from **Explorers Guild** ([hub & services](hub-and-services.md)). Guild
 |--------|--------|
 | **Browse** | All Navigators — unlocked (selectable) vs locked (silhouette + hint) |
 | **Assign** | Set **active** Navigator for the next labyrinth dive |
-| **Preview** | Aura summary on core six; list of Union skills in this Navigator’s kit |
+| **Preview** | Aura summary on core six; list of Protocol skills in this Navigator’s kit |
 | **Switch** | Change active Navigator among unlocked pool — **hub only** |
 
 No recruitment, no skill points, no equipment — unlock + assign only.
@@ -104,20 +104,20 @@ No recruitment, no skill points, no equipment — unlock + assign only.
 
 - Navigator **portrait + name** above or beside formation (not in front/back rows).
 - Aura icons on core portraits (small badge from active Navigator).
-- Union phase: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Union list.
+- Protocol use: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Protocol list.
 
 ## MVP1 content (placeholder)
 
 | Navigator | Unlock | Aura (MVP1) |
 |-----------|--------|-------------|
-| `guild_handler` | Day one | Union gain +5% |
+| `guild_handler` | Day one | Synchro gain +5% |
 
 Additional Navigators unlock via strata/quests post-MVP1.
 
 ## MVP1
 
 - [ ] One default Navigator + one aura
-- [ ] Navigator selects Union skill in Union phase
+- [ ] Navigator selects Protocol skill when Synchro is 100%
 - [ ] **Navigator Office:** pick active Navigator from **unlocked** pool (starter + 1 stratum unlock)
 - [ ] Not in formation rows or AGI queue
 
@@ -129,7 +129,7 @@ Additional Navigators unlock via strata/quests post-MVP1.
 
 ## Related docs
 
-- [Union (team bar)](union.md)
+- [Synchro Protocol (team bar)](synchro-protocol.md)
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)

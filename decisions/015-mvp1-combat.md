@@ -13,7 +13,7 @@
 6. **Random encounter flee:** Succeed/fail per roll; on success, party stays on **same cell** (no pushback). FOE flee uses [ADR 011](011-foe-flee-retreat.md).
 7. **Damage pipeline:** Locked formulas in [combat](../docs/02-systems/combat.md#damage-pipeline-mvp1) — 3 elements (fire, ice, volt); physical + pierce/slash tags; hit/evasion clamp 5–95%.
 8. **Status (MVP1 subset):** Poison, Sleep, Panic, Head Bind, Arm Bind, Offense/Defense Up & Down, Blind, Guard. **DoT can kill.** No leg bind, paralysis, burn, speed mods in MVP1.
-9. **Union tuning:** Use draft charge table in [union](../docs/02-systems/union.md) as MVP1 baseline; **one** Navigator (`guild_handler`) + **two** Union skills playable.
+9. **Synchro tuning:** Use draft charge table in [synchro-protocol](../docs/02-systems/synchro-protocol.md) as MVP1 baseline; **one** Navigator (`guild_handler`) + **two** Protocol skills playable.
 
 ## Related
 

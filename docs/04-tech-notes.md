@@ -94,14 +94,14 @@ GameState (composition root)
 ├── FoeSystem            — spawn, visibility, step patrol, contact
 ├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
 ├── NavigatorRuntime     — active navigator, aura application, roster
-├── UnionSystem          — team bar charge/spend; Navigator invokes in Union phase
-├── CombatController     — UnionPhase → AGI queue → EndRound
+├── ProtocolSystem       — Synchro bar charge/spend; Navigator invokes Protocol on core turn at 100%
+├── CombatController     — AGI queue + Protocol command → EndRound
 ├── CodexSystem          — enemy knowledge / weaknesses
 ├── ContentDatabase      — strata, floors, FOE, encounters
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
 ```
 
-**Dev bootstrap:** `DevBootstrap.unity` + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
+**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
 
 ## Map system
 
@@ -161,12 +161,12 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
 - Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
 
-## Union (team bar)
+## Synchro Protocol (team bar)
 
-- `UnionBar` float 0–1 on `PartyRuntime`
-- `UnionSystem.OnCombatEvent` — core six only
-- `CombatController.BeginRound` → `UnionPhase` if bar == 1 && Navigator skill chosen
-- `UnionSkillDefinition` — participant count, effect, presentation id
+- `SynchroBar` float 0–1 on `PartyRuntime`
+- `ProtocolSystem` — bar fill from core actions; spend on `CombatCommand.Protocol`
+- Core turn at Synchro == 1: player picks `protocol_strike` / `protocol_mend` from Navigator kit
+- `ProtocolSkillDefinition` — participant count, effect, presentation id
 - Save: `unionBar` + `activeNavigatorId` per dive
 - FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter
 
