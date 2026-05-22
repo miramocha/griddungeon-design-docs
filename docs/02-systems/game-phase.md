@@ -12,8 +12,8 @@ These goals drive the split between **macro phases** (this doc), **assemblies** 
 | **Hub ↔ explore ↔ combat loop** | `GamePhase` enum + `GamePhaseController.TryTransitionTo` + three `IPhaseController` Enter/Exit hooks |
 | **Spec-locked combat flow** | Protocol (core turn) → AGI queue → end-of-round stays on `CombatController`; not duplicated in phase controllers |
 | **Content in data, not code** | ScriptableObjects in Runtime; Core uses DTOs at boundaries (no `SkillDefinition` in simulators) |
-| **FOE + map + flee rules** | `ExplorationPhaseController` wires `DungeonExplorer` events → `MapSystem`, `FoeSystem`; combat entry via `GameState.RequestTransition` |
-| **Clear input per mode** | `InputRouter` reacts to `PhaseChanged`; one authoritative phase enum for UI and action maps |
+| **FOE + map + flee rules** | `ExplorationPhaseController` wires `DungeonExplorer` events → `MapSystem`, `FoeSystem`; combat entry via `GameState.RequestCombat` |
+| **Clear input per mode** | `InputRouter` reacts to `GameState.PhaseChanged`; one authoritative phase enum for UI and action maps |
 | **Inspectable, reviewable flow** | Phase transitions in C# (grep, diff, PR review); optional UVS later for presentation only |
 | **Single responsibility** | `GameState` = composition root; `GamePhaseController` = transitions; phase controllers = lifecycle; subsystems = domain rules |
 
@@ -24,8 +24,9 @@ Macro phases sit in **Runtime**; they orchestrate subsystems but do not implemen
 ```mermaid
 flowchart TB
   subgraph ui [GridDungeon.UI]
+    GB[GameBootstrap]
     IR[InputRouter]
-    HUD[ExplorationHUD / CombatHUD]
+    DevHUD[GamePhaseDevHud / MapView]
   end
   subgraph runtime [GridDungeon.Runtime]
     GS[GameState]
@@ -52,10 +53,11 @@ flowchart TB
     GP[GamePhase enum]
   end
   subgraph tests [GridDungeon.Tests]
-    T[NUnit against Core]
+    T[NUnit Core + Runtime phase tests]
   end
-  HUD --> GS
-  IR --> GPC
+  DevHUD --> GS
+  GB --> IR
+  IR -->|PhaseChanged| GS
   GPC --> GP
   CC & DE --> SIM
   T --> SIM
@@ -63,7 +65,9 @@ flowchart TB
   runtime --> core
 ```
 
-**Authority rule:** only `GamePhaseController` changes `GamePhase`. UI and gameplay code call `GameState.RequestTransition`; they do not toggle scenes or input maps directly.
+**Authority rule:** only `GamePhaseController` changes `GamePhase`. UI and gameplay code call `GameState.RequestTransition` or `GameState.RequestCombat`; they do not toggle scenes or input maps directly.
+
+Production **ExplorationHUD / CombatHUD** are future; MVP1 dev acceptance uses `GamePhaseDevHudView` and `MapView` (see [Dev bootstrap HUD](#dev-bootstrap-hud-ui-toolkit)).
 
 ## Terminology
 
@@ -86,8 +90,9 @@ flowchart LR
     CP[CombatPhaseController]
     GPC --- HP & EP & CP
   end
-  IR[InputRouter] -.->|PhaseChanged| GPC
-  Caller[FoeSystem / Hub / Combat] -->|RequestTransition| root
+  GB[GameBootstrap] --> IR[InputRouter]
+  IR -.->|PhaseChanged| GS[GameState]
+  Caller[FoeSystem / Hub / Combat] -->|RequestTransition / RequestCombat| root
 ```
 
 ASCII equivalent:
@@ -101,7 +106,8 @@ GameState (MonoBehaviour, composition root)
 ├── PartyRuntime, SaveSystem, ContentDatabase, …
 └── (shared subsystems referenced by phase controllers)
 
-InputRouter                      ← enables action maps from PhaseChanged
+GameBootstrap (UI)               ← InputRouter.Bind(GameState) on Start
+InputRouter                      ← enables action maps from GameState.PhaseChanged
 ```
 
 ### Responsibilities
@@ -109,11 +115,11 @@ InputRouter                      ← enables action maps from PhaseChanged
 | Type | Role |
 |------|------|
 | **`GamePhase`** (`Core` enum) | `Hub`, `Exploration`, `Combat` |
-| **`GamePhaseController`** | `TryTransitionTo`, `PhaseChanged`, transition validation |
-| **`GameState`** | Scene lifetime, serialized refs, public API for UI/systems to request transitions |
+| **`GamePhaseController`** | `BeginAt`, `TryTransitionTo`, `PhaseChanged`, transition validation |
+| **`GameState`** | Scene lifetime, serialized refs; forwards `PhaseChanged`; `RequestTransition` / `RequestCombat`; subscribes to `CombatController.BattleEnded` for post-battle phase changes |
 | **`HubPhaseController`** | Enter hub UI/services; exit clears exploration-only listeners |
-| **`ExplorationPhaseController`** | Wire `DungeonExplorer` events → `MapSystem`, `FoeSystem`, `EncounterTrigger`; show FPV |
-| **`CombatPhaseController`** | Start/end battle presentation; disable exploration input; call `CombatController` |
+| **`ExplorationPhaseController`** | Wire `DungeonExplorer` events → `MapSystem`, `FoeSystem`, `EncounterTrigger`; step handler requests combat via `RequestCombat` |
+| **`CombatPhaseController`** | Battle presentation enter/exit (view, aura, scene); calls `CombatController.StartBattle` — does **not** request macro phase transitions when battle ends |
 | **`CombatController`** | Synchro bar + Protocol, AGI queue, flee, victory — **unchanged by this doc** |
 
 ## Phase diagram
@@ -139,46 +145,52 @@ sequenceDiagram
   participant New as Next IPhaseController
   participant IR as InputRouter
 
-  Caller->>GS: RequestTransition(Combat)
+  Caller->>GS: RequestTransition(Combat) or RequestCombat(context)
   GS->>GPC: TryTransitionTo(Combat)
   GPC->>GPC: Validate(from, to)
   GPC->>Old: OnExit()
   GPC->>GPC: Current = Combat
   GPC->>New: OnEnter()
-  GPC->>IR: PhaseChanged
+  GPC->>GS: PhaseChanged
+  GS->>IR: PhaseChanged
   GPC-->>Caller: true
 ```
 
 ## Who requests transitions
 
-| Trigger | Requested phase | Caller |
-|---------|-----------------|--------|
-| **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) |
-| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate |
-| Hub **Side expedition** (MVP3) | Exploration | `HubController.EnterSideDungeon` — spawn at side floor entry ([side dungeons](side-dungeons.md)) |
-| First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GamePhaseController` |
-| Side dungeon **exit** `stairsUp` (MVP3) | Hub | `DungeonExplorer` interact — **hub only** ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)) |
-| FOE same cell as party | Combat | `FoeSystem` → `GameState` |
-| Random encounter on step | Combat | `EncounterTrigger` → `GameState` |
-| Battle won or flee success | Exploration | `CombatController` |
-| Return to surface / hub menu | Hub | Mouth **stairs up**, Return thread, or hub UI |
-| Party wipe | Hub | Wipe flow → load save → Hub |
+| Trigger | Requested phase | Caller | Game repo (MVP1) |
+|---------|-----------------|--------|------------------|
+| **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) | Planned — dev boot uses `BeginAt(Hub)` |
+| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate | `LeaveHub` → `RequestTransition(Exploration)`; hub UI stub |
+| Hub **Side expedition** (MVP3) | Exploration | `HubController.EnterSideDungeon` — spawn at side floor entry ([side dungeons](side-dungeons.md)) | MVP3 |
+| First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GameState` | Planned |
+| Side dungeon **exit** `stairsUp` (MVP3) | Hub | `DungeonExplorer` interact — **hub only** ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)) | MVP3 |
+| FOE same cell as party | Combat | `ExplorationPhaseController` → `GameState.RequestCombat` | Wired |
+| Random encounter on step | Combat | `ExplorationPhaseController` → `GameState.RequestCombat` | Wired |
+| Battle won or flee success | Exploration | `GameState` on `CombatController.BattleEnded` | Wired |
+| Return to surface / hub menu | Hub | Mouth **stairs up**, Return thread, or hub UI | Planned (except dev F1) |
+| Party wipe | Hub | `GameState` on `BattleEnded(Wipe)` | Wired |
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).
 
 ### Encounter priority (same step)
 
-1. **FOE contact** — if party cell equals FOE cell after step, request Combat immediately; **no random encounter roll**.
+1. **FOE contact** — if party cell equals FOE cell after step, `RequestCombat` immediately; **no random encounter roll**.
 2. **Random encounter** — `EncounterTrigger` rolls only when step completed and no FOE contact fired.
+
+`ExplorationPhaseController.HandlePartyStep` orchestrates both checks (not separate subscribers on `EncounterTrigger`).
 
 ## Exploration step flow
 
-While `Current == Exploration`, `ExplorationPhaseController` owns event subscriptions. A single step can end in map reveal, FOE patrol, contact combat, or a random encounter.
+While `Current == Exploration`, `ExplorationPhaseController` owns event subscriptions. A single step can end in map reveal, FOE contact combat, or a random encounter.
+
+**FOE patrol advance** after each step is spec’d but **not implemented** in `FoeSystem` yet (contact-only `OnPartyStep` today).
 
 ```mermaid
 sequenceDiagram
   participant Input as ExplorationInputHandler
   participant DE as DungeonExplorer
+  participant EP as ExplorationPhaseController
   participant Map as MapSystem
   participant Foe as FoeSystem
   participant Enc as EncounterTrigger
@@ -191,21 +203,22 @@ sequenceDiagram
   else blocked
     DE->>Map: OnBumpWall
   end
-  DE->>Foe: OnPartyStep
-  Foe->>Foe: Advance patrol
+  DE->>EP: OnPartyStep
+  EP->>Foe: OnPartyStep(cell)
   alt FOE same cell
-    Foe->>GS: RequestTransition(Combat)
+    Foe->>EP: OnFoeContact
+    EP->>GS: RequestCombat(foe context)
   else if no contact
-    Enc->>Enc: TryRollRandomEncounter
+    EP->>Enc: TryRollRandomEncounter
     opt roll succeeded
-      Enc->>GS: RequestTransition(Combat)
+      EP->>GS: RequestCombat(encounter context)
     end
   end
 ```
 
 ## Combat round flow (within Combat phase)
 
-When `Current == Combat`, **game phase does not change** until the battle ends. Round logic is entirely inside `CombatController`.
+When `Current == Combat`, **game phase does not change** until the battle ends. Round logic is entirely inside `CombatController`. Macro phase exit is **`GameState.HandleBattleEnded`**, not `CombatPhaseController`.
 
 ```mermaid
 sequenceDiagram
@@ -216,7 +229,7 @@ sequenceDiagram
   participant TQ as TurnQueueBuilder
   participant EOR as EndOfRoundPipeline
 
-  CP->>CC: StartBattle(context)
+  CP->>CC: StartBattle(PendingEntry)
   loop each combat round
     CC->>TQ: Build AGI queue
     loop each AGI turn
@@ -235,11 +248,11 @@ sequenceDiagram
     CC->>CC: Victory / wipe / continue
   end
   alt victory or flee
-    CC->>CP: OnBattleEnded
-    CP->>GS: RequestTransition(Exploration)
+    CC->>GS: BattleEnded
+    GS->>GS: RequestTransition(Exploration)
   else wipe
-    CC->>CP: OnBattleEnded
-    CP->>GS: RequestTransition(Hub)
+    CC->>GS: BattleEnded(Wipe)
+    GS->>GS: RequestTransition(Hub)
   end
 ```
 
@@ -247,12 +260,26 @@ See [combat](combat.md) for command tables and damage pipeline.
 
 ## Phase Enter / Exit checklist
 
+Target behaviour for MVP1. **Game repo status** (aligned with `griddungeon-game` on 2026-05-21):
+
+| Phase | Checklist item | Status |
+|-------|----------------|--------|
+| Hub | Show hub UI | Stub (`HubController.EnterHub` empty) |
+| Hub | FOE reset when `from == Exploration` | Wired (`ResetActiveStratumFloors`, `ClearExplorationState`) |
+| Exploration | Floor from save/context | Partial — dev hardcodes `s1_B1F`; `TODO(campaign)` |
+| Exploration | `FoeSystem.LoadFloor` | Stub |
+| Exploration | Event subscriptions + `RequestCombat` on contact/roll | Wired |
+| Combat | Presentation enter (view, aura, scene, `StartBattle`) | Wired |
+| Combat | Presentation exit (scene hide, aura remove) | Wired |
+| Combat | `CombatController` cleanup on macro exit | In `EndBattle` during battle, not `CombatPhaseController.OnExit` |
+| Input | Maps per phase via `InputRouter` | Wired via `GameBootstrap.Bind` + `GameState.PhaseChanged` |
+
 ### Hub `OnEnter`
 
 - Show hub UI (menu tree MVP1)
-- `InputRouter` → UI / hub map only
+- `InputRouter` → `UI` only (via `PhaseChanged`, not called from phase controller)
 - `SaveSystem` ready for inn save
-- **If `from == Exploration`** (return from labyrinth, ADR 008): `FoeSystem.ResetFloor` for active stratum floors; `SaveSystem.ClearExplorationState`
+- **If `from == Exploration`** (return from labyrinth, ADR 008): `FoeSystem.ResetActiveStratumFloors`; `SaveSystem.ClearExplorationState`
 - **If `from == Hub` or boot** — no FOE reset (inn menu reopen only)
 
 ### Hub `OnExit`
@@ -266,27 +293,28 @@ See [combat](combat.md) for command tables and damage pipeline.
 - `MapSystem.LoadFloor`
 - `FoeSystem.LoadFloor`
 - Subscribe: `DungeonExplorer.OnPartyStep`, `OnPartyEnteredCell`, `OnBumpWall`
-- Subscribe: `FoeSystem.OnFoeContact` → request Combat
-- `InputRouter` → Exploration + Map maps
+- Subscribe: `FoeSystem.OnFoeContact` → `RequestCombat`
+- `InputRouter` → `UI`, `Exploration`, `Map` (via `PhaseChanged`)
 
 ### Exploration `OnExit`
 
 - Unsubscribe all exploration listeners (avoid leaks)
+- Commit map snapshot; clear floor; `DungeonExplorer.StopMovement`
 - Optional: pause `DungeonExplorer` input
 
 ### Combat `OnEnter`
 
 - `DungeonView.SetVisible(false)` (or dimmed)
-- `CombatPhaseController` builds `CombatEntryContext`, calls `CombatController.StartBattle`
-- `CombatScenePresenter` spawn backdrop + enemy slots
+- `CombatPhaseController` uses `CombatController.PendingEntry`, calls `StartBattle`
+- `CombatScenePresenter` show backdrop + enemy slots
 - `AuraSystem.ApplyPassives` for active Navigator
-- `InputRouter` → Combat map
+- `InputRouter` → `UI`, `Combat` (via `PhaseChanged`)
 
 ### Combat `OnExit`
 
-- `CombatController` cleanup, dismiss aux summons
 - `CombatScenePresenter` teardown
 - `AuraSystem.RemovePassives`
+- Battle state cleanup remains in `CombatController.EndBattle` when the battle resolves
 
 ## API sketch (Runtime)
 
@@ -300,6 +328,7 @@ sealed class GamePhaseController
     public GamePhase Current { get; private set; }
     public event Action<GamePhase, GamePhase> PhaseChanged;
 
+    public void BeginAt(GamePhase phase, IReadOnlyDictionary<GamePhase, IPhaseController> controllers);
     public bool TryTransitionTo(GamePhase next, IReadOnlyDictionary<GamePhase, IPhaseController> controllers);
 }
 
@@ -314,21 +343,24 @@ interface IPhaseController
 sealed class GameState : MonoBehaviour
 {
     public GamePhase Current => _phaseController.Current;
-    public bool RequestTransition(GamePhase phase) => …;
+    public event Action<GamePhase, GamePhase> PhaseChanged;
+
+    public bool RequestTransition(GamePhase phase);
+    public bool RequestCombat(CombatEntryContext entry); // SetPendingEntry + Transition(Combat)
 }
 ```
 
-`TryTransitionTo` calls `OnExit` on the old controller, updates `Current`, calls `OnEnter` on the new controller, then raises `PhaseChanged`.
+`TryTransitionTo` calls `OnExit` on the old controller, updates `Current`, calls `OnEnter` on the new controller, then raises `PhaseChanged` (forwarded by `GameState`). Boot uses `BeginAt(Hub)` so initial `OnEnter` runs without a transition event.
 
 ## Input maps per phase
 
 | Game phase | Input System maps (enabled) |
 |------------|---------------------------|
 | Hub | `UI` (+ hub-specific if split later) |
-| Exploration | `Exploration`, `Map` (map overlay pass-through per ADR 014) |
-| Combat | `Combat`, `UI` |
+| Exploration | `UI`, `Exploration`, `Map` (map overlay pass-through per ADR 014) |
+| Combat | `UI`, `Combat` |
 
-Implemented in **`GridDungeon.UI`**: `InputRouter` subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)).
+Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)).
 
 ## Dev bootstrap HUD (UI Toolkit)
 
@@ -338,8 +370,9 @@ MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.u
 |-------|----------|------|
 | `GamePhaseDevHud.uxml` / `.uss` | `Assets/UI/Screens/Dev/` | BEM layout: current phase label, transition buttons, flee (combat only) |
 | `GamePanelSettings.asset` | `Assets/UI/Settings/` | Shared UI Toolkit **Panel Settings** — wired on `UIDocument` (created by dev bootstrap menu if missing) |
-| `GamePhaseDevHudView` | `GridDungeon.UI` / `Dev/` | `UIDocument` presenter; button `clicked` → `GameState.RequestTransition` / `RequestCombat`; subscribes to `PhaseChanged` |
-| Keyboard | F1–F4 | Same actions as buttons (Input System `Keyboard`, not legacy `Input`) |
+| `GamePhaseDevHudView` | `GridDungeon.UI` / `Dev/` | `UIDocument` presenter; button `clicked` → `GameState.RequestTransition` / `RequestCombat`; subscribes to `GameState.PhaseChanged` |
+| Keyboard | F1–F4 | Hub / Exploration / Combat / flee (same as buttons; Input System `Keyboard`) |
+| Keyboard (combat) | U / M | Dev Protocol strike / mend when Synchro ready |
 
 **Play-mode loop:** F1 Hub → F2 Exploration → F3 Combat → F4 flee (→ Exploration) → F1 Hub.
 
