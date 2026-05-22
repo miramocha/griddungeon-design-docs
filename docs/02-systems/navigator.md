@@ -97,7 +97,7 @@ Out of scope: Navigator leveling, trees, gear, or scaling auras.
 | **Protocol Deploy** (`protocol_deploy`) | Sortie **aux summon** in empty slot; scripted turns; Navigator name on portrait | [023](../../decisions/023-protocol-deploy-sortie-summon.md) |
 | **Protocol Transform** (`protocol_transform`) | **Slot-replace** one living core with Navigator **transform profile**; hybrid commands; **Revert** / duration / HP→0 revert safe; label **profile + “via [Core]”** | [024](../../decisions/024-protocol-transform.md) |
 
-Shared: **core** spends AGI turn at Synchro 100%; Navigator **executes** off-formation; **aura on**; **one** Deploy or Transform per battle — no second Protocol. See [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
+Shared: **core** spends AGI turn at Synchro 100%; Navigator **executes** off-formation; **aura on**; **multiple** Protocols per battle when Synchro **recharges** — blocked only while sortie or transform is **active**. See [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
 
 ## Hub — Navigator Office
 

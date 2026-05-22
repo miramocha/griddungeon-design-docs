@@ -49,7 +49,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Combatant** | `CombatantKind.Summon` — per-Navigator `SummonDefinition` (sortie kit); `linkedNavigatorId` in data |
 | **Navigator** | Stays **off-formation** — aura on core six, not targetable ([ADR 007](../../decisions/007-navigator-role.md)) |
 | **Sortie** | Targetable; AGI queue; scripted actions per [ADR 016](../../decisions/016-summon-control-mvp1.md) until player summon control lands |
-| **Synchro** | Sortie actions do not charge bar; **no second Protocol** while sortie is alive |
+| **Synchro** | Sortie actions do not charge bar; **no Protocol** while sortie is alive; after sortie ends, Synchro may recharge for another Protocol |
 | **UI** | Aux frame type **Summon**; portrait label = **Navigator display name** |
 | **End** | Battle end, sortie HP 0 (recall), duration, or dismiss action |
 

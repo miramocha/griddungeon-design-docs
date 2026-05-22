@@ -85,7 +85,7 @@ When the Synchro bar is **100%**, a **core member** on their AGI turn may use **
 2. Resolve effects; bar → **0%**; that character’s turn ends (normal queue advance).
 3. Other core/enemy/summon turns continue in AGI order.
 
-Only **one Protocol use** while the bar is full (spend resets the bar).
+Each time the bar is **100%**, the party may invoke **one** Protocol on a core turn (spend resets bar to **0%**). The same fight may use **multiple** Protocols if Synchro **recharges** during combat ([ADR 006](../../decisions/006-union-team-bar.md)). **Blocked** only while a Deploy **sortie is alive** or a **Transform** is active ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md), [ADR 024](../../decisions/024-protocol-transform.md)).
 
 ```
 Combat round:
@@ -107,14 +107,14 @@ Combat round:
 
 ### Skill ideas (post-MVP1)
 
-Not MVP1. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deploy) and [ADR 024](../../decisions/024-protocol-transform.md) (Transform). **One** post-MVP1 Protocol mode per battle (Deploy **or** Transform, not both). Navigator stays off-formation ([ADR 007](../../decisions/007-navigator-role.md)).
+Not MVP1. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deploy) and [ADR 024](../../decisions/024-protocol-transform.md) (Transform). Navigator stays off-formation ([ADR 007](../../decisions/007-navigator-role.md)). **Recharge loop:** multiple Protocols per battle when Synchro hits **100%** again; **not** while sortie or transform is active.
 
 | Skill | Participants | Effect |
 |-------|----------------|--------|
-| **Protocol Deploy** (`protocol_deploy`) | 3+ | **Core** spends AGI turn; Navigator spawns **sortie summon** in empty aux slot ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)). Scripted sortie turns (MVP1 summon pattern). **No second Protocol** this battle. Aux label: **Navigator display name**. |
-| **Protocol Transform** (`protocol_transform`) | 3+ | **Core** spends AGI turn; player picks **any living core**; Navigator **slot-replaces** target with transform profile ([ADR 024](../../decisions/024-protocol-transform.md)). **Hybrid** commands; **Revert** or `duration_turns` or HP→0 (**revert safe**). UI: profile name + **“via [CoreName]”**. **No second Protocol** this battle. |
+| **Protocol Deploy** (`protocol_deploy`) | 3+ | **Core** spends AGI turn; Navigator spawns **sortie summon** in empty aux slot ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)). Scripted sortie turns. No Protocol while sortie lives; may **Deploy again** later if aux empty + Synchro full. Aux label: **Navigator display name**. |
+| **Protocol Transform** (`protocol_transform`) | 3+ | **Core** spends AGI turn; **any living core** target; **slot-replace** with transform profile ([ADR 024](../../decisions/024-protocol-transform.md)). **Hybrid** + **Revert** / duration / HP→0 revert safe. No Protocol while transform active; may **Transform again** after revert + recharge. UI: profile name + **“via [CoreName]”**. |
 
-**Locked:** aura on during Deploy/Transform; core six charge Synchro; transform profile actions charge Synchro.
+**Locked:** aura on during Deploy/Transform; core six (and transform profile) charge Synchro; no overlapping sortie + transform.
 
 ## Presentation
 

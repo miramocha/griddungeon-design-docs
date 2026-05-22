@@ -1,7 +1,8 @@
 # ADR 023 — Protocol Deploy (navigator sortie as summon)
 
 **Status:** Accepted  
-**Date:** 2026-05-22
+**Date:** 2026-05-22  
+**Amended:** 2026-05-22
 
 ## Context
 
@@ -17,7 +18,7 @@ Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a
 4. **Navigator** — stays **off-formation**: executes Protocol, keeps **aura** on core six, **not targetable**, **no AGI turn** on the Navigator entity ([ADR 007](007-navigator-role.md) unchanged).
 5. **Sortie summon** — **targetable**; in AGI queue; row rules same as other aux summons; summon actions **do not** charge Synchro.
 6. **Control** — follows summon pipeline ([ADR 016](016-summon-control-mvp1.md)): MVP1-style **scripted** `actionScript` per sortie; player control TBD with other summons later.
-7. **While sortie is alive** — **no second Protocol** (any skill) until the sortie is gone (dismiss, HP 0, or battle end).
+7. **While sortie is alive** — **no Protocol** (any skill) until the sortie is gone (dismiss, HP 0, or battle end). After the sortie clears and Synchro reaches **100%** again, the party may invoke **another** Protocol in the same battle ([ADR 006](006-union-team-bar.md) recharge loop).
 8. **Dismiss** — battle end, summon HP → 0 (recall; Navigator not “dead”), duration expiry, or explicit dismiss action on sortie turn (define in skill data).
 9. **UI** — aux slot label **Summon**; portrait/name shows **active Navigator display name** (not a generic “Sortie” label).
 10. **Summon sources** — aux summons may come from **Summoner class deploy skills** or **Protocol Deploy** (different channels; same slot rules).
@@ -28,14 +29,15 @@ Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a
 |--------|-----|
 | Navigator as `CombatantKind` in formation row | Breaks ADR 007 identity and targeting |
 | Navigator immune but sortie also immune | Loses risk/reward for deploy |
-| Second Protocol while sortie active | User locked: no |
+| Second Protocol while sortie still alive | Cannot stack; after sortie ends, recharge allows another Protocol |
+| One Protocol per battle total | Rejected 2026-05-22 — multiple uses when bar refills |
 | Aura suspended while sortie out | User locked: aura stays on |
 | Generic “Sortie” UI label | User locked: use Navigator name |
 
 ## Consequences
 
 - Content: `protocol_deploy` + per-Navigator `sortie_summon_id` → `SummonDefinition`
-- `BattleSetup` / `ProtocolSystem`: spawn summon after Protocol resolve; block further Protocol until sortie cleared
+- `BattleSetup` / `ProtocolSystem`: spawn summon after Protocol resolve; block Protocol only **while** sortie active (not for whole battle)
 - Combat UI: aux frame + Navigator name on sortie portrait
 - No new `CombatantKind`; no amendment to ADR 007 role rules — only clarifies deploy is summon spawn
 
@@ -48,4 +50,4 @@ Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a
 - [ADR 007 — Navigator role](007-navigator-role.md)
 - [ADR 006 — Team bar](006-union-team-bar.md)
 - [ADR 016 — Summon control MVP1](016-summon-control-mvp1.md)
-- [ADR 024 — Protocol Transform](024-protocol-transform.md) — core slot replace; mutually exclusive Protocol mode per battle
+- [ADR 024 — Protocol Transform](024-protocol-transform.md) — core slot replace; cannot overlap active sortie or active transform

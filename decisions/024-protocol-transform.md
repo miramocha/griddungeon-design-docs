@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-22  
-**Amended:** 2026-05-22
+**Amended:** 2026-05-22 (Protocol recharge loop)
 
 ## Context
 
@@ -17,7 +17,7 @@ Aligned with [ADR 006](006-union-team-bar.md), [ADR 007](007-navigator-role.md),
 1. **Invoker** — a **core** member on their AGI turn when Synchro is **100%** (`CombatCommand.Protocol`); that core **spends their turn**; bar → **0%** after resolve.
 2. **Executor** — active **Navigator** off-formation (calls the protocol; **no** Navigator AGI turn).
 3. **Aura** — Navigator **aura stays on** all living core six during transform.
-4. **Protocol lock** — **no second Protocol** in the same battle once any post-MVP1 Protocol mode has been used (Transform active, or Deploy sortie was spawned, or Transform ended early). Deploy and Transform are **mutually exclusive** — only one may be invoked per fight ([ADR 023](023-protocol-deploy-sortie-summon.md)).
+4. **Protocol lock** — **no Protocol** while **transform is active** or while a **Deploy sortie is alive** ([ADR 023](023-protocol-deploy-sortie-summon.md)). When the mode ends and Synchro reaches **100%** again, the party may invoke **another** Protocol in the same battle (Strike, Mend, Deploy, Transform, etc.). Deploy and Transform **must not overlap** (no sortie + transform at once); they may both occur in one fight **sequentially** after recharge.
 5. **Participants** — **3+** living core members at invoke time (tune in data); transform target may be **any** living core including the invoker.
 6. **Synchro charge** — transform profile actions in a core slot **do** charge the bar (still `CombatantKind.Core`).
 
@@ -43,7 +43,7 @@ Aligned with [ADR 006](006-union-team-bar.md), [ADR 007](007-navigator-role.md),
 | **After revert** | Original is a **normal core** — Medic revive and targeting rules apply same fight. |
 | **Battle end** | If still transformed, revert safe before syncing to `PartyRuntime` / save. |
 
-One transform per battle (one Protocol mode). **No** second transform after early Revert in the same fight.
+**One active transform at a time.** After **Revert**, duration, or HP→0 revert safe, Synchro may recharge; **another** Transform (or any Protocol) is allowed when bar is **100%** and no sortie/transform is blocking.
 
 ### UI (locked)
 
@@ -65,8 +65,8 @@ One transform per battle (one Protocol mode). **No** second transform after earl
 | Transform via **bench** swap | Hub-only roster policy |
 | Transform into **aux** slot | ADR 023 owns aux channel |
 | Navigator in core row | ADR 007 |
-| Multiple transforms per battle | One Protocol mode per fight |
-| Second Protocol after early Revert | Same battle Protocol lock |
+| One Protocol per battle total | Rejected 2026-05-22 — multiple uses when bar refills |
+| Overlapping transform + sortie | Cannot run Deploy sortie and Transform at once |
 | Full player menu on profile | User chose hybrid |
 | Pure scripted profile turns | User chose hybrid |
 | Transform HP 0 → both permanently down | User chose revert safe |
@@ -74,10 +74,10 @@ One transform per battle (one Protocol mode). **No** second transform after earl
 ## Consequences
 
 - Content: `protocol_transform` + `TransformDefinition` per Navigator
-- `ProtocolSystem` / `BattleState`: sideline snapshot, apply profile, set `ProtocolModeUsed` for battle
+- `ProtocolSystem` / `BattleState`: sideline snapshot, apply profile; block Protocol only **while** transform active
 - `CombatController`: hybrid menu for profile; queue rebuild on transform/revert; restore snapshot on revert/end
 - Combat UI: target picker, dual-name label, Revert action
-- Tests: mutual exclusion with Deploy; revert safe; revive original after break; no second Protocol in same fight
+- Tests: no Protocol during active transform/sortie; second Protocol after recharge; revert safe; sequential Deploy then Transform OK
 
 ## Related
 
