@@ -90,6 +90,10 @@ Navigators do **not** progress like core party members:
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
+### Post-MVP1 Protocol idea
+
+**Protocol Deploy** — Navigator **transforms** into a combatant and joins the fight in an **aux slot** for the rest of the encounter (or until dismissed). Conflicts with MVP1 rule that Navigators stay off-formation and aux is summon/guest only; see [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
+
 ## Hub — Navigator Office
 
 Separate from **Explorers Guild** ([hub & services](hub-and-services.md)). Guild handles core six; Navigator Office handles party leads only.

@@ -104,6 +104,16 @@ Combat round:
 | **Protocol Retreat** | 4+ | High chance flee to floor entrance |
 | **Protocol Scan** | 1+ | Register enemy in codex |
 
+### Skill ideas (post-MVP1)
+
+Draft concepts only — not MVP1; may require [ADR 007](../../decisions/007-navigator-role.md) / [ADR 004](../../decisions/004-auxiliary-slots.md) amendment if built.
+
+| Skill | Participants | Effect (draft) |
+|-------|----------------|----------------|
+| **Protocol Deploy** (`protocol_deploy`) | 3+ | Navigator **transforms** into a combatant and **enters an aux slot** (front or back — player picks empty slot). Gains **AGI turns** and a limited combat kit for the rest of the fight (or until dismissed). Off-formation Navigator UI hides or mirrors the aux sprite. **Requires** a free aux slot; does not stack with an existing summon/guest in that row. |
+
+**Open questions if pursued:** targetable while deployed vs still immune; whether core six still charge Synchro only; dismiss timing (battle end, N turns, second Protocol); Protocol menu while deployed; presentation (sortie suit / drone frame).
+
 ## Presentation
 
 - Navigator portrait leads Protocol command ([combat presentation](combat-presentation.md)).
