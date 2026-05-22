@@ -12,6 +12,55 @@ Curated titles for **future design and tone checks**. **MVP1 authority** stays *
 
 ---
 
+## Etrian Odyssey — hub & town loop
+
+**Authority for MVP1 hub rules** ([hub-and-services](02-systems/hub-and-services.md), [release scope](00-release-scope.md)). EO is the model for *what* the hub does; presentation can add MSK-style place-making **after** MVP1 without changing service logic.
+
+| EO beat | What EO does | Grid Dungeon |
+|---------|--------------|--------------|
+| **Camp / guild at the mouth** | Town or camp **fixed** at the labyrinth entrance — not an open overworld | Single **guild town** scene from first hub visit (S1 Act 2); same layout throughout |
+| **Service loop** | Guild, shop, hospital, inn/save, then **re-enter** stratum | MVP1 menu tree: Explorers Guild, Navigator Office, shop, hospital, inn ([hub table](02-systems/hub-and-services.md#hub-locations-mvp1)) |
+| **No marathon in the maze** | Heal, equip, save at hub; push depth deliberately | Inn primary save; no labyrinth save MVP1; Return thread / mouth stairs up |
+| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 mouth spawn; S2+ warp gates ([dungeons § entry](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
+| **Hub navigation (EO titles vary)** | Older: **menu / icon** hubs; newer (e.g. Nexus): **walkable** 3D districts | **Menu-first** (EO classic) — **no** avatar walk; post-MVP1 **camera pan** on root-menu focus ([hub environment](02-systems/hub-and-services.md#hub-environment-presentation)) |
+| **Presentation** | Often **static** illustration or simple 3D with direct facility pick | Full-screen 3D backdrop + UI overlay; pans **post-MVP1** |
+
+**Borrow from EO (locked):** service set, save-at-inn, return-before-overextending loop, guild party prep, strata as progression bands.
+
+**Do not copy blindly:** EO2-style exploration TP; player-drawn maps; walk-only hub in MVP1 (scope).
+
+---
+
+## Mary Skelter — hub & base (secondary)
+
+MSK informs **feel** and **presentation bar**, not MVP1 mechanics. Compare proposals to EO compatibility ([scratchpad](#mary-skelter--design-notes-scratchpad) below).
+
+| MSK beat | What MSK does | Grid Dungeon |
+|----------|---------------|--------------|
+| **Base between tower floors** | **Hub / jail base** after nightmare dives — facilities, story, breathing room | Same macro loop as EO hub ([hub macro loop](02-systems/hub-and-services.md#macro-loop-eo-aligned)) |
+| **Dungeon vs base contrast** | FPV **nightmare** labyrinth vs safer **base** with readable spaces | Exploration FPV grid + **non-walkable** guild town (menu + backdrop) |
+| **Place readability** | Distinct **zones** in base (shop, clinic, etc.) even when navigation is not full open-world | Post-MVP1: root-menu focus **pans** camera to shop / hospital / guild anchors — **one** shared gate for all **Enter Stratum** rows |
+| **Combat / UI read** | Strong hit feedback, ailments, flashy skills | Reactive blocking HUD ([tech notes § UI reactivity](04-tech-notes.md#ui-reactivity)); sparse cinematics ([combat presentation](02-systems/combat-presentation.md)) |
+| **Burst fantasy** | Transform / blood / rage spikes | **Synchro Charge** + Navigator only — MSK burst is **feel reference**, not a second meter ([ADR 006](../decisions/006-union-team-bar.md)) |
+
+**Borrow from MSK (evaluate / post-MVP1):** environmental **identity** per service (building silhouette readable in one pan); **light ambient** life in hub scene (idle NPCs, smoke — later MVP); reactive UI motion already on MVP1 bar.
+
+**Rejected unless ADR:** replacing Navigator + Synchro with MSK-style personal transform meters; action combat; manual map drawing.
+
+### Hub presentation — EO + MSK synthesis
+
+| Layer | EO (primary) | MSK (secondary) | Our call |
+|-------|--------------|-----------------|----------|
+| **Interaction** | Menus, clear service list | Base facilities, strong zone identity | Root **menu**; no hub walk |
+| **World** | Camp at mouth, return loop | 3D base with readable districts | **One** full-screen town scene |
+| **Camera** | Mostly static / light transitions | Environmental storytelling in base | **Post-MVP1** debounced pan on root focus (~150–300 ms settle); **no pan** on locked rows or sub-menus |
+| **Audio** | Facility jingles, understated camp | More atmospheric base | **Probably no** hub looping ambience; service UI SFX only (for now) |
+| **Life** | Often minimal hub motion | More animated base | **Light ambient** scene motion — **later than MVP1** |
+
+Full hub spec: [hub environment presentation](02-systems/hub-and-services.md#hub-environment-presentation).
+
+---
+
 ## Secondary references
 
 | Game | Relevant beats | Possible borrow (evaluate later) |
@@ -31,7 +80,7 @@ Use when reviewing exploration, combat UI, or “dungeon feel” features. **Not
 | **Exploration** | FPV steps in a mapped tower | EO grid + auto-reveal ([ADR 002](../decisions/002-mapping-model.md)); floor painter + 2D HUD |
 | **Map threats** | Boss / FOE-like map icons, routing matters | FOE step patrol ([ADR 003](../decisions/003-foe-step-patrol.md)) |
 | **Combat read** | Strong VFX, clear hit / ailment feedback | Reactive blocking HUD ([04 — Tech notes](04-tech-notes.md#ui-reactivity)); Fixed presentation MVP1 |
-| **Hub loop** | Base camp between dives | Hub services ([hub-and-services](02-systems/hub-and-services.md)) |
+| **Hub loop** | Base camp between dives | Hub services + [EO/MSK hub synthesis](02-systems/hub-and-services.md#hub-environment-presentation) ([hub-and-services](02-systems/hub-and-services.md)) |
 | **Burst modes** | Transform / blood / rage spikes | **Synchro Charge** + Navigator ([ADR 006](../decisions/006-union-team-bar.md), [007](../decisions/007-navigator-role.md)) — compare feel only |
 | **Verticality** | Multi-floor tower structure | Strata + `level` bands ([ADR 019](../decisions/019-floor-verticality.md)) |
 

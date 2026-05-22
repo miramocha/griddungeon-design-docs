@@ -74,7 +74,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 |-------|-----|
 | Combat | [combat — UI motion & feedback](02-systems/combat.md#ui-motion--feedback) |
 | Exploration | [mapping — Map UI motion](02-systems/mapping.md#map-ui-motion) |
-| Hub | [hub — Service UI motion](02-systems/hub-and-services.md#service-ui-motion) |
+| Hub | [hub — Service UI motion](02-systems/hub-and-services.md#service-ui-motion); [hub — environment camera pan](02-systems/hub-and-services.md#hub-environment-presentation) (**post-MVP1**, non-blocking) |
 
 **Deferred (post-MVP1):** global **reduce UI motion** accessibility toggle; keep tween durations in data/prefs so scale-to-zero is trivial later.
 

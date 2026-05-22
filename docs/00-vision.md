@@ -17,7 +17,7 @@ Chart an unknown labyrinth from the first person — one grid step at a time. Th
 | Game | Take |
 |------|------|
 | ***Etrian Odyssey*** | **Primary:** auto-map presentation, FOEs, strata, guild classes, AGI combat, synthesis |
-| ***Mary Skelter: Nightmares*** | **Secondary:** FPV tower crawl, map threats, reactive combat read, hub-between-floors — future reference only ([game references](00-game-references.md)) |
+| ***Mary Skelter: Nightmares*** | **Secondary:** FPV tower crawl, map threats, reactive combat read, hub **place-making** (with EO menu loop) — [game references](00-game-references.md#mary-skelter--hub--base-secondary) |
 | *Wizardry* | Brutal identity optional; we use EO death/save model instead |
 | *SMT / dungeon crawlers* | Weaknesses and buff stacking (light touch, later) |
 
@@ -33,7 +33,7 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 
 - **Manual map drawing tools** (walls, icons, notes, eraser)
 - Action combat, QTEs, or real-time party control in battles
-- Full 3D hub walk (menu hub is fine for MVP1)
+- Full 3D hub walk (MVP1: menu hub; [menu-driven camera pan](02-systems/hub-and-services.md#hub-environment-presentation) is **post-MVP1**)
 - **Boost/Break** — out of scope; [Synchro Protocol](02-systems/synchro-protocol.md) covers team burst
 - Subclass systems until core loop is proven
 - **Dungeon gather / fishing minigames** — **MVP2** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))

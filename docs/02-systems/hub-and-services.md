@@ -15,7 +15,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | **Synthesis** (**MVP2**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
 | **Side expedition** (**MVP3**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
 
-No real-time hub walking required for prototype — menu tree is fine.
+No real-time hub walking — **menu tree stays the interaction model**. A **single full-screen 3D guild-town** backdrop (same scene from first hub visit) with **root-menu camera pans** post-MVP1 gives place identity without avatar locomotion (see [Hub environment presentation](#hub-environment-presentation)).
 
 ### Service UI motion
 
@@ -30,6 +30,7 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** | Yes |
 | Leave hub → stratum | Transition **fade** (pairs with phase change) | Yes — until exploration phase ready |
+| Menu item **focus** (hover / scroll) | Background camera **pans** to service building ([§ below](#hub-environment-presentation)) — **post-MVP1** | No — navigation stays live |
 
 ### Guild vs Navigator Office
 
@@ -41,6 +42,98 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | **In labyrinth** | Fight, explore, earn XP | Protocol execution + passives only |
 
 Prepare at **both** before entering the stratum (order in UI flexible).
+
+## Hub environment presentation
+
+**Design direction:** the hub is a **readable 3D environment** (guild town at the labyrinth mouth) behind the UI. The player still **picks services from menus** — no free-roam walking, no grid movement ([vision — non-goals](../00-vision.md)). **Menu focus** on the **root hub list** drives the camera so each service feels anchored in the world.
+
+### Locked decisions
+
+| Topic | Decision |
+|-------|----------|
+| **When focus → pan ships** | **Post-MVP1** — MVP1 hub is menus + services; camera pan is the first hub presentation pass after MVP1 |
+| **Town layout** | **One environment** from the first hub visit (S1 Act 2) — same guild-town scene throughout; services unlock via menu, not by swapping hub maps |
+| **Layout** | **Full-screen** 3D backdrop with **UI Toolkit overlay** on top (not split-pane) |
+| **Sub-menus** | **No camera pans** inside service screens (shop tabs, guild skill tree, hospital actions, etc.) — panning applies only to the **root hub menu** |
+| **Inside a service** | Camera **holds** the last root-menu anchor for that service; no tighter framing or secondary anchors on sub-menus |
+| **Hub entry default shot** | **TBD** — leaning toward a **wide establishing** town view until the player moves root-menu focus; not locked yet |
+| **Locked / unavailable root rows** | **No pan** — focus on a greyed-out service does not move the camera (avoids teasing buildings the player cannot use yet) |
+| **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth mouth / plaza camera pose |
+| **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
+| **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than MVP1** (author with post-MVP1 hub presentation or polish pass) |
+| **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
+
+**Reference synthesis (EO + Mary Skelter):** [game references — hub & town](../00-game-references.md#etrian-odyssey--hub--town-loop).
+
+### Debounced pan (rapid scroll)
+
+**Locked:** **debounced settle** — the camera does **not** chase every focus tick while the player scrolls the **root** list.
+
+| Rule | Detail |
+|------|--------|
+| **Trigger** | Start pan only when the same root row stays focused for ~**150–300 ms** (default **200 ms** until playtest) |
+| **During scroll** | Focus changes before the timer expires **reset** the debounce; no partial pan to skipped rows |
+| **After settle** | One smooth lerp to that row’s anchor (cancel any in-flight pan from a *previous* settled target if focus moved again after debounce fired) |
+| **Rejected** | **Interruptible chase** (immediate retarget on every focus change) — too busy when flicking Shop → Hospital |
+
+Tune duration post-MVP1 if keyboard taps feel laggy or fast gamepad flicks never show a building.
+
+### Menu focus → camera pan (post-MVP1)
+
+| Input | Behavior |
+|-------|----------|
+| **Hover** (mouse / gamepad focus on **root** menu row) | After [debounce](#debounced-pan-rapid-scroll), pan to that service’s **anchor** |
+| **Scroll / move selection** (keyboard, D-pad, stick on **root** hub list) | Same — debounced on **current highlighted root row** |
+| **Confirm** (open service) | Open service UI; camera **stays** on that service’s root anchor — **no** sub-menu pans or zoom |
+| **Back** (close service to root list) | Resume pan from **current root highlight**; if none focused, use entry default ([TBD](#locked-decisions), lean wide town) |
+
+Pan uses a **smooth lerp** (e.g. DOTween on a rig or virtual camera) after the debounce window elapses.
+
+**Rejected for this model:** requiring the player to walk an avatar to a door before the shop opens — that is “full 3D hub walk,” out of scope for early versions.
+
+### Service → backdrop anchor (targets)
+
+Each hub menu entry maps to an **authored camera pose** (and optional look-at) aimed at a recognizable building or district in the scene.
+
+| Hub menu / service | Backdrop focal point (example) |
+|--------------------|--------------------------------|
+| **Explorers Guild** | Guild hall / training yard |
+| **Navigator Office** | Navigator lodge or guild annex |
+| **Shop** | Shop front / market stall row |
+| **Hospital** | Hospital / clinic building |
+| **Inn / Camp desk** | Inn or camp desk exterior |
+| **Quest counter** | Notice board / guild quest hall wing |
+| **Enter Stratum** *N* (any *N*) | **One shared** labyrinth mouth / gate plaza — same anchor for every stratum entry row |
+| **Side expedition** (MVP3) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
+| **Synthesis** (MVP2) | Workshop / forge annex |
+
+Anchors are **data** (Transforms in scene, or `HubCameraAnchor` ScriptableObjects keyed by service id) so layout artists can tune without code changes.
+
+### Presentation vs gameplay lock
+
+Camera pan on menu focus is **ambient presentation** — it must **not** take the global [UI presentation lock](../04-tech-notes.md#ui-reactivity) used for inn save, shop confirm, or hospital heal. The player can scroll the menu while the camera moves.
+
+Service screens may still use the **Service UI motion** table above for panel tweens and blocking confirms.
+
+### Implementation sketch (game repo)
+
+| Piece | Role |
+|-------|------|
+| `HubEnvironmentPresenter` (or scene-local rig) | Owns backdrop camera; `PanToAnchor(serviceId)` on focus events |
+| `HubMenuView` / hub UI controller | Emits `MenuItemFocused(serviceId)` on hover and selection change |
+| `HubPhaseController` | Enables backdrop + UI on enter; no combat/exploration subsystems |
+
+Pattern parallels **combat arena presentation** ([combat presentation](combat-presentation.md), [ADR 013](../../decisions/013-combat-scene-rendering.md)): phase owns lifecycle; presenter owns camera/VFX only.
+
+### Release scope
+
+| Phase | Hub backdrop & camera |
+|-------|------------------------|
+| **MVP1** | Menu tree + services (required). **Same** guild-town environment art/layout from first hub visit is fine to author early; **static** or simple backdrop OK if pan is not wired yet. **No** focus → pan |
+| **Post-MVP1** | Wire **root-menu focus → pan**; full-screen 3D + UI overlay; anchors per service table above |
+| **Defer** | Polished building pass; **light ambient** scene life (NPC idle, VFX); avatar walk-up; sub-menu camera moves; hub **looping ambience** (likely cut) |
+
+**Acceptance (post-MVP1, when pan is wired):** scrolling the **root** list from **Shop** to **Hospital** reframes the environment to each building; opening shop/hospital sub-menus does **not** move the camera again.
 
 ## Macro loop (EO-aligned)
 
