@@ -73,7 +73,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 | Floor ID | Theme | Spawns | Stairs (mouth / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
 | `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,11)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** (Act 1 & B1F layout) | Act 1: **0**; Act 3: low chaff |
-| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,17)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
+| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
 | `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** boss FOE | Mixed |
 
 **Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp-gate hub entry is out of MVP1 scope.
@@ -146,13 +146,13 @@ entries:
   - { groupId: grp_b1_chaff_mite,   weight: 40 }
 ```
 
-**ASCII (20×20)** — `X` = blocked until Act 3; intro path E → ^ at mouth:
+**ASCII (20×20)** — `X` = blocked until Act 3; intro path E → ^ at mouth; north cap at `(9–11, 17–18)` blocks west bypass to `v`:
 
 ```
 ####################
-#..................#
-#..................#
-#......#######.....#
+#........###.......#
+#........#.#.......#
+#......###.###.....#
 #......#..v..#.....#
 #......#.....#.....#
 #......###X###.....#
@@ -190,14 +190,14 @@ entries:
 | `baseEncounterRate` | `0.10` |
 | `partyEntryPoint` | `(10, 2)`, facing **N** (from B1F `stairsDown`) |
 | `stairsUp` | `(10, 2)` |
-| `stairsDown` | `(10, 17)` |
+| `stairsDown` | `(10, 15)` |
 
 **FOE (required) — Synchro tutorial (unbeatable, mid-fight unlock):**
 
 ```yaml
 foeId: foe_alley_stalker
-spawnCell: [14, 11]
-patrolPath: [[14, 11], [14, 12], [15, 12], [15, 11]]
+spawnCell: [12, 11]
+patrolPath: [[12, 11], [12, 12], [13, 12], [13, 11]]
 stepsPerMove: 4
 tier: green
 encounterGroup: grp_alley_stalker_tutorial   # tutorial variant; enemies tutorialUnbeatable
@@ -237,7 +237,7 @@ entries:
 #....#.......#.....#
 #....#..C....#.....#
 #....#.......#.....#
-#....###...####.....#
+#....###..####.....#
 #.......#.#........#
 #.......#F#........#
 #.......#.#........#
@@ -245,11 +245,11 @@ entries:
 #....#.......#.....#
 #....#.......#.....#
 #....#.......#.....#
-#....####^####.....#
+#....#########.....#
 ####################
 ```
 
-`^` and `v` share column **10**; entry from B1F lands on **^** cell. East loop `(14–16, 10–13)` intersects FOE patrol.
+`^` and `v` share column **10** at `(10, 2)` / `(10, 15)` (ASCII `^`/`v` on those rows are visual; constants are authoritative). Entry from B1F lands on **^** at `(10, 2)`. East loop `(12–14, 10–13)` intersects FOE patrol.
 
 ---
 
@@ -303,17 +303,16 @@ entries:
 #....#.......#.....#
 #....#.......#.....#
 #....#.......#.....#
-#....####^####.....#
+#....#########.....#
 #........#.........#
 #....C...#.........#
 #........#.........#
 #........#.........#
 #........#.........#
 #........#.........#
-####################
 ```
 
-Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall cheeks — teaches FOE routing from B2F.
+Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall cheeks — teaches FOE routing from B2F. Entry from B2F: **`^` at `(10, 2)`** (pair with B2F `v` at `(10, 15)`).
 
 **Post-boss (MVP1):** set stratum-1-cleared flag; return via mouth **stairs up** → hub or **Return thread**. Do not require `stairsDown` on B3F for MVP1 completion.
 
