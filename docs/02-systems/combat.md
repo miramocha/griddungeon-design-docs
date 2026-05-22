@@ -167,7 +167,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
-| Turn advances | Turn strip: highlight **slides** or **pulses** to `Current`; previous slot eases to idle | Yes — next AGI turn / command |
+| Turn advances | AI/auto: turn strip handoff to `Current`. **Player command:** acting highlight on **party roster** slot, not strip | Yes — next AGI turn / command |
 | Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; optional floating number near slot | Yes — next action on that beat |
 | Status applied / cleansed | Icon **pop-in** or brief tint on portrait + queue icon | Yes |
 | Death / KO | Portrait **grey + scale down** or slide out; strip slot removed on rebuild with short fade | Yes |
@@ -193,7 +193,8 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 
 **Visual rules (MVP1):**
 
-- **Current actor:** strong highlight (frame glow / scale) with **animated handoff** when `Advance()` runs; strip does not scroll away from active slot during the turn.
+- **Current actor (auto / AI turn):** turn strip shows strong highlight (frame glow / scale) with **animated handoff** when the queue advances; strip does not scroll away from active slot during the turn.
+- **Player command phase (core turn):** strong highlight on the **acting core’s party roster slot** (formation row), **not** on the strip — strip stays informational only while the player picks Attack / Guard / Skill / etc. (#34 skeleton; full handoff beats in [combat presentation](combat-presentation.md)).
 - **Party vs enemy:** distinct frame or background tint; aux uses summon/guest frame ([summons & guests](summons-and-guests.md)).
 - **Enemies:** portrait or silhouette + row hint (front/back); weakness icons stay on enemy row UI, not required on every queue icon.
 - **Status:** control ailments (Sleep, etc.) show on the queue icon; skipped turns grey the slot ([status UI](combat-status-and-buffs.md#ui)).

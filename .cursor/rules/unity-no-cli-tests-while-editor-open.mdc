@@ -14,7 +14,7 @@ Implementation and tests live in **griddungeon-game**. The user typically has th
 
 ## Do instead
 
-1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
+1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo — expand `Tests → <Domain> → <Fixture>` ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
 2. Give **manual Play Mode** steps when closing tickets (see `ticket-test-documentation.mdc`).
 
 ## Exceptions

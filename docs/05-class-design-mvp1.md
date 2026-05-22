@@ -10,7 +10,7 @@ Concrete classes, interfaces, and enums for the MVP1 implementation. Derived fro
 
 | Goal | How architecture supports it |
 |------|--------------------------------|
-| **Test damage + AGI without Unity** | `GridDungeon.Core` simulators + `GridDungeon.Tests` (no `UnityEngine`) |
+| **Test damage + AGI without Unity** | `GridDungeon.Core` simulators + `GridDungeon.Tests` (mostly Core; Runtime when wiring needs it) |
 | **Hub ↔ explore ↔ combat loop** | `GamePhaseController` + three `IPhaseController`s ([game phase](02-systems/game-phase.md)) |
 | **Spec-locked combat** | `CombatController` + `TurnQueue` + `EndOfRoundPipeline`; combat sub-phases not on `GamePhase` |
 | **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, …) at simulator boundaries |
@@ -34,6 +34,7 @@ flowchart BT
   R[GridDungeon.Runtime]
   C[GridDungeon.Core]
   T --> C
+  T --> R
   UI --> R
   R --> C
 ```
@@ -45,15 +46,15 @@ GridDungeon.Runtime    (MonoBehaviours, ScriptableObjects)
     ↑
 GridDungeon.UI         (UI Toolkit views, input handlers)
 
-GridDungeon.Tests      (NUnit, references Core only)
+GridDungeon.Tests      (NUnit, references Core + Runtime; domain folders — game repo Assets/Tests/README.md)
 ```
 
 | Assembly | `asmdef` path | Notes |
 |----------|---------------|-------|
-| `GridDungeon.Core` | `Assets/Scripts/Core/GridDungeon.Core.asmdef` | No `UnityEngine` refs; testable in CI without headless Unity |
+| `GridDungeon.Core` | `Assets/Scripts/Core/GridDungeon.Core.asmdef` | No `UnityEngine` refs; Edit Mode tests via Unity Test Runner ([improvement plan](plans/core-assembly-improvement-plan.md)) |
 | `GridDungeon.Runtime` | `Assets/Scripts/Runtime/GridDungeon.Runtime.asmdef` | References Core |
 | `GridDungeon.UI` | `Assets/Scripts/UI/GridDungeon.UI.asmdef` | References Runtime; UI Toolkit bindings |
-| `GridDungeon.Tests` | `Assets/Tests/GridDungeon.Tests.asmdef` | References Core only; `CombatSimulator` tests |
+| `GridDungeon.Tests` | `Assets/Tests/GridDungeon.Tests.asmdef` | References Core + Runtime; Edit Mode layout in game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
 
 ---
 
@@ -1252,10 +1253,13 @@ Assets/
 │   ├── Summons/                  *.asset (SummonDefinition SOs)
 │   └── Dungeons/
 │       └── Stratum01/            B1F.asset, B2F.asset, B3F.asset
-├── Tests/                        GridDungeon.Tests.asmdef
-│   ├── DamageCalculatorTests.cs
-│   ├── TurnQueueBuilderTests.cs
-│   └── StatusSystemTests.cs
+├── Tests/                        GridDungeon.Tests.asmdef (see game repo Assets/Tests/README.md)
+│   ├── TestCategories.cs
+│   ├── Combat/
+│   ├── Exploration/
+│   ├── Foe/
+│   ├── Map/
+│   └── GameFlow/
 └── Plugins/
     └── Demigiant/DOTween/        (Asset Store import — required, see tech notes)
 ```

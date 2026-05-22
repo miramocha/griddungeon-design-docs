@@ -23,7 +23,7 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 ## Test plan (verified YYYY-MM-DD)
 
 ### Automated
-- [ ] Unity Test Runner → Edit Mode → `<Category>` → `<TestClass>` — all green (categories: game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md))
+- [ ] Unity Test Runner → Edit Mode → `Tests` → `<Domain>` → `<TestClass>` — all green (layout: [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md); optional category filter e.g. `Combat`)
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
@@ -45,10 +45,22 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 
 Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 018](../../decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../../decisions/001-grid-movement.md).
 
-**Dev bootstrap:** `GridDungeon → Scenes → Create Dev Bootstrap` if scene refs are stale; **F1** Hub / **F2** Exploration / **F3** Combat.
+**Dev bootstrap:** `GridDungeon → Scenes → Create Dev Bootstrap` if scene refs are stale; **F1** Hub / **F2** Exploration / **F3** Combat (dev fight: 2 cores + slime when roster empty — see game repo `Assets/Scripts/README.md`).
+
+## Edit Mode paths (game repo)
+
+| Domain | Namespace | Example fixture |
+|--------|-----------|-----------------|
+| `Combat` | `GridDungeon.Tests.Combat` | `DamageCalculatorTests` |
+| `Exploration` | `GridDungeon.Tests.Exploration` | `GridMovementTests` |
+| `Foe` | `GridDungeon.Tests.Foe` | `RetreatCellCalculatorTests` |
+| `Map` | `GridDungeon.Tests.Map` | `MapRevealCalculatorTests` |
+| `GameFlow` | `GridDungeon.Tests.GameFlow` | `GamePhaseControllerTests` |
+
+Full tree and category filtering: game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
 ## Agent / PR workflow
 
-1. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules.
+1. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules (expand `Tests → <Domain>` in Test Runner, or ask the user to).
 2. After implementation, **post the filled template** to the issue via `gh issue comment` (or PR body).
 3. If the user verified in-editor, incorporate their notes; do not invent results you did not run.
