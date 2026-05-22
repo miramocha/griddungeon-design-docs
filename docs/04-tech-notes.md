@@ -97,7 +97,7 @@ GameState (composition root)
 ├── ProtocolSystem       — Synchro bar charge/spend; Navigator invokes Protocol on core turn at 100%
 ├── CombatController     — AGI queue + Protocol command → EndRound
 ├── CodexSystem          — enemy knowledge / weaknesses
-├── ContentDatabase      — strata, floors, FOE, encounters
+├── ContentDatabase      — strata, floors, side dungeons (MVP3), FOE, encounters
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
 ```
 
@@ -129,6 +129,14 @@ GameState (composition root)
 | **Deferred** | MapProxy + minimap camera → RT (optional 3D debug preview only) |
 
 **Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
+
+## Side dungeons (MVP3)
+
+- **Save/map keys:** `{locationId}_{floorId}` — e.g. `sd01_F1` (not `s1_B1F`). Same `FloorMapStateSave` / `FoeStateSave[]` dictionaries as strata ([side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md)).
+- **`ExplorationStateSave`:** add `ExplorationMapKind` (`Stratum` | `SideDungeon`) + `locationId` + `floorId` on active dive.
+- **Hub entry:** `HubController.EnterSideDungeon(locationId, floorId)` — parallel to `LeaveHub`; loads floor SO from `ContentDatabase` by side key.
+- **Content path (draft):** `Assets/Content/SideDungeons/sd01_F1.asset`
+- **Stratum-only save:** `HubSaveData.UnlockedFloors` does not track side locations; use `UnlockedSideDungeonIds` or quest flags.
 
 ## Autopilot (MVP2)
 

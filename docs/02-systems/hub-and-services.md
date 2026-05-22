@@ -13,6 +13,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | **Inn / Camp desk** | Save game (primary save point) |
 | **Quest counter** | Accept kill/gather/floor reach quests (optional MVP1) |
 | **Synthesis** (**MVP2**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
+| **Side expedition** (**MVP3**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
 
 No real-time hub walking required for prototype — menu tree is fine.
 
@@ -49,6 +50,7 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
     → Retreat via first-floor stairs up (mouth) or Return thread when low
     → Hospital + shop + guild + Navigator Office → Repeat
+    → (MVP3) Side expedition — optional non-strata maps; exit → hub only ([side dungeons](side-dungeons.md))
 ```
 
 **New game exception:** Stratum 1 starts with **Act 1 on `s1_B1F`** (movement, no hub yet) — see [S1 campaign intro](../03-content/campaign/s1-intro.md).
@@ -83,8 +85,18 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 - **No save in labyrinth** for classic feel; optional **camp item** rare consumable for mid-stratum save (late feature).
 - Wipe → GAME OVER → load last hub save; **map data for strata already visited persists**.
 
+## Hub travel (stratum vs side)
+
+| Destination | Hub action | Entry API (draft) |
+|-------------|------------|-------------------|
+| **Stratum** labyrinth | **Enter Stratum** *N* | `LeaveHub(stratumId, floorId)` |
+| **Side dungeon** (MVP3) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
+
+Strata use warp gates (S2+) and mouth stairs with inter-stratum rules. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
+
 ## Related docs
 
+- [Side dungeons (MVP3)](side-dungeons.md)
 - [Release scope](../00-release-scope.md)
 - [Gathering & fishing (MVP2)](gathering-and-fishing.md)
 - [01 — Core loop](../01-core-loop.md)

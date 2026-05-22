@@ -915,6 +915,8 @@ class HubController : MonoBehaviour
 
     void EnterHub();
     void LeaveHub(string destStratumId, string destFloorId);
+    // MVP3 — see § MVP3 side dungeons sketch
+    void EnterSideDungeon(string locationId, string floorId);
 }
 
 class InnService
@@ -1275,6 +1277,46 @@ These string IDs must be stable across code and SO assets.
 | Status | `poison`, `sleep`, `panic`, `bind_head`, `bind_arm` | MVP1 subset |
 | Stat mods | `offense_up`, `offense_down`, `defense_up`, `defense_down`, `magic_up`, `magic_down`, `speed_up`, `speed_down`, `blind`, `regen` | |
 
+**MVP3 side dungeon IDs (draft, not MVP1):** `sd01`, floors `sd01_F1`, `sd01_F2` — [side dungeons](02-systems/side-dungeons.md).
+
+---
+
+## MVP3 — side dungeons (sketch)
+
+**Authority:** [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md). Does **not** change MVP1 locked content IDs above.
+
+```csharp
+enum ExplorationMapKind { Stratum, SideDungeon }
+
+// Extend ExplorationStateSave (MVP3)
+struct ExplorationStateSave
+{
+    ExplorationMapKind MapKind;
+    string LocationId;   // stratumId ("s1") OR side locationId ("sd01")
+    string FloorId;      // "B1F" or "F1"
+    GridPosition PartyCell;
+    FacingDirection Facing;
+}
+
+// SaveGame — MVP3 additions (draft)
+[Serializable] class SaveGame
+{
+    // ... existing MVP1 fields ...
+    string[] UnlockedSideDungeonIds;  // e.g. "sd01"
+}
+
+// Maps / FoeState dictionary keys:
+//   Stratum:  "s1_B1F"
+//   Side:     "sd01_F1"
+```
+
+| API | Caller | Phase |
+|-----|--------|-------|
+| `LeaveHub(stratumId, floorId)` | Hub **Enter Stratum** | → Exploration (stratum rules) |
+| `EnterSideDungeon(locationId, floorId)` | Hub **Side expedition** | → Exploration (side rules; exit → hub only) |
+
+`ContentDatabase.GetFloor` may resolve by composite key or `(MapKind, locationId, floorId)` — implementation detail for MVP3.
+
 ---
 
 ## Related docs
@@ -1291,5 +1333,7 @@ These string IDs must be stable across code and SO assets.
 - [Party & classes](02-systems/party-and-classes.md)
 - [Character progression](02-systems/character-progression.md)
 - [FOE encounters](02-systems/foe-encounters.md)
+- [Side dungeons (MVP3)](02-systems/side-dungeons.md)
+- [ADR 022 — Side dungeons MVP3](../decisions/022-side-dungeons-mvp3.md)
 - [Navigator](02-systems/navigator.md)
 - [Synchro Protocol](02-systems/synchro-protocol.md)

@@ -2,6 +2,8 @@
 
 Content structured like **Etrian Odyssey strata** — themed zones with multiple floors, FOE placements, and floor gimmicks.
 
+**Non-strata maps (MVP3):** optional **side dungeons** (`sd01`, …) — full grid explore + combat, hub **Side expedition** menu only. Not part of stratum progression — [side dungeons](../02-systems/side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md).
+
 ## Stratum structure
 
 ```

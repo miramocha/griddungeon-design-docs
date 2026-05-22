@@ -155,7 +155,9 @@ sequenceDiagram
 |---------|-----------------|--------|
 | **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) |
 | Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate |
+| Hub **Side expedition** (MVP3) | Exploration | `HubController.EnterSideDungeon` — spawn at side floor entry ([side dungeons](side-dungeons.md)) |
 | First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GamePhaseController` |
+| Side dungeon **exit** `stairsUp` (MVP3) | Hub | `DungeonExplorer` interact — **hub only** ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)) |
 | FOE same cell as party | Combat | `FoeSystem` → `GameState` |
 | Random encounter on step | Combat | `EncounterTrigger` → `GameState` |
 | Battle won or flee success | Exploration | `CombatController` |
@@ -360,4 +362,6 @@ If a UVS state graph is added later:
 - [MVP1 spec](../mvp1-spec.md)
 - [Combat](combat.md)
 - [Hub & services](hub-and-services.md)
+- [Side dungeons (MVP3)](side-dungeons.md)
+- [ADR 022 — Side dungeons](../../decisions/022-side-dungeons-mvp3.md)
 - [Input bindings](input-bindings.md)

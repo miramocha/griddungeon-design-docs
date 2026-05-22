@@ -13,7 +13,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Content** — strata, floors, monsters, FOE placement
 - **Tech** — Unity 6 / URP implementation constraints
 - **Decisions** — ADRs when we lock a design choice
-- **Release scope** — [MVP1 & MVP2](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
+- **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
 
 ## Release milestones
 
@@ -21,13 +21,14 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 |-----------|--------|
 | **MVP1** | Hub loop, explore, FOE, AGI combat, Synchro Protocol, auto-map |
 | **MVP2** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join, autopilot |
+| **MVP3** | Hub Side expedition → non-strata side dungeons ([ADR 022](decisions/022-side-dungeons-mvp3.md)) |
 
 ## Document index
 
 | Doc | Status | Summary |
 |-----|--------|---------|
 | [MVP1 spec](docs/mvp1-spec.md) | Active | MVP1 checklist + locked rules |
-| [00 — Release scope](docs/00-release-scope.md) | Draft | MVP1, MVP2, later |
+| [00 — Release scope](docs/00-release-scope.md) | Draft | MVP1, MVP2, MVP3, later |
 | [00 — Vision](docs/00-vision.md) | Draft | EO-first pillars, inspirations |
 | [00 — Game references](docs/00-game-references.md) | Draft | EO + Mary Skelter, etc. — future design reference |
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
@@ -50,6 +51,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |
 | [02 — Autopilot](docs/02-systems/autopilot.md) | MVP2 | Pathfind to discovered tile on map |
+| [02 — Side dungeons](docs/02-systems/side-dungeons.md) | MVP3 | Hub menu → non-strata grid maps |
 | [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; B1F–B3F MVP1 layouts |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
@@ -73,6 +75,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
 | [ADR 018 — Exploration animation speed](decisions/018-exploration-animation-speed.md) | Accepted | Slow / Normal / Fast / Very Fast lerp presets |
 | [ADR 021 — Autopilot MVP2](decisions/021-autopilot-mvp2.md) | Accepted | Pathfind on revealed tiles; no path drawing |
+| [ADR 022 — Side dungeons MVP3](decisions/022-side-dungeons-mvp3.md) | Accepted | Hub Side expedition; `sd##_F#` save keys |
 
 ## Resolved
 
@@ -98,6 +101,10 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - [FOE combat patrol](decisions/005-foe-combat-patrol.md) + [mid-battle join](decisions/010-chain-foe-battle.md)
 - [Autopilot](docs/02-systems/autopilot.md) — pathfind to discovered tiles; no map drawing ([ADR 021](decisions/021-autopilot-mvp2.md))
 - Optional: [cinematic QTE skills](docs/02-systems/combat-presentation.md)
+
+## MVP3 (scoped)
+
+- [Side dungeons](docs/02-systems/side-dungeons.md) — hub **Side expedition** → full grid explore + combat outside strata ([ADR 022](decisions/022-side-dungeons-mvp3.md))
 
 ## Open questions
 

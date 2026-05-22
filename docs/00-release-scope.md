@@ -6,8 +6,7 @@ Phased delivery for **Grid Dungeon**.
 |------|---------|
 | **MVP1** | First playable — core EO loop |
 | **MVP2** | Gathering/fishing minigames, synthesis, FOE combat patrol + mid-battle join, autopilot |
-
-Future milestones follow the same pattern (**MVP3**, …) if needed.
+| **MVP3** | Hub **Side expedition** → non-strata grid maps (full explore + combat) |
 
 MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered map tiles) without blocking MVP1.
 
@@ -47,15 +46,30 @@ MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered m
 
 ---
 
+## MVP3
+
+**Goal:** Optional **side dungeons** — EO-style grid explore + combat outside the stratum ladder, entered from the hub menu.
+
+| Feature | Doc |
+|---------|-----|
+| Hub **Side expedition** menu → unlocked `locationId`s | [side dungeons](02-systems/side-dungeons.md), [hub](02-systems/hub-and-services.md) |
+| `EnterSideDungeon` (separate from `LeaveHub`) | [game phase](02-systems/game-phase.md), [05 — Class design MVP3 sketch](05-class-design-mvp1.md#mvp3--side-dungeons-sketch) |
+| Save/map keys `sd##_F#` | [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md) |
+| Placeholder content `sd01` | [side dungeons § sd01](02-systems/side-dungeons.md#placeholder-content--sd01-salvage-annex) |
+
+**Out of MVP3 (stay in Later):** 3D hub walk, open overworld town grid.
+
+---
+
 ## Post-MVP1 class unlocks
 
 - **Elementalist**, **Saboteur**, **Overdriver** ([party & classes](02-systems/party-and-classes.md))
 
-## Later (after MVP2)
+## Later (after MVP3)
 
 - Elemental res buffs, leg bind, paralysis
 - Camp save consumable, 3D hub
-- Codex depth, guest quest lines, multiplayer (out of scope project-wide)
+- Codex depth, guest quest lines (beyond side-dungeon instances), multiplayer (out of scope project-wide)
 
 ---
 
