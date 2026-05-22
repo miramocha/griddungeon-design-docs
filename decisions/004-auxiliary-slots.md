@@ -12,7 +12,7 @@ Core party is **6 guild members (3+3)**. Design needs optional combat allies —
 1. Add **one auxiliary slot per row**: aux front, aux back.
 2. Each aux slot holds **at most one** entity: either a **summon** or a **guest** (never two in one slot).
 3. **Core 6** unchanged for exploration, save, XP, hospital.
-4. **Summons** — skill-spawned, temporary, no XP, combat-only unless skill specifies otherwise.
+4. **Summons** — temporary, no XP, combat-only unless skill specifies otherwise. Sources: **Summoner** deploy skills (MVP1+), post-MVP1 **Protocol Deploy** navigator sortie ([ADR 023](023-protocol-deploy-sortie-summon.md)), rare items / boss mechanics.
 5. **Guests** — script/quest-spawned, player- or AI-controlled per encounter definition, no XP.
 6. **Turn order:** aux units included in AGI queue like party members.
 7. **Max combatants:** 8 (6 core + 2 aux).
@@ -36,3 +36,4 @@ Core party is **6 guild members (3+3)**. Design needs optional combat allies —
 - [Summons & guests](../docs/02-systems/summons-and-guests.md)
 - [Party & classes](../docs/02-systems/party-and-classes.md)
 - [Combat](../docs/02-systems/combat.md)
+- [ADR 023 — Protocol Deploy sortie summon](023-protocol-deploy-sortie-summon.md)

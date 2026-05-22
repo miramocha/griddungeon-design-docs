@@ -25,7 +25,7 @@
 | Option | Why |
 |--------|-----|
 | Navigator in front/back row | Off-formation by design |
-| Navigator fills aux slot | Aux reserved for summon/guest |
+| Navigator fills aux slot | Aux reserved for summon/guest — Protocol Deploy spawns a **sortie summon**, not the Navigator ([ADR 023](023-protocol-deploy-sortie-summon.md)) |
 | Any core member invokes Protocol | Navigator identity diluted |
 | Mid-dungeon Navigator switch | User chose hub only |
 | Boss hits Navigator | User chose permanent non-target |
@@ -44,3 +44,4 @@
 - [Navigator](../docs/02-systems/navigator.md)
 - [Synchro Protocol](../docs/02-systems/synchro-protocol.md)
 - [ADR 006 — Team burst bar](006-union-team-bar.md)
+- [ADR 023 — Protocol Deploy sortie summon](023-protocol-deploy-sortie-summon.md)

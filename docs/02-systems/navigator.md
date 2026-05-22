@@ -77,7 +77,7 @@ Navigators are **never combat targets**:
 - **No AGI turn** — enemies and allies do not “hit” or buff Navigator in the turn system.
 - UI: Navigator portrait **without HP bar**; present for Protocol + aura only.
 
-Bosses cannot bypass this with “hit all party” — those effects apply to **core (+ aux)** only.
+Bosses cannot bypass this with “hit all party” — those effects apply to **core (+ aux summons/guests)** only. A **navigator sortie summon** from Protocol Deploy is aux and **is** targetable; the off-formation Navigator is not ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 
 ## Progression (simple)
 
@@ -89,6 +89,10 @@ Navigators do **not** progress like core party members:
 - **Only growth path:** unlock another Navigator with different aura/skills
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
+
+### Post-MVP1 — Protocol Deploy
+
+**Protocol Deploy** (`protocol_deploy`) — Navigator **executes** the Protocol off-formation and spawns a **navigator sortie summon** in an empty aux slot (not the Navigator in the row). Sortie is targetable and takes AGI turns; Navigator stays immune with **aura still on** core six. **No second Protocol** while the sortie lives. Aux portrait uses the **Navigator display name**. See [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
 
 ## Hub — Navigator Office
 
@@ -136,3 +140,4 @@ Additional Navigators unlock via strata/quests post-MVP1.
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)
