@@ -1,7 +1,7 @@
 # ADR 020 — Team burst naming (retire “Union”)
 
 **Status:** Accepted  
-**Date:** 2026-05-21  
+**Date:** 2026-05-21 (amended 2026-05-21 — **Synchro Charge** resource term)  
 **Supersedes working name in:** [ADR 006 — Team burst bar](006-union-team-bar.md) (mechanics unchanged)
 
 ## Context
@@ -23,17 +23,27 @@ MVP1 team burst uses a shared 0–100% bar and Navigator-executed skills ([synch
 | Field | Value |
 |-------|--------|
 | **System name** | Synchro Protocol |
-| **UI bar label** | Synchro |
+| **Team resource (design / docs)** | **Synchro Charge** (0–100% party pool) — parallel to per-character **MP** spent on skills |
+| **Team action** | **Protocol** — Navigator executes when charge is 100%; core member spends their AGI turn to invoke |
+| **UI meter label** | **Synchro** (short; not “Synchro Charge” on the HUD) |
 | **Content ID prefix** | `protocol_` |
 | **C# module folder / root type** | `Protocol` (`ProtocolSystem`, `ProtocolResolver`, …) |
-| **Save field** | `SynchroBar` (migrate from `UnionBar`; `FormerlySerializedAs` on `PartyRuntime` / scene refs) |
+| **C# / save field names** | **`SynchroBar`**, **`SynchroBarDelta`** — **no rename** to `SynchroCharge` in MVP1; maps to Synchro Charge in docs ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md)) |
 | **MVP1 skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
 
 Presentation:
 
-- Meter: **Synchro 100%**
+- Meter: **Synchro 100%** (shows Synchro Charge fill level)
 - Command menu: **Protocols** (Navigator kit)
 - Combat command: `CombatCommand.Protocol` + skill id
+
+### Resource vs action (locked vocabulary)
+
+| | Core six | Party / Navigator |
+|---|----------|-------------------|
+| Resource | MP | **Synchro Charge** |
+| Action | Skill | **Protocol** |
+| Spend | MP per skill | Full charge → 0% on Protocol |
 
 ## Consequences
 

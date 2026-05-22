@@ -70,7 +70,7 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ### Protocol (core turn, Synchro 100%)
 
-Only when **Synchro bar = 100%**, **unlocked** (`s1_synchro_unlocked`), on a **core** combatant’s turn ([synchro-protocol](synchro-protocol.md)). Hidden until mid–first-FOE unlock; tutorial phase may **force** Protocol only.
+Only when **Synchro Charge = 100%**, **unlocked** (`s1_synchro_unlocked`), on a **core** combatant’s turn ([synchro-protocol](synchro-protocol.md)). Hidden until mid–first-FOE unlock; tutorial phase may **force** Protocol only.
 
 | Action | Input | Notes |
 |--------|-------|-------|

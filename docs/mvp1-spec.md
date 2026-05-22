@@ -46,7 +46,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 |---|-------------|-----|
 | ✅ | Battle arena + enemy slots (not FPV fight) | [ADR 013](../decisions/013-combat-scene-rendering.md) |
 | ✅ | 6 core + 0–2 aux; Navigator off-formation | [ADR 004](../decisions/004-auxiliary-slots.md), [007](../decisions/007-navigator-role.md) |
-| ✅ | AGI queue UI; Protocol on core turn at Synchro 100% | [ADR 006](../decisions/006-union-team-bar.md), [ADR 020](../decisions/020-team-burst-naming.md) |
+| ✅ | AGI queue UI; Protocol on core turn at Synchro Charge 100% | [ADR 006](../decisions/006-union-team-bar.md), [ADR 020](../decisions/020-team-burst-naming.md) |
 | ✅ | Enemy front + back rows (5 slots max) | [ADR 015](../decisions/015-mvp1-combat.md) |
 | ✅ | Fixed camera + Fixed skills only | [combat presentation](02-systems/combat-presentation.md) |
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
@@ -129,7 +129,7 @@ Full Navigator roster unlocks post-MVP1.
 
 Numbers can move in data without ADR change:
 
-- Synchro % per action, Protocol skill power, encounter rates, `stepsPerMove`, shop prices.
+- Synchro Charge % per action, Protocol skill power, encounter rates, `stepsPerMove`, shop prices.
 
 ---
 

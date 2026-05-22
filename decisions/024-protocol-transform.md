@@ -21,7 +21,7 @@ Aligned with [ADR 006](006-union-team-bar.md), [ADR 007](007-navigator-role.md),
 3. **Aura** — Navigator **aura stays on** all living core six during transform.
 4. **Protocol lock** — **no Protocol** while **transform is active** or while a **Deploy sortie is alive** ([ADR 023](023-protocol-deploy-sortie-summon.md)). When the mode ends and Synchro reaches **100%** again, the party may invoke **another** Protocol in the same battle (Strike, Mend, Deploy, Transform, etc.). Deploy and Transform **must not overlap** (no sortie + transform at once); they may both occur in one fight **sequentially** after recharge.
 5. **Participants** — **3+** living core members at invoke time (tune in data); transform target may be **any** living core including the invoker.
-6. **Synchro charge** — transform profile actions in a core slot **do** charge the bar (still `CombatantKind.Core`).
+6. **Synchro Charge gain** — transform profile actions in a core slot **do** add charge (still `CombatantKind.Core`).
 
 ## Decision
 

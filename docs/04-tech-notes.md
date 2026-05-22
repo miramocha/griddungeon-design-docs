@@ -65,7 +65,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 | **DOTween on Toolkit** | Short tweens on `VisualElement` style/transform (fade, scale punch, slide, fill lerp). Enable DOTween **UI** module. No tween logic in `GridDungeon.Core`. |
 | **State first, motion second** | Apply authoritative values immediately (HP, map cells, queue order); animate **from** the previous visual state. |
 | **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock — play the full highlight → VFX → log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted — pick one per beat in the phase doc tables. |
-| **Duration** | Typical UI feedback **0.1–0.4s**; Synchro bar fill and HP drops may use **0.2–0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
+| **Duration** | Typical UI feedback **0.1–0.4s**; Synchro meter fill and HP drops may use **0.2–0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
 | **Cleanup** | `Kill` / complete tweens on `OnDisable`, phase exit, and combat end (see [Animation](#animation-dotween--timeline) above). |
 
 **MVP1 checklists by phase:**
@@ -94,7 +94,7 @@ GameState (composition root)
 ├── FoeSystem            — spawn, visibility, step patrol, contact
 ├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
 ├── NavigatorRuntime     — active navigator, aura application, roster
-├── ProtocolSystem       — Synchro bar charge/spend; Navigator invokes Protocol on core turn at 100%
+├── ProtocolSystem       — Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
 ├── CombatController     — AGI queue + Protocol command → EndRound
 ├── CodexSystem          — enemy knowledge / weaknesses
 ├── ContentDatabase      — strata, floors, side dungeons (MVP3), FOE, encounters
@@ -179,7 +179,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Synchro Protocol (team bar)
 
-- `SynchroBar` float 0–1 on `PartyRuntime`
+- `SynchroBar` float 0–1 on `PartyRuntime` (Synchro Charge)
 - `ProtocolSystem` — bar fill from core actions; spend on `CombatCommand.Protocol`
 - Core turn at Synchro == 1: player picks `protocol_strike` / `protocol_mend` from Navigator kit
 - S1: tutorial FOE unbeatable; `s1_synchro_unlocked` mid-fight; forced `protocol_strike` ends encounter ([synchro-protocol](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe))

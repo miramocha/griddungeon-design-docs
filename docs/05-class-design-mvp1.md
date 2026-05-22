@@ -403,7 +403,7 @@ class BattleState
     int Round;
     CombatEntryContext Entry;
     bool FleeEnabled;            // retreat cell + encounter noFlee
-    float SynchroBar;              // copy from PartyRuntime at StartBattle
+    float SynchroBar;              // Synchro Charge; copy from PartyRuntime at StartBattle
 }
 
 class RoundSnapshot
@@ -767,7 +767,7 @@ class PartyRuntime : MonoBehaviour
     Combatant[] CoreSlots   { get; }   // length 6
     Combatant?[] AuxSlots   { get; }   // length 2 (front/back); null = empty
     string ActiveNavigatorId { get; set; }
-    float SynchroBar           { get; set; }  // 0..1
+    float SynchroBar           { get; set; }  // Synchro Charge 0..1
 
     // All combatants eligible for AGI queue (core + non-null aux + enemies added by CombatController)
     IReadOnlyList<Combatant> AllPartyCombatants { get; }
@@ -808,7 +808,7 @@ class ProtocolSystem : MonoBehaviour
     // Called by CombatController after each core combatant action (below 100%)
     void OnCoreActed(Combatant actor, NavigatorDefinition nav);
 
-    // Core turn when Synchro bar == 1: CombatCommand.Protocol + skill id
+    // Core turn when Synchro Charge == 1: CombatCommand.Protocol + skill id
     bool TryUseProtocolSkill(string protocolSkillId, out ProtocolSkillData skill);
 
     void SpendBar();   // → 0 after Protocol use

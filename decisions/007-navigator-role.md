@@ -18,7 +18,7 @@
 6. Navigator **no AGI turn**, **not on exploration grid**.
 7. Navigator **not targetable** — no enemy or boss may directly interact with Navigator in combat (no HP, damage, status).
 8. **Fixed package per Navigator** — aura + Protocol kit in data; **no** XP, levels, skill points, aura tiers, or equipment.
-9. Synchro bar still **charges from core six actions** only.
+9. **Synchro Charge** still **gains from core six actions** only.
 
 ## Rejected
 

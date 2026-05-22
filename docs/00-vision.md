@@ -37,7 +37,7 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 - **Boost/Break** — out of scope; [Synchro Protocol](02-systems/synchro-protocol.md) covers team burst
 - Subclass systems until core loop is proven
 - **Dungeon gather / fishing minigames** — **MVP2** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))
-- Per-character burst gauges (using **team Synchro bar** instead — see [synchro-protocol](02-systems/synchro-protocol.md))
+- Per-character burst gauges (using **team Synchro Charge** instead — see [synchro-protocol](02-systems/synchro-protocol.md))
 - Navigator leveling, equipment, or aura tiers ([navigator](02-systems/navigator.md) is unlock-only)
 
 ## Out of scope (project)

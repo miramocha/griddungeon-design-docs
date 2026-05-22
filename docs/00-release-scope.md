@@ -18,7 +18,7 @@ MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered m
 |----------|----------------|
 | Grid exploration + auto-map ([ADR 002](../decisions/002-mapping-model.md)) | Fishing / gather **minigames** |
 | FOE step patrol + contact fights ([ADR 003](../decisions/003-foe-step-patrol.md)) | [FOE combat patrol](../decisions/005-foe-combat-patrol.md) + [mid-battle join](../decisions/010-chain-foe-battle.md) (**MVP2**) |
-| AGI combat, 6 core + aux layout, Synchro bar | Synthesis hub |
+| AGI combat, 6 core + aux layout, Synchro Charge | Synthesis hub |
 | Navigator + Protocol ([ADR 006](../decisions/006-union-team-bar.md), [007](../decisions/007-navigator-role.md)) | Full status roster ([combat-status-and-buffs](02-systems/combat-status-and-buffs.md) — subset only) |
 | Hub: Explorers Guild, Navigator Office, shop, hospital, inn save | 3D hub walk |
 | Chest loot; gather **instant loot** (no minigame) | Fishing + gather **minigame** (MVP2) |

@@ -60,7 +60,7 @@ See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](sync
 
 ## Protocol skills (Synchro)
 
-Coordinated team skills via [Synchro bar](synchro-protocol.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Protocol kit; guild-common Protocol skills may unlock via quests/strata (separate from Navigator unlocks).
+Coordinated team skills via [Synchro Charge](synchro-protocol.md); **Navigator executes**, core six **participate**. Each Navigator has a **fixed** Protocol kit; guild-common Protocol skills may unlock via quests/strata (separate from Navigator unlocks).
 
 ## Skill trees (EO model)
 

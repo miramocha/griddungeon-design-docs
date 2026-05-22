@@ -81,7 +81,7 @@ action_script:
 
 **UI on summon turn:** highlight aux portrait → play VFX → combat log line → **presentation lock** releases → next queue entry ([combat UI motion](combat.md#ui-motion--feedback), [tech notes](../04-tech-notes.md#ui-reactivity)).
 
-**Synchro bar:** Summon actions do **not** charge Synchro ([synchro-protocol](synchro-protocol.md)).
+**Synchro Charge:** Summon actions do **not** gain Synchro Charge ([synchro-protocol](synchro-protocol.md)).
 
 ## Guests
 

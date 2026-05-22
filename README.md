@@ -43,7 +43,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Summons & guests](docs/02-systems/summons-and-guests.md) | Draft | +1 front / +1 back aux |
 | [02 — Progression](docs/02-systems/character-progression.md) | Draft | Skill points, synthesis |
 | [02 — Navigator](docs/02-systems/navigator.md) | Draft | Off-formation lead; Protocol + auras |
-| [02 — Synchro Protocol](docs/02-systems/synchro-protocol.md) | Draft | Synchro bar; Navigator Protocols |
+| [02 — Synchro Protocol](docs/02-systems/synchro-protocol.md) | Draft | Synchro Charge; Navigator Protocols |
 | [02 — Input bindings](docs/02-systems/input-bindings.md) | Draft | PC keyboard + mouse defaults |
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
@@ -60,7 +60,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 003 — FOE step patrol](decisions/003-foe-step-patrol.md) | Accepted | FOEs advance on party steps |
 | [ADR 004 — Auxiliary slots](decisions/004-auxiliary-slots.md) | Accepted | +1 summon/guest per row |
 | [ADR 005 — FOE combat patrol](decisions/005-foe-combat-patrol.md) | Deferred | 1 FOE cell / combat round (**MVP2**) |
-| [ADR 006 — Team burst bar](decisions/006-union-team-bar.md) | Accepted | Synchro bar mechanics |
+| [ADR 006 — Team burst bar](decisions/006-union-team-bar.md) | Accepted | Synchro Charge mechanics |
 | [ADR 020 — Team burst naming](decisions/020-team-burst-naming.md) | Accepted | Retire “Union”; use Synchro Protocol |
 | [ADR 007 — Navigator role](decisions/007-navigator-role.md) | Accepted | Off-formation; runs Protocol |
 | [ADR 008 — Campaign defaults](decisions/008-campaign-defaults.md) | Accepted | FOE respawn, unlimited explore, PC |

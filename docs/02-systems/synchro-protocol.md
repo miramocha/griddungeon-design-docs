@@ -2,30 +2,40 @@
 
 **Locked name** ([ADR 020](../../decisions/020-team-burst-naming.md)). Replaces working name **Union**.
 
-Party-wide **Synchro** meter for coordinated **Protocol** skills, executed by the active **[Navigator](navigator.md)**. Inspired by *Etrian Odyssey V* Union skills; implemented as a **single shared bar**.
+Party-wide **Synchro Charge** (team resource) for coordinated **Protocol** actions, executed by the active **[Navigator](navigator.md)**. Inspired by *Etrian Odyssey V* Union skills; shown as a **single shared meter** in combat UI.
 
-## Synchro bar
+### Resource vs action (parallel to core combat)
+
+| | **Core six** | **Party / Navigator** |
+|---|--------------|-------------------------|
+| **Resource** | MP | **Synchro Charge** (0–100%, one pool) |
+| **Action** | Skill (attack, guard, skill, item) | **Protocol** (`CombatCommand.Protocol`) |
+| **Spend** | MP cost per skill | Full charge (100%) → **0%** on Protocol use |
+
+C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decisions/020-team-burst-naming.md)); player-facing meter label stays **Synchro**.
+
+## Synchro Charge
 
 | Property | Rule |
 |----------|------|
-| **Range** | 0–100% (one bar for the whole party) |
-| **UI** | Prominent combat meter (label: **Synchro**) |
-| **Charge** | **Core six** combat actions only |
-| **Spend** | **Navigator** invokes a Protocol when bar is 100% |
+| **Range** | 0–100% (one pool for the whole party) |
+| **UI** | Prominent combat meter (label: **Synchro** — not “Charge”) |
+| **Gain** | **Core six** combat actions only |
+| **Spend** | **Navigator** executes a Protocol when charge is **100%** |
 
-## Charging the bar
+## Gaining Synchro Charge
 
 ### When leaving hub
 
-- Bar set to **100%** when party enters the labyrinth from hub — **except** before Stratum 1 Synchro tutorial ([§ S1 tutorial gating](#s1-tutorial-gating-first-foe)).
+- Charge set to **100%** when party enters the labyrinth from hub — **except** before Stratum 1 Synchro tutorial ([§ S1 tutorial gating](#s1-tutorial-gating-first-foe)).
 - Navigator auras may modify gain rate (e.g. `guild_handler` +5%) — only while Synchro is **unlocked**.
 
 ### S1 tutorial gating (first FOE)
 
 **Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
 
-| State | Synchro bar | Charge in combat | Protocol (`U` / core turn) | Hub → labyrinth |
-|-------|-------------|------------------|----------------------------|-----------------|
+| State | Synchro Charge | Gain in combat | Protocol (`U` / core turn) | Hub → labyrinth |
+|-------|----------------|--------------|----------------------------|-----------------|
 | **Before first FOE contact** | Hidden / locked | **No gain** | **Disabled** | **0%** |
 | **First FOE phase A** (start) | Locked | No gain | Disabled | — |
 | **First FOE phase B** (mid unlock) | **100%** | Yes | **Forced** `protocol_strike` only | — |
@@ -37,14 +47,14 @@ Party-wide **Synchro** meter for coordinated **Protocol** skills, executed by th
 2. **`noFlee: true`** — cannot skip the lesson.
 3. **Unbeatable FOE** — tutorial enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); fight does not end on normal damage.
 4. **Phase A** — Synchro locked for first core turns (or until trigger).
-5. **Phase B (mid-fight)** — on trigger (e.g. 2 core turns or first party HP loss): set `s1_synchro_unlocked`, bar **100%**, Navigator prompt; next core turn **must** use **`protocol_strike`**.
+5. **Phase B (mid-fight)** — on trigger (e.g. 2 core turns or first party HP loss): set `s1_synchro_unlocked`, charge **100%**, Navigator prompt; next core turn **must** use **`protocol_strike`**.
 6. **End** — on Protocol resolve: scripted FOE retreat, victory, set `s1_synchro_protocol_tutorial_done` + `s1_first_foe_tutorial_complete`.
 
 Random fights before this FOE contact: Synchro **locked**. `CombatEntryContext.tutorialKind = SynchroFirstFoe` in implementation ([combat](combat.md)).
 
 ### During combat
 
-While bar is below 100%, **core formation members** add to the shared bar:
+While charge is below 100%, **core formation members** add to the shared pool:
 
 | Event | Synchro gain (MVP1 baseline — tune in data) |
 |-------|-------------------|
@@ -54,14 +64,14 @@ While bar is below 100%, **core formation members** add to the shared bar:
 | Item use | +2% |
 | Core member takes HP damage | +2% (once per hit) |
 | Enemy killed (participating in kill) | +5% |
-| Core member downed | −25% bar |
-| Combat ends (victory) | +10% if bar below 100% (optional catch-up) |
+| Core member downed | −25% charge |
+| Combat ends (victory) | +10% if charge below 100% (optional catch-up) |
 
-- **Navigator** does not act in AGI queue — does not directly add bar.
+- **Navigator** does not act in AGI queue — does not directly add charge.
 - **No gain** from aux summons/guests or enemy actions.
-- Bar cannot exceed 100%.
-- **Between battles** on the same floor: bar **persists** (if unlocked).
-- **Return to hub:** bar reset to **100%** when unlocked; **0%** and locked when `s1_synchro_unlocked` false.
+- Charge cannot exceed 100%.
+- **Between battles** on the same floor: charge **persists** (if unlocked).
+- **Return to hub:** charge reset to **100%** when unlocked; **0%** and locked when `s1_synchro_unlocked` false.
 
 Exploration steps do **not** charge Synchro.
 
@@ -69,23 +79,23 @@ Exploration steps do **not** charge Synchro.
 
 | Rule | Detail |
 |------|--------|
-| **Invoker** | **Core** on their AGI turn when bar is 100% ([Timing](#timing--core-turn-action-mvp1)) |
+| **Invoker** | **Core** on their AGI turn when charge is 100% ([Timing](#timing--core-turn-action-mvp1)) |
 | **Executor** | Active **Navigator** off-formation ([navigator.md](navigator.md)) — no Navigator AGI turn |
-| **Cost** | Bar → **0%** after use |
-| **Threshold** | Bar must be **100%** |
+| **Cost** | Charge → **0%** after use |
+| **Threshold** | Charge must be **100%** |
 | **Participants** | Living **core six** per skill min/max; downed excluded |
 | **Aux** | Do not participate (MVP1) |
 | **Skill list** | Navigator kit + guild-unlocked common Protocols |
 
 ### Timing — core turn action (MVP1)
 
-When the Synchro bar is **100%**, a **core member** on their AGI turn may use **Protocol** (`CombatCommand.Protocol`) instead of attack/guard/skill/item:
+When **Synchro Charge** is **100%**, a **core member** on their AGI turn may use **Protocol** (`CombatCommand.Protocol`) instead of attack/guard/skill/item:
 
 1. Player picks a Protocol from the **Navigator’s** available list (Navigator executes; living core join per skill rules).
-2. Resolve effects; bar → **0%**; that character’s turn ends (normal queue advance).
+2. Resolve effects; charge → **0%**; that character’s turn ends (normal queue advance).
 3. Other core/enemy/summon turns continue in AGI order.
 
-Each time the bar is **100%**, the party may invoke **one** Protocol on a core turn (spend resets bar to **0%**). The same fight may use **multiple** Protocols if Synchro **recharges** during combat ([ADR 006](../../decisions/006-union-team-bar.md)). **Blocked** only while a Deploy **sortie is alive** or a **Transform** is active ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md), [ADR 024](../../decisions/024-protocol-transform.md)).
+Each time charge is **100%**, the party may invoke **one** Protocol on a core turn (spend resets charge to **0%**). The same fight may use **multiple** Protocols if Synchro **recharges** during combat ([ADR 006](../../decisions/006-union-team-bar.md)). **Blocked** only while a Deploy **sortie is alive** or a **Transform** is active ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md), [ADR 024](../../decisions/024-protocol-transform.md)).
 
 ```
 Combat round:
@@ -135,9 +145,9 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 
 ## MVP1
 
-- [x] Synchro bar + Protocol on core turn at 100%
+- [x] Synchro Charge + Protocol on core turn at 100%
 - [x] Default Navigator: **Protocol Strike**, **Protocol Mend** (`protocol_strike`, `protocol_mend`)
-- [x] Core actions charge bar; Navigator off-formation
+- [x] Core actions gain Synchro Charge; Navigator off-formation
 - [ ] S1 gate: unlock Synchro **mid** first FOE; unbeatable FOE; forced `protocol_strike` **in that fight**
 
 ## Not in scope (MVP1)

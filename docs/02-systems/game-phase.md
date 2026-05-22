@@ -120,7 +120,7 @@ InputRouter                      ← enables action maps from GameState.PhaseCha
 | **`HubPhaseController`** | Enter hub UI/services; exit clears exploration-only listeners |
 | **`ExplorationPhaseController`** | Wire `DungeonExplorer` events → `MapSystem`, `FoeSystem`, `EncounterTrigger`; step handler requests combat via `RequestCombat` |
 | **`CombatPhaseController`** | Battle presentation enter/exit (view, aura, scene); calls `CombatController.StartBattle` — does **not** request macro phase transitions when battle ends |
-| **`CombatController`** | Synchro bar + Protocol, AGI queue, flee, victory — **unchanged by this doc** |
+| **`CombatController`** | Synchro Charge + Protocol, AGI queue, flee, victory — **unchanged by this doc** |
 
 ## Phase diagram
 

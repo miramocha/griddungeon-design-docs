@@ -45,10 +45,10 @@ While a Navigator is active, the **core six** receive that Navigator’s **aura*
 
 | Example Navigator | `navigator_id` | Aura (draft) | Notes |
 |-------------------|----------------|--------------|-------|
-| **Sortie Lead** | `guild_handler` | +5% Synchro bar gain (MVP1 starter) | Expedition flight lead; executes [Protocol](synchro-protocol.md) |
+| **Sortie Lead** | `guild_handler` | +5% Synchro Charge gain (MVP1 starter) | Expedition flight lead; executes [Protocol](synchro-protocol.md) |
 | **Route Analyst** | `route_analyst` | +5% accuracy to core | Course / grid planning — not combat targeting |
 | **Wellness Lead** | `wellness_lead` | −5% MP cost on core heals | Crew care; pairs with **Medic** kits, not the `medic` class |
-| **Sync Relay** | `sync_relay` | +3% Synchro bar gain from core actions | Comms loop for team Synchro; stratum unlock candidate |
+| **Sync Relay** | `sync_relay` | +3% Synchro Charge gain from core actions | Comms loop for team Synchro; stratum unlock candidate |
 | **Ledger Chief** | `ledger_chief` | +8% gold from battles | Post-sortie accounts / manifest payouts |
 
 Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same hub-lead layer as [party classes](party-and-classes.md) field jobs — do not reuse core `class_id` labels (`tactician`, `medic`, …).
@@ -61,12 +61,12 @@ Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same h
 
 When [Synchro](synchro-protocol.md) is **100%**, a **core member** on their AGI turn may invoke a Protocol (`CombatCommand.Protocol`) — that core **spends their turn**. The **active Navigator** **executes** the skill off-formation (calls the protocol; does not take an AGI turn):
 
-1. Synchro bar must be **100%** on the invoking core’s turn.
+1. Synchro Charge must be **100%** on the invoking core’s turn.
 2. Player picks a Protocol from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` in MVP1; post-MVP1 includes `protocol_deploy` per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 3. Navigator executes; living **core** members participate per skill min/max.
 4. Bar → **0%**; invoking core’s turn ends; queue advances.
 
-Navigator **does not** fill the Synchro bar themselves (no combat turns). Core six actions still charge the team bar.
+Navigator **does not** gain Synchro Charge themselves (no combat turns). Core six actions still fill the team pool.
 
 ## Combat targeting (locked)
 
