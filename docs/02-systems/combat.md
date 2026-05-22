@@ -115,7 +115,7 @@ Full rules: **[combat status & buffs](combat-status-and-buffs.md)**.
 |---|--------|-----|
 | Trigger | Step roll | Grid contact |
 | Difficulty | Floor table | Designed spawn; higher XP/drops |
-| Repeat | FOEs respawn when party returns to hub and re-enters floor ([ADR 008](../../decisions/008-campaign-defaults.md)) |
+| Repeat | Per step roll only (no map entity) | FOEs respawn on hub return and re-entry ([ADR 008](../../decisions/008-campaign-defaults.md)) |
 
 ## FOE patrol & mid-battle join (MVP2)
 

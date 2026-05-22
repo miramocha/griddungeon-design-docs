@@ -73,8 +73,8 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 
 ## Quests (optional MVP1)
 
-| Type | Example reward |
-|------|----------------|
+| Type | Objective | Example reward |
+|------|-----------|----------------|
 | Hunt | Kill N of enemy type | Gold, item |
 | Survey | Reach floor | Unlock shop stock |
 | Gather | Bring materials | Synthesis unlock |
