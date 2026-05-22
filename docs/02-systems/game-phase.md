@@ -170,7 +170,7 @@ sequenceDiagram
 | Battle won or flee success | Exploration | `GameState` on `CombatController.BattleEnded` | Wired |
 | Return to surface / hub | Hub | **In-world only:** mouth **stairs up**, **Return thread** item, **exit / gate** (warp, side-dungeon exit), scripted **event** — not exploration pause | Mouth stairs wired; items/events/gates per content |
 | Party wipe (**defeat**) | Hub | `GameState` on `BattleEnded(Wipe)` | Wired |
-| Exploration **pause** → title | *(out of macro phase)* | `Esc` → confirm **Quit to title** (title scene / app exit); does **not** enter Hub | Wired when title flow exists; dev: stop Play / `Application.Quit` |
+| Exploration **pause** → title | *(out of macro phase)* | `Esc` → confirm **Quit to title** (title scene / app exit); **no save write**; does **not** enter Hub | Wired when title flow exists; dev: stop Play / `Application.Quit` |
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).
 

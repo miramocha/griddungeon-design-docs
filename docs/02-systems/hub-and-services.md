@@ -10,7 +10,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit ([navigator](navigator.md)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
-| **Inn / Camp desk** | Save game (primary save point) |
+| **Inn / Camp desk** | Save game (**primary save point** — MVP1 has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
 | **Quest counter** | Accept kill/gather/floor reach quests (optional MVP1) |
 | **Synthesis** (**MVP2**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
 | **Side expedition** (**MVP3**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
