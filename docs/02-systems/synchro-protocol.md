@@ -69,7 +69,8 @@ Exploration steps do **not** charge Synchro.
 
 | Rule | Detail |
 |------|--------|
-| **Executor** | Active **Navigator** only ([navigator.md](navigator.md)) |
+| **Invoker** | **Core** on their AGI turn when bar is 100% ([Timing](#timing--core-turn-action-mvp1)) |
+| **Executor** | Active **Navigator** off-formation ([navigator.md](navigator.md)) — no Navigator AGI turn |
 | **Cost** | Bar → **0%** after use |
 | **Threshold** | Bar must be **100%** |
 | **Participants** | Living **core six** per skill min/max; downed excluded |

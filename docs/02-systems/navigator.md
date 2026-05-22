@@ -59,12 +59,12 @@ Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same h
 
 ## Protocol execution
 
-Only the **active Navigator** executes Protocol skills when [Synchro](synchro-protocol.md) is full:
+When [Synchro](synchro-protocol.md) is **100%**, a **core member** on their AGI turn may invoke a Protocol (`CombatCommand.Protocol`) — that core **spends their turn**. The **active Navigator** **executes** the skill off-formation (calls the protocol; does not take an AGI turn):
 
-1. Synchro bar must be **100%** on a **core** combatant’s turn.
-2. Player picks a Protocol skill from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` in MVP1).
-3. Navigator “calls” the protocol; living **core** members participate per skill min/max.
-4. Bar → 0%; Navigator does not consume an AGI turn.
+1. Synchro bar must be **100%** on the invoking core’s turn.
+2. Player picks a Protocol from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` in MVP1; post-MVP1 includes `protocol_deploy` per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
+3. Navigator executes; living **core** members participate per skill min/max.
+4. Bar → **0%**; invoking core’s turn ends; queue advances.
 
 Navigator **does not** fill the Synchro bar themselves (no combat turns). Core six actions still charge the team bar.
 
