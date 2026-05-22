@@ -33,14 +33,16 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 | `pre-commit-csharp-code-review.mdc` | **Shared** — review C# diff before agent-created commits (skipped in docs-only repos) |
 | `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before review/commit |
+| `unity-meta-files.mdc` | **Game** — `.meta` GUID policy (link from game repo via `scripts/link-cursor-rules.ps1`) |
 
 ## Agent skills (design-docs repo)
 
 | Skill | Purpose |
 |-------|---------|
 | [test-plan-grid-dungeon](../skills/test-plan-grid-dungeon/SKILL.md) | Consistent GitHub/PR test plans (tables, sign-off, N/A deferrals) |
+| [validate-unity-meta](../skills/validate-unity-meta/SKILL.md) | Unity `.meta` validation — runs in **griddungeon-game** |
 
-Mirrored under `griddungeon-game/.cursor/skills/test-plan-grid-dungeon/` for the implementation repo.
+Mirrored under `griddungeon-game/.cursor/skills/` for the implementation repo (`test-plan-grid-dungeon`, `validate-unity-meta`, …).
 
 ## Architecture mapping
 
