@@ -38,7 +38,7 @@ MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered m
 | **Dungeon fishing minigame** (pond/stream tiles) | [gathering & fishing](02-systems/gathering-and-fishing.md) |
 | **Synthesis** at hub | [character progression](02-systems/character-progression.md), [hub](02-systems/hub-and-services.md) |
 | Gather/fish nodes on map after use | [mapping](02-systems/mapping.md) |
-| Gather quests + material drops | [dungeons & encounters](../docs/03-content/dungeons-and-encounters.md) |
+| Gather quests + material drops | [dungeons & encounters](03-content/dungeons-and-encounters.md) |
 | **FOE combat patrol** + **mid-battle join** | [ADR 005](../decisions/005-foe-combat-patrol.md), [ADR 010](../decisions/010-chain-foe-battle.md) |
 | **Autopilot** — pathfind to discovered map tile | [autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md) |
 

@@ -202,7 +202,7 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 
 **Not in MVP1 UI:** speed buff/debuff reordering ([ADR 015](../../decisions/015-mvp1-combat.md)); strip order still reflects AGI at build time once those statuses ship.
 
-**Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](mvp1-spec.md) AGI queue UI.
+**Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](../mvp1-spec.md) AGI queue UI.
 
 ## Related docs
 

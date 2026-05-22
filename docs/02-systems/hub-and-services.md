@@ -46,7 +46,7 @@ Prepare at **both** before entering the stratum (order in UI flexible).
 
 ```
 Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
-    → Enter stratum — spawn rule per stratum; Synchro **100%** on exit except S1 before first FOE ([synchro](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe))
+    → Enter stratum — spawn rule per stratum; Synchro **100%** on exit except S1 before first FOE ([synchro](synchro-protocol.md#s1-tutorial-gating-first-foe))
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
     → Retreat via first-floor stairs up (mouth) or Return thread when low
     → Hospital + shop + guild + Navigator Office → Repeat

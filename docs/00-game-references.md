@@ -30,7 +30,7 @@ Use when reviewing exploration, combat UI, or “dungeon feel” features. **Not
 |-------|-----------|-------------------|
 | **Exploration** | FPV steps in a mapped tower | EO grid + auto-reveal ([ADR 002](../decisions/002-mapping-model.md)); floor painter + 2D HUD |
 | **Map threats** | Boss / FOE-like map icons, routing matters | FOE step patrol ([ADR 003](../decisions/003-foe-step-patrol.md)) |
-| **Combat read** | Strong VFX, clear hit / ailment feedback | Reactive blocking HUD ([04 — Tech notes](../04-tech-notes.md#ui-reactivity)); Fixed presentation MVP1 |
+| **Combat read** | Strong VFX, clear hit / ailment feedback | Reactive blocking HUD ([04 — Tech notes](04-tech-notes.md#ui-reactivity)); Fixed presentation MVP1 |
 | **Hub loop** | Base camp between dives | Hub services ([hub-and-services](02-systems/hub-and-services.md)) |
 | **Burst modes** | Transform / blood / rage spikes | **Synchro bar** + Navigator ([ADR 006](../decisions/006-union-team-bar.md), [007](../decisions/007-navigator-role.md)) — compare feel only |
 | **Verticality** | Multi-floor tower structure | Strata + `level` bands ([ADR 019](../decisions/019-floor-verticality.md)) |

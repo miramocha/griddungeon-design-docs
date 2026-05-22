@@ -1,6 +1,6 @@
 # Cursor rules (design-docs repo)
 
-Unity implementation rules are **shared with** [`griddungeon-game`](../../griddungeon-game) so architecture work in this repo follows the same principles as codegen.
+Unity implementation rules are **shared with** [griddungeon-game](https://github.com/miramocha/griddungeon-game) so architecture work in this repo follows the same principles as codegen.
 
 ## How files are linked (local)
 
@@ -36,4 +36,4 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 
 ## Architecture mapping
 
-See [architecture-design-principles.mdc](architecture-design-principles.mdc) and [game phase](../docs/02-systems/game-phase.md#design-goals-mvp1).
+See [architecture-design-principles.mdc](architecture-design-principles.mdc) and [game phase](../../docs/02-systems/game-phase.md#design-goals-mvp1).

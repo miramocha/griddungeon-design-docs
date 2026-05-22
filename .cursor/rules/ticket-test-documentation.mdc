@@ -23,7 +23,7 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 ## Test plan (verified YYYY-MM-DD)
 
 ### Automated
-- [ ] Unity Test Runner → Edit Mode → `<Category>` → `<TestClass>` — all green (categories: game repo [Assets/Tests/README.md](../../../griddungeon-game/Assets/Tests/README.md))
+- [ ] Unity Test Runner → Edit Mode → `<Category>` → `<TestClass>` — all green (categories: game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md))
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
@@ -38,12 +38,12 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 - [ ] …
 
 ### Spec / ADRs
-- [ADR 001](link), [ADR 018](link), …
+- [ADR 001](../../decisions/001-grid-movement.md), [ADR 018](../../decisions/018-exploration-animation-speed.md), …
 ```
 
 ## Grid Dungeon defaults (exploration)
 
-Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 018](../../griddungeon-design-docs/decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../../griddungeon-design-docs/decisions/001-grid-movement.md).
+Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 018](../../decisions/018-exploration-animation-speed.md)): step **0.28s**, turn **0.26s**, hold-to-repeat per [ADR 001](../../decisions/001-grid-movement.md).
 
 **Dev bootstrap:** `GridDungeon → Scenes → Create Dev Bootstrap` if scene refs are stale; **F1** Hub / **F2** Exploration / **F3** Combat.
 
