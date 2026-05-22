@@ -123,4 +123,4 @@ action_script:
 - [Combat](combat.md)
 - [ADR 004 — Auxiliary slots](../../decisions/004-auxiliary-slots.md)
 - [ADR 016 — Summon control MVP1](../../decisions/016-summon-control-mvp1.md)
-- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md) (Proposed)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)

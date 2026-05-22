@@ -1,6 +1,6 @@
 # ADR 023 — Protocol Deploy (navigator sortie as summon)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-05-22
 
 ## Context

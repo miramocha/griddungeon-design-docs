@@ -140,4 +140,4 @@ Additional Navigators unlock via strata/quests post-MVP1.
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
-- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md) (Proposed)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)

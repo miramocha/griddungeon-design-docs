@@ -106,7 +106,7 @@ Combat round:
 
 ### Skill ideas (post-MVP1)
 
-Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../decisions/023-protocol-deploy-sortie-summon.md) (**Proposed**). Does **not** amend [ADR 007](../../decisions/007-navigator-role.md) — Navigator stays off-formation; the sortie is a normal **aux summon**.
+Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../decisions/023-protocol-deploy-sortie-summon.md). Navigator stays off-formation; the sortie is a normal **aux summon** ([ADR 007](../../decisions/007-navigator-role.md) unchanged).
 
 | Skill | Participants | Effect (draft) |
 |-------|----------------|----------------|
@@ -139,4 +139,4 @@ Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../dec
 - [ADR 006 — Team bar mechanics](../../decisions/006-union-team-bar.md)
 - [ADR 020 — Naming](../../decisions/020-team-burst-naming.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
-- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md) (Proposed)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)

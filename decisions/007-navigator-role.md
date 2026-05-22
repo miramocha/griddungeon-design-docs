@@ -44,4 +44,4 @@
 - [Navigator](../docs/02-systems/navigator.md)
 - [Synchro Protocol](../docs/02-systems/synchro-protocol.md)
 - [ADR 006 — Team burst bar](006-union-team-bar.md)
-- [ADR 023 — Protocol Deploy sortie summon](023-protocol-deploy-sortie-summon.md) (Proposed)
+- [ADR 023 — Protocol Deploy sortie summon](023-protocol-deploy-sortie-summon.md)
