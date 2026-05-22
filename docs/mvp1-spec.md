@@ -40,6 +40,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ⬜ | `StratumFloor` **B2F** — patrol FOE + bind/poison tables | [game #29](https://github.com/miramocha/griddungeon-game/issues/29) |
 | ⬜ | `StratumFloor` **B3F** — boss FOE | [game #30](https://github.com/miramocha/griddungeon-game/issues/30) |
 | ✅ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md), [game #18](https://github.com/miramocha/griddungeon-game/issues/18) |
+| ⬜ | Map cell art — composite walls, door overlay, sprites | [map-cell-art](02-systems/map-cell-art.md), [game #38](https://github.com/miramocha/griddungeon-game/issues/38) |
 | ⬜ | Shared map grid painter (dedupe MapView + dev preview) | [game #26](https://github.com/miramocha/griddungeon-game/issues/26) — schedule early MVP1 |
 | ⬜ | Floor verticality + jump pads — **deferred**; flat B1F–B3F OK | [ADR 019](../decisions/019-floor-verticality.md) |
 

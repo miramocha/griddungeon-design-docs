@@ -130,6 +130,10 @@ GameState (composition root)
 
 **Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
 
+### Map cell art assets
+
+Sprite checklist, composite wall rules (edge segments — no 16 autotiles), door overlay tints, and USS class list: **[map-cell-art.md](02-systems/map-cell-art.md)**. Implementation: [game #38](https://github.com/miramocha/griddungeon-game/issues/38); shared painter: [#26](https://github.com/miramocha/griddungeon-game/issues/26). Campaign gates ≠ map icons: [#33](https://github.com/miramocha/griddungeon-game/issues/33).
+
 ## Side dungeons (MVP3)
 
 - **Save/map keys:** `{locationId}_{floorId}` — e.g. `sd01_F1` (not `s1_B1F`). Same `FloorMapStateSave` / `FoeStateSave[]` dictionaries as strata ([side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md)).

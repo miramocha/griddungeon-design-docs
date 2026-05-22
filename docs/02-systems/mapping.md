@@ -102,8 +102,17 @@ Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest
 
 ---
 
+## Map cell art (2D schematic)
+
+Locked **cell stack**, **composite walls** (edge segments + alcove — not 16 autotiles), **door overlay** tints, sprite checklist, and USS classes: **[map-cell-art.md](map-cell-art.md)**.
+
+Runtime draw priority today (`MapView`): party → fog → solid `#` → revealed `WallMask` edges (3+ → `█`) → features (stairs only) → FOE → floor `·`. `FeatureType.Door` exists in data; **door glyph/overlay not wired**. Campaign tutorial blockers (e.g. B1F `(10,13)`) are walkability gates ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)), not map icons.
+
+---
+
 ## Related docs
 
+- [Map cell art](map-cell-art.md) — sprites, tints, ASCII vs runtime table
 - [Map reveal save format](map-reveal-save-format.md) — packing visited cells and wall bitmasks for `SaveGame`
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [Autopilot (MVP2)](autopilot.md)

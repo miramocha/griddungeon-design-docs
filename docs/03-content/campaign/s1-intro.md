@@ -17,7 +17,7 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 |-----|-------|-----|---------|----------------|
 | **1 — Movement** | Exploration | `s1_B1F` | **Off** — `baseEncounterRate: 0`, `foeSpawns: []` | **Intro spawn** `(4, 2)`; **blockers** funnel to mouth; **`v` to B2F blocked** |
 | **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster |
-| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Mouth spawn** `(10, 2)` from hub; blockers **cleared**; mandatory tutorial FOE |
+| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Mouth spawn** `(10, 11)` (`stairsUp`) from hub; blockers **cleared**; mandatory tutorial FOE |
 
 **Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → mouth **stairs up** → hub.
 
@@ -45,7 +45,7 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | **Warp gate** | **None** on any `s1_*` floor |
 | **New game** | Cold start Act 1 on B1F intro spawn — not hub first |
 | **After Act 1** | No hub teleport back to intro cell |
-| **Act 3+ hub entry** | Always **B1F mouth** `(10, 2)` — stratum beginning; same on every repeat dive |
+| **Act 3+ hub entry** | Always **B1F mouth** `(10, 11)` — `stairsUp` cell; same on every repeat dive |
 | **Mouth `stairsUp`** | → Hub only |
 | **Synchro on hub exit** | **0%** / locked until mid–first FOE; **100%** after tutorial complete |
 

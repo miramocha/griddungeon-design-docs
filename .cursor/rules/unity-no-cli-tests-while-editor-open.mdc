@@ -1,0 +1,23 @@
+---
+description: Do not run Unity batch/CLI tests on griddungeon-game — user keeps the Editor open
+alwaysApply: true
+---
+
+# Unity tests — Editor open (no CLI batch runs)
+
+Implementation and tests live in **griddungeon-game**. The user typically has that Unity project **open in the Editor**. **Do not** run automated Unity tests from the terminal for now.
+
+## Do not run
+
+- `Unity.exe -batchmode … -runTests` against `griddungeon-game`
+- Any shell command that opens the same Unity `projectPath` while the user may be editing
+
+## Do instead
+
+1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
+2. Give **manual Play Mode** steps when closing tickets (see `ticket-test-documentation.mdc`).
+
+## Exceptions
+
+- User explicitly requests CLI tests **and** confirms the Unity project is not open.
+- Do not invent test results; rely on user-reported or CI output.

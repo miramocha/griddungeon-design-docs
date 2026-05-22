@@ -72,7 +72,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 
 | Floor ID | Theme | Spawns | Stairs (mouth / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
-| `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,2)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** (Act 1 & B1F layout) | Act 1: **0**; Act 3: low chaff |
+| `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,11)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** (Act 1 & B1F layout) | Act 1: **0**; Act 3: low chaff |
 | `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,17)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
 | `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** boss FOE | Mixed |
 
@@ -80,23 +80,23 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 
 ### Map legend (ASCII blockouts)
 
-| Symbol | Meaning |
-|--------|---------|
-| `#` | Non-walkable (perimeter / room wall) |
-| `.` | Walkable floor |
-| `E` | Intro spawn — Act 1 only (`partyEntryIntro`) |
-| `M` | Mouth spawn — hub re-entry / Act 3 (`partyEntryMouth`) |
-| `^` | `stairsUp` — mouth: → **hub** (all strata) |
-| `v` | `stairsDown` — next floor **in same stratum** |
-| `F` | FOE spawn |
-| `C` | Chest |
-| `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
-| `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) |
-| `X` | Blocked passage (Act 1 — opens Act 3) |
+| Symbol | Meaning | Runtime map ([map-cell-art](../02-systems/map-cell-art.md)) |
+|--------|---------|--------------------------------------------------------------|
+| `#` | Non-walkable (perimeter / room wall) | Solid block · `map-view__cell--wall` |
+| `.` | Walkable floor | Floor `·` when revealed |
+| `E` | Intro spawn — Act 1 only (`partyEntryIntro`) | Spawn only — not a map icon |
+| `M` | Mouth landing fiction `(10, 10)`; hub spawn at `^` `(10, 11)` (`partyEntryMouth`) | `M` not a map icon |
+| `^` | `stairsUp` — mouth: → **hub** (all strata) | Stairs up icon / `^` |
+| `v` | `stairsDown` — next floor **in same stratum** | Stairs down icon / `v` |
+| `F` | FOE spawn | FOE marker when in LOS |
+| `C` | Chest | Overlay when feature wired (MVP1+ art) |
+| `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Overlay MVP2+ |
+| `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
+| `X` | Blocked passage (Act 1 — opens Act 3) | Solid/gate tint — not edge wall |
 
 **Coordinates:** `(x, y)` with **x** west→east `0…19`, **y** south→north `0…19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
 
-Internal walls are **edge walls** on `FloorTileData.SolidEdges`, not separate tile types; ASCII shows room shells only—implementation fills north/east/south/west bits per cell.
+Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only — runtime paints **0–4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell → alcove fill (`█` glyph today), still walkable — distinct from impassable `#`.
 
 ### MVP1 enemy & encounter IDs (locked names)
 
@@ -130,7 +130,7 @@ Locked in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-lock
 | Field | Act 1 (movement) | Act 3 (tutorial dive) |
 |-------|------------------|------------------------|
 | `partyEntryIntro` | `(4, 2)`, facing **N** | — |
-| `partyEntryMouth` | — | `(10, 2)`, facing **N** (hub **Enter Stratum 1**) |
+| `partyEntryMouth` | — | `(10, 11)` at mouth `^`, facing **N** (hub **Enter Stratum 1**) |
 | `baseEncounterRate` | `0` | `0.05` |
 | `foeSpawns` | `[]` | `[]` (FOE from B2F) |
 | `stairsUp` (mouth `^`) | → **Hub** | → **Hub** |
