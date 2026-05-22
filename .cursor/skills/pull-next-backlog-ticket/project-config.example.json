@@ -1,0 +1,13 @@
+{
+  "owner": "YOUR_GITHUB_LOGIN_OR_ORG",
+  "number": 1,
+  "readyStatus": "Ready",
+  "backlogStatus": "Backlog",
+  "inProgressStatus": "In progress",
+  "doneStatuses": ["Done"],
+  "priorityOrder": ["P0", "P1", "P2"],
+  "sizeOrder": ["XS", "S", "M", "L", "XL"],
+  "repoPrefer": null,
+  "excludeLabels": ["blocked", "wontfix"],
+  "limit": 50
+}
