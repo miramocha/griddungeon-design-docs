@@ -92,7 +92,7 @@ Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
 ### Post-MVP1 — Protocol Deploy
 
-**Protocol Deploy** (`protocol_deploy`) — Navigator **executes** the Protocol off-formation and spawns a **navigator sortie summon** in an empty aux slot (not the Navigator in the row). Sortie is targetable and takes AGI turns; Navigator stays immune with **aura still on** core six. **No second Protocol** while the sortie lives. Aux portrait uses the **Navigator display name**. See [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
+**Protocol Deploy** (`protocol_deploy`) — a **core member** on their AGI turn invokes the Protocol when Synchro is 100% (Navigator has no turn). Navigator **executes** off-formation and spawns a **navigator sortie summon** in an empty aux slot (not the Navigator in the row). Sortie is targetable and takes AGI turns; Navigator stays immune with **aura still on** core six. **No second Protocol** while the sortie lives. Aux portrait uses the **Navigator display name**. See [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
 
 ## Hub — Navigator Office
 

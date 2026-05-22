@@ -110,7 +110,7 @@ Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../dec
 
 | Skill | Participants | Effect (draft) |
 |-------|----------------|----------------|
-| **Protocol Deploy** (`protocol_deploy`) | 3+ | Active Navigator **executes** Protocol off-formation; spawns a **navigator sortie summon** in an empty aux slot (front or back — player picks). Sortie has AGI turns and a limited kit ([ADR 016](../../decisions/016-summon-control-mvp1.md) scripted actions in MVP1 pattern). Navigator remains off-formation (**aura on** core six, not targetable). Sortie is **targetable**. **No second Protocol** until sortie is gone. Aux UI: type **Summon**, portrait label = **Navigator display name**. |
+| **Protocol Deploy** (`protocol_deploy`) | 3+ | **Core** on their AGI turn spends the action (same [Timing](#timing--core-turn-action-mvp1) as other Protocols); Navigator **executes** off-formation and spawns a **navigator sortie summon** in an empty aux slot (front or back — player picks). Sortie has AGI turns and a limited kit ([ADR 016](../../decisions/016-summon-control-mvp1.md) scripted actions in MVP1 pattern). Navigator remains off-formation (**aura on** core six, not targetable). Sortie is **targetable**. **No second Protocol** until sortie is gone. Aux UI: type **Summon**, portrait label = **Navigator display name**. |
 
 **Locked (2026-05-22):** aura stays active while sortie is out; no Protocol reuse until dismiss / HP 0 / battle end; core six only charge Synchro.
 

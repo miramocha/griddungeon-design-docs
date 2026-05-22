@@ -7,11 +7,11 @@
 
 Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a limited way. An earlier draft placed the Navigator **in** an aux row, which conflicted with [ADR 007](007-navigator-role.md) (off-formation, not targetable) and read as “Navigator fills aux slot” (explicitly rejected there).
 
-**Resolution:** Protocol Deploy does **not** move the Navigator into formation. The Navigator **executes** the Protocol off-formation and spawns a **navigator sortie summon** in an empty aux slot — same occupant type as Summoner deploys ([ADR 004](004-auxiliary-slots.md), [summons & guests](../docs/02-systems/summons-and-guests.md)).
+**Resolution:** Protocol Deploy does **not** move the Navigator into formation. Like every Protocol ([ADR 006](006-union-team-bar.md)), a **core member spends their AGI turn** to invoke it when Synchro is **100%** (`CombatCommand.Protocol` on that core’s turn). The Navigator has **no AGI turn** and cannot act independently — they **execute** the skill off-formation (voice/portrait, effect authority) while the invoking core’s turn ends after resolve. That Protocol spawn creates a **navigator sortie summon** in an empty aux slot — same occupant type as Summoner deploys ([ADR 004](004-auxiliary-slots.md), [summons & guests](../docs/02-systems/summons-and-guests.md)).
 
 ## Decision
 
-1. **`protocol_deploy`** — post-MVP1; costs **100% Synchro**; **3+** living core participants; bar → 0% after use.
+1. **`protocol_deploy`** — post-MVP1; costs **100% Synchro**; **3+** living core participants; bar → 0% after use; invoked on a **core** AGI turn per [synchro-protocol § Timing](../docs/02-systems/synchro-protocol.md#timing--core-turn-action-mvp1) (Navigator does not take that turn).
 2. **Spawn** — player picks **empty** aux front or back; skill fails if that row already has a summon or guest.
 3. **Combatant** — `CombatantKind.Summon` using a per-Navigator `SummonDefinition` (sortie frame / kit in data); tag `source: ProtocolDeploy` and `linkedNavigatorId` for logic/UI.
 4. **Navigator** — stays **off-formation**: executes Protocol, keeps **aura** on core six, **not targetable**, **no AGI turn** on the Navigator entity ([ADR 007](007-navigator-role.md) unchanged).
