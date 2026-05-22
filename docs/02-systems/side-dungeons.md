@@ -10,8 +10,8 @@
 |-------------------|--------------|
 | Main campaign vertical slice (`s1`, `s2`, …) | Optional combat / loot / story beats |
 | Hub **Enter Stratum** + warp gates (S2+) | Hub **Side expedition** menu only |
-| `UnlockedFloors` per stratum | Unlock via quest / flag / milestone — not stratum depth |
-| Mouth `stairsUp` → hub **or** previous stratum deepest | Exit → **hub only** |
+| `UnlockedWarpGateStrata` (strata only) | Unlock via quest / flag / milestone — not warp gates |
+| Mouth `stairsUp` → hub only (strata) | Exit → **hub only** |
 
 Side dungeons are **instanced grids reached from the hub menu**, not a free-roam town overworld ([hub & services](hub-and-services.md)).
 
@@ -69,7 +69,7 @@ Combat flee still returns to **Exploration** on the same side floor ([game phase
 
 - Side locations use prefix **`sd`** + two digits (e.g. `sd01`, `sd02`).
 - Floor IDs use **`F1`, `F2`, …** (not `B1F`) to avoid collision with stratum floor labels.
-- **Do not** add side floors to `HubSaveData.UnlockedFloors` (stratum-only).
+- **Do not** add side locations to `HubSaveData.UnlockedWarpGateStrata` (stratum warp gates only).
 
 ## Exploration rules
 

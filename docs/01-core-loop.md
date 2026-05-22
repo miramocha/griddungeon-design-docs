@@ -6,13 +6,13 @@
 [New game] Stratum 1 movement tutorial on B1F (no combat) → mouth stairs → hub
     → Hub: recruit 6 core, Navigator, equip (Stratum 1 Act 2)
     → Enter Stratum 1 at B1F mouth → explore B1F–B3F
-[Loop] Hub → enter stratum (warp gate S2+; S1 walk-in at mouth) → explore → fight → loot
-    → Retreat via first-floor stairs up (hub or previous stratum deepest) / return item
+[Loop] Hub → enter stratum at beginning (S1 mouth; S2+ warp gate when unlocked) → explore → fight → loot
+    → Retreat via first-floor mouth stairs up (hub) / return item
     → Hub: heal, save, skill points → repeat
 [MVP3] Hub → Side expedition → non-strata map (sd01, …) → explore → fight → exit stairs → hub
 ```
 
-See [campaign S1 intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md), and [dungeons — entry & mouth stairs](03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked).
+See [campaign S1 intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md), and [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked).
 
 ## Micro loop (exploration)
 

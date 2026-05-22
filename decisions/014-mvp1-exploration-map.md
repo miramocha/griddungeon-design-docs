@@ -9,7 +9,7 @@
 2. **Map UI:** Side panel always available in exploration; **fullscreen** map (`M`) — **movement keys pass through** (party can still step while map open); pan/zoom mouse on map panel; `M` or `Esc` closes.
 3. **Gather nodes (MVP1):** **One-click instant loot** from node (no minigame). Marks node depleted for dive; full gather **minigame** in **MVP2**. Node icon on map when visited.
 4. **Hub-return persistence** ([ADR 008](008-campaign-defaults.md) extended):
-   - **Keep:** revealed map, open doors, looted chests, quest flags, deepest floor unlocked.
+   - **Keep:** revealed map, open doors, looted chests, quest flags, **warp gate unlock** per stratum (`HubSaveData.UnlockedWarpGateStrata`).
    - **Reset:** FOE positions/patrol ([ADR 008](008-campaign-defaults.md)).
    - **Gather/fish nodes:** reset depleted state on hub return (MVP2 behavior; MVP1 stubs unchanged).
 5. **Traps:** Out of MVP1 (no damage tiles).

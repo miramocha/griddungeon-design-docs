@@ -161,7 +161,7 @@ sequenceDiagram
 | Trigger | Requested phase | Caller | Game repo (MVP1) |
 |---------|-----------------|--------|------------------|
 | **New game** (S1 Act 1) | Exploration | Bootstrap → `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) | Planned — dev boot uses `BeginAt(Hub)` |
-| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** (no warp); S2+: warp gate | `LeaveHub` → `RequestTransition(Exploration)`; hub UI stub |
+| Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` — S1: **B1F mouth**; S2+: warp gate if `UnlockedWarpGateStrata` | `LeaveHub` → `RequestTransition(Exploration)`; hub UI stub |
 | Hub **Side expedition** (MVP3) | Exploration | `HubController.EnterSideDungeon` — spawn at side floor entry ([side dungeons](side-dungeons.md)) | MVP3 |
 | First-floor **stairs up** (mouth) → camp | Hub | `DungeonExplorer` interact → `GameState` | Planned |
 | Side dungeon **exit** `stairsUp` (MVP3) | Hub | `DungeonExplorer` interact — **hub only** ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)) | MVP3 |

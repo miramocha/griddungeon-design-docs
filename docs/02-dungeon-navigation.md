@@ -16,6 +16,59 @@
 | Doors | Edge or cell flag; player marks on map when found |
 | Special | Stairs (stratum / height), **jump pads**, chests, gather points, stratum boss room |
 
+Authoring uses the same `(x, y)` axes as [dungeons & encounters — map legend](03-content/dungeons-and-encounters.md#map-legend-ascii-blockouts) (x west→east, y south→north; **N** = +y).
+
+### Party pose vs grid coordinates
+
+Exploration keeps **two layers**: grid state (rules, map, FOEs, encounters) and a **scene transform** (FPV camera / blobber motion). They must stay aligned; only the transform may lag during DOTween lerps ([ADR 001](../decisions/001-grid-movement.md)).
+
+| Layer | Owner | What it stores |
+|-------|--------|----------------|
+| **Grid (authority)** | `DungeonExplorer` | `GridPosition Cell`, `FacingDirection Facing` — committed at **step/turn start** |
+| **World pose (presentation)** | `Transform` on **`PartyPose`** (dev bootstrap) wired to `DungeonExplorer.m_poseRoot` | Unity position + Y rotation; tweened between committed grid states |
+
+`PartyPose` is a **scene object name** for the pose root, not a separate game type. If `m_poseRoot` is unset, the explorer falls back to its own `Transform`.
+
+**Grid → world (MVP1)**
+
+| Grid | World (Unity) |
+|------|----------------|
+| `Cell.X` | `position.x` |
+| `Cell.Y` | `position.z` (horizontal plane; grid **y** is not Unity **Y**) |
+| `level` (when [ADR 019](../decisions/019-floor-verticality.md) lands) | Not applied to pose Y in MVP1 — walkable height stays in collision/map data until vertical art ships |
+| — | `position.y` = **0** (floor plane) |
+
+Mapping is **1 unit = 1 cell**, integer indices — world position sits at `(x, 0, y)` with **no half-cell centering offset**:
+
+```
+world.x = cell.X
+world.z = cell.Y
+```
+
+**Facing → rotation**
+
+| `FacingDirection` | Grid step (logic) | `m_poseRoot` Y rotation |
+|-------------------|-------------------|-------------------------|
+| North | +Y | 0° (toward +Z) |
+| East | +X | 90° |
+| South | −Y | 180° |
+| West | −X | 270° |
+
+Bump nudges use the same XZ axes as displacement (`dx` → world X, `dy` → world Z).
+
+**During animation**
+
+- Displacement: `Cell` updates **before** the step tween; `OnPartyEnteredCell` / FOE / encounter logic run at commit time.
+- Turn: `Facing` updates **before** the turn tween; no step events.
+- While `IsAnimating`, `m_poseRoot` may differ from `Cell`/`Facing`; input does not commit another action until the tween completes.
+
+**Not pose-driven**
+
+- `MapSystem`, `FoeSystem`, save, and combat entry use **`GridPosition`**, not `Transform.position`.
+- Combat arena uses **slot transforms**, not grid world coords ([combat scene](02-systems/combat-scene.md)).
+
+Runtime: `DungeonExplorer.CellToWorld` / `FacingToRotation` in `griddungeon-game` (`Assets/Scripts/Runtime/Exploration/DungeonExplorer.cs`).
+
 ### Verticality (Doom-style)
 
 - Multiple **levels** can share the same `(x, y)`; each is a distinct cell.
@@ -69,8 +122,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 - Chests (**MVP1**); gather / fish nodes (**MVP2** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
 - **Stairs down (`v`)** — next floor in the **same stratum** (paired `stairsUp` on floor below).
 - **Stairs up (`^`) on first floor of stratum (mouth)** — not the same as mid-stratum stairs:
-  - → **Hub** (Exploration → Hub phase; EO “return to camp”).
-  - → **Previous stratum, deepest unlocked floor** (stratum 2+ only; stratum 1: hub only).
+  - → **Hub** only (Exploration → Hub phase; EO “return to camp”).
 - **Stairs up on B2F+** — previous floor in same stratum only.
 - **Stratum 1:** no warp gate; new game starts on B1F intro path before hub ([campaign S1 intro](03-content/campaign/s1-intro.md)).
 - **Return thread** item — instant hub once (consumable); does not replace mouth stairs.

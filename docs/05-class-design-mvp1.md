@@ -300,7 +300,7 @@ class StratumFloor : ScriptableObject
     TutorialBlocker[] tutorialBlockers; // cleared when s1_tutorial_dive_started
 }
 
-enum StairsUpTargetKind { SameStratumFloor, Hub, PreviousStratumDeepest }
+enum StairsUpTargetKind { SameStratumFloor, Hub }
 
 struct StairsUpLink
 {
@@ -330,7 +330,7 @@ class StratumDefinition
 }
 ```
 
-**Authoring rules:** [dungeons — entry](03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked), [campaign S1 intro](03-content/campaign/s1-intro.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
+**Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 
@@ -552,7 +552,7 @@ class FoeInstance
 [Serializable] struct HubSaveData
 {
     int Gold;
-    Dictionary<string, string> UnlockedFloors;    // stratumId → highest floorId
+    HashSet<string> UnlockedWarpGateStrata;       // stratumIds hub may Enter (warp gate unlocked in-world); s1 via campaign flag
 }
 
 [Serializable] struct ExplorationStateSave
@@ -664,6 +664,8 @@ sealed class GameState : MonoBehaviour
 ```csharp
 class DungeonExplorer : MonoBehaviour
 {
+    [SerializeField] Transform m_poseRoot; // scene "PartyPose"; grid → world — see dungeon navigation § Party pose
+
     GridPosition Cell    { get; private set; }
     FacingDirection Facing { get; private set; }
 

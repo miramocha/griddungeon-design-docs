@@ -47,16 +47,18 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 **Grid:** **20×20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) — no jump pads in MVP1 slice)  
 **Implementation:** hand-fill `StratumFloor` ScriptableObjects until the floor painter ships ([ADR 002](../../decisions/002-mapping-model.md)); game path `Assets/Content/Floors/s1_B1F.asset` etc. ([04 — Tech notes](../04-tech-notes.md#map-system))
 
-### Stratum entry & first-floor stairs (locked)
+### Stratum entry & warp gates (locked)
 
-| Stratum | **Warp gate** | **Hub → labyrinth** | **First-floor `stairsUp`** |
-|---------|---------------|----------------------|----------------------------|
-| **`s1` (MVP1)** | **None** | Act 1: cold start on B1F; Act 3+: **Enter Stratum 1** → **B1F mouth** only (no warp) | **Hub only** (no previous stratum) |
-| **`s2`+** | Yes — hub teleports to authored gate cell on entrance floor | Warp to gate, then explore | **Hub** or **deepest unlocked floor of previous stratum** |
+| Stratum | **Warp gate on floor** | **Hub → labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
+|---------|------------------------|----------------------|----------------|---------------------------|
+| **`s1` (MVP1)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** → **B1F mouth** (stratum beginning) | Act 2 party ready (`s1_party_ready`) — not a warp-gate tile | → **Hub** |
+| **`s2`+** | Yes — authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked → warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | → **Hub** |
+
+**Rule:** every hub dive starts at the stratum **beginning** (mouth or warp gate on entrance floor). No resume at deepest floor, no mouth stairs to a prior stratum’s depth.
 
 **Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
 
-**First floor of each stratum** = stratum **mouth**. `stairsUp` at the mouth is how the party **returns to camp** (→ Hub phase) or **climbs back** to the previous stratum’s deepest saved floor. Visually this is “exit stairs” — one feature, multiple targets ([05 — Class design](../05-class-design-mvp1.md#floors--stratum)).
+**First floor of each stratum** = stratum **mouth**. Mouth `stairsUp` returns to **hub** only ([05 — Class design](../05-class-design-mvp1.md#floors--stratum)).
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace mouth stairs.
 
@@ -74,7 +76,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 | `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,17)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
 | `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** boss FOE | Mixed |
 
-**Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp gates and inter-stratum mouth stairs are out of MVP1 scope.
+**Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp-gate hub entry is out of MVP1 scope.
 
 ### Map legend (ASCII blockouts)
 
@@ -84,7 +86,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 | `.` | Walkable floor |
 | `E` | Intro spawn — Act 1 only (`partyEntryIntro`) |
 | `M` | Mouth spawn — hub re-entry / Act 3 (`partyEntryMouth`) |
-| `^` | `stairsUp` — mouth: hub (S1) or hub **or** prev-stratum deepest (S2+) |
+| `^` | `stairsUp` — mouth: → **hub** (all strata) |
 | `v` | `stairsDown` — next floor **in same stratum** |
 | `F` | FOE spawn |
 | `C` | Chest |

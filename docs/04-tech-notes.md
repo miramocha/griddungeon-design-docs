@@ -87,7 +87,7 @@ GameState (composition root)
 │   ├── ExplorationPhaseController
 │   └── CombatPhaseController
 ├── HubServices          — explorers guild, navigator office, shop, hospital, inn save
-├── DungeonExplorer      — grid step, facing, interact
+├── DungeonExplorer      — grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp — see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
 ├── DungeonView          — FPV cell rendering (hidden during combat)
 ├── CombatScenePresenter — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 ├── MapSystem            — auto-reveal layer, fog, read-only UI
@@ -136,7 +136,7 @@ GameState (composition root)
 - **`ExplorationStateSave`:** add `ExplorationMapKind` (`Stratum` | `SideDungeon`) + `locationId` + `floorId` on active dive.
 - **Hub entry:** `HubController.EnterSideDungeon(locationId, floorId)` — parallel to `LeaveHub`; loads floor SO from `ContentDatabase` by side key.
 - **Content path (draft):** `Assets/Content/SideDungeons/sd01_F1.asset`
-- **Stratum-only save:** `HubSaveData.UnlockedFloors` does not track side locations; use `UnlockedSideDungeonIds` or quest flags.
+- **Stratum-only save:** `HubSaveData.UnlockedWarpGateStrata` (hub **Enter Stratum** after in-world gate unlock); does not track side locations — use `UnlockedSideDungeonIds` or quest flags.
 
 ## Autopilot (MVP2)
 
@@ -212,7 +212,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ```json
 {
-  "hub": { "gold": 0, "unlockedFloors": { "s1": "B3F" } },
+  "hub": { "gold": 0, "unlockedWarpGateStrata": ["s1", "s2"] },
   "party": [ /* 6 characters + skill allocations */ ],
   "maps": {
     "s1_B2F": { "visited": [], "walls": [], "features": [], "foeIcons": [] }

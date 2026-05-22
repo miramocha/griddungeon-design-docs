@@ -36,9 +36,12 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | FOE contact → fight; flee + retreat cell | [ADR 011](../decisions/011-foe-flee-retreat.md) |
 | ✅ | FOE respawn on hub return | [ADR 008](../decisions/008-campaign-defaults.md) |
 | ✅ | Gather node: one-click instant loot (no minigame) | [ADR 014](../decisions/014-mvp1-exploration-map.md) |
-| ⬜ | `StratumFloor` assets for **B1F–B3F** (20×20 each; layouts in content doc) | [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f), [ADR 002](../decisions/002-mapping-model.md) |
-| ⬜ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md), [map save format](02-systems/map-reveal-save-format.md) |
-| ⬜ | Floor verticality + jump pads (Doom-style; flat B1F–B3F OK for first ship) | [ADR 019](../decisions/019-floor-verticality.md) |
+| ✅ | `StratumFloor` **B1F** (`s1_B1F`) — Act 1/3 modes, blockers | [game #14](https://github.com/miramocha/griddungeon-game/issues/14), [dungeons — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) |
+| ⬜ | `StratumFloor` **B2F** — patrol FOE + bind/poison tables | [game #29](https://github.com/miramocha/griddungeon-game/issues/29) |
+| ⬜ | `StratumFloor` **B3F** — boss FOE | [game #30](https://github.com/miramocha/griddungeon-game/issues/30) |
+| ✅ | 2D `MapView` from floor data + reveal (no minimap RT) | [ADR 002](../decisions/002-mapping-model.md), [game #18](https://github.com/miramocha/griddungeon-game/issues/18) |
+| ⬜ | Shared map grid painter (dedupe MapView + dev preview) | [game #26](https://github.com/miramocha/griddungeon-game/issues/26) — schedule early MVP1 |
+| ⬜ | Floor verticality + jump pads — **deferred**; flat B1F–B3F OK | [ADR 019](../decisions/019-floor-verticality.md) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
 
@@ -51,22 +54,25 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | Fixed camera + Fixed skills only | [combat presentation](02-systems/combat-presentation.md) |
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
 | ✅ | FOE combat patrol **off** (MVP2) | [ADR 005](../decisions/005-foe-combat-patrol.md) deferred |
-| ⬜ | 8 enemy types + 1 boss encounter group | content |
-| ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [party classes](02-systems/party-and-classes.md#summon-skills--summoner-only), [ADR 016](../decisions/016-summon-control-mvp1.md) |
-| ⬜ | Reactive HUD — hub / explore / combat; **blocking** UI; Synchro tutorial UI (hide → force Protocol) | [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), game [#19](https://github.com/miramocha/griddungeon-game/issues/19) |
-| ⬜ | S1 intro: Act 1 movement → hub party → Act 3 mouth entry; tutorial blockers on `s1_B1F` | [campaign/s1-intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
-| ⬜ | Synchro unlocks **mid** first FOE; FOE **unbeatable**; forced `protocol_strike` in same fight | [campaign/s1-intro](03-content/campaign/s1-intro.md), [synchro — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
+| ⬜ | 8 enemy types + 1 boss encounter group | [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
+| ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [game #11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |
+| ⬜ | Post-battle **XP + loot** (core party) | [game #31](https://github.com/miramocha/griddungeon-game/issues/31), [progression](02-systems/character-progression.md) |
+| ⬜ | Production HUD (split from [#19](https://github.com/miramocha/griddungeon-game/issues/19) epic) | [#34](https://github.com/miramocha/griddungeon-game/issues/34) skeleton · [#35](https://github.com/miramocha/griddungeon-game/issues/35) reactive + Synchro tutorial · [#36](https://github.com/miramocha/griddungeon-game/issues/36) hub + explore |
+| ⬜ | **Campaign:** S1 flags, new-game bootstrap, spawn routing | [game #33](https://github.com/miramocha/griddungeon-game/issues/33), [campaign/s1-intro](03-content/campaign/s1-intro.md) |
+| ⬜ | S1 intro blockers + FOE/tutorial on floors | [game #20](https://github.com/miramocha/griddungeon-game/issues/20), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
+| ⬜ | Synchro unlocks **mid** first FOE; FOE **unbeatable**; forced `protocol_strike` | [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (rules), [#35](https://github.com/miramocha/griddungeon-game/issues/35) (UI), [synchro — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
 
 ### Hub & progression
 
 | # | Requirement | Doc |
 |---|-------------|-----|
-| ✅ | Inn save, hospital, shop, Guild + **Navigator Office** | [hub](02-systems/hub-and-services.md) |
+| ⬜ | Inn save, hospital, shop, Guild + **Navigator Office** (services + UX) | [game #13](https://github.com/miramocha/griddungeon-game/issues/13), [hub](02-systems/hub-and-services.md) |
+| ⬜ | **SaveGame** persist (inn, map, FOE, campaign flags) | [game #32](https://github.com/miramocha/griddungeon-game/issues/32), [map save format](02-systems/map-reveal-save-format.md) |
 | ✅ | 6 classes day one; skill points at hub | [party](02-systems/party-and-classes.md) |
 | ✅ | Stats: HP, MP, STR, TEC, AGI, VIT, LUC | [progression](02-systems/character-progression.md) |
 | ✅ | 1 Navigator + 2 Protocol skills (MVP1 kit) | [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md) |
-| ⬜ | 3 skills per class minimum | content |
-| ⬜ | Weapon + 3 armor + 1 accessory | [progression](02-systems/character-progression.md) |
+| ⬜ | 3 skills per class minimum | [design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
+| ⬜ | Weapon + 3 armor + 1 accessory | [design-docs #4](https://github.com/miramocha/griddungeon-design-docs/issues/4), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
 
 ### Tech ([ADR 012](../decisions/012-unity-6-stack.md))
 
@@ -87,7 +93,11 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | **B2F** | First bind/poison enemies, 1 FOE |
 | **B3F** | Stratum boss FOE + stairs (MVP1 “win”) |
 
-**Layouts (ASCII + YAML):** [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) · [campaign S1 intro](03-content/campaign/s1-intro.md) · [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1).
+**Layouts (ASCII + YAML):** [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) · [campaign S1 intro](03-content/campaign/s1-intro.md) · [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1) (authoritative).
+
+**Floor assets (game):** B1F [done #14](https://github.com/miramocha/griddungeon-game/issues/14) · B2F [#29](https://github.com/miramocha/griddungeon-game/issues/29) · B3F [#30](https://github.com/miramocha/griddungeon-game/issues/30).
+
+**Vertical slice:** [game #15](https://github.com/miramocha/griddungeon-game/issues/15) — end-to-end hub → B3F boss → hub.
 
 Defer B4F–B5F polish until loop proven.
 
@@ -130,6 +140,26 @@ Full Navigator roster unlocks post-MVP1.
 Numbers can move in data without ADR change:
 
 - Synchro Charge % per action, Protocol skill power, encounter rates, `stepsPerMove`, shop prices.
+
+---
+
+## 7. Pull order (GitHub backlog)
+
+Filter the board by label **`pull-w01`** … **`pull-w08`**, or use **Status → Ready** for the current wave. UI work is split under epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) ([#34](https://github.com/miramocha/griddungeon-game/issues/34) → [#35](https://github.com/miramocha/griddungeon-game/issues/35) → [#36](https://github.com/miramocha/griddungeon-game/issues/36)).
+
+| Wave | Label | Pull next (top → bottom) | Status on board |
+|------|-------|--------------------------|-----------------|
+| **1** | `pull-w01` | [#32](https://github.com/miramocha/griddungeon-game/issues/32) Save → [#33](https://github.com/miramocha/griddungeon-game/issues/33) Campaign | **Ready** |
+| **2** | `pull-w02` | [#34](https://github.com/miramocha/griddungeon-game/issues/34) Combat HUD skeleton | **Ready** |
+| **3** | `pull-w03` | [#13](https://github.com/miramocha/griddungeon-game/issues/13) Hub · [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB · [design #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) enemies · [design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3) skills · [design #4](https://github.com/miramocha/griddungeon-design-docs/issues/4) equipment | Backlog |
+| **4** | `pull-w04` | [#26](https://github.com/miramocha/griddungeon-game/issues/26) map painter · [#29](https://github.com/miramocha/griddungeon-game/issues/29) B2F · [#20](https://github.com/miramocha/griddungeon-game/issues/20) FoeSystem | Backlog |
+| **5** | `pull-w05` | [#35](https://github.com/miramocha/griddungeon-game/issues/35) Combat reactive + Synchro tutorial UI · [design #5](https://github.com/miramocha/griddungeon-design-docs/issues/5) Navigator review | Backlog |
+| **6** | `pull-w06` | [#30](https://github.com/miramocha/griddungeon-game/issues/30) B3F · [#11](https://github.com/miramocha/griddungeon-game/issues/11) summon · [#36](https://github.com/miramocha/griddungeon-game/issues/36) Hub + explore HUD | Backlog |
+| **7** | `pull-w07` | [#31](https://github.com/miramocha/griddungeon-game/issues/31) XP + loot · [#27](https://github.com/miramocha/griddungeon-game/issues/27) pause menu | Backlog |
+| **8** | `pull-w08` | [#15](https://github.com/miramocha/griddungeon-game/issues/15) Vertical slice (integration) | Backlog |
+| — | `pull-epic` | [#19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic — closes when #34–#36 done | Backlog |
+
+Board: [Codename: GridDungeon (project 3)](https://github.com/users/miramocha/projects/3) — open items ordered to match waves 1→8 where the API allows.
 
 ---
 

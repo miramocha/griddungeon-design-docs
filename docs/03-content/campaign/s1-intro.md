@@ -45,12 +45,11 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | **Warp gate** | **None** on any `s1_*` floor |
 | **New game** | Cold start Act 1 on B1F intro spawn — not hub first |
 | **After Act 1** | No hub teleport back to intro cell |
-| **Act 3 entry** | Always **B1F mouth** `(10, 2)` — not wilderness intro, not resume-deepest (first dive) |
-| **Mouth `stairsUp`** | → Hub only (no previous stratum) |
+| **Act 3+ hub entry** | Always **B1F mouth** `(10, 2)` — stratum beginning; same on every repeat dive |
+| **Mouth `stairsUp`** | → Hub only |
 | **Synchro on hub exit** | **0%** / locked until mid–first FOE; **100%** after tutorial complete |
-| **Repeat dives** | Resume policy TBD post-MVP1 ([dungeons — entry table](../dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked)) |
 
-Stratum **2+** use warp gates and mouth stairs → hub **or** previous stratum deepest — see dungeons entry table.
+Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — warp gates](../dungeons-and-encounters.md#stratum-entry--warp-gates-locked).
 
 ---
 

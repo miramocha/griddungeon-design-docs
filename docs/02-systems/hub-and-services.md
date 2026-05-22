@@ -67,9 +67,8 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
 - Example: Stratum 1 "Fallen District" — floors B1F–B5F (MVP1: B1F–B3F + boss on B3F).
-- **Stratum 2+:** hub **Enter Stratum** warps to that stratum’s **warp gate** on its entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--first-floor-stairs-locked)).
-- **First floor mouth stairs up:** return to **hub**, or to **deepest unlocked floor of the previous stratum** (S1 mouth: hub only).
-- Hub may **remember deepest unlocked floor** per stratum for resume after tutorial (post-MVP1 tuning).
+- **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F mouth; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
+- **First-floor mouth `stairsUp`:** → **hub** only (all strata).
 
 ## Quests (optional MVP1)
 
@@ -92,7 +91,7 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 | **Stratum** labyrinth | **Enter Stratum** *N* | `LeaveHub(stratumId, floorId)` |
 | **Side dungeon** (MVP3) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
 
-Strata use warp gates (S2+) and mouth stairs with inter-stratum rules. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
+Strata: warp-gate unlock + beginning-only hub entry (S2+); S1 mouth entry. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
 
 ## Related docs
 

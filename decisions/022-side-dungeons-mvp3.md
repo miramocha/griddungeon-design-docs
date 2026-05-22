@@ -13,7 +13,7 @@ The EO-style loop uses **strata** as the main campaign vertical slice ([dungeons
 2. **Separate hub entry** — `HubController.EnterSideDungeon(locationId, floorId)`; **do not** overload `LeaveHub(stratumId, floorId)` for side content.
 3. **Save / map keys** — composite key `{locationId}_{floorId}` (e.g. `sd01_F1`), distinct from stratum keys (`s1_B1F`). `ExplorationStateSave` records `ExplorationMapKind` + `locationId` + `floorId`.
 4. **Exit target** — in-dungeon `stairsUp` / exit features return to **Hub only** (no `PreviousStratumDeepest`).
-5. **Unlock** — quest / story flag / milestone; **not** `HubSaveData.UnlockedFloors` (stratum-only).
+5. **Unlock** — quest / story flag / milestone; **not** `HubSaveData.UnlockedWarpGateStrata` (stratum warp gates only).
 6. **Authoring** — reuse floor tile/FOE/encounter data shape from `StratumFloor`; MVP3 may add `ExplorationMapKind` or `SideDungeonDefinition` in `ContentDatabase` without changing MVP1 locked IDs.
 7. **FOE / map persistence** — same as labyrinth: map reveal persists; FOEs respawn on hub return + re-entry ([ADR 008](008-campaign-defaults.md)).
 
