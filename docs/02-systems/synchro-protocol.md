@@ -116,6 +116,18 @@ Not MVP1. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deplo
 
 **Locked:** aura on during Deploy/Transform; core six (and transform profile) charge Synchro; no overlapping sortie + transform.
 
+### Kit + hub lock (practical)
+
+Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](navigator.md)). **No mid-dungeon Navigator swap** ([ADR 007](../../decisions/007-navigator-role.md)) — the party cannot switch to another Navigator’s Protocol list during exploration or combat.
+
+| Implication | Detail |
+|-------------|--------|
+| **Deploy → Transform in one fight** | Only if **that** Navigator’s kit includes **both** `protocol_deploy` and `protocol_transform` — a **content** choice, not a hub swap |
+| **Typical dive** | Most Navigators expected to offer **one** post-MVP1 mode skill (Deploy **or** Transform) plus common Protocols (Strike, Mend, …); repeated Protocols in a fight are usually **Strike/Mend** recharges |
+| **Overlap rule** | Engine still blocks sortie + transform **at once**; sequential Deploy then Transform is rare but valid when kit allows |
+
+**Content guidance:** prefer **one mode Protocol per Navigator** so players pick Navigators at hub for identity, not to combo Deploy and Transform in a single battle.
+
 ## Presentation
 
 - Navigator portrait leads Protocol command ([combat presentation](combat-presentation.md)).

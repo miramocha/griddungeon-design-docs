@@ -8,7 +8,9 @@
 
 Post-MVP1 skill **`protocol_transform`** lets the Navigator **replace** one **core** party member in their formation slot with a **fixed transform profile** for a limited time — distinct from [ADR 023](023-protocol-deploy-sortie-summon.md) **Protocol Deploy**, which spawns a **navigator sortie summon** in an **aux** slot.
 
-**Not in scope:** bench roster swap mid-fight ([party-and-classes](../docs/02-systems/party-and-classes.md)); Navigator entering a formation row ([ADR 007](007-navigator-role.md)).
+**Not in scope:** bench roster swap mid-fight ([party-and-classes](../docs/02-systems/party-and-classes.md)); Navigator entering a formation row ([ADR 007](007-navigator-role.md)); mid-dungeon Navigator swap (hub only — active kit fixed for the dive).
+
+**Practical:** Deploy then Transform in one battle requires **both** skills on the **same** Navigator’s kit ([synchro-protocol § Kit + hub lock](../docs/02-systems/synchro-protocol.md#kit--hub-lock-practical)); content should usually grant **one** mode Protocol per Navigator.
 
 ## Shared rules (all Protocols + this skill)
 
