@@ -104,6 +104,16 @@ Combat round:
 | **Protocol Retreat** | 4+ | High chance flee to floor entrance |
 | **Protocol Scan** | 1+ | Register enemy in codex |
 
+### Skill ideas (post-MVP1)
+
+Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../decisions/023-protocol-deploy-sortie-summon.md) (**Proposed**). Does **not** amend [ADR 007](../../decisions/007-navigator-role.md) — Navigator stays off-formation; the sortie is a normal **aux summon**.
+
+| Skill | Participants | Effect (draft) |
+|-------|----------------|----------------|
+| **Protocol Deploy** (`protocol_deploy`) | 3+ | Active Navigator **executes** Protocol off-formation; spawns a **navigator sortie summon** in an empty aux slot (front or back — player picks). Sortie has AGI turns and a limited kit ([ADR 016](../../decisions/016-summon-control-mvp1.md) scripted actions in MVP1 pattern). Navigator remains off-formation (**aura on** core six, not targetable). Sortie is **targetable**. **No second Protocol** until sortie is gone. Aux UI: type **Summon**, portrait label = **Navigator display name**. |
+
+**Locked (2026-05-22):** aura stays active while sortie is out; no Protocol reuse until dismiss / HP 0 / battle end; core six only charge Synchro.
+
 ## Presentation
 
 - Navigator portrait leads Protocol command ([combat presentation](combat-presentation.md)).
@@ -129,3 +139,4 @@ Combat round:
 - [ADR 006 — Team bar mechanics](../../decisions/006-union-team-bar.md)
 - [ADR 020 — Naming](../../decisions/020-team-burst-naming.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md) (Proposed)

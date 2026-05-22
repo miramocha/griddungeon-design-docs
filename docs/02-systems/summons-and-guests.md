@@ -28,7 +28,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 | Property | Rule |
 |----------|------|
-| **Source** | **Summoner class only** (deploy skills); rare items / boss mechanics |
+| **Source** | **Summoner class** deploy skills (MVP1+); post-MVP1 **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
 | **Commands (MVP1)** | **Scripted only** — fixed action/skills per turn; **no** player command menu ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
@@ -39,6 +39,21 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
 **Stacking:** One summon per aux slot. New summon on occupied aux slot replaces old (or skill fails — tune per skill).
+
+### Navigator sortie (Protocol Deploy — post-MVP1)
+
+| Property | Rule |
+|----------|------|
+| **Source** | Protocol skill `protocol_deploy` — active Navigator executes; **not** a Summoner class skill |
+| **Spawn** | Empty aux front or back only; fails if slot occupied |
+| **Combatant** | `CombatantKind.Summon` — per-Navigator `SummonDefinition` (sortie kit); `linkedNavigatorId` in data |
+| **Navigator** | Stays **off-formation** — aura on core six, not targetable ([ADR 007](../../decisions/007-navigator-role.md)) |
+| **Sortie** | Targetable; AGI queue; scripted actions per [ADR 016](../../decisions/016-summon-control-mvp1.md) until player summon control lands |
+| **Synchro** | Sortie actions do not charge bar; **no second Protocol** while sortie is alive |
+| **UI** | Aux frame type **Summon**; portrait label = **Navigator display name** |
+| **End** | Battle end, sortie HP 0 (recall), duration, or dismiss action |
+
+Does **not** violate “Navigator fills aux slot” — the **summon** occupies the slot; Navigator identity stays in the off-formation strip ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 
 ### MVP1 action script (simple)
 
@@ -108,3 +123,4 @@ action_script:
 - [Combat](combat.md)
 - [ADR 004 — Auxiliary slots](../../decisions/004-auxiliary-slots.md)
 - [ADR 016 — Summon control MVP1](../../decisions/016-summon-control-mvp1.md)
+- [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md) (Proposed)
