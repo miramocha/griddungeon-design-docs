@@ -48,4 +48,4 @@ Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a
 - [ADR 007 — Navigator role](007-navigator-role.md)
 - [ADR 006 — Team bar](006-union-team-bar.md)
 - [ADR 016 — Summon control MVP1](016-summon-control-mvp1.md)
-- [ADR 024 — Protocol Transform](024-protocol-transform.md) (Proposed) — core slot; mutually exclusive Protocol mode per battle
+- [ADR 024 — Protocol Transform](024-protocol-transform.md) — core slot replace; mutually exclusive Protocol mode per battle

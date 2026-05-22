@@ -90,9 +90,14 @@ Navigators do **not** progress like core party members:
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
-### Post-MVP1 — Protocol Deploy
+### Post-MVP1 Protocol skills
 
-**Protocol Deploy** (`protocol_deploy`) — a **core member** on their AGI turn invokes the Protocol when Synchro is 100% (Navigator has no turn). Navigator **executes** off-formation and spawns a **navigator sortie summon** in an empty aux slot (not the Navigator in the row). Sortie is targetable and takes AGI turns; Navigator stays immune with **aura still on** core six. **No second Protocol** while the sortie lives. Aux portrait uses the **Navigator display name**. See [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
+| Skill | Summary | ADR |
+|-------|---------|-----|
+| **Protocol Deploy** (`protocol_deploy`) | Sortie **aux summon** in empty slot; scripted turns; Navigator name on portrait | [023](../../decisions/023-protocol-deploy-sortie-summon.md) |
+| **Protocol Transform** (`protocol_transform`) | **Slot-replace** one living core with Navigator **transform profile**; hybrid commands; **Revert** / duration / HP→0 revert safe; label **profile + “via [Core]”** | [024](../../decisions/024-protocol-transform.md) |
+
+Shared: **core** spends AGI turn at Synchro 100%; Navigator **executes** off-formation; **aura on**; **one** Deploy or Transform per battle — no second Protocol. See [Synchro Protocol — skill ideas](synchro-protocol.md#skill-ideas-post-mvp1).
 
 ## Hub — Navigator Office
 
@@ -141,3 +146,4 @@ Additional Navigators unlock via strata/quests post-MVP1.
 - [Combat](combat.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
 - [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)
+- [ADR 024 — Protocol Transform](../../decisions/024-protocol-transform.md)

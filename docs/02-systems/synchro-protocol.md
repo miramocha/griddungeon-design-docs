@@ -107,13 +107,14 @@ Combat round:
 
 ### Skill ideas (post-MVP1)
 
-Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../decisions/023-protocol-deploy-sortie-summon.md). Navigator stays off-formation; the sortie is a normal **aux summon** ([ADR 007](../../decisions/007-navigator-role.md) unchanged).
+Not MVP1. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deploy) and [ADR 024](../../decisions/024-protocol-transform.md) (Transform). **One** post-MVP1 Protocol mode per battle (Deploy **or** Transform, not both). Navigator stays off-formation ([ADR 007](../../decisions/007-navigator-role.md)).
 
-| Skill | Participants | Effect (draft) |
-|-------|----------------|----------------|
-| **Protocol Deploy** (`protocol_deploy`) | 3+ | **Core** on their AGI turn spends the action (same [Timing](#timing--core-turn-action-mvp1) as other Protocols); Navigator **executes** off-formation and spawns a **navigator sortie summon** in an empty aux slot (front or back — player picks). Sortie has AGI turns and a limited kit ([ADR 016](../../decisions/016-summon-control-mvp1.md) scripted actions in MVP1 pattern). Navigator remains off-formation (**aura on** core six, not targetable). Sortie is **targetable**. **No second Protocol** until sortie is gone. Aux UI: type **Summon**, portrait label = **Navigator display name**. |
+| Skill | Participants | Effect |
+|-------|----------------|--------|
+| **Protocol Deploy** (`protocol_deploy`) | 3+ | **Core** spends AGI turn; Navigator spawns **sortie summon** in empty aux slot ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)). Scripted sortie turns (MVP1 summon pattern). **No second Protocol** this battle. Aux label: **Navigator display name**. |
+| **Protocol Transform** (`protocol_transform`) | 3+ | **Core** spends AGI turn; player picks **any living core**; Navigator **slot-replaces** target with transform profile ([ADR 024](../../decisions/024-protocol-transform.md)). **Hybrid** commands; **Revert** or `duration_turns` or HP→0 (**revert safe**). UI: profile name + **“via [CoreName]”**. **No second Protocol** this battle. |
 
-**Locked (2026-05-22):** aura stays active while sortie is out; no Protocol reuse until dismiss / HP 0 / battle end; core six only charge Synchro.
+**Locked:** aura on during Deploy/Transform; core six charge Synchro; transform profile actions charge Synchro.
 
 ## Presentation
 
@@ -141,3 +142,4 @@ Not MVP1. Scoped design: [ADR 023 — Protocol Deploy (sortie summon)](../../dec
 - [ADR 020 — Naming](../../decisions/020-team-burst-naming.md)
 - [ADR 007 — Navigator role](../../decisions/007-navigator-role.md)
 - [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)
+- [ADR 024 — Protocol Transform](../../decisions/024-protocol-transform.md)

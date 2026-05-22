@@ -77,7 +77,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 021 — Autopilot MVP2](decisions/021-autopilot-mvp2.md) | Accepted | Pathfind on revealed tiles; no path drawing |
 | [ADR 022 — Side dungeons MVP3](decisions/022-side-dungeons-mvp3.md) | Accepted | Hub Side expedition; `sd##_F#` save keys |
 | [ADR 023 — Protocol Deploy sortie summon](decisions/023-protocol-deploy-sortie-summon.md) | Accepted | `protocol_deploy` spawns aux summon; Navigator off-formation |
-| [ADR 024 — Protocol Transform](decisions/024-protocol-transform.md) | Proposed | `protocol_transform` enhances one core; slot replace vs in-place morph TBD |
+| [ADR 024 — Protocol Transform](decisions/024-protocol-transform.md) | Accepted | `protocol_transform` slot-replaces one core with Navigator transform profile |
 
 ## Resolved
 
