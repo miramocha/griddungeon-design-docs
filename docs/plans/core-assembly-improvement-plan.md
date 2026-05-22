@@ -69,7 +69,7 @@
 | `Core/Campaign/` | S1 story gates, floor keys, spawn constants | Generic reusable campaign framework |
 | `Core/SaveData/` | Save DTOs + mappers used by both layers | File I/O paths (Runtime `SaveSystem`) |
 
-**Action:** When adding S2+ campaign code, use `Core/Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts.
+**Action:** When adding S2+ campaign code, use `Core/Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts. Target shape for neutral spawn DTO + per-stratum policy: [ADR 025](../decisions/025-campaign-exploration-target.md) (proposed stub).
 
 ### 0.3 Tests (Unity Edit Mode)
 
