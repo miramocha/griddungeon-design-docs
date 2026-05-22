@@ -28,7 +28,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Interact** | `Space` | Door, chest, stairs, gather |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
 | **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
-| **Pause** | `Esc` | Pause menu; confirm quit to hub |
+| **Pause** | `Esc` | Pause menu: **Resume** / **Quit to title** (confirm). **No** return to hub from pause — use in-dungeon exits only ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
 **Arrow keys** duplicate `W/A/S/D` + `Q/E` (accessibility).
 

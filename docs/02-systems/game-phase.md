@@ -130,7 +130,7 @@ stateDiagram-v2
   Hub --> Exploration: LeaveHub
   Exploration --> Combat: Encounter
   Combat --> Exploration: Win / Flee
-  Exploration --> Hub: ReturnToHub
+  Exploration --> Hub: InWorldReturnOnly
   Combat --> Hub: WipeLoadSave
 ```
 
@@ -168,10 +168,15 @@ sequenceDiagram
 | FOE same cell as party | Combat | `ExplorationPhaseController` → `GameState.RequestCombat` | Wired |
 | Random encounter on step | Combat | `ExplorationPhaseController` → `GameState.RequestCombat` | Wired |
 | Battle won or flee success | Exploration | `GameState` on `CombatController.BattleEnded` | Wired |
-| Return to surface / hub menu | Hub | Mouth **stairs up**, Return thread, or hub UI | Planned (except dev F1) |
-| Party wipe | Hub | `GameState` on `BattleEnded(Wipe)` | Wired |
+| Return to surface / hub | Hub | **In-world only:** mouth **stairs up**, **Return thread** item, **exit / gate** (warp, side-dungeon exit), scripted **event** — not exploration pause | Mouth stairs wired; items/events/gates per content |
+| Party wipe (**defeat**) | Hub | `GameState` on `BattleEnded(Wipe)` | Wired |
+| Exploration **pause** → title | *(out of macro phase)* | `Esc` → confirm **Quit to title** (title scene / app exit); does **not** enter Hub | Wired when title flow exists; dev: stop Play / `Application.Quit` |
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).
+
+### Return to hub (exploration only)
+
+Hub is reached from exploration only through **events**, **items**, **exits/gates**, **stairs** (mouth), or **defeat** ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7). Exploration pause does **not** offer “return to hub.”
 
 ### Encounter priority (same step)
 

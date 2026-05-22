@@ -14,6 +14,7 @@
    - **Gather/fish nodes:** reset depleted state on hub return (MVP2 behavior; MVP1 stubs unchanged).
 5. **Traps:** Out of MVP1 (no damage tiles).
 6. **Encounter suppress:** Out of MVP1.
+7. **Return to hub (exploration):** Only via **in-world triggers** — scripted **events**, **items** (e.g. Return thread), **exits / gates** (warp gates, side-dungeon exits), **stairs** (mouth `stairsUp` on stratum first floor), or **defeat** (party wipe → hub load). **Not** from exploration pause (`Esc` opens Resume / **Quit to title** only; see [input bindings](../docs/02-systems/input-bindings.md)).
 
 ## Related
 

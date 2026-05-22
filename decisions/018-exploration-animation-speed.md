@@ -15,7 +15,7 @@ Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-move
 3. **What scales:** Visual lerp durations only — **step move**, **turn rotate**, and **bump nudge** (both segments). Does **not** change when grid logic commits, FOE step patrol, or random encounter rolls.
 4. **Hold-to-repeat:** Unchanged ([ADR 001](001-grid-movement.md)); a faster preset shortens time between repeated steps while holding a key, not game-time step rules.
 5. **Persistence:** `PlayerPrefs` (or future settings save) when the settings UI ships; until then, runtime uses **Normal**.
-6. **UI (future):** Pause → Settings → Gameplay or Accessibility dropdown; not required for MVP1 code.
+6. **UI (future):** Pause → Settings → Gameplay or Accessibility dropdown; not required for MVP1 code. Exploration pause: **Resume** / **Quit to title** only — no hub return ([ADR 014](014-mvp1-exploration-map.md) §7).
 
 ### Locked durations
 

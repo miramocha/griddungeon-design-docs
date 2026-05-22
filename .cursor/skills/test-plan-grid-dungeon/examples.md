@@ -26,12 +26,17 @@ Abbreviated reference — full verified plan lives on [issue #34](https://github
 **Notes:** Manual A1–A6 + B pass. A3 step 14 / A2 step 10 not observable until enemy turn pacing (#35). Not a #34 defect.
 ```
 
+## Example: Exploration pause / hub return (#27, ADR 014 §7)
+
+See game repo `.cursor/local/test-plans/test-plan-issue-27.md`. Manual: pause shows **Quit to Title** (not hub); mouth `^` returns hub; map fullscreen **Esc** closes map only.
+
 ## Domain quick picks
 
 | Ticket touches | Automated path | Manual focus |
 |----------------|----------------|--------------|
 | Core simulators | `Tests → Combat` | F3 or none |
 | Explorer / map | `Tests → Exploration`, `Map` | F2, **M**, step timings |
+| Exploration pause (#27) | `Tests → GameFlow` | F2 Esc, mouth `^`, quit-to-title |
 | Phase transitions | `Tests → GameFlow` | F1/F2/F3/F4/F6/F7 |
 | FOE / retreat | `Tests → Foe` | F2 contact, F4 flee |
-| Save | `Tests → GameFlow` → Save* fixtures | F8, hub loop |
+| Save | `Tests → GameFlow` → Save* fixtures | F8, hub via stairs/items only |

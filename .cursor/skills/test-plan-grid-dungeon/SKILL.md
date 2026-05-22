@@ -23,14 +23,28 @@ Complements [.cursor/rules/ticket-test-documentation.mdc](../../rules/ticket-tes
 3. **Post to GitHub issue comment** by default; mirror under `## Test plan` on the PR.
 4. Mark steps **N/A** with reason + follow-up issue (e.g. instant enemy AI → #35), not as failures.
 5. Use **tables** for manual steps: `| Step | Action | Expected |` with stable step numbers across edits.
+6. **Local drafts only under `.cursor/local/`** — never write `test-plan-issue-*.md` at `.cursor/` root or anywhere else tracked by git (in **griddungeon-game**, add the same `.gitignore` entry).
+
+## Local draft path (optional)
+
+Use when the user runs **Create test plan** / asks for a file to edit before posting (typically in **griddungeon-game**):
+
+| Item | Value |
+|------|--------|
+| Directory | `.cursor/local/test-plans/` (gitignored) |
+| Filename | `test-plan-issue-<N>.md` or `test-plan-pr-<N>.md` |
+| Commit | **Never** — canonical copy lives on the GitHub issue/PR |
+
+Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game repo; committed by mistake on #29).
 
 ## Workflow
 
 1. Read the issue/PR scope and touched domains (`Combat`, `Exploration`, `Map`, `Foe`, `GameFlow`).
 2. Pick a preset from [template.md](template.md) (full skeleton) or [examples.md](examples.md).
 3. Fill **Setup**, **Automated** (Test Runner tree paths), **Manual** sections (A/B…), **Regressions**, **Spec/ADRs**.
-4. Post via `gh issue comment` or edit existing test-plan comment (`gh api` PATCH).
-5. After user feedback: update sign-off date, check boxes, add **Notes** for N/A/deferred.
+4. If a local file is needed, write only to `.cursor/local/test-plans/…` (game repo).
+5. Post via `gh issue comment` or edit existing test-plan comment (`gh api` PATCH).
+6. After user feedback: update sign-off date, check boxes, add **Notes** for N/A/deferred.
 
 ## Defaults (unless the ticket overrides)
 
@@ -42,6 +56,10 @@ Complements [.cursor/rules/ticket-test-documentation.mdc](../../rules/ticket-tes
 | F3 dev roster | 2 cores + slime when party empty — [game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md) |
 | Combat highlight | Core command pick → **party roster**, not AGI strip ([combat.md](../../docs/02-systems/combat.md#turn-order-strip-agi-queue-ui)) |
 | Edit Mode tree | `Tests → <Domain> → <Fixture>` — [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
+| Exploration **Esc** (map not fullscreen) | Pause: **Resume** / **Quit to title** (confirm). **No** hub from pause ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7) |
+| Exploration **Esc** (map fullscreen) | Closes fullscreen map only ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| Return to **hub** from exploration | In-world only: stairs (mouth), items, exits/gates, events, defeat — not pause ([game phase](../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
+| Combat **Esc** | Resume / Settings only ([ADR 015](../../decisions/015-mvp1-combat.md)) |
 
 ## Section letters (manual primary)
 
@@ -63,4 +81,4 @@ Always end with a dated checklist (copy from [template.md](template.md)). Separa
 ## Resources
 
 - Full copy-paste template: [template.md](template.md)
-- Combat HUD example (issue #34 shape): [examples.md](examples.md)
+- Examples (#34 combat HUD, #27 exploration pause): [examples.md](examples.md)
