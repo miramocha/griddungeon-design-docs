@@ -376,7 +376,7 @@ MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.u
 
 **Play-mode loop:** F1 Hub → F2 Exploration → F3 Combat → F4 flee (→ Exploration) → F1 Hub.
 
-**F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_hero_b` (AGI 9) + `dev_slime` (AGI 5) — for turn-order strip QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue.
+**F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_hero_b` (AGI 9) + `dev_slime` (AGI 5) — for turn-order strip QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue; **player command** turns highlight the acting core on the **party roster**, not the AGI strip ([combat.md](combat.md#turn-order-strip-agi-queue-ui)).
 
 Dev UI is **not** authoritative — it only calls `GameState` APIs. Production hub/explore/combat HUDs replace this panel later; see [class design MVP1](../05-class-design-mvp1.md#ui-layer).
 

@@ -34,6 +34,14 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 | `pre-commit-csharp-code-review.mdc` | **Shared** — review C# diff before agent-created commits (skipped in docs-only repos) |
 | `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before review/commit |
 
+## Agent skills (design-docs repo)
+
+| Skill | Purpose |
+|-------|---------|
+| [test-plan-grid-dungeon](../skills/test-plan-grid-dungeon/SKILL.md) | Consistent GitHub/PR test plans (tables, sign-off, N/A deferrals) |
+
+Mirrored under `griddungeon-game/.cursor/skills/test-plan-grid-dungeon/` for the implementation repo.
+
 ## Architecture mapping
 
 See [architecture-design-principles.mdc](architecture-design-principles.mdc) and [game phase](../../docs/02-systems/game-phase.md#design-goals-mvp1).
