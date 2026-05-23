@@ -49,7 +49,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 2. **`noFlee: true`** — cannot skip the lesson.
 3. **Unbeatable FOE** — tutorial enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); fight does not end on normal damage.
 4. **Phase A** — Synchro locked for first core turns (or until trigger).
-5. **Phase B (mid-fight)** — on trigger (e.g. 2 core turns or first party HP loss): set `s1_synchro_unlocked`, charge **100%**, Navigator prompt; next core turn **must** use **`protocol_strike`**.
+5. **Phase B (mid-fight)** — on trigger (**2 completed core turns** OR **FOE at HP floor**, whichever is first): after that action’s UI beat finishes, play **story scene** `s1_synchro_protocol_unlock` (Navigator-only click-through block — [story events](story-events.md), [ADR 028](../../decisions/028-story-visual-novel-events.md)); on dismiss set `s1_synchro_unlocked`, charge **100%**; next core turn **must** use **`protocol_strike`**.
 6. **End** — on Protocol resolve: scripted FOE retreat, victory, set `s1_synchro_protocol_tutorial_done` + `s1_first_foe_tutorial_complete`.
 
 Random fights before this FOE contact: Synchro **locked**. `CombatEntryContext.tutorialKind = SynchroFirstFoe` in implementation ([combat](combat.md)).

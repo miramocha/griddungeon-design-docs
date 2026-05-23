@@ -8,4 +8,6 @@ Narrative progression, tutorials, and one-time gates — **not** floor grids or 
 | [../dungeons-and-encounters.md](../dungeons-and-encounters.md) | Floor layouts, FOE placement, random tables (authority for grids) |
 | [../mvp1-enemy-roster.md](../mvp1-enemy-roster.md) | Enemy stats, skills, encounter group compositions |
 
-**Post-MVP1:** add `events/` here for tile scripts and story fights when we have more than isolated tutorial beats. Game assets stay on existing types (`StratumFloor`, `EncounterGroup`, save flags) — see [05 — Class design](../../05-class-design-mvp1.md#floors--stratum).
+**Story scenes (VN):** [story-events.md](../../02-systems/story-events.md) · [ADR 028](../../decisions/028-story-visual-novel-events.md) — index under `docs/03-content/story-events/` when authored.
+
+**Post-MVP1:** expand `story-events/` for tile scripts and one-off fights beyond S1 tutorial. Game assets stay on existing types (`StratumFloor`, `EncounterGroup`, save flags) — see [05 — Class design](../../05-class-design-mvp1.md#floors--stratum).

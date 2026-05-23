@@ -66,7 +66,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ⬜ | MVP1 class skill **rules** + Summoner `deploy_test_drone` | [game #52](https://github.com/miramocha/griddungeon-game/issues/52), [#11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | ⬜ | Post-battle **XP + loot** (core party) | [game #31](https://github.com/miramocha/griddungeon-game/issues/31), [progression](02-systems/character-progression.md) |
 | ✅ | Combat HUD skeleton (AGI strip, commands, HP) | [game #34](https://github.com/miramocha/griddungeon-game/issues/34) |
-| ⬜ | Combat HUD reactive + Synchro tutorial presentation | [#35](https://github.com/miramocha/griddungeon-game/issues/35) · epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) |
+| ⬜ | Combat HUD reactive + Synchro tutorial presentation | [#35](https://github.com/miramocha/griddungeon-game/issues/35) · epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) · VN story layer [ADR 028](../decisions/028-story-visual-novel-events.md) |
 | ⬜ | Hub + exploration HUD (party strip, service motion) | [game #36](https://github.com/miramocha/griddungeon-game/issues/36) |
 | ⬜ | S1 intro blockers + FOE patrol/encounters/gather wiring | [game #20](https://github.com/miramocha/griddungeon-game/issues/20), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
 | ⬜ | Synchro **tutorial** — mid-fight unlock, unbeatable FOE, forced `protocol_strike` | [#35](https://github.com/miramocha/griddungeon-game/issues/35), [synchro — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |

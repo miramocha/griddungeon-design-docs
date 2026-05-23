@@ -22,7 +22,7 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 **Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → mouth **stairs up** → hub.
 
-**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **`foe_alley_stalker`** (unbeatable, mid-fight Synchro + forced `protocol_strike`) → B3F boss.
+**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **`foe_alley_stalker`** (unbeatable, mid-fight Synchro + VN briefing + forced `protocol_strike` — [story events](../../02-systems/story-events.md)) → B3F boss.
 
 ---
 

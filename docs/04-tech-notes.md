@@ -97,6 +97,7 @@ GameState (composition root)
 ├── ProtocolSystem       — Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
 ├── CombatController     — AGI queue + command planning + Protocol → EndRound; `ActionStepDelaySeconds` default **0.55s** between resolved actions (0 in tests)
 ├── CodexSystem          — enemy knowledge / weaknesses
+├── StoryEventRunner     — VN scenes; overlay lock ([ADR 028](../decisions/028-story-visual-novel-events.md), [story events](02-systems/story-events.md))
 ├── ContentDatabase      — strata, floors, side dungeons (MVP3), FOE, encounters
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
 ```

@@ -90,6 +90,7 @@ Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1]
 | **Unbeatable** | Tutorial enemies cannot die (HP floor / `tutorialUnbeatable` on encounter group) |
 | **Flee** | `noFlee: true` until tutorial completes |
 | **Victory** | Fight ends after forced `protocol_strike` — FOE scripted retreat, not wipe |
+| **Story** | Mid-fight VN scene `s1_synchro_protocol_unlock` on Phase B trigger — [story events](story-events.md), [ADR 028](../../decisions/028-story-visual-novel-events.md) |
 | **Contact** | Same cell rules as normal FOE; `CombatEntryContext.TutorialKind = SynchroFirstFoe` |
 
 ## Related docs
