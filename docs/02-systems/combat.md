@@ -52,7 +52,7 @@ During **command planning**, each pick writes immediately to `PartyCommandBatch`
 |-------------|-----------|--------|
 | Step back one **mistaken** pick | **Back** (`R` / `Esc`) → remove the **last** queued command; highlight returns to that core; stay in planning | [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
 | Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** Tab / core-cycle during planning |
-| Cancel the **whole** round plan | `Esc` + Confirm dialog or dedicated control | Deferred to optional [#44](https://github.com/miramocha/griddungeon-game/issues/44) settings mode |
+| Cancel the **whole** round plan | Dedicated control + confirm dialog | Deferred to optional [#44](https://github.com/miramocha/griddungeon-game/issues/44) — not `Esc`/`R` (those are **Back** in MVP1) |
 
 **Input:** During planning, `CombatInputHandler` binds `Cancel` (`R` / `Esc`) to `StepBackCommandPlanning` ([input bindings](input-bindings.md)). Same binding backs out of AGI targeting sub-menus during turn phase ([#60](https://github.com/miramocha/griddungeon-game/issues/60) follow-up).
 
@@ -161,7 +161,7 @@ See [combat presentation](combat-presentation.md).
 
 ## Input
 
-PC: combat commands `Z`/`X`/`C`/`V`/`B`, mouse targets, `U` Protocol when Synchro 100% on core turn — [input bindings](input-bindings.md).
+PC: combat commands `Z`/`X`/`C`/`V`/`B`; command-planning **Back** `R`/`Esc` (LIFO, [game #61](https://github.com/miramocha/griddungeon-game/issues/61)); **Protocol** `U`/`Enter` one-shot when Synchro 100%; mouse targets — [input bindings](input-bindings.md).
 
 ## UI requirements
 
@@ -171,7 +171,7 @@ PC: combat commands `Z`/`X`/`C`/`V`/`B`, mouse targets, `U` Protocol when Synchr
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
-- **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling
+- **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **Back** (`R`/`Esc` + command bar) pops last pick (LIFO)
 - **Turn phase:** cores play queued commands on their AGI slot; summons **auto-resolve** in MVP1
 - Target selection with valid highlights — [game #60](https://github.com/miramocha/griddungeon-game/issues/60) (today: `PickDefaultTarget` auto-pick until shipped)
 - Combat log

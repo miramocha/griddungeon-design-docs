@@ -839,6 +839,8 @@ class CombatController : MonoBehaviour
     void SubmitFlee();
 
     event Action<TurnQueue> OnQueueRebuilt;
+    event Action<Combatant?> OnCommandTargetChanged;
+    event Action OnPartyCommandsChanged;           // planning queue / Back — game #61
     event Action<Combatant> OnTurnStart;
     event Action<CombatActionResult> OnActionResolved;
     event Action<BattleResult> OnBattleEnded;
