@@ -51,9 +51,15 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 
 - **Unity 6** + **URP** + **Input System** ([ADR 012](../decisions/012-unity-6-stack.md)); see [04 — Tech notes](04-tech-notes.md)
 
-## Tone & setting (TBD)
+## Tone & setting
 
-Placeholder: settlement at the edge of a **Yggdrasil-like labyrinth** — one entrance, many strata, ecology changes per depth. Replace with setting brief when art exists.
+**One line:** A guild-licensed crew maps a living **undercity** beneath a familiar metropolis — concrete, water, and things that were never meant to stay down there.
+
+**Municipal underworks (MVP1 art direction):** Modern, grounded, **not sci-fi**. Strata read as **infrastructure + neglect** (maintenance tunnels, flood channels, sealed transit) rather than castle fantasy or cyberpunk. FOE and place names stay urban (`alley_stalker`, `gutter_crow`, **Flooded Underpass**). Hub **guild** = city **contract crew**, not medieval order.
+
+**Yggdrasil-like labyrinth** structure stays: one mouth, many strata, ecology shifts per depth ([dungeons](03-content/dungeons-and-encounters.md)).
+
+**UI:** Warm charcoal panels, off-white type, **amber-gold** accents (Synchro / active turn) — schematic map like a **transit or architectural plan**, not neon HUD ([map cell art](02-systems/map-cell-art.md#visual-tone-municipal-underworks)).
 
 ## Success criteria (MVP1)
 

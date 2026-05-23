@@ -115,6 +115,26 @@ Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or at
 
 ---
 
+## Visual tone (municipal underworks)
+
+Locked with [00 — Vision § Tone & setting](../00-vision.md#tone--setting). MVP1 map and HUD use a **warm charcoal + amber-gold** palette — readable schematic (transit / architectural plan), **not** sci-fi neon.
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| Base | `#14161A` | Panels, fog |
+| Surface | `#1E2228` | Cards, map chrome |
+| Ink | `#E8EAED` | Primary labels |
+| Muted | `#9AA3B2` | Hints, secondary |
+| Accent | `#C9A227` | Synchro fill, active turn, stairs down |
+| Copper | `#B87333` | Secondary highlight (optional) |
+| Ally | `#6B9080` | Party on map / roster (utility green-grey) |
+| Threat | `#B85C4A` | FOE (rust, not alarm red) |
+| Stairs up | `#8A9BA8` | Cool utility sign |
+
+Implementation: [MapView.uss](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Exploration/MapView.uss), [CombatHud.uss](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Combat/CombatHud.uss), [HudOverlay.uss](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/HudOverlay.uss).
+
+---
+
 ## USS tint classes (BEM)
 
 Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Exploration/MapView.uss); extend for sprites (background-image per layer or child `VisualElement`s).
@@ -127,8 +147,8 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 | `map-view__cell--wall` | Solid `#` or edge wall cell | Wall / edge tint |
 | `map-view__cell--gate` | *(planned)* | Blocked passage `X` — distinct from `#` |
 | `map-view__cell--alcove` | *(planned)* | 3+ edge fill |
-| `map-view__cell--stairs-up` | `FeatureType.StairsUp` | Cool accent |
-| `map-view__cell--stairs-down` | `FeatureType.StairsDown` | Warm accent |
+| `map-view__cell--stairs-up` | `FeatureType.StairsUp` | Utility cool (`#8A9BA8`) |
+| `map-view__cell--stairs-down` | `FeatureType.StairsDown` | Amber accent (`#C9A227`) |
 | `map-view__cell--door` | *(planned)* | Door overlay base |
 | `map-view__cell--door-closed` | *(planned)* | Default closed |
 | `map-view__cell--door-locked` | *(planned)* | Key-gated |

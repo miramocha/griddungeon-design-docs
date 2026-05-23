@@ -2,8 +2,9 @@
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Floor layouts (ASCII, FOE YAML):** [dungeons — MVP1 §](../dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) — do not duplicate grids here.  
+**Enemy stats / encounter groups:** [mvp1-enemy-roster](../mvp1-enemy-roster.md).  
 **Hub services (Act 2):** [hub — S1 intro](../../02-systems/hub-and-services.md#stratum-1-intro)  
-**Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
+**Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe) · **Rules:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) · **UI:** [game #19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35)
 
 Terminology: **campaign intro** = this doc (Acts 1–3). **Event** (future) = tile scripts / one-off story cells — see [campaign README](README.md).
 

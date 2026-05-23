@@ -251,7 +251,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 - `PartyRuntime` — 6 core, always
 - `CombatController` — spawns aux from skills/scripts; clears on battle end
-- `ResolveSummonTurn()` — run `SummonDefinition.actionScript`; no input ([ADR 016](../decisions/016-summon-control-mvp1.md))
+- Summon AGI turn — `IsWaitingForPlayer` + filtered command panel ([ADR 016](../decisions/016-summon-control-mvp1.md)); **no** auto `SummonScriptRunner` for player summons
 
 ## Performance
 
