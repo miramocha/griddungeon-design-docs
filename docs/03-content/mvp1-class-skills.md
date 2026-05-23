@@ -96,6 +96,8 @@ summon_definition_id: test_drone
 # Occupied aux back: fail cast, no MP spent
 ```
 
+**Deploy vs traps:** Only Summoner has aux deploy skills in MVP1. Future Marksman **floor traps** are a separate exploration system — not aux-slot allies ([party & classes](../02-systems/party-and-classes.md#summon-skills--summoner-only)).
+
 ### Marksman (`marksman`)
 
 | Node | `skill_id` | Role in kit |
@@ -103,8 +105,6 @@ summon_definition_id: test_drone
 | 1 | `marksman_aimed_shot` | Pierce single target |
 | 2 | `marksman_bind_shot` | Control + damage |
 | 3 | `marksman_volley` | AoE ranged |
-
-**Note:** Floor **traps** are a separate system — not aux-slot allies ([party & classes](../02-systems/party-and-classes.md#summon-skills--summoner-only)).
 
 ### Tactician (`tactician`)
 
