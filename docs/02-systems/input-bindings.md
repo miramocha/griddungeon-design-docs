@@ -78,9 +78,22 @@ Only when **Synchro Charge = 100%**, **unlocked** (`s1_synchro_unlocked`), on a 
 | **Select Protocol skill** | `1`–`9` or mouse click | MVP1 dev HUD: `U` strike, `M` mend |
 | **Confirm Protocol** | `Enter` | Resolve; bar → 0% |
 
+### Command planning (round start)
+
+After the turn queue is built and **before** AGI playback ([combat § Command planning](combat.md#command-planning--undo--cancel-gap)). Player assigns one command per **living core** in any order; combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
+
+| Action | Keyboard | Notes |
+|--------|----------|-------|
+| **Attack / Guard / Skill / Item / Flee** | `1`–`5` | Same as AGI turn; writes to `PartyCommandBatch` for highlighted core |
+| **Protocol** | `U` / `Enter` | When Synchro 100% on assigned core |
+| **Cancel queued command** | `Esc` | Clears queued action for **highlighted** core; stays in planning — **not wired** ([#61](https://github.com/miramocha/griddungeon-game/issues/61)) |
+| **Select core to plan** | LMB on roster | Re-select another core to change their command — **not wired** (#58 follow-up) |
+
+**Pause:** Combat `Pause` (`Esc` in map) is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** bound in `CombatInputHandler` yet. Until pause ships, `Esc` during planning should use **`Cancel`** (undo), not pause.
+
 ### AGI turn phase (per actor)
 
-When a **player-controlled** combatant’s turn is active (core or aux; not Navigator).
+When a **player-controlled** combatant’s turn is active (core or aux; not Navigator). **Default flow:** living cores already queued during command planning — this section applies to **summon** control, **targeting** sub-steps, and legacy per-slot mode if [#44](https://github.com/miramocha/griddungeon-game/issues/44) optional confirm is OFF.
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|

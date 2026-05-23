@@ -40,8 +40,23 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
 2. Display queue icons (portraits; aux uses distinct frame).
-3. **Turn phase** — each actor takes one action in AGI order. On a **core** turn, if [Synchro Charge](synchro-protocol.md) is 100% and **unlocked**, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; charge → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions **gain** charge when below 100%. **S1 first FOE:** scripted encounter — enemies **unbeatable**; Synchro unlocks **mid-fight**; forced `protocol_strike` ends the battle ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
-4. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
+3. **Command planning** — before AGI playback, player assigns **one command per living core** (any pick order). Roster highlights the active `CommandTarget`; queued cores show a pending state. When every living core has a command, combat **auto-commits** and enters turn phase ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
+4. **Turn phase** — each actor takes one action in **AGI order** (not assignment order). Living cores execute their **queued** commands on their queue slot. On a **core** turn, if [Synchro Charge](synchro-protocol.md) is 100% and **unlocked**, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; charge → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions **gain** charge when below 100%. **S1 first FOE:** scripted encounter — enemies **unbeatable**; Synchro unlocks **mid-fight**; forced `protocol_strike` ends the battle ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
+5. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
+
+### Command planning — undo / cancel (gap)
+
+During **command planning**, each pick writes immediately to `PartyCommandBatch` (no separate Confirm step in the default flow; optional EO-style confirm is [#44](https://github.com/miramocha/griddungeon-game/issues/44)).
+
+| Player need | MVP1 spec | Status |
+|-------------|-----------|--------|
+| Clear a **mistaken** command for the highlighted core | `Esc` → remove that core’s queued action; stay in planning | **Not implemented** — [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
+| Change a **prior** core’s command | Roster click (or keyboard cycle) to re-select that core, then re-pick | Roster re-select **not wired** (#58 follow-up) |
+| Cancel the **whole** round plan | `Esc` + Confirm dialog or dedicated control | Deferred to optional [#44](https://github.com/miramocha/griddungeon-game/issues/44) settings mode |
+
+**Input:** Combat map defines `Cancel` on `Esc` for sub-menus during AGI targeting ([input bindings](input-bindings.md)); `CombatInputHandler` does **not** subscribe to `Cancel` during command planning today.
+
+**UI:** Command bar stays enabled during planning; no “Undo” control on HUD.
 
 **Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).
 
@@ -156,7 +171,8 @@ PC: combat commands `1`–`5`, mouse targets, `U` Protocol when Synchro 100% on 
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
-- Command phase: one action per **player-controlled** core combatant; summons **auto-resolve** in MVP1
+- **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling
+- **Turn phase:** cores play queued commands on their AGI slot; summons **auto-resolve** in MVP1
 - Target selection with valid highlights — [game #60](https://github.com/miramocha/griddungeon-game/issues/60) (today: `PickDefaultTarget` auto-pick until shipped)
 - Combat log
 - Enemy weakness icons when identified

@@ -829,8 +829,12 @@ class CombatController : MonoBehaviour
     void StartBattle(CombatEntryContext context);
     void EndBattle(BattleResult result);
 
-    // Called by UI command handlers
-    void SubmitPlayerAction(Combatant actor, CombatAction action);
+    // Command planning + UI command handlers
+    bool IsCommandPlanning { get; }
+    Combatant? CommandTarget { get; }
+    void SubmitPlayerAction(CombatAction action);   // queues during CommandPlanning
+    void SelectCommandTarget(Combatant core);
+    void ClearQueuedCommand(Combatant core);        // Esc / undo — game #61
     void SubmitFlee();
 
     event Action<TurnQueue> OnQueueRebuilt;
@@ -839,7 +843,15 @@ class CombatController : MonoBehaviour
     event Action<BattleResult> OnBattleEnded;
 }
 
-enum CombatPhase { Idle, TurnPhase, EndOfRound }
+enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
+
+class PartyCommandBatch   // Core — queued commands keyed by combatant id
+{
+    void Assign(Combatant core, CombatAction action);
+    void Remove(string combatantId);   // undo during CommandPlanning — game #61
+    bool TryGet(string combatantId, out CombatAction action);
+    // AllLivingCoresAssigned, FirstUnassigned, …
+}
 
 // Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
 
