@@ -833,8 +833,9 @@ class CombatController : MonoBehaviour
     bool IsCommandPlanning { get; }
     Combatant? CommandTarget { get; }
     void SubmitPlayerAction(CombatAction action);   // queues during CommandPlanning
-    void SelectCommandTarget(Combatant core);
-    void ClearQueuedCommand(Combatant core);        // Esc / undo — game #61
+    void SelectCommandTarget(Combatant core);       // roster re-select — #58 follow-up
+    bool CanStepBackCommandPlanning { get; }
+    void StepBackCommandPlanning();              // R / Esc — Back (LIFO) — game #61
     void SubmitFlee();
 
     event Action<TurnQueue> OnQueueRebuilt;
@@ -848,7 +849,7 @@ enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
 class PartyCommandBatch   // Core — queued commands keyed by combatant id
 {
     void Assign(Combatant core, CombatAction action);
-    void Remove(string combatantId);   // undo during CommandPlanning — game #61
+    void Remove(string combatantId);   // StepBackCommandPlanning pop — game #61
     bool TryGet(string combatantId, out CombatAction action);
     // AllLivingCoresAssigned, FirstUnassigned, …
 }

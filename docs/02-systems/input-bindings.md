@@ -80,16 +80,16 @@ Only when **Synchro Charge = 100%**, **unlocked** (`s1_synchro_unlocked`), on a 
 
 ### Command planning (round start)
 
-After the turn queue is built and **before** AGI playback ([combat § Command planning](combat.md#command-planning--undo--cancel-gap)). Player assigns one command per **living core** in any order; combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
+After the turn queue is built and **before** AGI playback ([combat § Command planning — back](combat.md#command-planning--back)). Player assigns one command per **living core** in sequence (highlight advances to the next unassigned core after each pick); combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
 | **Attack / Guard / Skill / Item / Flee** | `Z`/`X`/`C`/`V`/`B` | Same as AGI turn; frees `1`–`9` for Protocol / skill sub-menus |
 | **Protocol** | `U` / `Enter` | When Synchro 100% on assigned core |
-| **Cancel queued command** | `R` or `Esc` | Clears queued action for **highlighted** core; stays in planning |
-| **Select core to plan** | LMB on roster | Re-select another core to change their command — **not wired** (#58 follow-up) |
+| **Back** (last queued command) | `R` or `Esc` | Pops the **last** assignment (LIFO); highlight returns to that core; no-op when nothing queued — [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
+| **Select core to plan** | LMB on roster | Re-select another core without stepping back — **not wired** (#58 follow-up); **no** Tab core-cycle during planning |
 
-**Pause:** Combat `Pause` (`Esc` in map) is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** bound in `CombatInputHandler` yet. Until pause ships, `Esc` during planning should use **`Cancel`** (undo), not pause.
+**Pause:** Combat `Pause` (`Esc` in map) is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** bound in `CombatInputHandler` yet. Until pause ships, `R` / `Esc` during planning uses **Back**, not pause.
 
 ### AGI turn phase (per actor)
 
