@@ -86,4 +86,4 @@ When hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/
 - [Combat — Command planning](../docs/02-systems/combat.md#command-planning--back)
 - [ADR 009 — PC input](009-input-bindings-pc.md) (exploration unchanged)
 - [ADR 015 — MVP1 combat](015-mvp1-combat.md)
-- Implementation: [game repo issues](https://github.com/miramocha/griddungeon-game/issues) filed from ADR 026 (menu focus navigation epic)
+- Implementation: [game #67](https://github.com/miramocha/griddungeon-game/issues/67) (epic), [#68](https://github.com/miramocha/griddungeon-game/issues/68) (navigator), [#69](https://github.com/miramocha/griddungeon-game/issues/69) (command bar), [#70](https://github.com/miramocha/griddungeon-game/issues/70) (targeting)
