@@ -46,26 +46,27 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 ### Command planning — back
 
-During **command planning**, each pick writes immediately to `PartyCommandBatch` (no separate Confirm step in the default flow; optional EO-style confirm is [#44](https://github.com/miramocha/griddungeon-game/issues/44)).
+During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) or **LMB** (mouse) and writes to `PartyCommandBatch`. Per-command focus navigation is [ADR 026](../../decisions/026-combat-menu-focus-navigation.md). Optional **round-end** confirm after all cores are assigned is [#44](https://github.com/miramocha/griddungeon-game/issues/44) (separate).
 
 | Player need | MVP1 spec | Status |
 |-------------|-----------|--------|
-| Step back one **mistaken** pick | **Back** (`R` / `Esc`) → remove the **last** queued command; highlight returns to that core; stay in planning | [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
-| Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** Tab / core-cycle during planning |
-| Cancel the **whole** round plan | Dedicated control + confirm dialog | Deferred to optional [#44](https://github.com/miramocha/griddungeon-game/issues/44) — not `Esc`/`R` (those are **Back** in MVP1) |
+| Step back one **mistaken** pick | **`X`** or **Back button** → LIFO remove last queued command; highlight returns to that core | [game #61](https://github.com/miramocha/griddungeon-game/issues/61) — rebind per ADR 026 |
+| Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** roster keyboard |
+| Cancel the **whole** round plan | Dedicated control + confirm dialog | Deferred to [#44](https://github.com/miramocha/griddungeon-game/issues/44) |
 
-**Input:** During planning, `CombatInputHandler` binds `Cancel` (`R` / `Esc`) to `StepBackCommandPlanning` ([input bindings](input-bindings.md)). During a **targeting sub-step**, the same binding **cancels targeting** (no command queued) or pops the last queued command when not targeting ([game #60](https://github.com/miramocha/griddungeon-game/issues/60), [#61](https://github.com/miramocha/griddungeon-game/issues/61)).
+**Input:** Arrows move focus on command bar; **`Z`** confirms command; **`X`** / **Back button** = Back (LIFO or cancel targeting). **`Esc`** = pause when pause UI ships (no-op until then). **`R`** dropped ([input bindings](input-bindings.md), ADR 026).
 
-**UI:** Command bar **Back (R / Esc)** during planning; enabled when at least one command is queued. Roster **queued** styling clears when a command is popped.
+**UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. Global hint: **Z Confirm · X Cancel · Esc Pause**. Roster **queued** styling clears when a command is popped.
 
 ### Command planning — targeting
 
 After **Attack** or a **single-target** skill during command planning ([#60](https://github.com/miramocha/griddungeon-game/issues/60)):
 
 1. Valid enemy (or ally, per `TargetingRule`) slots **highlight** on the roster (`ValidTargetCalculator`).
-2. **LMB** on a valid slot sets `TargetId` on the queued action; planning advances to the next core.
-3. **Esc / Back** cancels the sub-step without queuing a command.
-4. **No valid targets** — command panel shows “No valid targets”; player must pick another command or Back.
+2. **Focus moves to the target list** (Path B, ADR 026); first valid slot highlighted; **arrow keys** move highlight; **`Z`** confirms `TargetId` and advances planning.
+3. **LMB** on a valid slot confirms immediately (no **`Z`**).
+4. **`X`** or **Back button** cancels targeting without queuing.
+5. **No valid targets** — command panel shows “No valid targets”; player must pick another command or Back.
 
 **Stale queued targets ([#65](https://github.com/miramocha/griddungeon-game/issues/65)):** If a queued `TargetId` points at a dead or invalid combatant during planning or before that action resolves, the roster shows **dashed stale styling** and tooltip *“Target down — will retarget”*. At **AGI playback**, `CombatTargeting.ResolveLivingTarget` retargets within the valid set or drops the action per rules.
 
@@ -185,7 +186,7 @@ See [combat presentation](combat-presentation.md).
 
 ## Input
 
-PC: combat commands `Z`/`X`/`C`/`V`/`B`; command-planning **Back** `R`/`Esc` (LIFO, [game #61](https://github.com/miramocha/griddungeon-game/issues/61)); **Protocol** `U`/`Enter` one-shot when Synchro 100%; mouse targets — [input bindings](input-bindings.md).
+PC: combat **menu focus** — arrows, **`Z`** confirm, **`X`** / **Back button** cancel/LIFO ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)); **`Esc`** pause when UI ships; mouse one-click commands and LMB targets — [input bindings](input-bindings.md).
 
 ## UI requirements
 
@@ -195,9 +196,9 @@ PC: combat commands `Z`/`X`/`C`/`V`/`B`; command-planning **Back** `R`/`Esc` (LI
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
-- **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **Back** (`R`/`Esc` + command bar) pops last pick (LIFO)
-- **Turn phase:** cores play queued commands on their AGI slot; summons **auto-resolve** in MVP1
-- **Target selection** during command planning — valid highlights + LMB pick; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
+- **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **focus navigator** on command bar + target list ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md))
+- **Turn phase:** cores play queued commands on their AGI slot; summons use same focus model when player-controlled ([ADR 016](../../decisions/016-summon-control-mvp1.md))
+- **Target selection** during command planning — valid highlights + arrows/`Z` + LMB; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)

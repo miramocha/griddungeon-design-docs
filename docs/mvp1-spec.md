@@ -91,7 +91,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | Unity 6 + URP + Input System + Shader Graph–first |
 | ✅ | `GamePhaseController` + hub / explore / combat phase controllers ([ADR 017](../decisions/017-game-phase-controller.md)) |
 | ✅ | `CombatSimulator` unit tests for damage + AGI order |
-| ✅ | PC default bindings (EO exploration `A/D` strafe + `Q/E` turn; combat `Z`–`B`) | [game #3](https://github.com/miramocha/griddungeon-game/issues/3), [#63](https://github.com/miramocha/griddungeon-game/issues/63), [ADR 009](../decisions/009-input-bindings-pc.md) |
+| ✅ | PC default bindings (exploration `A/D` strafe + `Q/E` turn; combat focus + `Z`/`X` per [ADR 026](../decisions/026-combat-menu-focus-navigation.md)) | [game #3](https://github.com/miramocha/griddungeon-game/issues/3), [#63](https://github.com/miramocha/griddungeon-game/issues/63), [ADR 009](../decisions/009-input-bindings-pc.md) |
+| ⬜ | Combat menu focus navigation (command bar + targeting Path B) | [ADR 026](../decisions/026-combat-menu-focus-navigation.md) — implementation issues in game repo |
 
 ---
 

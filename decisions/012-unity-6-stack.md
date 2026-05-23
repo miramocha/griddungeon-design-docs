@@ -49,3 +49,4 @@ Implementation will live in a **Unity** project. Engine version and render pipel
 - [02 — Input bindings](../docs/02-systems/input-bindings.md)
 - [ADR 008 — Campaign defaults](008-campaign-defaults.md)
 - [ADR 009 — Input bindings PC](009-input-bindings-pc.md)
+- [ADR 026 — Combat menu focus navigation](026-combat-menu-focus-navigation.md)

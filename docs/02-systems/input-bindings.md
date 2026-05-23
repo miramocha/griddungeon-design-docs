@@ -7,7 +7,7 @@ Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action map
 ## Design principles
 
 - **Exploration:** grid actions on keyboard; no mouse movement in FPV.
-- **Combat:** commands on keyboard; **mouse** for target/ally selection.
+- **Combat:** **menu focus** on command bar (+ target list when targeting) — arrows move focus, **`Z`** confirm, **`X`** cancel/Back; **mouse** still one-click queue and LMB targets ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 - **Map:** mouse pan/zoom when map panel focused or fullscreen.
 - **Rebindable** in settings menu (MVP1: ship with defaults below; store overrides in player prefs).
 
@@ -68,55 +68,54 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ## Combat
 
-### Protocol (Synchro 100%)
+**Authority:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md). Global combat UI keys: **arrows** = move focus, **`Z`** = confirm (`Enter` alias), **`X`** = cancel / Back, **`Esc`** = pause (no-op until pause UI ships). **`R`** is not used for Back.
 
-Only when **Synchro Charge = 100%** and **unlocked** (`s1_synchro_unlocked`) ([synchro-protocol](synchro-protocol.md)). Hidden until mid–first-FOE unlock; tutorial phase may **force** Protocol only.
-
-**MVP1 (no skill sub-menu):** one press queues (command planning) or resolves (AGI core turn) — **no** separate confirm step.
-
-| Action | Input | Notes |
-|--------|-------|-------|
-| **Protocol** | `U` or `Enter` | Dev default: `protocol_strike`; bar spent on resolve during AGI playback |
-| **Protocol** (mouse) | Click **Protocol** on command bar | Same as `U` |
-| **Pick skill** | `1`–`9` | **Deferred (#35+)** — no Protocol skill list UI in MVP1 |
-
-### Command planning (round start)
-
-After the turn queue is built and **before** AGI playback ([combat § Command planning — back](combat.md#command-planning--back)). Player assigns one command per **living core** in sequence (highlight advances to the next unassigned core after each pick); combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
+### Command bar (planning + player-controlled turns)
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack / Guard / Skill / Item / Flee** | `Z`/`X`/`C`/`V`/`B` | Same as AGI turn; frees `1`–`9` for Protocol / skill sub-menus |
-| **Protocol** | `U` or `Enter` | One-shot queue for highlighted core (same as command bar click); not a confirm step |
-| **Back** (last queued command) | `R` or `Esc` | Pops the **last** assignment (LIFO); highlight returns to that core; no-op when nothing queued — [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
-| **Back** (mouse) | Click **Back** on command bar | Same as `R` / `Esc` |
-| **Select core to plan** | LMB on roster | Re-select another core without stepping back — **not wired** (#58 follow-up); **no** Tab core-cycle during planning |
-| **Select target** | LMB on highlighted enemy/party slot | After **Attack** or single-target **Skill** during planning — valid slots only ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) |
-| **Cancel targeting** | `R` or `Esc` | Exits targeting sub-step without queuing; if not targeting, **Back** (LIFO) |
-
-**Pause vs Back:** Combat `Pause` is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** wired in `CombatInputHandler` yet. During **command planning**, `R` and `Esc` map to **Back** or **cancel targeting** (not pause).
-
-### AGI turn phase (per actor)
-
-When a **player-controlled** combatant’s turn is active (core or aux; not Navigator). **Default MVP1 flow:** living cores already queued (with targets picked) during command planning — playback runs queued actions on each AGI slot. This section applies to **summon** control and legacy per-slot mode if [#44](https://github.com/miramocha/griddungeon-game/issues/44) optional confirm is OFF.
-
-| Action | Keyboard | Notes |
-|--------|----------|-------|
-| **Attack** | `Z` | Per-slot pick mode only (not default planning flow) |
-| **Guard** | `X` | Self |
-| **Skill** | `C` | Sub-menu or skill bar `1`–`8` |
-| **Item** | `V` | Sub-menu |
-| **Flee** | `B` | Queued in planning; resolves on that core’s AGI turn |
-| **Cycle target** | `Tab` | **Deferred** — mouse pick during planning ([#60](https://github.com/miramocha/griddungeon-game/issues/60) shipped LMB only) |
-| **Confirm action** | `Space` | **Deferred** — optional EO confirm ([#44](https://github.com/miramocha/griddungeon-game/issues/44)) |
-| **Cancel / back** | `R` or `Esc` | Sub-menu back (summon / legacy per-slot) |
+| **Move focus** | Arrow keys | Active scope: command bar or target list (see targeting) |
+| **Confirm** | `Z` or `Enter` | Queue focused command, confirm target, or activate **Back button** |
+| **Cancel / Back** | `X` | Cancel targeting, or LIFO undo last queued command when planning |
+| **Pause** | `Esc` | Any phase when pause menu ships ([ADR 015](../../decisions/015-mvp1-combat.md)); no-op until then |
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
-| **Select target** | LMB on enemy/portrait | **Command planning** targeting ([#60](https://github.com/miramocha/griddungeon-game/issues/60)); pointer enabled in combat |
-| **Select skill** | LMB on skill icon | |
+| **Command** | LMB on bar button | **Instant** queue (no extra `Z`) — keyboard cursor unchanged |
+| **Back button** | LMB | Same as `X` when enabled |
+| **Protocol** | LMB | Instant when visible and ready |
 
-**Sub-menus:** `1`–`8` pick skill/item slot; `Esc` backs out.
+**Command bar items (focus order):** Attack → Guard → Skill → Item → Flee → Protocol (if visible) → **Back button**. Default focus when a core’s planning starts: **Attack**. Skip disabled/hidden entries.
+
+**Planning flow:** One command per living core in **formation order** ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)); auto-advance after each confirm. **No roster keyboard** — use **`X`** / **Back button** to LIFO undo ([game #61](https://github.com/miramocha/griddungeon-game/issues/61)). Roster LMB re-select ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) optional.
+
+### Protocol (Synchro 100%)
+
+On command bar when **Synchro Charge = 100%** and **unlocked** ([synchro-protocol](synchro-protocol.md)). Confirm with **`Z`** (not a separate `U` one-shot). **`1`–`9` skill picker** deferred ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+).
+
+### Command planning — targeting
+
+After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/griddungeon-game/issues/60)):
+
+| Action | Keyboard | Notes |
+|--------|----------|-------|
+| **Move target focus** | Arrow keys | Valid slots only; first valid slot highlighted on enter |
+| **Confirm target** | `Z` or `Enter` | Queue command with `TargetId`; advance to next core |
+| **Cancel targeting** | `X` or **Back button** (+ `Z` on focused Back) | No command queued; return to command bar (default focus Attack) |
+
+**Path B:** entering targeting **moves focus to the target list**; command bar **`Z`** is ignored until targeting ends.
+
+| Action | Mouse | Notes |
+|--------|-------|-------|
+| **Pick target** | LMB on valid slot | Instant confirm |
+
+### AGI turn phase (default MVP1)
+
+Living cores already queued during planning — **no** per-core command bar on AGI slots. **Summon** and legacy per-slot control use the same **focus + `Z` / `X`** model ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md), [ADR 016](../../decisions/016-summon-control-mvp1.md)).
+
+### Round-end confirm (separate)
+
+Optional **confirm all assignments** before AGI playback — [#44](https://github.com/miramocha/griddungeon-game/issues/44); **not** the same as per-command **`Z`** confirm.
 
 ### Combat UI (any time in fight)
 
@@ -124,7 +123,7 @@ When a **player-controlled** combatant’s turn is active (core or aux; not Navi
 |--------|-------|-------|
 | **Toggle combat log** | `L` | Expand/collapse |
 | **Toggle map** | `M` | Read-only floor map |
-| **Pause** | `Esc` | **Turn phase / post-planning only** when pause UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)). During **command planning**, `Esc` is **Back**, not pause. |
+| **Pause** | `Esc` | When pause UI ships — all phases ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) |
 
 ### Cinematic QTE
 
@@ -142,14 +141,14 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Hub & menus
 
-Standard PC UI:
+**Deferred** until hub service UI ships ([#36](https://github.com/miramocha/griddungeon-game/issues/36)). When built, use the same **arrows / `Z` / `X`** pattern as combat ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) hub addendum).
 
-| Action | Input |
-|--------|-------|
-| Navigate | Mouse, `Up`/`Down`, `Enter` |
-| Back | `Esc` or mouse |
-| Assign party / skills | Mouse at **Explorers Guild** |
-| Assign Navigator | Mouse at **Navigator Office** |
+| Action | Input (target) |
+|--------|----------------|
+| Navigate | Mouse, arrows |
+| Confirm | `Z` (`Enter` alias) |
+| Cancel / back | `X` or mouse |
+| Assign party / skills | Mouse at **Explorers Guild** (until guild UI ships) |
 
 No grid movement in hub.
 
@@ -165,11 +164,11 @@ Exploration
   MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
 
 Combat
-  ProtocolMenu, ConfirmProtocol   # MVP1: both fire default Protocol; skill1..9 when picker ships (#35)
-  CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee
-  CycleTarget, Confirm, Cancel
-  QTEPrompt, SkipCinematic
-  ToggleLog, ToggleMap, Pause
+  MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows / Z / X (wire + remap from legacy Cmd*)
+  ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
+  CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
+  CycleTarget                             # deferred; targeting uses MenuNavigate on roster
+  ToggleLog, ToggleMap, Pause             # Esc → Pause when UI ships
 
 Map
   Pan, Zoom, RecenterParty
@@ -205,3 +204,4 @@ Ship PC first. Later: left stick = forward/back strafe optional; right stick dis
 - [ADR 021 — Autopilot MVP2](../../decisions/021-autopilot-mvp2.md)
 - [Autopilot (MVP2)](autopilot.md)
 - [ADR 008 — Campaign defaults](../../decisions/008-campaign-defaults.md)
+- [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md)

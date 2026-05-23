@@ -1,6 +1,6 @@
 # ADR 009 — PC Input Bindings
 
-**Status:** Accepted  
+**Status:** Accepted (combat UI input amended by [ADR 026](026-combat-menu-focus-navigation.md))  
 **Date:** 2026-05-20
 
 ## Context
@@ -17,6 +17,11 @@
 6. **Rebindable** via settings when implemented; defaults in [input-bindings.md](../docs/02-systems/input-bindings.md).
 7. **Gamepad** deferred.
 
+## Amendments (2026-05-23)
+
+Combat **player command UI** (planning, targeting, summon/per-slot control): superseded by [ADR 026 — Combat menu focus navigation](026-combat-menu-focus-navigation.md) (`Z` confirm, `X` cancel/Back, arrows, no direct `Z`/`X`/`C`/`V`/`B` commands, no `R` Back). Exploration, map, and hub deferrals unchanged.
+
 ## Related
 
 - [Input bindings](../docs/02-systems/input-bindings.md)
+- [ADR 026 — Combat menu focus navigation](026-combat-menu-focus-navigation.md)
