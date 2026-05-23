@@ -9,10 +9,10 @@
 
 ## Decision
 
-1. **Keyboard** for grid movement: `W/S/A/D` displace, `Q/E` turn, `Space` interact.
+1. **Keyboard** for grid movement: `W/S` forward/back, `Space` interact. **Trial layout (MVP1 playtest):** `A/D` strafe, `Q/E` turn (EO HD PC default was `Q/E` strafe, `A/D` turn — see [input-bindings.md](../docs/02-systems/input-bindings.md)).
 2. **Mouse** for combat targeting and map pan/zoom; not for FPV movement.
-3. **Protocol** on core turn when Synchro = 100%: `U` + confirm `Enter` ([ADR 020](020-team-burst-naming.md)); `1`/`2` strike/mend while bar full.
-4. **Combat commands** `1`–`5` (attack, guard, skill, item, flee) + `Enter`/`Esc` confirm/cancel.
+3. **Protocol** when Synchro = 100%: **`U` or `Enter`** — one-shot in MVP1 (dev `protocol_strike`; no skill sub-menu confirm). `1`–`9` skill picks deferred until Protocol picker UI ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+).
+4. **Combat commands** `Z`/`X`/`C`/`V`/`B` (attack, guard, skill, item, flee); `Space` confirm targeting, `R`/`Esc` cancel/back; combat pause unbound until ADR 015 UI ships.
 5. **Map** `M` toggle; LMB drag pan; wheel zoom.
 6. **Rebindable** via settings when implemented; defaults in [input-bindings.md](../docs/02-systems/input-bindings.md).
 7. **Gamepad** deferred.

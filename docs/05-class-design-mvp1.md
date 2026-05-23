@@ -675,7 +675,7 @@ class DungeonExplorer : MonoBehaviour
     void TryStepBack();
     void TryStrafeLeft();
     void TryStrafeRight();
-    void TryTurnLeft();      // Q/E — hold repeat after turn lerp; no step events
+    void TryTurnLeft();      // A/D — hold repeat after turn lerp; no step events
     void TryTurnRight();
     void TryInteract();
     void StopMovement();     // kill tweens on combat exit
@@ -833,11 +833,14 @@ class CombatController : MonoBehaviour
     bool IsCommandPlanning { get; }
     Combatant? CommandTarget { get; }
     void SubmitPlayerAction(CombatAction action);   // queues during CommandPlanning
-    void SelectCommandTarget(Combatant core);
-    void ClearQueuedCommand(Combatant core);        // Esc / undo — game #61
+    void SelectCommandTarget(Combatant core);       // roster re-select — #58 follow-up
+    bool CanStepBackCommandPlanning { get; }
+    void StepBackCommandPlanning();              // R / Esc — Back (LIFO) — game #61
     void SubmitFlee();
 
     event Action<TurnQueue> OnQueueRebuilt;
+    event Action<Combatant?> OnCommandTargetChanged;
+    event Action OnPartyCommandsChanged;           // planning queue / Back — game #61
     event Action<Combatant> OnTurnStart;
     event Action<CombatActionResult> OnActionResolved;
     event Action<BattleResult> OnBattleEnded;
@@ -848,7 +851,7 @@ enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
 class PartyCommandBatch   // Core — queued commands keyed by combatant id
 {
     void Assign(Combatant core, CombatAction action);
-    void Remove(string combatantId);   // undo during CommandPlanning — game #61
+    void Remove(string combatantId);   // StepBackCommandPlanning pop — game #61
     bool TryGet(string combatantId, out CombatAction action);
     // AllLivingCoresAssigned, FirstUnassigned, …
 }
@@ -1061,7 +1064,7 @@ class ExplorationInputHandler
 
 class CombatInputHandler
 {
-    void OnCommand(int slot);    // 1–5 → Attack/Guard/Skill/Item/Flee
+    void OnCommand(int slot);    // Z/X/C/V/B → Attack/Guard/Skill/Item/Flee
     void OnProtocolMenu();       // U when Synchro == 100% on core turn
     void OnSelectTarget(string combatantId);
     void OnConfirm(); void OnCancel();

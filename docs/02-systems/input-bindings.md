@@ -21,18 +21,18 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 |--------|----------|-------|
 | **Move forward** | `W` | Displacement |
 | **Move backward** | `S` | Displacement |
-| **Strafe left** | `A` | Displacement |
-| **Strafe right** | `D` | Displacement |
-| **Turn left** | `Q` | No step events |
-| **Turn right** | `E` | No step events |
+| **Strafe left** | `A` | Displacement (trial layout — was EO `Q`) |
+| **Strafe right** | `D` | Displacement (trial layout — was EO `E`) |
+| **Turn left** | `Q` | No step events (trial layout — was EO `A`) |
+| **Turn right** | `E` | No step events (trial layout — was EO `D`) |
 | **Interact** | `Space` | Door, chest, stairs, gather |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
 | **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
 | **Pause** | `Esc` | Pause menu: **Resume** / **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
-**Arrow keys** duplicate `W/A/S/D` + `Q/E` (accessibility).
+**Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 
-**Movement (W/A/S/D and arrow duplicates)** and **turn (Q/E and arrow duplicates)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
+**Movement (`W`/`S`/`A`/`D` and forward/back arrows)** and **turn (`Q`/`E` and left/right arrows)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
 
 - While an explorer **lerp** is playing (durations per [ADR 018](../../decisions/018-exploration-animation-speed.md) preset; Normal: step ~0.28s, turn ~0.26s): **no** new commit of that action type and **no** buffered input.
 - When the lerp **ends**, re-check `IsPressed` on held actions; if a movement key is still held, take **one** displacement (priority over turn); else if a turn key is still held, take **one** 90° turn.
@@ -68,28 +68,31 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ## Combat
 
-### Protocol (core turn, Synchro 100%)
+### Protocol (Synchro 100%)
 
-Only when **Synchro Charge = 100%**, **unlocked** (`s1_synchro_unlocked`), on a **core** combatant’s turn ([synchro-protocol](synchro-protocol.md)). Hidden until mid–first-FOE unlock; tutorial phase may **force** Protocol only.
+Only when **Synchro Charge = 100%** and **unlocked** (`s1_synchro_unlocked`) ([synchro-protocol](synchro-protocol.md)). Hidden until mid–first-FOE unlock; tutorial phase may **force** Protocol only.
+
+**MVP1 (no skill sub-menu):** one press queues (command planning) or resolves (AGI core turn) — **no** separate confirm step.
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Open Protocol menu** | `U` | Lists Navigator Protocol skills |
-| **Select Protocol skill** | `1`–`9` or mouse click | MVP1 dev HUD: `U` strike, `M` mend |
-| **Confirm Protocol** | `Enter` | Resolve; bar → 0% |
+| **Protocol** | `U` or `Enter` | Dev default: `protocol_strike`; bar spent on resolve during AGI playback |
+| **Protocol** (mouse) | Click **Protocol** on command bar | Same as `U` |
+| **Pick skill** | `1`–`9` | **Deferred (#35+)** — no Protocol skill list UI in MVP1 |
 
 ### Command planning (round start)
 
-After the turn queue is built and **before** AGI playback ([combat § Command planning](combat.md#command-planning--undo--cancel-gap)). Player assigns one command per **living core** in any order; combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
+After the turn queue is built and **before** AGI playback ([combat § Command planning — back](combat.md#command-planning--back)). Player assigns one command per **living core** in sequence (highlight advances to the next unassigned core after each pick); combat auto-commits when all living cores are queued ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack / Guard / Skill / Item / Flee** | `1`–`5` | Same as AGI turn; writes to `PartyCommandBatch` for highlighted core |
-| **Protocol** | `U` / `Enter` | When Synchro 100% on assigned core |
-| **Cancel queued command** | `Esc` | Clears queued action for **highlighted** core; stays in planning — **not wired** ([#61](https://github.com/miramocha/griddungeon-game/issues/61)) |
-| **Select core to plan** | LMB on roster | Re-select another core to change their command — **not wired** (#58 follow-up) |
+| **Attack / Guard / Skill / Item / Flee** | `Z`/`X`/`C`/`V`/`B` | Same as AGI turn; frees `1`–`9` for Protocol / skill sub-menus |
+| **Protocol** | `U` or `Enter` | One-shot queue for highlighted core (same as command bar click); not a confirm step |
+| **Back** (last queued command) | `R` or `Esc` | Pops the **last** assignment (LIFO); highlight returns to that core; no-op when nothing queued — [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
+| **Back** (mouse) | Click **Back** on command bar | Same as `R` / `Esc` |
+| **Select core to plan** | LMB on roster | Re-select another core without stepping back — **not wired** (#58 follow-up); **no** Tab core-cycle during planning |
 
-**Pause:** Combat `Pause` (`Esc` in map) is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** bound in `CombatInputHandler` yet. Until pause ships, `Esc` during planning should use **`Cancel`** (undo), not pause.
+**Pause vs Back:** Combat `Pause` is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** wired in `CombatInputHandler` yet. During **command planning**, `R` and `Esc` map to **Back** only (not pause).
 
 ### AGI turn phase (per actor)
 
@@ -97,14 +100,14 @@ When a **player-controlled** combatant’s turn is active (core or aux; not Navi
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack** | `1` | Then mouse pick enemy |
-| **Guard** | `2` | Self |
-| **Skill** | `3` | Sub-menu or skill bar `1`–`8` |
-| **Item** | `4` | Sub-menu |
-| **Flee** | `5` | Confirm dialog optional |
+| **Attack** | `Z` | Then mouse pick enemy |
+| **Guard** | `X` | Self |
+| **Skill** | `C` | Sub-menu or skill bar `1`–`8` |
+| **Item** | `V` | Sub-menu |
+| **Flee** | `B` | Confirm dialog optional |
 | **Cycle target** | `Tab` | Next valid target (keyboard-only path) |
-| **Confirm action** | `Enter` | Execute after target/skill chosen |
-| **Cancel / back** | `Esc` | Clear sub-menu |
+| **Confirm action** | `Space` | Execute after target/skill chosen (EO-style confirm) |
+| **Cancel / back** | `R` or `Esc` | Clear sub-menu |
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
@@ -121,7 +124,7 @@ When a **player-controlled** combatant’s turn is active (core or aux; not Navi
 |--------|-------|-------|
 | **Toggle combat log** | `L` | Expand/collapse |
 | **Toggle map** | `M` | Read-only floor map |
-| **Pause** | `Esc` | Pause menu: Resume / Settings only — no abandon ([ADR 015](../../decisions/015-mvp1-combat.md)) |
+| **Pause** | `Esc` | **Turn phase / post-planning only** when pause UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)). During **command planning**, `Esc` is **Back**, not pause. |
 
 ### Cinematic QTE
 
@@ -162,7 +165,7 @@ Exploration
   MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
 
 Combat
-  ProtocolMenu, ProtocolSkill1..9, ConfirmProtocol
+  ProtocolMenu, ConfirmProtocol   # MVP1: both fire default Protocol; skill1..9 when picker ships (#35)
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee
   CycleTarget, Confirm, Cancel
   QTEPrompt, SkipCinematic
