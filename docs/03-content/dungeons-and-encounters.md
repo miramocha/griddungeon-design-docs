@@ -72,9 +72,9 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 
 | Floor ID | Theme | Spawns | Stairs (mouth / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
-| `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,11)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** (Act 1 & B1F layout) | Act 1: **0**; Act 3: low chaff |
-| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** patrol FOE — **first FOE / Synchro gate** | Bind + poison |
-| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** boss FOE | Mixed |
+| `s1_B1F` | Outskirts gate | Intro `(4,2)` / mouth `(10,11)` | Mouth `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** — `grp_b1_chaff_*` |
+| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** — `foe_alley_stalker` → `grp_alley_stalker_tutorial` | **0.10** — `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
+| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** — `foe_s1_warden` → `grp_s1_warden` | **0.12** — `grp_b3_mix_hounds` / `rubble_pair` / `control` |
 
 **Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp-gate hub entry is out of MVP1 scope.
 
@@ -100,7 +100,7 @@ Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate ti
 
 ### MVP1 enemy & encounter IDs (locked names)
 
-Locked in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-locked): **floors + status** (`bind_head`, `bind_arm`, `poison`). Enemy and group IDs below are **locked for MVP1 content** ([mvp1-spec](../mvp1-spec.md) “8 types + 1 boss”); add rows to the class-design table when enemy SOs land in the game repo.
+**Stats, skills, group slot layouts, FOE mapping:** [mvp1-enemy-roster.md](mvp1-enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-locked).
 
 | Enemy ID | Role | MVP1 status teaching |
 |----------|------|----------------------|
@@ -112,16 +112,16 @@ Locked in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-lock
 | `venom_slime` | DoT | `poison` |
 | `alley_thug` | Mid bruiser | — |
 | `rubble_guard` | FOE escort | — |
-| `s1_warden` | **Stratum boss** | `bind_head`, `poison` (scripted opens) |
+| `s1_warden` | **Stratum boss** | `bind_head`, `poison` (immune; scripted opens in fight) |
 
-**Encounter groups** (referenced by FOE + random tables):
+**Encounter groups** (full compositions in roster doc):
 
-| Group ID | Slots |
-|----------|-------|
-| `grp_alley_stalker` | `alley_thug`, `scrapling` |
-| `grp_alley_stalker_tutorial` | `alley_thug` (tutorialUnbeatable) — first FOE only |
-| `grp_s1_warden` | `s1_warden` (boss; front row) |
-| `grp_b2_bind_poison` | mix entries below |
+| Group ID | Use |
+|----------|-----|
+| `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden` | FOE / boss |
+| `grp_b1_chaff_hound`, `grp_b1_chaff_mite` | B1F random (Act 3) |
+| `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime` | B2F random |
+| `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | B3F random |
 
 ### `s1_B1F` — Outskirts gate (intro + mouth)
 
@@ -323,7 +323,7 @@ Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall 
 - [ ] `s1_B1F.asset` — grid 20×20, intro + mouth spawns, mouth `stairsUp`→hub, tutorial blockers, Act 1/3 flags
 - [ ] `s1_B2F.asset` — patrol path indices match `foe_alley_stalker` YAML
 - [ ] `s1_B3F.asset` — boss `noFlee` on encounter group / fight tag
-- [ ] `EncounterGroup` + `EnemyDefinition` SOs for provisional IDs (game repo)
+- [ ] `EncounterGroup` + `EnemyDefinition` SOs per [mvp1-enemy-roster](mvp1-enemy-roster.md) ([game #12](https://github.com/miramocha/griddungeon-game/issues/12))
 - [ ] Playtest: B1F tutorial ≤ 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1–3 attempts at level 5–8
 - [ ] `foe_alley_stalker`: tutorial unbeatable FOE, mid-fight Synchro unlock, forced `protocol_strike` in-fight, B3F block until `s1_first_foe_tutorial_complete`
 
@@ -407,6 +407,7 @@ Between fights on the same dive **without** hub visit: FOE positions **persist**
 
 ## Related docs
 
+- [MVP1 enemy roster](mvp1-enemy-roster.md) — stats, skills, encounter groups ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2))
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [ADR 003 — FOE step patrol](../../decisions/003-foe-step-patrol.md)
 - [02 — Combat](../02-systems/combat.md)

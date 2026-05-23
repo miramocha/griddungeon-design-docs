@@ -17,7 +17,7 @@ Post-MVP1 skill **`protocol_deploy`** lets the active Navigator join combat in a
 3. **Combatant** — `CombatantKind.Summon` using a per-Navigator `SummonDefinition` (sortie frame / kit in data); tag `source: ProtocolDeploy` and `linkedNavigatorId` for logic/UI.
 4. **Navigator** — stays **off-formation**: executes Protocol, keeps **aura** on core six, **not targetable**, **no AGI turn** on the Navigator entity ([ADR 007](007-navigator-role.md) unchanged).
 5. **Sortie summon** — **targetable**; in AGI queue; row rules same as other aux summons; summon actions **do not** charge Synchro.
-6. **Control** — follows summon pipeline ([ADR 016](016-summon-control-mvp1.md)): MVP1-style **scripted** `actionScript` per sortie; player control TBD with other summons later.
+6. **Control** — follows summon pipeline ([ADR 016](016-summon-control-mvp1.md)): **player-controlled** like other MVP1 summons (minimal kit per sortie `SummonDefinition`).
 7. **While sortie is alive** — **no Protocol** (any skill) until the sortie is gone (dismiss, HP 0, or battle end). After the sortie clears and Synchro reaches **100%** again, the party may invoke **another** Protocol in the same battle ([ADR 006](006-union-team-bar.md) recharge loop).
 8. **Dismiss** — battle end, summon HP → 0 (recall; Navigator not “dead”), duration expiry, or explicit dismiss action on sortie turn (define in skill data).
 9. **UI** — aux slot label **Summon**; portrait/name shows **active Navigator display name** (not a generic “Sortie” label).

@@ -55,4 +55,4 @@ Presentation:
 
 - [Synchro Protocol system](../docs/02-systems/synchro-protocol.md)
 - [Navigator](007-navigator-role.md)
-- [mvp1-spec §4](../docs/mvp1-spec.md#4-mvp1-navigator--synchro-protocol-placeholder-content)
+- [mvp1-spec §4](../docs/mvp1-spec.md#4-mvp1-navigator--synchro-protocol)

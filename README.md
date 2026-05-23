@@ -53,6 +53,8 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Autopilot](docs/02-systems/autopilot.md) | MVP2 | Pathfind to discovered tile on map |
 | [02 — Side dungeons](docs/02-systems/side-dungeons.md) | MVP3 | Hub menu → non-strata grid maps |
 | [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; B1F–B3F MVP1 layouts |
+| [03 — MVP1 enemy roster](docs/03-content/mvp1-enemy-roster.md) | Draft | S1 enemy stats/skills, encounter groups, FOE mapping ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2)) |
+| [03 — MVP1 class skills](docs/03-content/mvp1-class-skills.md) | Locked | 3 skills × 6 classes; deploy + summon script IDs ([#3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
 | [ADR 001 — Grid movement](decisions/001-grid-movement.md) | Accepted | Step lerp, hold-to-repeat, strafe, turn rules |
@@ -71,7 +73,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 013 — Combat scene rendering](decisions/013-combat-scene-rendering.md) | Accepted | Battle arena backdrop; enemies on slots |
 | [ADR 014 — MVP1 exploration & map](decisions/014-mvp1-exploration-map.md) | Accepted | Wall reveal, map input, persist, gather stub |
 | [ADR 015 — MVP1 combat](decisions/015-mvp1-combat.md) | Accepted | Damage, single enemy row, status subset |
-| [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 scripted actions; player control TBD |
+| [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 **player-controlled** summons; minimal per-summon kit |
 | [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
 | [ADR 018 — Exploration animation speed](decisions/018-exploration-animation-speed.md) | Accepted | Slow / Normal / Fast / Very Fast lerp presets |
 | [ADR 021 — Autopilot MVP2](decisions/021-autopilot-mvp2.md) | Accepted | Pathfind on revealed tiles; no path drawing |

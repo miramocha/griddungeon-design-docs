@@ -55,8 +55,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | Fixed camera + Fixed skills only | [combat presentation](02-systems/combat-presentation.md) |
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
 | ✅ | FOE combat patrol **off** (MVP2) | [ADR 005](../decisions/005-foe-combat-patrol.md) deferred |
-| ⬜ | 8 enemy types + 1 boss encounter group | [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
-| ⬜ | One summon — **Summoner-only** `deploy_test_drone` (scripted) | [game #11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |
+| ⬜ | 8 enemy types + 1 boss encounter group | [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) · [mvp1-enemy-roster](03-content/mvp1-enemy-roster.md) · [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
+| ⬜ | One summon — **Summoner-only** `deploy_test_drone` (**player-controlled** drone kit) | [MVP1 class skills](03-content/mvp1-class-skills.md), [game #11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | ⬜ | Post-battle **XP + loot** (core party) | [game #31](https://github.com/miramocha/griddungeon-game/issues/31), [progression](02-systems/character-progression.md) |
 | ⬜ | Production HUD (split from [#19](https://github.com/miramocha/griddungeon-game/issues/19) epic) | [#34](https://github.com/miramocha/griddungeon-game/issues/34) skeleton · [#35](https://github.com/miramocha/griddungeon-game/issues/35) reactive + Synchro tutorial · [#36](https://github.com/miramocha/griddungeon-game/issues/36) hub + explore |
 | ⬜ | **Campaign:** S1 flags, new-game bootstrap, spawn routing | [game #33](https://github.com/miramocha/griddungeon-game/issues/33), [campaign/s1-intro](03-content/campaign/s1-intro.md) |
@@ -72,8 +72,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | 6 classes day one; skill points at hub | [party](02-systems/party-and-classes.md) |
 | ✅ | Stats: HP, MP, STR, TEC, AGI, VIT, LUC | [progression](02-systems/character-progression.md) |
 | ✅ | 1 Navigator + 2 Protocol skills (MVP1 kit) | [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md) |
-| ⬜ | 3 skills per class minimum | [design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
-| ⬜ | Weapon + 3 armor + 1 accessory | [design-docs #4](https://github.com/miramocha/griddungeon-design-docs/issues/4), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
+| ⬜ | 3 skills per class minimum | [MVP1 class skills](03-content/mvp1-class-skills.md) (IDs locked — [design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3)), [game #12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB |
+| ⬜ | Weapon + 3 armor + 1 accessory | [design-docs #4](https://github.com/miramocha/griddungeon-design-docs/issues/4) — [locked table](02-systems/character-progression.md#mvp1-equipment-locked); [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
 
 ### Tech ([ADR 012](../decisions/012-unity-6-stack.md))
 
@@ -96,6 +96,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 
 **Layouts (ASCII + YAML):** [dungeons & encounters — MVP1 §](03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) · [campaign S1 intro](03-content/campaign/s1-intro.md) · [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1) (authoritative).
 
+**Enemies & groups:** [mvp1-enemy-roster](03-content/mvp1-enemy-roster.md) · [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2).
+
 **Floor assets (game):** B1F [done #14](https://github.com/miramocha/griddungeon-game/issues/14) · B2F [#29](https://github.com/miramocha/griddungeon-game/issues/29) · B3F [#30](https://github.com/miramocha/griddungeon-game/issues/30).
 
 **Vertical slice:** [game #15](https://github.com/miramocha/griddungeon-game/issues/15) — end-to-end hub → B3F boss → hub.
@@ -110,6 +112,8 @@ Defer B4F–B5F polish until loop proven.
 |-------|------|
 | **Navigator** | `guild_handler` — unlocked day one; aura: Synchro gain +5% |
 | **Protocol skills** | `protocol_strike` (damage), `protocol_mend` (heal all living core) |
+
+Authority: [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md), [class design — MVP1 IDs](05-class-design-mvp1.md#mvp1-content-ids-locked). S1 tutorial gating: [synchro § S1](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [game #10](https://github.com/miramocha/griddungeon-game/issues/10) · [game #19](https://github.com/miramocha/griddungeon-game/issues/19).
 
 Full Navigator roster unlocks post-MVP1.
 
@@ -132,7 +136,7 @@ Full Navigator roster unlocks post-MVP1.
 | Floor level painter (Editor → `StratumFloor`) | Post-MVP1; MVP1 may hand-author one test floor |
 | Multi-level map layer toggle in HUD | Post-MVP1 |
 | MapProxy + minimap camera (debug 3D preview) | Deferred / optional |
-| Setting name / tone brief | Parallel art |
+| Setting name / tone brief | [00 — Vision § Tone](00-vision.md#tone--setting) (municipal underworks; UI palette in [map cell art](02-systems/map-cell-art.md#visual-tone-municipal-underworks)) |
 
 ---
 

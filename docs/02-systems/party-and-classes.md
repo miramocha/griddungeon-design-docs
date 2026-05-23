@@ -50,7 +50,7 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 | **Marksman traps** | Separate system — not aux slot allies |
 | **Items / bosses** | Rare exceptions; not on core class trees |
 
-**MVP1:** one test skill — `deploy_test_drone` (aux back, 3 turns, scripted actions).
+**MVP1:** one test deploy — `deploy_test_drone` → `test_drone` (aux back, 3 rounds, **player-controlled** Attack/Guard/`volt_burst`). Full six-class kits: [MVP1 class skills](../03-content/mvp1-class-skills.md).
 
 **Party build:** Up to **two** deploys if both aux rows filled and Summoner has the skills.
 
@@ -69,6 +69,8 @@ Coordinated team skills via [Synchro Charge](synchro-protocol.md); **Navigator e
 - Skills cost **levels** in prerequisites; some grant passives.
 - Summon skills target **aux front** or **aux back** per definition.
 - No multiclass in MVP1.
+
+**MVP1 kits:** 3 skills per core class (IDs, targeting, Fixed presentation) — [MVP1 class skills](../03-content/mvp1-class-skills.md).
 
 See [character progression](character-progression.md).
 

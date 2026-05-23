@@ -94,7 +94,7 @@ Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
 | Skill | Summary | ADR |
 |-------|---------|-----|
-| **Protocol Deploy** (`protocol_deploy`) | Sortie **aux summon** in empty slot; scripted turns; Navigator name on portrait | [023](../../decisions/023-protocol-deploy-sortie-summon.md) |
+| **Protocol Deploy** (`protocol_deploy`) | Sortie **aux summon** in empty slot; player-controlled summon kit; Navigator name on portrait | [023](../../decisions/023-protocol-deploy-sortie-summon.md) |
 | **Protocol Transform** (`protocol_transform`) | **Slot-replace** one living core with Navigator **transform profile**; hybrid commands; **Revert** / duration / HP→0 revert safe; label **profile + “via [Core]”** | [024](../../decisions/024-protocol-transform.md) |
 
 Shared: **core** spends AGI turn at Synchro 100%; Navigator **executes** off-formation; **aura on**; **multiple** Protocols per battle when Synchro **recharges** — blocked only while sortie or transform is **active**.
@@ -120,20 +120,28 @@ No recruitment, no skill points, no equipment — unlock + assign only.
 - Aura icons on core portraits (small badge from active Navigator).
 - Protocol use: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Protocol list.
 
-## MVP1 content (placeholder)
+## MVP1 content (locked)
 
-| Navigator | Unlock | Aura (MVP1) |
-|-----------|--------|-------------|
-| **Sortie Lead** (`guild_handler`) | Day one | Synchro gain +5% |
+Matches [mvp1-spec §4](../mvp1-spec.md#4-mvp1-navigator--synchro-protocol) and [class design — MVP1 IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked).
+
+| Navigator | `navigator_id` | Unlock | Aura (MVP1) | Protocol kit |
+|-----------|----------------|--------|-------------|--------------|
+| **Sortie Lead** | `guild_handler` | Day one | +5% Synchro Charge gain (`synchroGainBonus = 0.05`) | `protocol_strike`, `protocol_mend` |
 
 Additional Navigators unlock via strata/quests post-MVP1.
 
 ## MVP1
 
-- [ ] One default Navigator + one aura
-- [ ] Navigator selects Protocol skill when Synchro is 100%
-- [ ] **Navigator Office:** pick active Navigator from **unlocked** pool (starter + 1 stratum unlock)
-- [ ] Not in formation rows or AGI queue
+**Design (locked):**
+
+- [x] One default Navigator (`guild_handler`) + aura documented
+- [x] MVP1 Protocol kit: `protocol_strike`, `protocol_mend`
+- [x] Not in formation rows or AGI queue (off-formation executor)
+
+**Implementation (game — open):**
+
+- [ ] Protocol picker when Synchro is 100% (production HUD — [game #19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35))
+- [ ] **Navigator Office:** pick active Navigator from **unlocked** pool ([game #13](https://github.com/miramocha/griddungeon-game/issues/13); post-MVP1: starter + stratum unlock)
 
 ## Resolved decisions
 

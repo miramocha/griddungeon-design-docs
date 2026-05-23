@@ -2,6 +2,8 @@
 
 Curated titles for **future design and tone checks**. **MVP1 authority** stays **Etrian Odyssey–first** ([00 — Vision](00-vision.md)); entries here inform optional systems, UX, and post-MVP1 ideas — they do not override locked ADRs unless we explicitly amend one.
 
+**Naming:** Reference games inform **mechanics**, not **proper nouns**. Do not lift iconic item/skill/enemy names (e.g. EO `medica`, `amrita`, `nectar`). Use original IDs and display names per [tone brief](00-vision.md#tone--setting) — see Cursor rule `content-original-naming.mdc`.
+
 ---
 
 ## Primary (locked for MVP1)

@@ -19,6 +19,9 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 - **Aux (0–2):** optional [summon or guest](summons-and-guests.md) per row.
 - **Melee** without pierce targets **front row** (core + aux front) before back.
 - **Ranged / spells** — per skill targeting rules.
+- **Row collapse (locked MVP1):** when a front-row enemy dies, survivors **shift forward** (EO-style). Back-row-only remaining enemies become valid **melee** targets without pierce.
+- **AllEnemies** skills hit **occupied enemy slots** only; pierce/back flags per skill ([mvp1-class-skills](../03-content/mvp1-class-skills.md)).
+- **Status inflict:** resolve **damage first**, then roll bind/ailment if target still alive ([mvp1-class-skills § Locked](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
 
 ## Turn structure — AGI order (EO-style)
 
@@ -57,9 +60,9 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 | Unit | MVP1 control |
 |------|----------------|
-| **Summon** | **Scripted** — fixed `actionScript` each turn; no player menu ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Summon** | **Player-controlled** — Attack / Guard + `SummonDefinition.skillIds` ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Guest** | Player commands by default; **NPC guest** = AI script |
-| **Summon (later)** | Player control vs hybrid vs scripted — **decide later** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Summon (later)** | Optional **stance hybrid** (AI from kit) |
 
 ## Commands (enemy)
 

@@ -1,0 +1,41 @@
+---
+description: Original names for content IDs — do not copy reference-game item/skill/enemy names
+globs: docs/**/*.md, decisions/**/*.md
+alwaysApply: false
+---
+
+# Content naming — original, not lifted
+
+Grid Dungeon uses [game references](../docs/00-game-references.md) for **mechanics and UX**, not for **copying proper nouns** from those titles.
+
+## Rule
+
+When authoring **new** content (enemies, skills, items, equipment, encounter groups, Navigator kits):
+
+- **Do not** reuse **recognizable names** from reference games (Etrian Odyssey, Mary Skelter, Wizardry, etc.) for locked `skillId` / `equipId` / `enemyId` / display names.
+- **Do** reuse **genre mechanics** (FOE, AGI, strata, hub inn save, Synchro-style burst) per ADRs and system docs.
+- **Tone:** match [00 — Vision § Tone](../docs/00-vision.md#tone--setting) — municipal underworks / contract crew, not medieval or sci-fi default.
+
+## Allowed vs not
+
+| OK | Avoid (examples) |
+|----|------------------|
+| `patch_kit`, `stim_draft`, `trauma_kit`, `foe_alley_stalker` | `medica`, `amrita`, `nectar`, `union_strike` |
+| `protocol_strike`, `guild_handler` | EO Union skill names, EO Navigator names |
+| Generic combat verbs: Guard, Attack, Flee | — |
+| **FOE** as a system term (documented ADR) | Copying EO enemy *display* names verbatim |
+
+Renames already locked: [ADR 020](../decisions/020-team-burst-naming.md) (Union → Synchro). Consumables: [character progression § Consumables](../docs/02-systems/character-progression.md#consumables-starter).
+
+## When editing existing locked IDs
+
+- **Do not rename** locked IDs in [05-class-design-mvp1.md](../docs/05-class-design-mvp1.md#mvp1-content-ids-locked) without an explicit ticket — saves and game assets depend on them.
+- New rows in content tables (e.g. [mvp1-enemy-roster.md](../docs/03-content/mvp1-enemy-roster.md)) must follow this rule before merge.
+
+## PR / agent self-check
+
+Before proposing new content IDs, ask: *Would an EO player read this name as a direct lift?* If yes, pick an in-world name that fits the tone brief.
+
+## Game repo
+
+Same rule applies when adding `Assets/Content/**` ScriptableObjects — IDs must match design-docs locked tables; display names follow the same originality rule.

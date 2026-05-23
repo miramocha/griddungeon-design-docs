@@ -31,14 +31,14 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Source** | **Summoner class** deploy skills (MVP1+); post-MVP1 **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
-| **Commands (MVP1)** | **Scripted only** — fixed action/skills per turn; **no** player command menu ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
-| **Commands (later)** | **TBD** — full player control vs stance hybrid vs keep scripted |
-| **AGI** | Summon has own AGI; enters turn queue; turn **auto-resolves** in MVP1 |
+| **Commands (MVP1)** | **Player-controlled** — Attack / Guard + summon `skillIds` on summon AGI turn ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Commands (later)** | Optional **stance hybrid** (AI picks from kit) |
+| **AGI** | Summon has own AGI; enters turn queue; **waits for player** like core |
 | **XP** | No XP to summons |
 | **Death** | Disappears; no hospital revive |
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
-**Stacking:** One summon per aux slot. New summon on occupied aux slot replaces old (or skill fails — tune per skill).
+**Stacking:** One summon per aux slot. **`deploy_test_drone`:** if aux back occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
 
 ### Navigator sortie (Protocol Deploy — post-MVP1)
 
@@ -48,40 +48,34 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Spawn** | Empty aux front or back only; fails if slot occupied |
 | **Combatant** | `CombatantKind.Summon` — per-Navigator `SummonDefinition` (sortie kit); `linkedNavigatorId` in data |
 | **Navigator** | Stays **off-formation** — aura on core six, not targetable ([ADR 007](../../decisions/007-navigator-role.md)) |
-| **Sortie** | Targetable; AGI queue; scripted actions per [ADR 016](../../decisions/016-summon-control-mvp1.md) until player summon control lands |
+| **Sortie** | Targetable; AGI queue; **player-controlled** like other summons ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Synchro** | Sortie actions do not charge bar; **no Protocol** while sortie is alive; after sortie ends, Synchro may recharge for another Protocol |
 | **UI** | Aux frame type **Summon**; portrait label = **Navigator display name** |
 | **End** | Battle end, sortie HP 0 (recall), duration, or dismiss action |
 
 Does **not** violate “Navigator fills aux slot” — the **summon** occupies the slot; Navigator identity stays in the off-formation strip ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 
-### MVP1 action script (simple)
+### MVP1 summon kit (`test_drone`)
 
-Each `SummonDefinition` includes a short **`actionScript`** — resolved top to bottom each summon turn (first valid step wins, or by turn index — pick one pattern in data).
-
-**Example — MVP1 test drone (Summoner skill `deploy_test_drone`):**
-
-| Step | Action | Target |
-|------|--------|--------|
-| 1 | `volt_burst` (skill) | Random enemy |
-| 2+ | `attack` | Lowest HP enemy in reach |
+Player picks commands on each drone AGI turn ([ADR 016](../../decisions/016-summon-control-mvp1.md)). Data on `SummonDefinition`:
 
 ```yaml
 summon_id: test_drone
-duration_turns: 3
-action_script:
-  - turn: 1
-    action: skill
-    skill_id: volt_burst
-    target: random_enemy
-  - turn: default
-    action: attack
-    target: lowest_hp_enemy
+duration_rounds: 3
+aux_row: back
+skill_ids: [volt_burst]   # plus implicit Attack / Guard
+# action_script: unused for MVP1 player summons
 ```
 
-**UI on summon turn:** highlight aux portrait → play VFX → combat log line → **presentation lock** releases → next queue entry ([combat UI motion](combat.md#ui-motion--feedback), [tech notes](../04-tech-notes.md#ui-reactivity)).
+| Command | Rule |
+|---------|------|
+| **Attack** | Standard melee/ranged attack action |
+| **Guard** | Self guard |
+| **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([mvp1-class-skills](../03-content/mvp1-class-skills.md#summon-kit-test_drone)) |
 
-**Synchro Charge:** Summon actions do **not** gain Synchro Charge ([synchro-protocol](synchro-protocol.md)).
+**UI on summon turn:** highlight aux portrait in strip + roster; **command panel** active (same path as core); presentation lock per [#35](https://github.com/miramocha/griddungeon-game/issues/35) when shipped.
+
+**Synchro Charge:** Summon actions do **not** gain Synchro Charge ([synchro-protocol](synchro-protocol.md)). **Protocol** not offered on summon turns.
 
 ## Guests
 
@@ -113,7 +107,7 @@ action_script:
 
 | Phase | Scope |
 |-------|--------|
-| **MVP1** | Aux slots + one test summon — **scripted** actions only ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **MVP1** | Aux slots + one test summon — **player-controlled** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **MVP1+** | One scripted **guest** on a quest fight |
 | **Later** | Multiple summon skills, enemy summons, guest roster |
 

@@ -32,6 +32,8 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 ### S1 tutorial gating (first FOE)
 
+**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules / `TutorialCombatKind`) · [game #19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic → [#35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro meter + tutorial prompts)
+
 **Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
 
 | State | Synchro Charge | Gain in combat | Protocol (`U` / core turn) | Hub → labyrinth |
@@ -145,10 +147,16 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 
 ## MVP1
 
+**Design (locked — this doc):**
+
 - [x] Synchro Charge + Protocol on core turn at 100%
-- [x] Default Navigator: **Protocol Strike**, **Protocol Mend** (`protocol_strike`, `protocol_mend`)
+- [x] Default Navigator kit: `protocol_strike`, `protocol_mend` ([Navigator](navigator.md) · [class design § MVP1 IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked))
 - [x] Core actions gain Synchro Charge; Navigator off-formation
-- [ ] S1 gate: unlock Synchro **mid** first FOE; unbeatable FOE; forced `protocol_strike` **in that fight**
+- [x] S1 tutorial gating specified (flags, phases, [campaign S1](../03-content/campaign/s1-intro.md))
+
+**Implementation (game — open):**
+
+- [ ] S1 gate: unlock Synchro **mid** first FOE; unbeatable FOE; forced `protocol_strike` **in that fight** ([#10](https://github.com/miramocha/griddungeon-game/issues/10), UI [#19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35))
 
 ## Not in scope (MVP1)
 
