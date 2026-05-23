@@ -675,7 +675,7 @@ class DungeonExplorer : MonoBehaviour
     void TryStepBack();
     void TryStrafeLeft();
     void TryStrafeRight();
-    void TryTurnLeft();      // Q/E — hold repeat after turn lerp; no step events
+    void TryTurnLeft();      // A/D — hold repeat after turn lerp; no step events
     void TryTurnRight();
     void TryInteract();
     void StopMovement();     // kill tweens on combat exit
@@ -1061,7 +1061,7 @@ class ExplorationInputHandler
 
 class CombatInputHandler
 {
-    void OnCommand(int slot);    // 1–5 → Attack/Guard/Skill/Item/Flee
+    void OnCommand(int slot);    // Z/X/C/V/B → Attack/Guard/Skill/Item/Flee
     void OnProtocolMenu();       // U when Synchro == 100% on core turn
     void OnSelectTarget(string combatantId);
     void OnConfirm(); void OnCancel();

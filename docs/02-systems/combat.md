@@ -161,7 +161,7 @@ See [combat presentation](combat-presentation.md).
 
 ## Input
 
-PC: combat commands `1`–`5`, mouse targets, `U` Protocol when Synchro 100% on core turn — [input bindings](input-bindings.md).
+PC: combat commands `Z`/`X`/`C`/`V`/`B`, mouse targets, `U` Protocol when Synchro 100% on core turn — [input bindings](input-bindings.md).
 
 ## UI requirements
 

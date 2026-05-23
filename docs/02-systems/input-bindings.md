@@ -21,18 +21,18 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 |--------|----------|-------|
 | **Move forward** | `W` | Displacement |
 | **Move backward** | `S` | Displacement |
-| **Strafe left** | `A` | Displacement |
-| **Strafe right** | `D` | Displacement |
-| **Turn left** | `Q` | No step events |
-| **Turn right** | `E` | No step events |
+| **Strafe left** | `Q` | EO HD PC default; displacement |
+| **Strafe right** | `E` | EO HD PC default; displacement |
+| **Turn left** | `A` | No step events |
+| **Turn right** | `D` | No step events |
 | **Interact** | `Space` | Door, chest, stairs, gather |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
 | **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
 | **Pause** | `Esc` | Pause menu: **Resume** / **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
-**Arrow keys** duplicate `W/A/S/D` + `Q/E` (accessibility).
+**Arrow keys** duplicate `W/S` (forward/back) and `A/D` (turn) for accessibility. Strafe (`Q`/`E`) has no arrow duplicate.
 
-**Movement (W/A/S/D and arrow duplicates)** and **turn (Q/E and arrow duplicates)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
+**Movement (`W`/`S`/`Q`/`E` and forward/back arrows)** and **turn (`A`/`D` and left/right arrows)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
 
 - While an explorer **lerp** is playing (durations per [ADR 018](../../decisions/018-exploration-animation-speed.md) preset; Normal: step ~0.28s, turn ~0.26s): **no** new commit of that action type and **no** buffered input.
 - When the lerp **ends**, re-check `IsPressed` on held actions; if a movement key is still held, take **one** displacement (priority over turn); else if a turn key is still held, take **one** 90° turn.
@@ -84,9 +84,9 @@ After the turn queue is built and **before** AGI playback ([combat § Command pl
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack / Guard / Skill / Item / Flee** | `1`–`5` | Same as AGI turn; writes to `PartyCommandBatch` for highlighted core |
+| **Attack / Guard / Skill / Item / Flee** | `Z`/`X`/`C`/`V`/`B` | Same as AGI turn; frees `1`–`9` for Protocol / skill sub-menus |
 | **Protocol** | `U` / `Enter` | When Synchro 100% on assigned core |
-| **Cancel queued command** | `Esc` | Clears queued action for **highlighted** core; stays in planning — **not wired** ([#61](https://github.com/miramocha/griddungeon-game/issues/61)) |
+| **Cancel queued command** | `R` or `Esc` | Clears queued action for **highlighted** core; stays in planning |
 | **Select core to plan** | LMB on roster | Re-select another core to change their command — **not wired** (#58 follow-up) |
 
 **Pause:** Combat `Pause` (`Esc` in map) is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** bound in `CombatInputHandler` yet. Until pause ships, `Esc` during planning should use **`Cancel`** (undo), not pause.
@@ -97,14 +97,14 @@ When a **player-controlled** combatant’s turn is active (core or aux; not Navi
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack** | `1` | Then mouse pick enemy |
-| **Guard** | `2` | Self |
-| **Skill** | `3` | Sub-menu or skill bar `1`–`8` |
-| **Item** | `4` | Sub-menu |
-| **Flee** | `5` | Confirm dialog optional |
+| **Attack** | `Z` | Then mouse pick enemy |
+| **Guard** | `X` | Self |
+| **Skill** | `C` | Sub-menu or skill bar `1`–`8` |
+| **Item** | `V` | Sub-menu |
+| **Flee** | `B` | Confirm dialog optional |
 | **Cycle target** | `Tab` | Next valid target (keyboard-only path) |
-| **Confirm action** | `Enter` | Execute after target/skill chosen |
-| **Cancel / back** | `Esc` | Clear sub-menu |
+| **Confirm action** | `Space` | Execute after target/skill chosen (EO-style confirm) |
+| **Cancel / back** | `R` or `Esc` | Clear sub-menu |
 
 | Action | Mouse | Notes |
 |--------|-------|-------|

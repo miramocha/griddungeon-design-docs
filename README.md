@@ -66,7 +66,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 020 — Team burst naming](decisions/020-team-burst-naming.md) | Accepted | Retire “Union”; use Synchro Protocol |
 | [ADR 007 — Navigator role](decisions/007-navigator-role.md) | Accepted | Off-formation; runs Protocol |
 | [ADR 008 — Campaign defaults](decisions/008-campaign-defaults.md) | Accepted | FOE respawn, unlimited explore, PC |
-| [ADR 009 — Input bindings](decisions/009-input-bindings-pc.md) | Accepted | WASD + QE, combat 1–5, mouse targets |
+| [ADR 009 — Input bindings](decisions/009-input-bindings-pc.md) | Accepted | EO-style WS/QE/AD; combat ZXCVB; mouse targets |
 | [ADR 010 — FOE mid-battle join](decisions/010-chain-foe-battle.md) | Accepted | 1 FOE joins current fight per round (with ADR 005) |
 | [ADR 011 — FOE flee retreat](decisions/011-foe-flee-retreat.md) | Accepted | Flee pushes back 1 cell; disabled at wall |
 | [ADR 012 — Unity 6 stack](decisions/012-unity-6-stack.md) | Accepted | Unity 6, URP, Shader Graph–first |
