@@ -16,7 +16,7 @@ Replace `issue/NN-slug`, `YYYY-MM-DD`, domains, and step text. Delete unused A/B
 
 Optional: **F8** or **GridDungeon → Save → Delete MVP1 save file** when testing campaign/save paths.
 
-**Domain-specific setup:** <!-- e.g. F3 dev roster: dev_hero (14) + dev_hero_b (9) + dev_slime (5) -->
+**Domain-specific setup:** <!-- e.g. F3 dev roster: dev_hero (14) + dev_medic (9, ally heal Skill) + dev_slime (5) -->
 
 ---
 

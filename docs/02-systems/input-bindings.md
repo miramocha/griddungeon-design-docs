@@ -107,7 +107,7 @@ After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
-| **Pick target** | LMB on valid slot | Instant confirm |
+| **Pick target** | LMB on valid slot | Instant confirm ([#60](https://github.com/miramocha/griddungeon-game/issues/60), keyboard [#70](https://github.com/miramocha/griddungeon-game/issues/70)) |
 
 ### AGI turn phase (default MVP1)
 
