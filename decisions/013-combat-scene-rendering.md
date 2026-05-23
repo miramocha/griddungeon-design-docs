@@ -1,7 +1,8 @@
 # ADR 013 — Combat Scene Rendering (Battle Arena vs World Space)
 
 **Status:** Accepted  
-**Date:** 2026-05-20
+**Date:** 2026-05-20  
+**Amended:** 2026-05-23 — arena rig supports up to **6** enemy slot anchors (EO IV+ **3+3** formation; [ADR 015](015-mvp1-combat.md)).
 
 ## Context
 
@@ -20,7 +21,7 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 |-------|----------|
 | **Exploration** | FPV dungeon scene stays loaded; **frozen** (input off, optional dim/blur) |
 | **Transition** | Short blend (~0.3–0.6s): flash or wipe → **Combat scene** overlay or sub-scene |
-| **Combat view** | **Stratum/floor-themed backdrop** (2D art or 3D set piece) + **enemy slot anchors** (up to 5) + party UI (portraits / row strip) |
+| **Combat view** | **Stratum/floor-themed backdrop** (2D art or 3D set piece) + **enemy slot anchors** (up to 6) + party UI (portraits / row strip) |
 | **Enemies** | Rendered at slot transforms — **sprites or 3D models** on the arena, **not** at grid world coordinates |
 | **Return** | On win/flee/wipe → reverse transition → resume FPV at fight anchor cell |
 

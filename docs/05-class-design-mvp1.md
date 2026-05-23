@@ -226,7 +226,7 @@ class EncounterGroup : ScriptableObject
 {
     string groupId;
     EnemySlotConfig[] frontRow;  // ≤3 enemy slots
-    EnemySlotConfig[] backRow;   // ≤2 enemy slots
+    EnemySlotConfig[] backRow;   // ≤3 enemy slots
     BattleBackgroundId background;
     bool tutorialUnbeatable;     // enemies cannot die; HP floor at 1
     bool noFlee;
@@ -399,7 +399,7 @@ class BattleState
 {
     Combatant[] CoreSlots;       // 6
     Combatant?[] AuxSlots;       // 2
-    Combatant[] EnemySlots;      // 5 max, sparse
+    Combatant[] EnemySlots;      // 6 max, sparse
     TurnQueue Queue;
     int Round;
     CombatEntryContext Entry;

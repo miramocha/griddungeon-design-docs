@@ -64,7 +64,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## Encounter groups
 
-`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤2 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([05 — enemies & encounters](../05-class-design-mvp1.md#enemies--encounters)). Slot order = left-to-right in combat UI.
+`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤3 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([05 — enemies & encounters](../05-class-design-mvp1.md#enemies--encounters)). Slot order = left-to-right in combat UI.
 
 ### FOE & boss (authored spawns)
 

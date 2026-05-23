@@ -9,7 +9,7 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 ```
 [ Navigator — off formation; Synchro Protocol + passives only ]
 
-[ Enemies — up to 5 targets, front + back rows (MVP1) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
+[ Enemies — up to 6 targets, front + back rows (**≤3** per row, MVP1) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
 
 [ Core front ×3 ] [ Aux front ×1 ]   summon or guest
 [ Core back  ×3 ] [ Aux back  ×1 ]   summon or guest

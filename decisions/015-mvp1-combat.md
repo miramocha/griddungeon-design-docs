@@ -1,11 +1,12 @@
 # ADR 015 — MVP1 Combat
 
 **Status:** Accepted  
-**Date:** 2026-05-20
+**Date:** 2026-05-20  
+**Amended:** 2026-05-23 — enemy formation aligned to **Etrian Odyssey IV+** (≤3 front + ≤3 back; **6** occupied max). Replaces prior **5** max / **≤2** back cap.
 
 ## Decisions (MVP1)
 
-1. **Enemy layout:** **Front + back rows** (like party) — up to **5** slots total across rows per encounter design; melee targets enemy **front** before back unless pierce.
+1. **Enemy layout:** **Front + back rows** (like party) — up to **6** slots total (**≤3** per row) per encounter design; melee targets enemy **front** before back unless pierce.
 2. **Battle camera:** **Three-quarter** fixed angle on arena rig ([ADR 013](013-combat-scene-rendering.md)).
 3. **Presentation:** All skills **`Fixed`**; cinematic/QTE stubbed ([combat presentation](../docs/02-systems/combat-presentation.md)).
 4. **ADR 005 / mid-battle join:** **Off in MVP1** — FOEs frozen on grid during fights; ships in **MVP2** ([ADR 005](005-foe-combat-patrol.md), [ADR 010](010-chain-foe-battle.md)).

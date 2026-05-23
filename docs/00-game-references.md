@@ -12,6 +12,16 @@ Curated titles for **future design and tone checks**. **MVP1 authority** stays *
 |------|---------------------|
 | ***Etrian Odyssey*** (series) | Auto-map (no player drawing), FOEs, strata/floors, guild party, AGI combat, hub between dives, EO Union-style team burst → [Synchro Protocol](02-systems/synchro-protocol.md) |
 
+### Etrian Odyssey IV+ — enemy formation (locked for MVP1)
+
+From **Etrian Odyssey IV** onward, enemy lines use the same **front + back row** grid as the player party layout (not a single enemy row). Grid Dungeon adopts this cap for MVP1 ([ADR 015](../decisions/015-mvp1-combat.md)).
+
+| | Etrian Odyssey IV+ | Grid Dungeon MVP1 |
+|---|-------------------|-------------------|
+| **Party on field** | Up to **5** members (front/back rows) | **6** core + **0–2** aux; Navigator off-formation |
+| **Enemy formation** | Up to **3** front + **3** back (**6** occupied max) | Same **3+3** cap ([combat scene](02-systems/combat-scene.md#enemy-slots)) |
+| **Arena presentation** | 2D/3D enemy lineup on battle stage | Slot rig `EnemySlot_0..5` on backdrop ([ADR 013](../decisions/013-combat-scene-rendering.md)) |
+
 ---
 
 ## Etrian Odyssey — hub & town loop
