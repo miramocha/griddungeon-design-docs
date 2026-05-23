@@ -73,30 +73,31 @@ Authoring format: **YAML or ScriptableObject** referencing text keys — **TBD**
 | `combat_tutorial_phase` | Advance `TutorialCombatKind` phase (game #10) |
 | `unlock_input_hint` | Show combat HUD callout (may delegate to #35) |
 | `start_combat_rule` | Resume AGI after scene ends |
+| `start_guided_protocol` | HUD highlight + command gate (`protocol_strike`) |
+| `teleport_to_hub` | Script `Combat → Hub` after outro VN |
+| `play_foe_crisis_aoe` | Scripted tutorial enemy action (rules-owned; optional story hook) |
 
 **Rule:** Campaign **truth** stays in `CampaignSaveData` + `CombatController` / resolvers; story events only **invoke** documented APIs.
 
 ### 5. S1 Protocol tutorial — beat mapping (locked)
 
-Aligns with locked [synchro § S1](../docs/02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe):
+Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker). Aligns with [synchro § S1](../docs/02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe).
 
-| Combat phase | Story event id | Purpose |
-|--------------|----------------|---------|
-| **Phase A** (Synchro locked) | — | No story scene in MVP1 |
-| **Phase B trigger** | **`s1_synchro_protocol_unlock`** (required) | Navigator briefing; effects: `s1_synchro_unlocked`, charge 100% |
-| **After scene** | Combat resumes; next core turn **forced** `protocol_strike` (existing rule) |
-| **Post-Protocol** | — | No separate scene in MVP1 (FOE retreat stays mechanical) |
+| Step | Combat / rules | Story / guided UI |
+|------|----------------|-------------------|
+| **A** Opening | Synchro locked; FOE `tutorialUnbeatable` | — |
+| **B** Crisis trigger | **2 core turns** OR **FOE at HP floor** (first) | — |
+| **C** Crisis AOE | FOE scripted attack → **all living core HP = 1** (fake wipe, no KO) | After AOE UI beat |
+| **D** Unlock VN | `s1_synchro_unlocked`, Synchro 100% | **`s1_synchro_protocol_unlock`** |
+| **E** Guided Protocol | Only `protocol_strike` allowed | HUD highlights ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) — [guided-tutorial § combat](../docs/02-systems/guided-tutorial.md#combat-guided-tutorial-s1--protocol) |
+| **F** Finisher | Protocol **kills** FOE; `s1_synchro_protocol_tutorial_done` | — |
+| **G** Hub outro | Script **`Combat → Hub`** | **`s1_tutorial_hub_return`** → `s1_first_foe_tutorial_complete` |
 
-**Phase B trigger (locked):** whichever comes **first**:
+**Not used:** FOE scripted **retreat** after Protocol; player does **not** resume exploration on B2F after this fight.
 
-1. **Two completed core turns** in Phase A, or  
-2. **FOE at HP floor** (1 HP / `tutorialUnbeatable` floor) — anti soft-lock if the player stalls.
+**Scene timing (locked):** each VN starts **after** the preceding combat UI beat (crisis AOE tween, Protocol resolve VFX).
 
-**Scene start (locked):** invoke runner **after** the triggering action’s UI beat finishes (HP tween, log, presentation lock released) — not mid-tween.
-
-Story event is **invoked by** `CombatController` when the trigger fires; runner does not own trigger logic.
-
-**Speakers (locked):** **Navigator only** for MVP1 — avoid scripted lines for customizable core members ([story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party)).
+**Speakers (locked):** **Navigator only** — [story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party).
 
 ### 6. Presentation — phased (locked)
 
@@ -111,7 +112,7 @@ Story event is **invoked by** `CombatController` when the trigger fires; runner 
 | **Background (combat)** | **Arena / battle view stays visible**; combat chrome may **retract** — which panels TBD ([open questions](#open-questions)) |
 | **Advance** | **Z** (combat confirm) **or mouse click** on panel — no separate Story map in MVP1 |
 | **Skip** | **Disabled** for MVP1 tutorial |
-| **Act 1 B1F** | Same runner system when beats ship — not lightweight toasts ([decision](#stakeholder-decisions-2026-05-23)) |
+| **Act 1 B1F** | **Not** story events — [ADR 029](029-guided-tutorial.md) paginated tutorial + codex |
 
 Exploration/hub: use same overlay pattern when content exists; Act 1 + B2F tutorial can land in either order — **implementation order deferred**.
 
@@ -141,7 +142,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | `StoryEventRunner` + click-through view; **`s1_synchro_protocol_unlock`** only; combat pause + Phase B trigger; effects on dismiss; **Z** or click advance |
+| **MVP1** | Runner + click-through view; **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
 | **MVP1 schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
 | **MVP1 content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
 | **Deferred** | Authoring format (YAML vs SO); hub/explore content order; [#35](https://github.com/miramocha/griddungeon-game/issues/35) vs new issue split |
@@ -184,7 +185,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 | Combat backdrop | Arena visible; UI retract **TBD** |
 | Speakers (S1) | Navigator only; no core dialogue (custom party) |
 | Input | **Z** or click |
-| Act 1 movement | Same story system (not toasts) when implemented |
+| Act 1 movement | **Guided tutorial** paginated block + codex ([ADR 029](029-guided-tutorial.md)) — not story VN |
 | #35 split | **Undecided** — document both HUD and story in planning |
 | Branching | Deferred; schema should support flag branches later |
 | VO | None planned yet |
@@ -202,6 +203,7 @@ Resolve UI retract + #35 before **Accepted**.
 
 ## Related
 
+- [ADR 029 — Guided tutorial (HUD coaching)](029-guided-tutorial.md) — orthogonal; `start_guided_protocol` handoff
 - [Story events (system doc)](../docs/02-systems/story-events.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
 - [ADR 027 — Combat cinematic timeline events](027-combat-cinematic-timeline-events.md)

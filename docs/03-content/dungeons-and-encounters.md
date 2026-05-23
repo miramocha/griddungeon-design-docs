@@ -175,7 +175,7 @@ entries:
 - **v** `(10, 17)` — to B2F; blocked in Act 1.
 - **X** — tutorial blockers on shortcuts to `v` and wide loops.
 
-**Act 1 beats:** move from **E** → bump walls on side alcoves → **G** / **C** on route → **^** → hub (sets `s1_intro_movement_complete`).
+**Act 1 beats:** move from **E** → bump walls on side alcoves → **G** / **C** on route → **^** → hub (sets `s1_intro_movement_complete`) — [guided hints](campaign/s1-guided-tutorials.md#act-1--movement-b1f).
 
 **Act 3 beats:** hub party ready → spawn **M** → clear blockers → optional B1F chaff fights → **v** → B2F FOE tutorial ([`s1_B2F`](#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
@@ -207,8 +207,8 @@ encounterTags: [tutorial_synchro, unbeatable]
 synchroUnlockTrigger: after_core_turns_2      # or on_first_party_damage — tune in data
 ```
 
-- **Unbeatable:** encounter enemies cannot die; HP floors at 1 (or damage ignored at 0). Fight ends only after forced **`protocol_strike`** ([synchro § S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
-- **Synchro:** locked at fight start; **unlocks mid-fight** at trigger → bar **100%** → forced Protocol on next core turn → scripted FOE retreat / victory.
+- **Unbeatable:** FOE cannot die until **`protocol_strike`** finisher ([synchro § S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
+- **Crisis:** trigger (2 core turns OR FOE at HP floor) → FOE **scripted AOE** → all living core **HP = 1** → unlock VN → guided Protocol → FOE **kill** → **hub warp** ([story events § S1 flow](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)).
 - **Progression:** path to `s1_B3F` blocked until `s1_first_foe_tutorial_complete`.
 - Prior combats (B1F random): Synchro still locked.
 
@@ -325,7 +325,7 @@ Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall 
 - [ ] `s1_B3F.asset` — boss `noFlee` on encounter group / fight tag
 - [ ] `EncounterGroup` + `EnemyDefinition` SOs per [mvp1-enemy-roster](mvp1-enemy-roster.md) ([game #12](https://github.com/miramocha/griddungeon-game/issues/12))
 - [ ] Playtest: B1F tutorial ≤ 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1–3 attempts at level 5–8
-- [ ] `foe_alley_stalker`: tutorial unbeatable FOE, mid-fight Synchro unlock, forced `protocol_strike` in-fight, B3F block until `s1_first_foe_tutorial_complete`
+- [ ] `foe_alley_stalker`: crisis AOE, VN unlock, guided `protocol_strike`, FOE kill, hub warp — B3F block until `s1_first_foe_tutorial_complete`
 
 ---
 

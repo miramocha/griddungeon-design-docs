@@ -889,7 +889,7 @@ class CombatEntryContext
     string BattleBackgroundId;
     GridPosition FightAnchor;
     FacingDirection PartyFacing;
-    TutorialCombatKind TutorialKind;  // SynchroFirstFoe: mid-fight unlock + forced protocol_strike
+    TutorialCombatKind TutorialKind;  // SynchroFirstFoe: crisis AOE, VN unlock, guided protocol_strike, hub warp
 }
 
 class CombatAction

@@ -71,7 +71,7 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 - [ ] New game: B1F movement tutorial → hub party setup → tutorial dive from B1F mouth
 - [ ] Return to hub via **in-world** paths only (mouth stairs, items, exits/gates, events, defeat) — not pause menu; pause → **quit to title**
 - [ ] After hub return: save, heal, spend **skill point**, re-enter with **map intact**
-- [ ] **Synchro** tutorial: unbeatable first FOE on B2F; mid-fight unlock + forced `protocol_strike`
+- [ ] **Synchro** tutorial: B2F FOE crisis AOE → VN → guided `protocol_strike` → hub warp
 
 ## Related docs
 

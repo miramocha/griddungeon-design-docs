@@ -28,7 +28,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Interact** | `Space` | Door, chest, stairs, gather |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
 | **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
-| **Pause** | `Esc` | Pause menu: **Resume** / **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
+| **Pause** | `Esc` | Pause menu: **Resume**, **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 
@@ -77,7 +77,7 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 | **Move focus** | Arrow keys | Active scope: command bar or target list (see targeting) |
 | **Confirm** | `Z` or `Enter` | Queue focused command, confirm target, or activate **Back button** |
 | **Cancel / Back** | `X` | Cancel targeting, or LIFO undo last queued command when planning |
-| **Pause** | `Esc` | Any phase when pause menu ships ([ADR 015](../../decisions/015-mvp1-combat.md)); no-op until then |
+| **Pause** | `Esc` | Pause menu (incl. **Tutorial codex** when unlocked — [ADR 029](../../decisions/029-guided-tutorial.md)); no-op until UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)) |
 
 | Action | Mouse | Notes |
 |--------|-------|-------|

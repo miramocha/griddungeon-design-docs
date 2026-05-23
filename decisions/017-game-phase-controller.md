@@ -35,7 +35,7 @@ Requirements:
 | Exploration | Combat | FOE contact, random encounter roll |
 | Combat | Exploration | Victory, successful flee |
 | Exploration | Hub | Stairs to surface / retreat item / designer exit |
-| Combat | Hub | Party wipe → load last inn save (after GAME OVER flow) |
+| Combat | Hub | Party wipe → load last inn save (after GAME OVER flow); **S1 tutorial only:** scripted hub warp after `s1_tutorial_hub_return` ([story events](../docs/02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) |
 | Hub | Hub | Invalid — no-op |
 | Combat | Combat | Invalid — no-op |
 

@@ -4,6 +4,7 @@
 **Floor layouts (ASCII, FOE YAML):** [dungeons — MVP1 §](../dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) — do not duplicate grids here.  
 **Enemy stats / encounter groups:** [mvp1-enemy-roster](../mvp1-enemy-roster.md).  
 **Hub services (Act 2):** [hub — S1 intro](../../02-systems/hub-and-services.md#stratum-1-intro)  
+**Guided tutorials (S1):** [s1-guided-tutorials](s1-guided-tutorials.md) · [system](../../02-systems/guided-tutorial.md)  
 **Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe) · **Rules:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) · **UI:** [game #19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35)
 
 Terminology: **campaign intro** = this doc (Acts 1–3). **Event** (future) = tile scripts / one-off story cells — see [campaign README](README.md).
@@ -20,9 +21,9 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster |
 | **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Mouth spawn** `(10, 11)` (`stairsUp`) from hub; blockers **cleared**; mandatory tutorial FOE |
 
-**Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → mouth **stairs up** → hub.
+**Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → mouth **stairs up** → hub ([guided hints](s1-guided-tutorials.md#act-1--movement-b1f)).
 
-**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **`foe_alley_stalker`** (unbeatable, mid-fight Synchro + VN briefing + forced `protocol_strike` — [story events](../../02-systems/story-events.md)) → B3F boss.
+**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **`foe_alley_stalker`** (crisis AOE → VN unlock → guided `protocol_strike` → kill → VN + **warp hub** — [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) → re-enter stratum → B3F boss.
 
 ---
 
@@ -33,9 +34,9 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at mouth |
 | `s1_party_ready` | Act 2: guild party requirement met |
 | `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
-| `s1_synchro_unlocked` | Mid-fight during `foe_alley_stalker` tutorial |
-| `s1_synchro_protocol_tutorial_done` | Forced `protocol_strike` completed in that fight |
-| `s1_first_foe_tutorial_complete` | Tutorial encounter ended; **B3F** unblocked |
+| `s1_synchro_unlocked` | After unlock VN (`s1_synchro_protocol_unlock`), post-crisis AOE |
+| `s1_synchro_protocol_tutorial_done` | `protocol_strike` finisher killed FOE |
+| `s1_first_foe_tutorial_complete` | Hub return VN + scripted warp from B2F tutorial; **B3F** unblocked |
 
 ---
 
@@ -64,6 +65,8 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 
 ## Related
 
+- [s1-guided-tutorials.md](s1-guided-tutorials.md) — Act 1 / hub / combat coach beats
+- [guided-tutorial.md](../../02-systems/guided-tutorial.md) — system (modes, schema, runtime)
 - [mvp1-spec §1](../../mvp1-spec.md#1-player-facing-loop-mvp1) — player-facing loop
 - [01 — Core loop](../../01-core-loop.md)
 - [game-phase](../../02-systems/game-phase.md) — new game bootstrap, `LeaveHub`

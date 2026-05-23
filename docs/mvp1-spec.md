@@ -69,7 +69,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ⬜ | Combat HUD reactive + Synchro tutorial presentation | [#35](https://github.com/miramocha/griddungeon-game/issues/35) · epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) · VN story layer [ADR 028](../decisions/028-story-visual-novel-events.md) |
 | ⬜ | Hub + exploration HUD (party strip, service motion) | [game #36](https://github.com/miramocha/griddungeon-game/issues/36) |
 | ⬜ | S1 intro blockers + FOE patrol/encounters/gather wiring | [game #20](https://github.com/miramocha/griddungeon-game/issues/20), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
-| ⬜ | Synchro **tutorial** — mid-fight unlock, unbeatable FOE, forced `protocol_strike` | [#35](https://github.com/miramocha/griddungeon-game/issues/35), [synchro — S1 gating](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) |
+| ⬜ | S1 **guided tutorials** — Act 1 movement hints; B2F Protocol coach + crisis/VN/hub warp | [guided-tutorial](02-systems/guided-tutorial.md), [s1-guided-tutorials](03-content/campaign/s1-guided-tutorials.md), [#35](https://github.com/miramocha/griddungeon-game/issues/35), [story events § S1 flow](02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker) |
 
 ### Hub & progression
 

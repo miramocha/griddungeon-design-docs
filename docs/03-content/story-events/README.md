@@ -8,9 +8,8 @@ Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/C
 
 | storyEventId | once | Prerequisite | Trigger | Status |
 |--------------|------|--------------|---------|--------|
-| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started`; not `s1_synchro_unlocked` | B2F FOE — Phase B: 2 core turns **or** FOE HP floor (first) | MVP1 click-block — [draft](s1/s1_synchro_protocol_unlock.md) |
-| `s1_foe_stalker_intro` | — | — | — | **Not MVP1** |
-| `s1_foe_stalker_retreat` | — | — | — | **Not MVP1** |
+| `s1_synchro_protocol_unlock` | yes | not `s1_synchro_unlocked` | After crisis AOE UI beat | [draft](s1/s1_synchro_protocol_unlock.md) |
+| `s1_tutorial_hub_return` | yes | `s1_synchro_protocol_tutorial_done` | After Protocol kills FOE | [draft](s1/s1_tutorial_hub_return.md) |
 
 ## Post-MVP1 (placeholders)
 

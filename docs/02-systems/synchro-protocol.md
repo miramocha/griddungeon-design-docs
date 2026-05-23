@@ -40,17 +40,27 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 |-------|----------------|--------------|----------------------------|-----------------|
 | **Before first FOE contact** | Hidden / locked | **No gain** | **Disabled** | **0%** |
 | **First FOE phase A** (start) | Locked | No gain | Disabled | — |
-| **First FOE phase B** (mid unlock) | **100%** | Yes | **Forced** `protocol_strike` only | — |
+| **Crisis → guided Protocol** | **100%** after unlock VN | No gain until unlock | **Guided** `protocol_strike` only | — |
 | **After tutorial complete** | Normal | Normal | Normal | **100%** on hub exit |
 
 **First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([campaign S1](../03-content/campaign/s1-intro.md) · [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
 1. **Act 3 path** — block B3F until `s1_first_foe_tutorial_complete`.
 2. **`noFlee: true`** — cannot skip the lesson.
-3. **Unbeatable FOE** — tutorial enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); fight does not end on normal damage.
-4. **Phase A** — Synchro locked for first core turns (or until trigger).
-5. **Phase B (mid-fight)** — on trigger (**2 completed core turns** OR **FOE at HP floor**, whichever is first): after that action’s UI beat finishes, play **story scene** `s1_synchro_protocol_unlock` (Navigator-only click-through block — [story events](story-events.md), [ADR 028](../../decisions/028-story-visual-novel-events.md)); on dismiss set `s1_synchro_unlocked`, charge **100%**; next core turn **must** use **`protocol_strike`**.
-6. **End** — on Protocol resolve: scripted FOE retreat, victory, set `s1_synchro_protocol_tutorial_done` + `s1_first_foe_tutorial_complete`.
+3. **Unbeatable FOE** — until Protocol resolve, enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); normal damage does not end the fight.
+4. **Scripted beat order (locked)** — full sequence in [story events § S1 tutorial flow](story-events.md#s1-tutorial-flow-foe_alley_stalker); summary:
+
+| Step | What happens |
+|------|----------------|
+| **A — Opening** | Synchro locked; normal tutorial combat (FOE on HP floor if player focuses it). |
+| **B — Crisis trigger** | When **2 completed core turns** OR **FOE at HP floor** (first): scripted **FOE crisis AOE** — party-wide hit reduces **all living core HP to 1** (fake wipe; **no** game over, cores stay up). |
+| **C — Unlock VN** | After crisis UI beat: **`s1_synchro_protocol_unlock`** — Navigator briefing; set `s1_synchro_unlocked`, Synchro **100%**. |
+| **D — Guided Protocol** | [Guided tutorial](guided-tutorial.md#combat-guided-tutorial-s1--protocol) — HUD highlights **Protocol**; player must confirm **`protocol_strike`** (only allowed command). |
+| **E — Protocol finisher** | `protocol_strike` resolves; FOE **dies** (tutorial unbeatable lifted for this hit); set `s1_synchro_protocol_tutorial_done`. |
+| **F — Exit VN + hub** | **`s1_tutorial_hub_return`** — short outro; **scripted warp to hub** (not normal combat → exploration on B2F); set `s1_first_foe_tutorial_complete`. |
+
+5. **Crisis AOE** — authored scripted enemy action (display-only or minimal rules damage); must not KO cores — clamp living core HP to **1**. FOE HP may stay at floor through crisis.
+6. **Hub return** — exceptional `Combat → Hub` transition ([game phase](game-phase.md)); player re-enters stratum from hub when ready (mouth spawn per [S1 intro](../03-content/campaign/s1-intro.md)).
 
 Random fights before this FOE contact: Synchro **locked**. `CombatEntryContext.tutorialKind = SynchroFirstFoe` in implementation ([combat](combat.md)).
 
@@ -156,7 +166,7 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 
 **Implementation (game — open):**
 
-- [ ] S1 gate: unlock Synchro **mid** first FOE; unbeatable FOE; forced `protocol_strike` **in that fight** ([#10](https://github.com/miramocha/griddungeon-game/issues/10), UI [#19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35))
+- [ ] S1 gate: crisis AOE → VN unlock → guided `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#35](https://github.com/miramocha/griddungeon-game/issues/35), [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
 
 ## Not in scope (MVP1)
 

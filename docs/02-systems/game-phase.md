@@ -174,6 +174,8 @@ sequenceDiagram
 
 Combat **never** transitions directly to Hub on flee — only Exploration (FOE remains on map).
 
+**Exception (S1 tutorial):** after `foe_alley_stalker` Protocol finisher, `s1_tutorial_hub_return` scripts **`Combat → Hub`** ([story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker)) — not victory-on-B2F exploration.
+
 ### Return to hub (exploration only)
 
 Hub is reached from exploration only through **events**, **items**, **exits/gates**, **stairs** (mouth), or **defeat** ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7). Exploration pause does **not** offer “return to hub.”

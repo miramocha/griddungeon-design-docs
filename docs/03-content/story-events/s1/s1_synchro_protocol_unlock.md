@@ -1,10 +1,10 @@
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** Copy draft — Navigator only; MVP1 = click-through block (no portrait art).
+**Status:** Copy draft — Navigator only; MVP1 = click-through block.
 
-**Trigger:** Whichever is first — 2 completed core turns in Phase A, or FOE at tutorial HP floor ([synchro § S1](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
+**When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 
-**Start:** After triggering action UI beat completes.
+**Prerequisite:** B2F tutorial FOE; crisis already fired.
 
 **Dismiss:** Z or click per line; **no skip**.
 
@@ -12,24 +12,27 @@
 
 - `set_campaign_flag` → `s1_synchro_unlocked = true`
 - `set_synchro_charge` → `100`
-- `combat_tutorial_phase` → forced `protocol_strike` on next core turn
+- `start_guided_protocol` → `protocol_strike` only
 
 ---
 
-## Script (placeholder — use `textKey` + `textEn` in data)
+## Script (placeholder — `textKey` + `textEn`)
 
 | textKey | textEn (draft) |
 |---------|----------------|
-| `story.s1.synchro_unlock.line_01` | *(optional — FOE reacts via combat UI only, no line)* |
-| `story.s1.synchro_unlock.line_02` | The whole squad’s channel just locked in. That’s **Synchro** — my link to your crew. |
-| `story.s1.synchro_unlock.line_03` | I can run one **Protocol** on your signal. Full bar, one shot. |
-| `story.s1.synchro_unlock.line_04` | On your next turn, open **Protocol** and take **Protocol Strike**. We hit hard, then pull back before it rallies. |
+| `story.s1.synchro_unlock.line_01` | That blast should have ended you. It didn’t — because the channel’s still open. |
+| `story.s1.synchro_unlock.line_02` | That’s **Synchro**. My link to your whole crew. One coordinated shot while the bar is full. |
+| `story.s1.synchro_unlock.line_03` | I’m charging **Protocol Strike**. When your turn comes, open **Protocol** and confirm. |
+| `story.s1.synchro_unlock.line_04` | Hit it once. Hard. We don’t get a second chance at this range. |
 
-Speaker: **`navigator:guild_handler`** for all lines. No core-named dialogue (custom party).
+Speaker: **`navigator:guild_handler`** only.
+
+**Preceding beat (combat, not VN):** FOE crisis AOE — log/VFX only; no FOE dialogue required.
 
 ---
 
 ## Related
 
-- [ADR 028](../../../decisions/028-story-visual-novel-events.md)
-- [Story events](../../02-systems/story-events.md)
+- [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
+- [Guided Protocol coach](../../campaign/s1-guided-tutorials.md#guided-hint--protocol-coach) — HUD after this event
+- [s1_tutorial_hub_return](s1_tutorial_hub_return.md)

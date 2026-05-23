@@ -87,10 +87,12 @@ Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1]
 
 | Rule | Detail |
 |------|--------|
-| **Unbeatable** | Tutorial enemies cannot die (HP floor / `tutorialUnbeatable` on encounter group) |
+| **Unbeatable** | FOE cannot die until Protocol finisher (`tutorialUnbeatable` until step F) |
+| **Crisis** | On trigger (2 core turns OR FOE at HP floor): FOE **scripted AOE** → all living core **HP = 1** (fake wipe, not GAME OVER) |
 | **Flee** | `noFlee: true` until tutorial completes |
-| **Victory** | Fight ends after forced `protocol_strike` — FOE scripted retreat, not wipe |
-| **Story** | Mid-fight VN scene `s1_synchro_protocol_unlock` on Phase B trigger — [story events](story-events.md), [ADR 028](../../decisions/028-story-visual-novel-events.md) |
+| **Victory** | Player **`protocol_strike`** kills FOE; then **hub warp** — not retreat-on-B2F ([story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker)) |
+| **Story** | `s1_synchro_protocol_unlock` (post-crisis), `s1_tutorial_hub_return` (post-kill) — [ADR 028](../../decisions/028-story-visual-novel-events.md) |
+| **Guided HUD** | `s1_combat_guided_protocol` after unlock VN — [guided-tutorial](guided-tutorial.md), [S1 beats](../03-content/campaign/s1-guided-tutorials.md) |
 | **Contact** | Same cell rules as normal FOE; `CombatEntryContext.TutorialKind = SynchroFirstFoe` |
 
 ## Related docs
