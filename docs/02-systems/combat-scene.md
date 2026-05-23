@@ -46,18 +46,28 @@ How encounters **leave exploration FPV** and present **enemies** during AGI comb
 
 Enemies are **not** placed at world `(x, y)` from the grid.
 
+**Two layers — do not conflate:**
+
+| Layer | What it is | MVP1 |
+|-------|------------|------|
+| **Tactical formation** | Front + back rows for targeting, melee, row collapse | **≤3 front + ≤2 back** (5 occupied max) — locked in [combat](combat.md#battle-layout), [ADR 015](../../decisions/015-mvp1-combat.md), `EncounterGroup.frontRow` / `backRow` |
+| **Arena rig** | Backdrop-stage **anchors** where battle sprites/models attach | Up to **5 anchors** on one stage lineup; empty anchors hidden |
+
+Combat UI and rules use **front/back rows** (like the party). The arena is **not** “enemies have only one tactical row” — it is a **fixed stage** with slot transforms instead of dungeon cells. Anchors may use depth offset or a single horizontal line; presentation follows occupied tactical slots.
+
 ```
-        [ Enemy slot 0 ] [ 1 ] [ 2 ] [ 3 ] [ 4 ]   ← front row / single row (content)
+   tactical front (≤3)     [ anchor 0 ] [ 1 ] [ 2 ]
+   tactical back  (≤2)     [ anchor 3 ] [ 4 ]        ← may sit deeper on stage
         ─────────────────────────────────────────
                     backdrop
         ─────────────────────────────────────────
         [ Party UI: 3+3 core + aux + Navigator strip ]
 ```
 
-| Slot | Content |
-|------|---------|
-| `0..4` | Active enemies for encounter group; empty slots hidden |
-| Join mid-fight | Next free slot or authored “join slot”; slide-in animation ([chain FOE](chain-foe-battle.md)) |
+| Anchor / slot | Content |
+|---------------|---------|
+| `0..4` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/mvp1-enemy-roster.md)) |
+| Join mid-fight | Next free **tactical** slot (front first, else back); slide-in on matching anchor ([chain FOE](chain-foe-battle.md)) |
 
 **Enemy render mode** (per enemy definition, same slot rig):
 
@@ -136,13 +146,12 @@ Deferred unless a future **“immersive combat”** experiment flag is approved.
 ## Content authoring
 
 ```yaml
-# StratumFloor or EncounterGroup
+# EncounterGroup (authoring — tactical rows, not grid cells)
 battle_background: forest_clearing
-enemy_slots:
+front_row:
   - enemy_id: forest_wolf
-    slot: 0
   - enemy_id: forest_wolf
-    slot: 2
+back_row: []   # optional second row; CombatScenePresenter maps rows → arena anchors
 
 # FoeDefinition
 foe_id: red_raptor
