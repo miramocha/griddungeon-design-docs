@@ -180,6 +180,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - `PartyRuntime.ActiveNavigatorId`; `UnlockedNavigatorIds` (flags from strata/quests/events)
 - `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
 - Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
+- **Explore:** bottom-right **3D presence** in exploration + combat; Protocol Deploy/Transform transition model into aux / core slot rigs — [navigator § Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence) (MVP1 still portrait strip)
 
 ## Synchro Protocol (team bar)
 
@@ -264,6 +265,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping — [mapping § Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
+- [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions — [navigator § Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence)
 - [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
 - [ ] **Floor level painter** → `StratumFloor` export (primary map authoring; MVP1 may hand-fill one test floor)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)

@@ -83,7 +83,7 @@ Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([co
 
 - **Primary:** UI portraits + HP/MP/status (readable AGI play).
 - **Optional:** Low-poly 3D party silhouettes on near plane or omitted in MVP1.
-- Navigator: strip only — not in slot row ([navigator](navigator.md)).
+- **Navigator:** MVP1 portrait strip off formation ([navigator](navigator.md)). **Explore:** bottom-right 3D model; Protocol Deploy/Transform may transition that model into aux / core slot rigs — [navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence).
 
 ---
 

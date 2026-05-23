@@ -7,7 +7,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | Service | Function |
 |---------|----------|
 | **Explorers Guild** | Create/recruit **core** characters; register **6-member** party; allocate **skill points**; view class skill trees |
-| **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit ([navigator](navigator.md)) |
+| **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit — **2D portrait roster** in UI ([navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)); **not** the labyrinth bottom-right 3D rig ([navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
 | **Inn / Camp desk** | Save game (**primary save point** — MVP1 has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
@@ -28,7 +28,7 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
 | Shop buy / sell | Gold + stock row **pulse**; inventory slot update | Yes |
 | Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
-| Navigator Office pick active | Portrait **glow**; aura preview **fade in** | Yes |
+| Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
 | Leave hub → stratum | Transition **fade** (pairs with phase change) | Yes — until exploration phase ready |
 | Menu item **focus** (hover / scroll) | Background camera **pans** to service building ([§ below](#hub-environment-presentation)) — **post-MVP1** | No — navigation stays live |
 

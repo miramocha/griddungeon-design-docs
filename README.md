@@ -115,6 +115,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 - MVP1 **structure** locked — [mvp1-spec](docs/mvp1-spec.md), [ADR 014](decisions/014-mvp1-exploration-map.md), [ADR 015](decisions/015-mvp1-combat.md)
 - **Map during combat** — show persistent schematic for incoming FOE threat vs `M` toggle only? [mapping § Consider / explore](docs/02-systems/mapping.md#consider--explore--map-during-combat) (ties to [ADR 005](decisions/005-foe-combat-patrol.md))
+- **Navigator 3D presence** — bottom-right model in exploration + combat; Protocol Deploy → aux slot, Transform → core slot transition — [navigator § Consider / explore](docs/02-systems/navigator.md#consider--explore--navigator-3d-presence)
 - Remaining work: **content** (floors, enemies, skills), **tuning numbers**, MVP2 features
 
 ## Naming
