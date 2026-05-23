@@ -50,14 +50,14 @@ Enemies are **not** placed at world `(x, y)` from the grid.
 
 | Layer | What it is | MVP1 |
 |-------|------------|------|
-| **Tactical formation** | Front + back rows for targeting, melee, row collapse | **≤3 front + ≤2 back** (5 occupied max) — locked in [combat](combat.md#battle-layout), [ADR 015](../../decisions/015-mvp1-combat.md), `EncounterGroup.frontRow` / `backRow` |
-| **Arena rig** | Backdrop-stage **anchors** where battle sprites/models attach | Up to **5 anchors** on one stage lineup; empty anchors hidden |
+| **Tactical formation** | Front + back rows for targeting, melee, row collapse | **≤3 front + ≤3 back** (6 occupied max) — locked in [combat](combat.md#battle-layout), [ADR 015](../../decisions/015-mvp1-combat.md), `EncounterGroup.frontRow` / `backRow` |
+| **Arena rig** | Backdrop-stage **anchors** where battle sprites/models attach | Up to **6 anchors** on one stage lineup; empty anchors hidden |
 
 Combat UI and rules use **front/back rows** (like the party). The arena is **not** “enemies have only one tactical row” — it is a **fixed stage** with slot transforms instead of dungeon cells. Anchors may use depth offset or a single horizontal line; presentation follows occupied tactical slots.
 
 ```
    tactical front (≤3)     [ anchor 0 ] [ 1 ] [ 2 ]
-   tactical back  (≤2)     [ anchor 3 ] [ 4 ]        ← may sit deeper on stage
+   tactical back  (≤3)     [ anchor 3 ] [ 4 ] [ 5 ]        ← may sit deeper on stage
         ─────────────────────────────────────────
                     backdrop
         ─────────────────────────────────────────
@@ -66,7 +66,7 @@ Combat UI and rules use **front/back rows** (like the party). The arena is **not
 
 | Anchor / slot | Content |
 |---------------|---------|
-| `0..4` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/mvp1-enemy-roster.md)) |
+| `0..5` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/mvp1-enemy-roster.md)) |
 | Join mid-fight | Next free **tactical** slot (front first, else back); slide-in on matching anchor ([chain FOE](chain-foe-battle.md)) |
 
 **Enemy render mode** (per enemy definition, same slot rig):
@@ -171,7 +171,7 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 - `CombatEntryContext` → `ResolveBackground()`, `SpawnEncounter(EncounterGroup)`
 - `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
 - Additive scene `CombatArena` or enabled root under `GameRoot`
-- MVP1: one biome backdrop + sprite enemies on 5 slots
+- MVP1: one biome backdrop + sprite enemies on 6 slots
 
 ---
 

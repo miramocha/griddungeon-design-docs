@@ -194,7 +194,7 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Combat scene
 
-- `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..4` ([ADR 013](../decisions/013-combat-scene-rendering.md))
+- `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..5` ([ADR 013](../decisions/013-combat-scene-rendering.md))
 - Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
 - Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) — separate assets per id
 
