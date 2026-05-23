@@ -95,7 +95,7 @@ GameState (composition root)
 ├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
 ├── NavigatorRuntime     — active navigator, aura application, roster
 ├── ProtocolSystem       — Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
-├── CombatController     — AGI queue + Protocol command → EndRound
+├── CombatController     — AGI queue + command planning + Protocol → EndRound; `ActionStepDelaySeconds` default **0.55s** between resolved actions (0 in tests)
 ├── CodexSystem          — enemy knowledge / weaknesses
 ├── ContentDatabase      — strata, floors, side dungeons (MVP3), FOE, encounters
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
@@ -196,7 +196,8 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 - `CombatHud.uxml` — enemy panel uses **two rows** (`enemy-roster-front`, `enemy-roster-back`), each `flex-direction: row`, up to **3** cards; empty `EnemySlots[]` indices omitted ([combat § Enemy roster UI](02-systems/combat.md#enemy-roster-ui-formation-rows)).
 - `CombatRosterView.BindEnemyFormation` — maps `EnemySlots[0..2]` → front container, `[3..5]` → back; party roster stays single `party-roster-slots` strip.
-- AGI `turn-order-strip` — flat list; do not split enemies into front/back in the strip.
+- AGI `turn-order-strip` — flat list; do not split enemies into front/back in the strip; wider plates + USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
+- Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
 
 ## Combat scene
 

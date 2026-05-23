@@ -91,32 +91,32 @@ After the turn queue is built and **before** AGI playback ([combat § Command pl
 | **Back** (last queued command) | `R` or `Esc` | Pops the **last** assignment (LIFO); highlight returns to that core; no-op when nothing queued — [game #61](https://github.com/miramocha/griddungeon-game/issues/61) |
 | **Back** (mouse) | Click **Back** on command bar | Same as `R` / `Esc` |
 | **Select core to plan** | LMB on roster | Re-select another core without stepping back — **not wired** (#58 follow-up); **no** Tab core-cycle during planning |
+| **Select target** | LMB on highlighted enemy/party slot | After **Attack** or single-target **Skill** during planning — valid slots only ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) |
+| **Cancel targeting** | `R` or `Esc` | Exits targeting sub-step without queuing; if not targeting, **Back** (LIFO) |
 
-**Pause vs Back:** Combat `Pause` is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** wired in `CombatInputHandler` yet. During **command planning**, `R` and `Esc` map to **Back** only (not pause).
+**Pause vs Back:** Combat `Pause` is reserved for pause menu ([ADR 015](../../decisions/015-mvp1-combat.md)) and is **not** wired in `CombatInputHandler` yet. During **command planning**, `R` and `Esc` map to **Back** or **cancel targeting** (not pause).
 
 ### AGI turn phase (per actor)
 
-When a **player-controlled** combatant’s turn is active (core or aux; not Navigator). **Default flow:** living cores already queued during command planning — this section applies to **summon** control, **targeting** sub-steps, and legacy per-slot mode if [#44](https://github.com/miramocha/griddungeon-game/issues/44) optional confirm is OFF.
+When a **player-controlled** combatant’s turn is active (core or aux; not Navigator). **Default MVP1 flow:** living cores already queued (with targets picked) during command planning — playback runs queued actions on each AGI slot. This section applies to **summon** control and legacy per-slot mode if [#44](https://github.com/miramocha/griddungeon-game/issues/44) optional confirm is OFF.
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Attack** | `Z` | Then mouse pick enemy |
+| **Attack** | `Z` | Per-slot pick mode only (not default planning flow) |
 | **Guard** | `X` | Self |
 | **Skill** | `C` | Sub-menu or skill bar `1`–`8` |
 | **Item** | `V` | Sub-menu |
-| **Flee** | `B` | Confirm dialog optional |
-| **Cycle target** | `Tab` | Next valid target (keyboard-only path) |
-| **Confirm action** | `Space` | Execute after target/skill chosen (EO-style confirm) |
-| **Cancel / back** | `R` or `Esc` | Clear sub-menu |
+| **Flee** | `B` | Queued in planning; resolves on that core’s AGI turn |
+| **Cycle target** | `Tab` | **Deferred** — mouse pick during planning ([#60](https://github.com/miramocha/griddungeon-game/issues/60) shipped LMB only) |
+| **Confirm action** | `Space` | **Deferred** — optional EO confirm ([#44](https://github.com/miramocha/griddungeon-game/issues/44)) |
+| **Cancel / back** | `R` or `Esc` | Sub-menu back (summon / legacy per-slot) |
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
-| **Select target** | LMB on enemy/portrait | Valid slots highlighted |
+| **Select target** | LMB on enemy/portrait | **Command planning** targeting ([#60](https://github.com/miramocha/griddungeon-game/issues/60)); pointer enabled in combat |
 | **Select skill** | LMB on skill icon | |
 
 **Sub-menus:** `1`–`8` pick skill/item slot; `Esc` backs out.
-
-**Implementation:** Targeting mode + mouse pick not wired yet — Attack resolves via `PickDefaultTarget` until [game #60](https://github.com/miramocha/griddungeon-game/issues/60). `Tab` / `Enter` confirm paths ship with #60.
 
 ### Combat UI (any time in fight)
 

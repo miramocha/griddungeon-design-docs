@@ -41,7 +41,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 1. Build **turn queue**: all living **core + aux + enemies** sorted by **AGI**.
 2. Display queue icons (portraits; aux uses distinct frame).
 3. **Command planning** — before AGI playback, player assigns **one command per living core** in sequence (highlight auto-advances to the next unassigned core after each pick). Roster highlights the active `CommandTarget`; queued cores show a pending state. **Back** (`R` / `Esc`) pops the last queued command and returns highlight to that core ([#61](https://github.com/miramocha/griddungeon-game/issues/61)). When every living core has a command, combat **auto-commits** and enters turn phase ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)).
-4. **Turn phase** — each actor takes one action in **AGI order** (not assignment order). Living cores execute their **queued** commands on their queue slot. On a **core** turn, if [Synchro Charge](synchro-protocol.md) is 100% and **unlocked**, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; charge → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions **gain** charge when below 100%. **S1 first FOE:** scripted encounter — enemies **unbeatable**; Synchro unlocks **mid-fight**; forced `protocol_strike` ends the battle ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
+4. **Turn phase** — each actor takes one action in **AGI order** (not assignment order). Living cores execute their **queued** commands on their queue slot. **Dead combatants** in the pre-built queue are **skipped** immediately at turn start (no action, no step delay) until a living actor is current or the round ends ([#66](https://github.com/miramocha/griddungeon-game/pull/66)). Between resolved actions, `CombatController` waits **0.55s** by default (`ActionStepDelaySeconds`; **0** in Edit Mode tests) so HP/target UI can be read. On a **core** turn, if [Synchro Charge](synchro-protocol.md) is 100% and **unlocked**, player may use **Protocol** instead of attack/guard/skill; **[Navigator](navigator.md)** executes; charge → 0% ([ADR 006](../../decisions/006-union-team-bar.md), [ADR 007](../../decisions/007-navigator-role.md)). Other actions **gain** charge when below 100%. **S1 first FOE:** scripted encounter — enemies **unbeatable**; Synchro unlocks **mid-fight**; forced `protocol_strike` ends the battle ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 5. **End of combat round** — status ticks, summon duration −1; optional FOE patrol tick ([ADR 005](../../decisions/005-foe-combat-patrol.md)); check wipe/victory; rebuild queue if fight continues.
 
 ### Command planning — back
@@ -54,9 +54,22 @@ During **command planning**, each pick writes immediately to `PartyCommandBatch`
 | Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** Tab / core-cycle during planning |
 | Cancel the **whole** round plan | Dedicated control + confirm dialog | Deferred to optional [#44](https://github.com/miramocha/griddungeon-game/issues/44) — not `Esc`/`R` (those are **Back** in MVP1) |
 
-**Input:** During planning, `CombatInputHandler` binds `Cancel` (`R` / `Esc`) to `StepBackCommandPlanning` ([input bindings](input-bindings.md)). Same binding backs out of AGI targeting sub-menus during turn phase ([#60](https://github.com/miramocha/griddungeon-game/issues/60) follow-up).
+**Input:** During planning, `CombatInputHandler` binds `Cancel` (`R` / `Esc`) to `StepBackCommandPlanning` ([input bindings](input-bindings.md)). During a **targeting sub-step**, the same binding **cancels targeting** (no command queued) or pops the last queued command when not targeting ([game #60](https://github.com/miramocha/griddungeon-game/issues/60), [#61](https://github.com/miramocha/griddungeon-game/issues/61)).
 
 **UI:** Command bar **Back (R / Esc)** during planning; enabled when at least one command is queued. Roster **queued** styling clears when a command is popped.
+
+### Command planning — targeting
+
+After **Attack** or a **single-target** skill during command planning ([#60](https://github.com/miramocha/griddungeon-game/issues/60)):
+
+1. Valid enemy (or ally, per `TargetingRule`) slots **highlight** on the roster (`ValidTargetCalculator`).
+2. **LMB** on a valid slot sets `TargetId` on the queued action; planning advances to the next core.
+3. **Esc / Back** cancels the sub-step without queuing a command.
+4. **No valid targets** — command panel shows “No valid targets”; player must pick another command or Back.
+
+**Stale queued targets ([#65](https://github.com/miramocha/griddungeon-game/issues/65)):** If a queued `TargetId` points at a dead or invalid combatant during planning or before that action resolves, the roster shows **dashed stale styling** and tooltip *“Target down — will retarget”*. At **AGI playback**, `CombatTargeting.ResolveLivingTarget` retargets within the valid set or drops the action per rules.
+
+**Living-target resolution:** Queued `TargetId` is resolved at AGI playback (including enemy `SingleEnemy` vs party rows). `CanTargetBack` on the skill gates back-row picks ([game #56](https://github.com/miramocha/griddungeon-game/issues/56) — full row-collapse rules still open).
 
 **Speed Boost** / **Slow** modify effective AGI when building the queue ([combat-status-and-buffs](combat-status-and-buffs.md#stat-buffs--debuffs)).
 
@@ -68,7 +81,7 @@ During **command planning**, each pick writes immediately to `PartyCommandBatch`
 | Guard | Damage reduction until next turn |
 | Skill | Class skill; may **place summon** in aux slot |
 | Item | Usable consumables |
-| Flee | May fail; see [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) for retreat cell rule |
+| Flee | Queued in command planning like other commands; **resolves on that core’s AGI turn** (not instant). Success roll via `FleeCalculator` (see [§ Flee success](#flee-success-mvp1)); may fail (wasted turn). Retreat cell rule: [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) |
 | Protocol | **Navigator executes**; Synchro 100%; uses the acting **core** member’s AGI turn (`CombatCommand.Protocol` + skill id) |
 
 ## Commands (summon / guest)
@@ -112,6 +125,17 @@ roll on-hit status inflicts
 | Heals | `skillPower + TEC * 0.4`, no hit roll |
 
 Full rules: **[combat status & buffs](combat-status-and-buffs.md)**.
+
+### Flee success (MVP1)
+
+Resolved on the **acting core’s AGI turn** when `CombatCommand.Flee` was queued during planning ([game #66](https://github.com/miramocha/griddungeon-game/pull/66)).
+
+```
+successPercent = clamp( (1.5 − enemyAvgAgi / partyAvgAgi) × 100, 5, 95 )
+roll ≤ successPercent → flee succeeds (subject to BattleState.FleeEnabled / retreat cell)
+```
+
+`FleeCalculator` in Core; dev **F4** / phase HUD may still call instant `SubmitFlee` for QA.
 
 ## Status, buffs & debuffs (summary)
 
@@ -173,7 +197,7 @@ PC: combat commands `Z`/`X`/`C`/`V`/`B`; command-planning **Back** `R`/`Esc` (LI
 - Aux label: Summon / Guest
 - **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **Back** (`R`/`Esc` + command bar) pops last pick (LIFO)
 - **Turn phase:** cores play queued commands on their AGI slot; summons **auto-resolve** in MVP1
-- Target selection with valid highlights — [game #60](https://github.com/miramocha/griddungeon-game/issues/60) (today: `PickDefaultTarget` auto-pick until shipped)
+- **Target selection** during command planning — valid highlights + LMB pick; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
@@ -193,6 +217,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Synchro Charge change | Meter fill **lerps**; at 100% brief **glow** before Protocol use | Yes — Protocol command on core turn |
 | Protocol use | Navigator + participating cores **highlight** ([synchro-protocol](synchro-protocol.md)) | Yes — same core turn continues after resolve |
 | Valid targeting | Enemy/portrait **outline pulse** on valid slots ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) | No — selection is interactive; pulse loops until pick |
+| Stale queued target | Dashed roster frame + tooltip *Target down — will retarget* ([#65](https://github.com/miramocha/griddungeon-game/issues/65)) | No — informational during planning / playback |
 | Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
 | FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
 | Combat log line | Newest entry **fade/slide in**; scroll to bottom | Bundled with the beat above (same lock) |
@@ -206,7 +231,7 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 | Included | Excluded |
 |----------|----------|
 | Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Protocol only; separate portrait) |
-| | Dead / KO combatants (removed when queue rebuilds) |
+| | Dead / KO at **queue rebuild** (round start/end); mid-round deaths **skip** turn without rebuild |
 
 **Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design-mvp1.md#view-controllers)).
 
@@ -217,7 +242,8 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 - **Party vs enemy:** distinct frame or background tint; aux uses summon/guest frame ([summons & guests](summons-and-guests.md)).
 - **Enemies:** portrait or silhouette + row hint (front/back); weakness icons stay on enemy row UI, not required on every queue icon.
 - **Status:** control ailments (Sleep, etc.) show on the queue icon; skipped turns grey the slot ([status UI](combat-status-and-buffs.md#ui)).
-- **Rebuild:** full strip refresh when the queue is rebuilt (start of round, after deaths, end of round). Mid-round inserts (e.g. FOE join MVP2) update on the **next** round ([chain FOE](chain-foe-battle.md#ui--presentation)).
+- **Rebuild:** full strip refresh when the queue is rebuilt (start of round, end of round). Mid-round deaths: strip may still show the slot until rebuild; turn advances via **skip dead** ([§ Round flow](#round-flow)). Mid-round inserts (e.g. FOE join MVP2) update on the **next** round ([chain FOE](chain-foe-battle.md#ui--presentation)).
+- **Strip width / names:** wider plates; full names via USS ellipsis (no C# truncation) ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - **Cinematics:** strip stays on screen, dimmed; never fully hidden ([combat presentation](combat-presentation.md#ui-during-cinematic)).
 
 **Not in MVP1 UI:** speed buff/debuff reordering ([ADR 015](../../decisions/015-mvp1-combat.md)); strip order still reflects AGI at build time once those statuses ship.

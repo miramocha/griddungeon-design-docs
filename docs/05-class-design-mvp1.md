@@ -479,6 +479,26 @@ static class StatusSystem
     static bool IsBlocked(Combatant actor, SkillData skill);
 }
 
+static class ValidTargetCalculator
+{
+    static IReadOnlyList<Combatant> GetValidTargets(
+        BattleState state, TargetingRule rule, bool actorTargetsEnemies);
+    // Front-row preference for melee; CanTargetBack / Pierce per skill — [#56](https://github.com/miramocha/griddungeon-game/issues/56) row-collapse follow-up
+}
+
+static class CombatTargeting
+{
+    static bool RequiresPlayerTarget(CombatAction action, IReadOnlyDictionary<string, SkillData> skills);
+    static Combatant? ResolveLivingTarget(BattleState state, CombatAction action, ...);
+    static bool IsQueuedTargetStale(BattleState state, CombatAction action, ...);
+}
+
+static class FleeCalculator
+{
+    static float ComputeSuccessPercent(BattleState state);  // clamp 5..95
+    static bool RollSuccess(BattleState state, Func<float> rollPercent);
+}
+
 static class RetreatCellCalculator
 {
     static GridPosition GetRetreatCell(GridPosition partyCell, FacingDirection facing);
@@ -1159,14 +1179,8 @@ class CommandPanelView : MonoBehaviour
     event Action<CombatAction> OnActionSelected;
 }
 
-// Player pick for Attack / single-target skills — [game #60](https://github.com/miramocha/griddungeon-game/issues/60).
-// May fold into CombatHudView + CombatRosterView if a separate type is not needed.
-class TargetSelectorView : MonoBehaviour
-{
-    void ShowTargets(IReadOnlyList<Combatant> valid);
-    void Hide();
-    event Action<string> OnTargetSelected;
-}
+// Player pick for Attack / single-target skills — shipped in CombatHudView + CombatRosterView ([#60](https://github.com/miramocha/griddungeon-game/issues/60)).
+// Optional dedicated TargetSelectorView not used in MVP1; highlights + LMB on roster slots.
 
 class SynchroBarView : MonoBehaviour
 {
@@ -1234,7 +1248,8 @@ Assets/
 │   ├── Core/                     GridDungeon.Core.asmdef
 │   │   ├── Models/               Combatant.cs, BattleState.cs, FoeInstance.cs, FloorMapState.cs, ...
 │   │   ├── Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
-│   │   ├── Simulators/           DamageCalculator.cs, RetreatCellCalculator.cs, TurnQueueBuilder.cs, ...
+│   │   ├── Simulators/           DamageCalculator.cs, ValidTargetCalculator.cs, CombatTargeting.cs,
+│   │   │                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs, TurnQueueBuilder.cs, ...
 │   │   ├── SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...
 │   │   └── Enums/                GamePhase.cs, CombatantKind.cs, ...
 │   ├── Runtime/                  GridDungeon.Runtime.asmdef
