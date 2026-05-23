@@ -21,11 +21,15 @@ If **none** of the above apply (docs-only repo), skip this rule and commit per t
 1. Gather commit scope: `git status`, `git diff` (staged and unstaged).
 2. If the commit includes **no** `.cs` changes (docs, assets, config only), skip review and commit.
 3. If `.cs` is in scope, **format first** per `pre-commit-csharpier-format.mdc` (CSharpier extension / CLI on changed paths).
-4. **Run a code review** before `git add` / `git commit`:
-   - Follow the **code-review-unity** agent skill.
-   - Read changed `.cs` files and related callers/asmdefs/UXML when behavior spans files.
-   - Enforce applicable `.cursor/rules/` gates for touched paths.
-5. **Report findings** to the user grouped by severity (Blocker / Should fix / Nit).
+4. **Independent review** before `git add` / `git commit` — do **not** self-review in this thread:
+   - Gather `git diff` / `git diff --staged` and list changed `.cs` paths (plus related UXML/asmdef if behavior spans assemblies).
+   - Launch the **fresh-reviewer** subagent (Task tool, `readonly: true`) with a prompt containing **only**:
+     - Changed file paths
+     - Paste or summary of the diff (if small)
+     - Applicable `.cursor/rules/` paths for touched areas
+   - Do **not** pass implementation rationale, prior fix attempts, or chat history into the subagent prompt.
+   - Apply **code-review-unity** standards via the subagent; parent fixes **Blockers** (or gets explicit user approval) before committing.
+5. **Report** the subagent's findings to the user grouped by severity (Blocker / Should fix / Nit).
 6. **Blockers** — fix or get explicit user approval to proceed.
 7. Only then create the commit (never skip hooks; never commit secrets).
 

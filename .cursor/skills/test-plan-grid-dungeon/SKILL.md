@@ -43,8 +43,9 @@ Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game r
 2. Pick a preset from [template.md](template.md) (full skeleton) or [examples.md](examples.md).
 3. Fill **Setup**, **Automated** (Test Runner tree paths), **Manual** sections (A/B…), **Regressions**, **Spec/ADRs**.
 4. If a local file is needed, write only to `.cursor/local/test-plans/…` (game repo).
-5. Post via `gh issue comment` or edit existing test-plan comment (`gh api` PATCH).
-6. After user feedback: update sign-off date, check boxes, add **Notes** for N/A/deferred.
+5. **Before close-out** on implementation tickets: in **griddungeon-game**, run **fresh-reviewer** (see [game `.cursor/agents/fresh-reviewer.md`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/agents/fresh-reviewer.md)) with diff + issue AC only; fix Blockers before posting the plan.
+6. Post via `gh issue comment` or edit existing test-plan comment (`gh api` PATCH).
+7. After user feedback: update sign-off date, check boxes, add **Notes** for N/A/deferred.
 
 ## Defaults (unless the ticket overrides)
 
