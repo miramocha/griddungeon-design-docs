@@ -829,8 +829,12 @@ class CombatController : MonoBehaviour
     void StartBattle(CombatEntryContext context);
     void EndBattle(BattleResult result);
 
-    // Called by UI command handlers
-    void SubmitPlayerAction(Combatant actor, CombatAction action);
+    // Command planning + UI command handlers
+    bool IsCommandPlanning { get; }
+    Combatant? CommandTarget { get; }
+    void SubmitPlayerAction(CombatAction action);   // queues during CommandPlanning
+    void SelectCommandTarget(Combatant core);
+    void ClearQueuedCommand(Combatant core);        // Esc / undo — game #61
     void SubmitFlee();
 
     event Action<TurnQueue> OnQueueRebuilt;
@@ -839,7 +843,15 @@ class CombatController : MonoBehaviour
     event Action<BattleResult> OnBattleEnded;
 }
 
-enum CombatPhase { Idle, TurnPhase, EndOfRound }
+enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
+
+class PartyCommandBatch   // Core — queued commands keyed by combatant id
+{
+    void Assign(Combatant core, CombatAction action);
+    void Remove(string combatantId);   // undo during CommandPlanning — game #61
+    bool TryGet(string combatantId, out CombatAction action);
+    // AllLivingCoresAssigned, FirstUnassigned, …
+}
 
 // Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
 
@@ -1144,6 +1156,8 @@ class CommandPanelView : MonoBehaviour
     event Action<CombatAction> OnActionSelected;
 }
 
+// Player pick for Attack / single-target skills — [game #60](https://github.com/miramocha/griddungeon-game/issues/60).
+// May fold into CombatHudView + CombatRosterView if a separate type is not needed.
 class TargetSelectorView : MonoBehaviour
 {
     void ShowTargets(IReadOnlyList<Combatant> valid);
@@ -1170,10 +1184,14 @@ class CombatLogView : MonoBehaviour
 
 class EnemySlotsView : MonoBehaviour
 {
-    void SpawnEnemySlot(int slot, EnemyDefinition def);
-    void MarkDead(int slot);
-    void ShowStatusIcons(int slot, IReadOnlyList<StatusInstance> statuses);
+    // Arena rig: 6 anchors (EnemySlot_0..5); optional back-row depth offset on 3..5
+    Transform[] m_anchors;   // length BattleFormation.MaxEnemySlots (6)
+    void SpawnEnemySlot(int slotIndex, EnemyDefinition def);  // slotIndex 0..5
+    void MarkDead(int slotIndex);
+    void ShowStatusIcons(int slotIndex, IReadOnlyList<StatusInstance> statuses);
 }
+
+// CombatScenePresenter (arena rig) — GetEnemySlotAnchor(slotIndex) for spawn + VFX; MVP1 HUD uses CombatRosterView two-row bind
 ```
 
 ---
