@@ -4,6 +4,8 @@ MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visua
 
 **Implementation today (glyphs):** `MapView` uses one `Label` per cell with Unicode fallback glyphs and USS tint classes ([game `MapView.cs`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/Views/MapView.cs)). **Target:** composite **sprites** (floor + edge segments + overlays) with the same priority rules — no 16-tile wall autotile PNG set.
 
+**Inspiration (other games):** [Refs — Map UI](../refs/map-ui.md) — screenshot board; locked art rules stay in this doc.
+
 ---
 
 ## Cell model (runtime)

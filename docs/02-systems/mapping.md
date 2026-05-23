@@ -112,6 +112,7 @@ Runtime draw priority today (`MapView`): party → fog → solid `#` → reveale
 
 ## Related docs
 
+- [Refs — Map UI (other games)](../refs/map-ui.md) — inspiration screenshots (not spec authority)
 - [Map cell art](map-cell-art.md) — sprites, tints, ASCII vs runtime table
 - [Map reveal save format](map-reveal-save-format.md) — packing visited cells and wall bitmasks for `SaveGame`
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)

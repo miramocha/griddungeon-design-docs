@@ -13,6 +13,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Content** — strata, floors, monsters, FOE placement
 - **Tech** — Unity 6 / URP implementation constraints
 - **Decisions** — ADRs when we lock a design choice
+- **Refs** — visual / UX scratchpads (screenshots, links; not spec authority)
 - **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
 
 ## Release milestones
@@ -34,6 +35,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |
+| [Refs — Map UI](docs/refs/map-ui.md) | Scratchpad | Other games’ map UI screenshots (inspiration) |
 | [02 — Hub & services](docs/02-systems/hub-and-services.md) | Draft | Explorers Guild, Navigator Office, shop, hospital, save |
 | [02 — Combat](docs/02-systems/combat.md) | Draft | AGI turn order, rows |
 | [02 — Combat status & buffs](docs/02-systems/combat-status-and-buffs.md) | Draft | Ailments, binds, Boost/Down, ticks |
