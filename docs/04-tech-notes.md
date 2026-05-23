@@ -192,9 +192,16 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - Save: `synchroBar` + `activeNavigatorId` per dive
 - FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter
 
+## Combat HUD (UI Toolkit)
+
+- `CombatHud.uxml` — enemy panel uses **two rows** (`enemy-roster-front`, `enemy-roster-back`), each `flex-direction: row`, up to **3** cards; empty `EnemySlots[]` indices omitted ([combat § Enemy roster UI](02-systems/combat.md#enemy-roster-ui-formation-rows)).
+- `CombatRosterView.BindEnemyFormation` — maps `EnemySlots[0..2]` → front container, `[3..5]` → back; party roster stays single `party-roster-slots` strip.
+- AGI `turn-order-strip` — flat list; do not split enemies into front/back in the strip.
+
 ## Combat scene
 
 - `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..5` ([ADR 013](../decisions/013-combat-scene-rendering.md))
+- `CombatScenePresenter.GetEnemySlotAnchor(int slotIndex)` — `slotIndex` `0..5` matches UI + `Combatant.SlotIndex`
 - Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
 - Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) — separate assets per id
 

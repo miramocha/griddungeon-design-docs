@@ -100,6 +100,8 @@ When a **player-controlled** combatant’s turn is active (core or aux; not Navi
 
 **Sub-menus:** `1`–`8` pick skill/item slot; `Esc` backs out.
 
+**Implementation:** Targeting mode + mouse pick not wired yet — Attack resolves via `PickDefaultTarget` until [game #60](https://github.com/miramocha/griddungeon-game/issues/60). `Tab` / `Enter` confirm paths ship with #60.
+
 ### Combat UI (any time in fight)
 
 | Action | Input | Notes |

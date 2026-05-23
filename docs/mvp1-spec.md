@@ -54,6 +54,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ✅ | Enemy front + back rows (6 slots max, **3+3**) | [ADR 015](../decisions/015-mvp1-combat.md) |
 | ✅ | Fixed camera + Fixed skills only | [combat presentation](02-systems/combat-presentation.md) |
 | ✅ | Damage + status MVP1 subset | [combat](02-systems/combat.md), [status](02-systems/combat-status-and-buffs.md) |
+| ⬜ | Player **target selection** (mouse + valid highlights) | [combat](02-systems/combat.md#ui-requirements) · [game #60](https://github.com/miramocha/griddungeon-game/issues/60) · depends [#55](https://github.com/miramocha/griddungeon-game/issues/55) · rules [#56](https://github.com/miramocha/griddungeon-game/issues/56) |
 | ✅ | FOE combat patrol **off** (MVP2) | [ADR 005](../decisions/005-foe-combat-patrol.md) deferred |
 | ⬜ | 8 enemy types + 1 boss encounter group | [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) · [mvp1-enemy-roster](03-content/mvp1-enemy-roster.md) · [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
 | ⬜ | One summon — **Summoner-only** `deploy_test_drone` (**player-controlled** drone kit) | [MVP1 class skills](03-content/mvp1-class-skills.md), [game #11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |

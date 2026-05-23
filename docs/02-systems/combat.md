@@ -157,7 +157,7 @@ PC: combat commands `1`–`5`, mouse targets, `U` Protocol when Synchro 100% on 
 - **4+4 row layout** — six core portraits + two aux slots (empty aux hidden or dimmed)
 - Aux label: Summon / Guest
 - Command phase: one action per **player-controlled** core combatant; summons **auto-resolve** in MVP1
-- Target selection with valid highlights
+- Target selection with valid highlights — [game #60](https://github.com/miramocha/griddungeon-game/issues/60) (today: `PickDefaultTarget` auto-pick until shipped)
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
@@ -176,7 +176,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Death / KO | Portrait **grey + scale down** or slide out; strip slot removed on rebuild with short fade | Yes |
 | Synchro Charge change | Meter fill **lerps**; at 100% brief **glow** before Protocol use | Yes — Protocol command on core turn |
 | Protocol use | Navigator + participating cores **highlight** ([synchro-protocol](synchro-protocol.md)) | Yes — same core turn continues after resolve |
-| Valid targeting | Enemy/portrait **outline pulse** on valid slots | No — selection is interactive; pulse loops until pick |
+| Valid targeting | Enemy/portrait **outline pulse** on valid slots ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) | No — selection is interactive; pulse loops until pick |
 | Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
 | FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
 | Combat log line | Newest entry **fade/slide in**; scroll to bottom | Bundled with the beat above (same lock) |
@@ -207,6 +207,27 @@ Combat must show a **horizontal strip** (left → right = soonest → latest) li
 **Not in MVP1 UI:** speed buff/debuff reordering ([ADR 015](../../decisions/015-mvp1-combat.md)); strip order still reflects AGI at build time once those statuses ship.
 
 **Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](../mvp1-spec.md) AGI queue UI.
+
+### Enemy roster UI (formation rows)
+
+Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — not a single flat wrap list. The AGI turn-order strip stays a **flat** queue (no row grouping).
+
+| UI area | Layout | Data |
+|---------|--------|------|
+| **Front row** | Up to **3** portrait cards, left → right | `BattleState.EnemySlots[0..2]` — occupied slots only (empty indices hidden) |
+| **Back row** | Up to **3** portrait cards, left → right | `BattleState.EnemySlots[3..5]` — occupied slots only |
+| **Row label** | Small heading per row (`Front` / `Back`) | Mirrors party row affordance; optional subtle row tint on cards |
+
+**Slot index map** (shared by UI, arena rig, and VFX):
+
+| Tactical row | Slot indices | Arena anchor |
+|--------------|--------------|--------------|
+| Front | `0`, `1`, `2` | `EnemySlot_0` … `EnemySlot_2` |
+| Back | `3`, `4`, `5` | `EnemySlot_3` … `EnemySlot_5` |
+
+Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards with a visual gap or left-aligned pair per HUD style ([04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit)).
+
+**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster remains one row per core formation (6 + aux later).
 
 ## Related docs
 

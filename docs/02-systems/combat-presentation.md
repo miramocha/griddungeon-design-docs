@@ -156,6 +156,19 @@ Timeline markers (`QTE_Open`, `QTE_Close`) can drive prompts instead of `at_sec`
 
 Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowed briefly for `CinematicQTE` climax frame only.
 
+### VFX anchor targets (`EnemySlot` rig)
+
+`Fixed` and cinematic clips spawn hit VFX at **arena slot transforms**, not world grid cells. Indices match [combat scene § Enemy slots](combat-scene.md#enemy-slots) and [combat § Enemy roster UI](combat.md#enemy-roster-ui-formation-rows):
+
+| Slot index | Tactical row | Transform name (convention) |
+|------------|--------------|-----------------------------|
+| `0`–`2` | Front | `EnemySlot_0` … `EnemySlot_2` |
+| `3`–`5` | Back | `EnemySlot_3` … `EnemySlot_5` |
+
+- **Primary target zoom** (`BattleCameraRig.NudgeZoomToTarget`) uses the **occupied** anchor for `Combatant.SlotIndex`.
+- **Empty anchors** stay disabled/hidden — no VFX parent on vacant rig points.
+- **Row collapse (Phase C):** when survivors shift index, presenters **re-parent** sprites and refresh UI on the new slot — VFX always follows current `SlotIndex`, not a fixed screen position.
+
 ---
 
 ## Tech sketch (Unity 6)

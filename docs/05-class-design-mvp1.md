@@ -1144,6 +1144,8 @@ class CommandPanelView : MonoBehaviour
     event Action<CombatAction> OnActionSelected;
 }
 
+// Player pick for Attack / single-target skills — [game #60](https://github.com/miramocha/griddungeon-game/issues/60).
+// May fold into CombatHudView + CombatRosterView if a separate type is not needed.
 class TargetSelectorView : MonoBehaviour
 {
     void ShowTargets(IReadOnlyList<Combatant> valid);
@@ -1170,10 +1172,14 @@ class CombatLogView : MonoBehaviour
 
 class EnemySlotsView : MonoBehaviour
 {
-    void SpawnEnemySlot(int slot, EnemyDefinition def);
-    void MarkDead(int slot);
-    void ShowStatusIcons(int slot, IReadOnlyList<StatusInstance> statuses);
+    // Arena rig: 6 anchors (EnemySlot_0..5); optional back-row depth offset on 3..5
+    Transform[] m_anchors;   // length BattleFormation.MaxEnemySlots (6)
+    void SpawnEnemySlot(int slotIndex, EnemyDefinition def);  // slotIndex 0..5
+    void MarkDead(int slotIndex);
+    void ShowStatusIcons(int slotIndex, IReadOnlyList<StatusInstance> statuses);
 }
+
+// CombatScenePresenter (arena rig) — GetEnemySlotAnchor(slotIndex) for spawn + VFX; MVP1 HUD uses CombatRosterView two-row bind
 ```
 
 ---
