@@ -211,8 +211,8 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 - `BattleCameraRig` — fixed angle on arena rig ([combat presentation](02-systems/combat-presentation.md))
 - `SkillDefinition.presentation`: `Fixed` | `Cinematic` | `CinematicQTE`
 - `Fixed` — VFX at slots; optional subtle zoom to primary target, then reset
-- `Cinematic` — Timeline; skippable; enemy boss telegraphs (no player QTE)
-- `CinematicQTE` — Timeline + `QTEController` (press / chain / hold); tier → damage bonus; skill always resolves base on miss
+- `Cinematic` / `CinematicQTE` — `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
+- `CinematicQTE` — `QTEController` tiers → damage bonus; skill always resolves base on miss/skip
 - MVP1: all skills `Fixed`; cinematic + QTE stubbed
 - MVP2: 1× `CinematicQTE` party skill + 1× boss `Cinematic` sample
 

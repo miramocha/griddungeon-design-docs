@@ -81,6 +81,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 023 — Protocol Deploy sortie summon](decisions/023-protocol-deploy-sortie-summon.md) | Accepted | `protocol_deploy` spawns aux summon; Navigator off-formation |
 | [ADR 024 — Protocol Transform](decisions/024-protocol-transform.md) | Accepted | `protocol_transform` slot-replaces one core with Navigator transform profile |
 | [ADR 025 — Campaign exploration target](decisions/025-campaign-exploration-target.md) | Proposed (stub) | Neutral `ExplorationTarget` DTO; per-stratum campaign policy (`S1` / `S2+`); defer until second stratum |
+| [ADR 027 — Combat cinematic Timeline events](decisions/027-combat-cinematic-timeline-events.md) | Accepted | `PlayableDirector.stopped` + QTE markers; no `at_sec` in skill data |
 
 ## Resolved
 

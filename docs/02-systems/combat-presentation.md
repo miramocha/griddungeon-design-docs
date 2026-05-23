@@ -91,46 +91,30 @@ Combat log always records **mechanical outcome** (damage, status) even if visual
 
 ## Authoring (data-driven)
 
-Each skill references a **presentation profile**:
+Each skill references a **presentation profile**. **Timing** for cinematics is authored on the Timeline ([ADR 027](../../decisions/027-combat-cinematic-timeline-events.md)); skill data holds **profile + asset id + QTE bonus numbers** only.
 
 | Profile | Camera | Animation | QTE | MVP1 |
 |---------|--------|-----------|-----|------|
 | `Fixed` (default) | Same angle; optional target zoom | Simple cast + VFX | — | All skills |
 | `Cinematic` | Scripted | Timeline / clip | None | Stub only |
-| `CinematicQTE` | Scripted | Timeline + markers | 1–N prompts | **MVP2** (1–2 skills) |
+| `CinematicQTE` | Scripted | Timeline + **markers** | 1–N prompts on Timeline | **MVP2** (1–2 skills) |
 
-```yaml
-skill_id: elementalist_fire_burst
-presentation: Fixed
-vfx_prefab: vfx_fire_burst
-zoom_to_target: true
+**Skill / SO fields (Unity content):**
 
-skill_id: breaker_blade_storm
-presentation: CinematicQTE
-cinematic_asset: cin_blade_storm
-skippable: true
-qte_prompts:
-  - at_sec: 0.8
-    type: press
-    key: Space
-    window_sec: 0.45
-  - at_sec: 1.6
-    type: press
-    key: "1"
-    window_sec: 0.4
-qte_bonus:
-  perfect: { damage_mult: 1.25, crit_bonus: 0.15 }
-  good:    { damage_mult: 1.10 }
-  base:    { damage_mult: 1.0 }
+| Field | `Fixed` | `Cinematic` | `CinematicQTE` |
+|-------|---------|-------------|----------------|
+| `presentation` | `Fixed` | `Cinematic` | `CinematicQTE` |
+| `cinematicAssetId` | — | prefab / Timeline ref | same |
+| `vfxPrefab` / `zoomToTarget` | optional | — | — |
+| `qteBonus` (perfect / good / base) | — | — | multipliers only — **not** prompt times |
 
-skill_id: stratum1_boss_eruption
-presentation: Cinematic
-cinematic_asset: cin_boss_eruption
-skippable: true
-# enemy — no qte_prompts
-```
+**Timeline prefab (`SkillCinematicPrefab`):**
 
-Timeline markers (`QTE_Open`, `QTE_Close`) can drive prompts instead of `at_sec` when clip timing is authored in-editor.
+- `PlayableDirector` → skill Timeline; length = `director.duration` (no duplicate seconds on `SkillDefinition`).
+- Marker track **`Cinematic Beats`**: `CinematicQteOpenMarker` / `CinematicQteCloseMarker` at authored frames ([ADR 027 §4](../../decisions/027-combat-cinematic-timeline-events.md#4-mid-cinematic-beats--markers-vs-signals)).
+- End of clip → `PlayableDirector.stopped` → apply rules + resume queue.
+
+**Deprecated:** doc-only `qte_prompts[].at_sec` lists — do not ship in MVP2+ content; re-time prompts by moving markers in the Timeline editor.
 
 ---
 
@@ -174,10 +158,10 @@ Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowe
 ## Tech sketch (Unity 6)
 
 - `BattleCameraRig` — default pose; `NudgeZoomToTarget` for `Fixed`
-- `SkillDefinition.presentation` → `Fixed | Cinematic | CinematicQTE`
-- `CinematicSkillPlayer` — Timeline; emits `OnQTEWindowOpen(prompt)`
-- `QTEController` — scores input vs window; outputs `QTEResult` tier
-- `CombatPresentationController` — exclusive cinematic lock; skip + accessibility flags
+- `SkillDefinition.presentation` → `Fixed | Cinematic | CinematicQTE`; `cinematicAssetId` when not `Fixed`
+- `CinematicSkillPlayer` — `PlayableDirector.Play()` / `stopped`; `INotificationReceiver` for QTE markers ([ADR 027](../../decisions/027-combat-cinematic-timeline-events.md))
+- `QTEController` — `OpenPrompt` / `ClosePrompt` / `CancelActivePrompts`; outputs `QTEResult` tier
+- `CombatPresentationController` — cinematic lock; skip order: cancel QTE → `Stop()` → base resolve on `stopped`
 - Exploration camera **unchanged** — combat scene only
 
 ---
@@ -196,6 +180,7 @@ See [release scope](../00-release-scope.md). Optional in MVP2 alongside gather/f
 
 ## Related docs
 
+- [ADR 027 — Combat cinematic Timeline events](../../decisions/027-combat-cinematic-timeline-events.md)
 - [Combat](combat.md)
 - [Input bindings — cinematic QTE](input-bindings.md#cinematic-qte)
 - [Synchro Protocol](synchro-protocol.md) — candidate for `CinematicQTE` finishers

@@ -132,8 +132,10 @@ class SkillDefinition : ScriptableObject
     float[] powerByRank;          // index 0 = rank 1
     TargetingRule targeting;
     SkillPresentation presentation;
+    string cinematicAssetId;      // when presentation != Fixed; Timeline prefab ref ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
     StatusInflict? inflictStatus; // optional on-hit status
     string summonDefinitionId;    // set if skillType == Deploy
+    // CinematicQTE: qteBonus multipliers on skill or linked SO — prompt timing on Timeline markers only
 }
 
 struct TargetingRule

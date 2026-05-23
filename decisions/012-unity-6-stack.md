@@ -50,3 +50,4 @@ Implementation will live in a **Unity** project. Engine version and render pipel
 - [ADR 008 — Campaign defaults](008-campaign-defaults.md)
 - [ADR 009 — Input bindings PC](009-input-bindings-pc.md)
 - [ADR 026 — Combat menu focus navigation](026-combat-menu-focus-navigation.md)
+- [ADR 027 — Combat cinematic Timeline events](027-combat-cinematic-timeline-events.md)
