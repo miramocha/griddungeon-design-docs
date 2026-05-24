@@ -33,6 +33,7 @@ Speaker: **`navigator:guild_handler`** only.
 
 ## Related
 
+- [s1_b2f_stalker_briefing](s1_b2f_stalker_briefing.md) — exploration Event cell before this fight
 - [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 - [Guided Protocol coach](../../campaign/s1-guided-tutorials.md#guided-hint--protocol-coach) — HUD after this event
 - [s1_tutorial_hub_return](s1_tutorial_hub_return.md)

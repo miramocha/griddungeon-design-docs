@@ -13,9 +13,9 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 | Act | Phase | Guided? | Story VN? |
 |-----|-------|---------|-----------|
-| **1 — Movement** | Exploration `s1_B1F` | **Yes** — movement + interact | No |
+| **1 — Movement** | Exploration `s1_B1F` | **Yes** — movement + interact | **Yes** — mouth Event cell before hub |
 | **2 — Party** | Hub | Optional / UI motion only | No |
-| **3 — Tutorial dive** | B1F → B2F combat | **Yes** — Protocol coach | **Yes** — unlock + hub return |
+| **3 — Tutorial dive** | B1F → B2F combat | **Yes** — Protocol coach | **Yes** — B2F Event briefing + unlock + hub return |
 
 ---
 
@@ -29,7 +29,9 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 | 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “Contract crew, check in.” p2: “Move **north** — mouth camp is ahead.” (+ still: compass / passage) |
 | 2 | `s1_explore_wall_bump` | First wall bump | last page dismiss | “Blocked. **Strafe** or **turn**, then step forward.” |
 | 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: signage / auto-map. p2: supply cache — **Interact** on **C** to take materials. |
-| 4 | `s1_explore_mouth_stairs` | On **^** before hub | `interact` | “Stairs up — report to the **guild hub**.” |
+| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs up — report to the **guild hub**.” Else: “**Interact** — stairs up to hub.” |
+
+**Story VN (Act 1):** [s1_b1f_mouth_briefing](../story-events/s1/s1_b1f_mouth_briefing.md) on Event cell **`!` `(9, 10)`** — fires before row 4; Navigator copy owns hub report fiction.
 
 **Codex:** each completed entry unlocks under category `basics` (four rows in codex for Act 1).
 
@@ -49,12 +51,13 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 **Rules authority:** [synchro § S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [foe tutorial](../../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker).
 
-VN scripts: [s1_synchro_protocol_unlock](../story-events/s1/s1_synchro_protocol_unlock.md), [s1_tutorial_hub_return](../story-events/s1/s1_tutorial_hub_return.md).
+VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing.md), [s1_synchro_protocol_unlock](../story-events/s1/s1_synchro_protocol_unlock.md), [s1_tutorial_hub_return](../story-events/s1/s1_tutorial_hub_return.md).
 
-### Phase map (combat)
+### Phase map (exploration + combat)
 
 | Phase | Rules (summary) | Story VN | Guided hint |
 |-------|-----------------|----------|-------------|
+| **0 — Approach** | Event cell on B2F west loop | **`s1_b2f_stalker_briefing`** → starts tutorial combat | — |
 | **A — Opening** | Synchro locked; FOE unbeatable | — | — |
 | **B — Crisis** | 2 core turns **or** FOE at HP floor → crisis AOE → party at 1 HP | — | — |
 | **C — Unlock** | — | `s1_synchro_protocol_unlock` | — |
@@ -78,7 +81,7 @@ VN scripts: [s1_synchro_protocol_unlock](../story-events/s1/s1_synchro_protocol_
 **Start:** story effect `start_guided_protocol` on last step of `s1_synchro_protocol_unlock`.  
 **End:** clear highlight when `protocol_strike` begins resolve; set `s1_synchro_protocol_tutorial_done` on kill.
 
-**Pre-fight:** no guided hints on FOE contact — player may use normal commands until crisis (**phase A**).
+**Pre-fight:** **story VN** on Event cell (phase **0**); no guided HUD until post-crisis. Player may use normal commands in combat until crisis (**phase A**). FOE grid contact still starts the same tutorial if the Event was skipped.
 
 ---
 
@@ -86,9 +89,11 @@ VN scripts: [s1_synchro_protocol_unlock](../story-events/s1/s1_synchro_protocol_
 
 | Flag | Guided / story relevance |
 |------|--------------------------|
+| `s1_b1f_mouth_briefing_seen` | Act 1 mouth VN done; shortens `s1_explore_mouth_stairs` |
 | `s1_intro_movement_complete` | Suppresses all Act 1 explore hints |
 | `s1_party_ready` | Enables `s1_hub_enter_stratum` |
 | `s1_tutorial_dive_started` | Act 3 B1F blockers cleared |
+| `s1_b2f_stalker_briefing_seen` | B2F approach VN done; optional analytics / bypass guard |
 | `s1_synchro_unlocked` | Prerequisite for `s1_combat_guided_protocol` |
 | `s1_synchro_protocol_tutorial_done` | Protocol coach done |
 | `s1_first_foe_tutorial_complete` | Hub return VN done; B3F unblocked |
@@ -99,7 +104,7 @@ VN scripts: [s1_synchro_protocol_unlock](../story-events/s1/s1_synchro_protocol_
 
 - [ ] `GuidedTutorialDefinition` content for table above
 - [ ] Act 1 triggers on `s1_B1F` intro mode (spawn, bump, cells G/C/^)
-- [ ] `s1_combat_guided_protocol` wired from `start_guided_protocol` ([#35](https://github.com/miramocha/griddungeon-game/issues/35))
+- [ ] `s1_combat_guided_protocol` wired from `start_guided_protocol` ([#88](https://github.com/miramocha/griddungeon-game/issues/88))
 - [ ] Command gate matches [combat § S1 tutorial](../../02-systems/combat.md) / `TutorialCombatKind.SynchroFirstFoe`
 - [ ] Playtest: Act 1 ≤ 8 min with hints; B2F crisis → Protocol path not soft-lockable
 

@@ -6,7 +6,7 @@
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
 **VN dialogue layer:** [story-events](story-events.md) · [ADR 028](../../decisions/028-story-visual-novel-events.md) · **This layer:** [ADR 029](../../decisions/029-guided-tutorial.md)  
 **Combat rules (tutorial FOE):** [synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe) · [foe-encounters § tutorial FOE](foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)  
-**Implementation tracking:** [game #35](https://github.com/miramocha/griddungeon-game/issues/35) (HUD + guided presentation) · [game #20](https://github.com/miramocha/griddungeon-game/issues/20) (S1 wiring)
+**Implementation tracking:** [game #88](https://github.com/miramocha/griddungeon-game/issues/88) (guided coach) · [game #87](https://github.com/miramocha/griddungeon-game/issues/87) (story VN — handoff only) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro HUD + Protocol-only — done) · [#20](https://github.com/miramocha/griddungeon-game/issues/20) (S1 wiring)
 
 ---
 
@@ -15,7 +15,7 @@
 | Layer | Job | S1 examples |
 |-------|-----|-------------|
 | **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short copy; arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** |
-| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase | `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
+| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `TutorialCombatKind`, `tutorialUnbeatable`, save flags |
 
 A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (story) → guided Protocol (this doc) → finisher (rules).
@@ -67,7 +67,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | `GuidedTutorialDefinition` | Content | `hintId`, copy keys, highlight targets, completion rule |
 | `GuidedTutorialSequence` | Content | Ordered hints for one beat (e.g. Act 1 mouth approach) |
 | `GuidedTutorialController` | Runtime | Active hint, completion, delegates to phase owners |
-| `GuidedTutorialView` | UI | Paginated panel, media slot, HUD pulses ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) |
+| `GuidedTutorialView` | UI | Paginated panel, media slot, HUD pulses ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | `TutorialCodexView` | UI | Pause menu → **Tutorial codex**; index of unlocked `tutorialEntryId`s — read-only |
 
 **Ownership (architecture):** do not embed S1 flag logic inside the view. `ExplorationPhaseController` / `CombatController` / campaign service decide **when** to start; controller applies **effects** (`set_campaign_flag`, `combat_tutorial_phase`, `start_guided_protocol`) via the same dispatch table as [story-events § effects](story-events.md#effects-draft).

@@ -32,7 +32,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 ### S1 tutorial gating (first FOE)
 
-**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules / `TutorialCombatKind`) · [game #19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic → [#35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro meter + tutorial prompts)
+**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol coach
 
 **Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
 
@@ -52,6 +52,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 | Step | What happens |
 |------|----------------|
+| **0 — Approach** | B2F **Event** cell → **`s1_b2f_stalker_briefing`** VN → tutorial combat starts (before any hub return). |
 | **A — Opening** | Synchro locked; normal tutorial combat (FOE on HP floor if player focuses it). |
 | **B — Crisis trigger** | When **2 completed core turns** OR **FOE at HP floor** (first): scripted **FOE crisis AOE** — party-wide hit reduces **all living core HP to 1** (fake wipe; **no** game over, cores stay up). |
 | **C — Unlock VN** | After crisis UI beat: **`s1_synchro_protocol_unlock`** — Navigator briefing; set `s1_synchro_unlocked`, Synchro **100%**. |
@@ -166,7 +167,7 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 
 **Implementation (game — open):**
 
-- [ ] S1 gate: crisis AOE → VN unlock → guided `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#35](https://github.com/miramocha/griddungeon-game/issues/35), [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
+- [ ] S1 gate: crisis AOE → VN unlock → guided `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#87](https://github.com/miramocha/griddungeon-game/issues/87), [#88](https://github.com/miramocha/griddungeon-game/issues/88), [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
 
 ## Not in scope (MVP1)
 

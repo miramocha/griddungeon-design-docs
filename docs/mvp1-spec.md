@@ -7,7 +7,7 @@ Single checklist for the **first playable**. Locked exploration/combat rules: [A
 ## 1. Player-facing loop (MVP1)
 
 ```
-New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs → hub)
+New game: s1_B1F movement tutorial (no enemies, blocked path → mouth Event VN → stairs → hub)
   → Hub Act 2: Guild party (6 core), Navigator, save
   → Enter Stratum 1 at B1F mouth (no warp gate; Synchro taught on **unbeatable** B2F FOE)
   → Explore B1F–B3F (FPV + auto-map + FOE on B2F+)
@@ -66,10 +66,11 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth stairs �
 | ⬜ | MVP1 class skill **rules** + Summoner `deploy_test_drone` | [game #52](https://github.com/miramocha/griddungeon-game/issues/52), [#11](https://github.com/miramocha/griddungeon-game/issues/11), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | ⬜ | Post-battle **XP + loot** (core party) | [game #31](https://github.com/miramocha/griddungeon-game/issues/31), [progression](02-systems/character-progression.md) |
 | ✅ | Combat HUD skeleton (AGI strip, commands, HP) | [game #34](https://github.com/miramocha/griddungeon-game/issues/34) |
-| ⬜ | Combat HUD reactive + Synchro tutorial presentation | [#35](https://github.com/miramocha/griddungeon-game/issues/35) · epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) · VN story layer [ADR 028](../decisions/028-story-visual-novel-events.md) |
+| ✅ | Combat HUD reactive + Synchro tutorial presentation | [#35](https://github.com/miramocha/griddungeon-game/issues/35) · epic [#19](https://github.com/miramocha/griddungeon-game/issues/19) |
+| ⬜ | **Story events (VN)** — `StoryEventRunner` + four S1 scenes | [#87](https://github.com/miramocha/griddungeon-game/issues/87) · [ADR 028](../decisions/028-story-visual-novel-events.md) · [story-events](02-systems/story-events.md) |
+| ⬜ | **Guided tutorials** — Act 1 movement + B2F Protocol coach | [#88](https://github.com/miramocha/griddungeon-game/issues/88) · [ADR 029](../decisions/029-guided-tutorial.md) · [s1-guided-tutorials](03-content/campaign/s1-guided-tutorials.md) |
 | ⬜ | Hub + exploration HUD (party strip, service motion) | [game #36](https://github.com/miramocha/griddungeon-game/issues/36) |
-| ⬜ | S1 intro blockers + FOE patrol/encounters/gather wiring | [game #20](https://github.com/miramocha/griddungeon-game/issues/20), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
-| ⬜ | S1 **guided tutorials** — Act 1 movement hints; B2F Protocol coach + crisis/VN/hub warp | [guided-tutorial](02-systems/guided-tutorial.md), [s1-guided-tutorials](03-content/campaign/s1-guided-tutorials.md), [#35](https://github.com/miramocha/griddungeon-game/issues/35), [story events § S1 flow](02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker) |
+| ✅ | S1 intro blockers + FOE patrol/encounters/gather wiring | [game #20](https://github.com/miramocha/griddungeon-game/issues/20) · [PR #91](https://github.com/miramocha/griddungeon-game/pull/91), [hub](02-systems/hub-and-services.md#stratum-1-intro) |
 
 ### Hub & progression
 
@@ -123,7 +124,7 @@ Defer B4F–B5F polish until loop proven.
 | **Navigator** | `guild_handler` — unlocked day one; aura: Synchro gain +5% |
 | **Protocol skills** | `protocol_strike` (damage), `protocol_mend` (heal all living core) |
 
-Authority: [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md), [class design — MVP1 IDs](05-class-design-mvp1.md#mvp1-content-ids-locked). Protocol **rules** [#10](https://github.com/miramocha/griddungeon-game/issues/10) done; S1 **tutorial beat** [#35](https://github.com/miramocha/griddungeon-game/issues/35) · [synchro § S1](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe).
+Authority: [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md), [class design — MVP1 IDs](05-class-design-mvp1.md#mvp1-content-ids-locked). Protocol **rules** [#10](https://github.com/miramocha/griddungeon-game/issues/10) done; Synchro HUD [#35](https://github.com/miramocha/griddungeon-game/issues/35) done; S1 **VN** [#87](https://github.com/miramocha/griddungeon-game/issues/87) · **coach** [#88](https://github.com/miramocha/griddungeon-game/issues/88) · [synchro § S1](02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe).
 
 Full Navigator roster unlocks post-MVP1.
 
@@ -169,7 +170,7 @@ Numbers can move in data without ADR change:
 | **2** (`pull-w02`) | **Combat HUD skeleton** — AGI strip, command panel, HP ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so combat is playable before polish | **Done** |
 | **3+** | Content, hub loop, map art, tutorials, vertical slice | See table below |
 
-UI epic [#19](https://github.com/miramocha/griddungeon-game/issues/19): [#34](https://github.com/miramocha/griddungeon-game/issues/34) done → [#35](https://github.com/miramocha/griddungeon-game/issues/35) reactive + Synchro tutorial → [#36](https://github.com/miramocha/griddungeon-game/issues/36) hub + explore HUD.
+UI epic [#19](https://github.com/miramocha/griddungeon-game/issues/19): [#34](https://github.com/miramocha/griddungeon-game/issues/34) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) done → [#87](https://github.com/miramocha/griddungeon-game/issues/87) story events + [#88](https://github.com/miramocha/griddungeon-game/issues/88) guided tutorials → [#36](https://github.com/miramocha/griddungeon-game/issues/36) hub + explore HUD.
 
 | Wave | Label | Pull next (top → bottom) | Status |
 |------|-------|--------------------------|--------|
@@ -177,13 +178,14 @@ UI epic [#19](https://github.com/miramocha/griddungeon-game/issues/19): [#34](ht
 | **2** | `pull-w02` | [#34](https://github.com/miramocha/griddungeon-game/issues/34) Combat HUD skeleton | **Done** |
 | **3** | `pull-w03` | [#13](https://github.com/miramocha/griddungeon-game/issues/13) Hub · [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB · [#52](https://github.com/miramocha/griddungeon-game/issues/52) class skill rules | **Ready** (current) |
 | **4** | `pull-w04` | [#75](https://github.com/miramocha/griddungeon-game/issues/75) floor painter epic ([#76](https://github.com/miramocha/griddungeon-game/issues/76)→[#79](https://github.com/miramocha/griddungeon-game/issues/79)) · [#26](https://github.com/miramocha/griddungeon-game/issues/26) HUD grid refactor · [#20](https://github.com/miramocha/griddungeon-game/issues/20) FoeSystem · [#56](https://github.com/miramocha/griddungeon-game/issues/56) enemy targeting | Backlog |
-| **5** | `pull-w05` | [#35](https://github.com/miramocha/griddungeon-game/issues/35) Combat reactive + Synchro tutorial UI | Backlog |
+| **5** | `pull-w05` | [#35](https://github.com/miramocha/griddungeon-game/issues/35) Combat reactive + Synchro tutorial UI | **Done** |
+| **5b** | `pull-w05b` | [#87](https://github.com/miramocha/griddungeon-game/issues/87) Story events · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Guided tutorials | Backlog |
 | **6** | `pull-w06` | [#30](https://github.com/miramocha/griddungeon-game/issues/30) B3F · [#11](https://github.com/miramocha/griddungeon-game/issues/11) summon · [#36](https://github.com/miramocha/griddungeon-game/issues/36) Hub + explore HUD | Backlog |
 | **7** | `pull-w07` | [#31](https://github.com/miramocha/griddungeon-game/issues/31) XP + loot | Backlog |
 | **8** | `pull-w08` | [#15](https://github.com/miramocha/griddungeon-game/issues/15) Vertical slice (integration) | Backlog |
-| — | `pull-epic` | [#19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic — closes when #35–#36 done (#34 done) · [#75](https://github.com/miramocha/griddungeon-game/issues/75) floor painter — closes when #76–#79 done | Backlog |
+| — | `pull-epic` | [#19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic — closes when #87–#88 + #36 done (#34–#35 done) · [#75](https://github.com/miramocha/griddungeon-game/issues/75) floor painter — closes when #76–#79 done | Backlog |
 
-**Closed since wave plan was written:** [#29](https://github.com/miramocha/griddungeon-game/issues/29) B2F · [#27](https://github.com/miramocha/griddungeon-game/issues/27) pause · [#60](https://github.com/miramocha/griddungeon-game/issues/60) target selection · [#65](https://github.com/miramocha/griddungeon-game/issues/65) stale targets · design [#1](https://github.com/miramocha/griddungeon-design-docs/issues/1)–[#5](https://github.com/miramocha/griddungeon-design-docs/issues/5) content/review docs.
+**Closed since wave plan was written:** [#35](https://github.com/miramocha/griddungeon-game/issues/35) combat reactive + Synchro HUD · [#29](https://github.com/miramocha/griddungeon-game/issues/29) B2F · [#27](https://github.com/miramocha/griddungeon-game/issues/27) pause · [#60](https://github.com/miramocha/griddungeon-game/issues/60) target selection · [#65](https://github.com/miramocha/griddungeon-game/issues/65) stale targets · design [#1](https://github.com/miramocha/griddungeon-design-docs/issues/1)–[#5](https://github.com/miramocha/griddungeon-design-docs/issues/5) content/review docs.
 
 Board: [Codename: GridDungeon (project 3)](https://github.com/users/miramocha/projects/3) — open items ordered to match waves 1→8 where the API allows.
 

@@ -1,7 +1,8 @@
 # Story Events (Visual Novel Presentation)
 
 **Authority:** [ADR 028](../../decisions/028-story-visual-novel-events.md) (Proposed — stakeholder decisions 2026-05-23) · Coaching layer: [ADR 029](../../decisions/029-guided-tutorial.md)  
-**Status:** Draft — UI retract + #35 split still open.
+**Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87) · HUD coach: [#88](https://github.com/miramocha/griddungeon-game/issues/88) · Synchro chrome: [#35](https://github.com/miramocha/griddungeon-game/issues/35) (done)  
+**Status:** Draft — combat UI retract during mid-fight story still open.
 
 Scripted **story scenes** with visual-novel-style presentation: character portraits, dialogue lines, optional choices, and **side effects** (campaign flags, combat tutorial phase, UI hints). One pipeline for hub briefings, exploration tile events, and **mid-combat** tutorials (first use: S1 Synchro / Protocol on `foe_alley_stalker`).
 
@@ -67,10 +68,27 @@ Executed synchronously when a step is entered (or when a choice is picked). Impl
 | `combat_tutorial_phase` | `phase` | `CombatController` / `TutorialCombatKind` |
 | `show_combat_hint` | `hintId` | Combat HUD (#35) — optional delegation |
 | `start_guided_protocol` | `skillId` | Enable guided Protocol only (`protocol_strike`) |
+| `start_combat` | `encounterGroupId`, `tutorialKind?`, `noFlee?` | `GameState.RequestCombat` — used after exploration Event VN (S1 briefing) |
 | `teleport_to_hub` | — | `GamePhaseController` scripted `Combat → Hub` |
 | `end_story_event` | — | Runner |
 
 New effects require an ADR amendment or appendix — avoid ad-hoc string effects in scenes.
+
+---
+
+## Act 1 — first hub (B1F)
+
+**Authority:** [s1-intro § Act 1](../03-content/campaign/s1-intro.md#three-acts-same-s1_b1f-map) · movement coaching: [guided-tutorial](guided-tutorial.md) (orthogonal paginated hints).
+
+| `storyEventId` | When | Effects (on complete) |
+|----------------|------|------------------------|
+| **`s1_b1f_mouth_briefing`** | Exploration Event cell **`!` `(9, 10)`** on mouth approach — **before** first **`^` → hub** | `s1_b1f_mouth_briefing_seen` |
+
+**Trigger (locked):** `ExplorationPhaseController` / tile script → `StoryEventRunner.Play` on `OnPartyEnteredCell`; overlay lock until dismiss; then player walks to **`^`** for `Exploration → Hub`.
+
+**Act 1 exception:** one story event at the mouth; other Act 1 beats stay **guided tutorial** ([ADR 029](../../decisions/029-guided-tutorial.md) — not a fourth macro phase).
+
+Draft copy: [s1/s1_b1f_mouth_briefing.md](../03-content/story-events/s1/s1_b1f_mouth_briefing.md).
 
 ---
 
@@ -81,11 +99,16 @@ New effects require an ADR amendment or appendix — avoid ad-hoc string effects
 ```mermaid
 sequenceDiagram
   participant P as Player
+  participant EP as ExplorationPhaseController
   participant FOE as foe_alley_stalker
   participant CC as CombatController
   participant VN as StoryEventRunner
   participant HUD as Guided tutorial HUD
 
+  P->>EP: Enter Event cell on s1_B2F
+  EP->>VN: s1_b2f_stalker_briefing
+  VN->>P: Navigator lines (Z / click)
+  VN->>CC: start_combat grp_alley_stalker_tutorial
   Note over P,FOE: Phase A — Synchro locked, FOE unbeatable
   P->>FOE: Up to 2 core turns and/or chip FOE to HP floor
   CC->>CC: Crisis trigger (2 turns OR FOE at 1 HP)
@@ -102,10 +125,11 @@ sequenceDiagram
 
 | Step | Systems | Story / UI |
 |------|---------|------------|
+| **Approach (exploration)** | Event cell `(7, 11)` on `s1_B2F` | **`s1_b2f_stalker_briefing`** → `start_combat` (tutorial group); main path before hub warp |
 | **Crisis trigger** | `CombatController` tutorial phase | Same condition as before: **2 core turns** OR **FOE at HP floor** (anti soft-lock) |
 | **Crisis AOE** | Scripted FOE action — party HP → **1** each living core | Combat log + VFX; **not** GAME OVER |
 | **Unlock VN** | `s1_synchro_protocol_unlock` after AOE UI beat | Navigator-only click-through block |
-| **Guided Protocol** | [#35](https://github.com/miramocha/griddungeon-game/issues/35) HUD + combat gate | Only **Protocol → `protocol_strike`** enabled |
+| **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) coach + [#35](https://github.com/miramocha/griddungeon-game/issues/35) Protocol-only gate | Only **Protocol → `protocol_strike`** enabled |
 | **Finisher** | `protocol_strike` kills FOE | Sets `s1_synchro_protocol_tutorial_done` |
 | **Hub outro** | `s1_tutorial_hub_return` | VN lines → **`teleport_to_hub`** (scripted `Combat → Hub`) |
 
@@ -119,14 +143,17 @@ Summary: Synchro at **100%**; pulse **Protocol**; other commands disabled; playe
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
+| **`s1_b2f_stalker_briefing`** | Exploration Event cell on B2F (before tutorial fight / hub) | `s1_b2f_stalker_briefing_seen`, `start_combat` → `grp_alley_stalker_tutorial` |
 | **`s1_synchro_protocol_unlock`** | After crisis AOE UI beat | `s1_synchro_unlocked`, Synchro 100%, enter guided phase |
 | **`s1_tutorial_hub_return`** | After Protocol kills FOE | `s1_first_foe_tutorial_complete`, `teleport_to_hub` |
 
-Fight-start intro / separate retreat scene: **not** used — crisis AOE + hub outro replace them.
+Mid-fight intro / separate retreat scene: **not** used — approach VN + crisis AOE + hub outro cover the arc. FOE grid contact remains a **fallback** if the player reaches the stalker without the Event cell.
+
+**Exploration trigger (locked):** `ExplorationPhaseController` (or floor tile script) calls `StoryEventRunner.Play` on `OnPartyEnteredCell` for the Event tile — same overlay lock as combat VN; exploration steps blocked until dismiss.
 
 **Save:** hub inn only — no mid-fight save.
 
-Draft copy: [s1/s1_synchro_protocol_unlock.md](../03-content/story-events/s1/s1_synchro_protocol_unlock.md), [s1/s1_tutorial_hub_return.md](../03-content/story-events/s1/s1_tutorial_hub_return.md).
+Draft copy: [s1/s1_b1f_mouth_briefing.md](../03-content/story-events/s1/s1_b1f_mouth_briefing.md), [s1/s1_b2f_stalker_briefing.md](../03-content/story-events/s1/s1_b2f_stalker_briefing.md), [s1/s1_synchro_protocol_unlock.md](../03-content/story-events/s1/s1_synchro_protocol_unlock.md), [s1/s1_tutorial_hub_return.md](../03-content/story-events/s1/s1_tutorial_hub_return.md).
 
 ---
 
@@ -196,19 +223,17 @@ Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Stor
 | Phase | Example trigger |
 |-------|-----------------|
 | Hub | Service script after Navigator unlock |
-| Exploration | Cell script `storyEventId` on enter |
+| Exploration | Cell script `storyEventId` on `OnPartyEnteredCell` — **MVP1:** `s1_b1f_mouth_briefing` (Act 1, before first hub); `s1_b2f_stalker_briefing` (B2F, before tutorial combat / scripted hub) |
 | Combat | Tutorial phase callback, boss intro before turn 1 |
 
-Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-and-encounters.md#encounter-types)) may call `Play()` before or after combat starts — **TBD** per event.
+Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-and-encounters.md#encounter-types)): **S1 tutorial** = dialogue on enter, then `start_combat` on dismiss (no flee). Other events may use before/after fight — per content row.
 
 ---
 
 ## Open design questions
 
 1. **Combat UI retract** — which panels hide during mid-combat story (command bar, AGI strip, enemy row, Synchro meter reveal on scene end only, etc.).
-2. **Game #35** — HUD/meter/reactive chrome only vs includes `StoryEventRunner`.
-3. **Authoring** — YAML vs ScriptableObject (deferred).
-4. **MVP1 build order** — S1 combat unlock vs Act 1 B1F beats first (deferred).
+2. **Authoring** — YAML vs ScriptableObject (deferred).
 
 ---
 

@@ -27,5 +27,6 @@ Speaker: **`navigator:guild_handler`** only.
 
 ## Related
 
+- [s1_b2f_stalker_briefing](s1_b2f_stalker_briefing.md) — exploration Event cell before tutorial fight
 - [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 - [S1 intro — flags](../../campaign/s1-intro.md#save-flags-campaign)

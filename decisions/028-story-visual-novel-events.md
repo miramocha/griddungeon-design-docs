@@ -1,8 +1,8 @@
 # ADR 028 — Story Events (Visual Novel Presentation)
 
-**Status:** Proposed (decisions locked 2026-05-23 — pending UI-retract detail + #35 split)  
+**Status:** Proposed (decisions locked 2026-05-23 — UI-retract detail open; implementation [#87](https://github.com/miramocha/griddungeon-game/issues/87))  
 **Date:** 2026-05-23  
-**First consumer:** S1 unbeatable FOE (`foe_alley_stalker`) — mid-fight Synchro / Protocol tutorial ([synchro § S1 gating](../docs/02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe), [game #35](https://github.com/miramocha/griddungeon-game/issues/35))  
+**First consumer:** S1 — four scenes (B1F / B2F Event cells + mid-combat unlock + hub outro) ([story-events](../docs/02-systems/story-events.md), [game #87](https://github.com/miramocha/griddungeon-game/issues/87))  
 **Aligns with:** [ADR 017](017-game-phase-controller.md) (macro phases), [ADR 027](027-combat-cinematic-timeline-events.md) (combat skill cinematics — **orthogonal**), [04 — Tech notes § UI reactivity](../docs/04-tech-notes.md#ui-reactivity)
 
 ## Context
@@ -14,7 +14,7 @@ Grid Dungeon needs **scripted narrative beats** that:
 - Stay **data-driven** and **testable** where rules touch campaign flags; presentation stays in Runtime/UI.
 - Reuse one pipeline for S1 Protocol teaching and later beats (Navigator unlock scenes, tile **Event** fights, boss intros).
 
-Today, S1 gating is specified in rules + flags ([synchro-protocol](../docs/02-systems/synchro-protocol.md), [s1-intro](../docs/03-content/campaign/s1-intro.md)) with “Navigator prompt” called out but **no shared presentation owner**. [Game #35](https://github.com/miramocha/griddungeon-game/issues/35) covers Synchro meter + tutorial UI — this ADR defines the **story layer** that can host those lines without one-off combat HUD hacks.
+Today, S1 gating is specified in rules + flags ([synchro-protocol](../docs/02-systems/synchro-protocol.md), [s1-intro](../docs/03-content/campaign/s1-intro.md)) with “Navigator prompt” called out but **no shared presentation owner**. [Game #35](https://github.com/miramocha/griddungeon-game/issues/35) (done) covers Synchro meter + Protocol-only HUD; **story dialogue** ships in [#87](https://github.com/miramocha/griddungeon-game/issues/87). **HUD coaching** ships in [#88](https://github.com/miramocha/griddungeon-game/issues/88) ([ADR 029](029-guided-tutorial.md)).
 
 **Not in scope for this ADR**
 
@@ -74,6 +74,7 @@ Authoring format: **YAML or ScriptableObject** referencing text keys — **TBD**
 | `unlock_input_hint` | Show combat HUD callout (may delegate to #35) |
 | `start_combat_rule` | Resume AGI after scene ends |
 | `start_guided_protocol` | HUD highlight + command gate (`protocol_strike`) |
+| `start_combat` | After exploration Event VN — `RequestCombat` with tutorial group (`grp_alley_stalker_tutorial`) |
 | `teleport_to_hub` | Script `Combat → Hub` after outro VN |
 | `play_foe_crisis_aoe` | Scripted tutorial enemy action (rules-owned; optional story hook) |
 
@@ -85,6 +86,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 
 | Step | Combat / rules | Story / guided UI |
 |------|----------------|-------------------|
+| **0** Approach | Event cell on `s1_B2F` — west loop | **`s1_b2f_stalker_briefing`** → `start_combat` (before hub warp arc) |
 | **A** Opening | Synchro locked; FOE `tutorialUnbeatable` | — |
 | **B** Crisis trigger | **2 core turns** OR **FOE at HP floor** (first) | — |
 | **C** Crisis AOE | FOE scripted attack → **all living core HP = 1** (fake wipe, no KO) | After AOE UI beat |
@@ -112,7 +114,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 | **Background (combat)** | **Arena / battle view stays visible**; combat chrome may **retract** — which panels TBD ([open questions](#open-questions)) |
 | **Advance** | **Z** (combat confirm) **or mouse click** on panel — no separate Story map in MVP1 |
 | **Skip** | **Disabled** for MVP1 tutorial |
-| **Act 1 B1F** | **Not** story events — [ADR 029](029-guided-tutorial.md) paginated tutorial + codex |
+| **Act 1 B1F** | **One** Event-cell story scene before first hub (`s1_b1f_mouth_briefing`); other beats = [ADR 029](029-guided-tutorial.md) guided pages + codex |
 
 Exploration/hub: use same overlay pattern when content exists; Act 1 + B2F tutorial can land in either order — **implementation order deferred**.
 
@@ -142,10 +144,10 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | Runner + click-through view; **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
+| **MVP1** | Runner + click-through view; **`s1_b1f_mouth_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
 | **MVP1 schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
 | **MVP1 content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
-| **Deferred** | Authoring format (YAML vs SO); hub/explore content order; [#35](https://github.com/miramocha/griddungeon-game/issues/35) vs new issue split |
+| **Deferred** | Authoring format (YAML vs SO); hub/explore content beyond S1 |
 | **Post-MVP1** | Full VN portraits; Act 1 beats; skip/auto; exploration tile events; hub Navigator unlock scenes |
 
 **Save / replay:** Inn save at hub only — no mid-fight save. Reloading during tutorial is out of scope; flags gate re-showing scenes.
@@ -153,7 +155,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 ### 10. Testing & implementation notes (for game repo — not done in this ADR pass)
 
 - **Edit Mode:** `StoryEventRunnerTests` — given step list + mock campaign, assert flags/effects after `Complete()`.
-- **Play Mode:** DevBootstrap F3 + forced tutorial state — manual checklist in [#35](https://github.com/miramocha/griddungeon-game/issues/35).
+- **Play Mode:** DevBootstrap — manual checklist in [#87](https://github.com/miramocha/griddungeon-game/issues/87).
 - **Input:** While `StoryEventRunner.IsActive`, `InputRouter` routes to story map only ([ADR 009](009-input-bindings-pc.md) amendment when implemented).
 
 ## Rejected (draft)
@@ -171,7 +173,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 - **Design:** [story-events.md](../docs/02-systems/story-events.md) (system doc); update [synchro-protocol](../docs/02-systems/synchro-protocol.md), [s1-intro](../docs/03-content/campaign/s1-intro.md), [foe-encounters](../docs/02-systems/foe-encounters.md) with story-event ids.
 - **Content:** `Assets/Content/StoryEvents/` + `docs/03-content/story-events/` index.
 - **Runtime:** `StoryEventRunner`, `StoryEventView`; combat tutorial invokes runner instead of ad-hoc modal.
-- **Issues:** Clarify [#35](https://github.com/miramocha/griddungeon-game/issues/35) scope — VN scene vs meter/HUD chrome; optional new implementation issue for runner.
+- **Issues:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) (story runner + S1 content); [#88](https://github.com/miramocha/griddungeon-game/issues/88) (guided coach — handoff from `start_guided_protocol`).
 - **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design-mvp1.md) when accepted.
 
 ## Stakeholder decisions (2026-05-23)
@@ -185,8 +187,8 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 | Combat backdrop | Arena visible; UI retract **TBD** |
 | Speakers (S1) | Navigator only; no core dialogue (custom party) |
 | Input | **Z** or click |
-| Act 1 movement | **Guided tutorial** paginated block + codex ([ADR 029](029-guided-tutorial.md)) — not story VN |
-| #35 split | **Undecided** — document both HUD and story in planning |
+| Act 1 movement | **Guided tutorial** paginated block + codex ([ADR 029](029-guided-tutorial.md)); **one** Event-cell VN before first hub (`s1_b1f_mouth_briefing`) |
+| #35 split | **Resolved** — [#35](https://github.com/miramocha/griddungeon-game/issues/35) = combat reactive + Synchro HUD only; [#87](https://github.com/miramocha/griddungeon-game/issues/87) = story events |
 | Branching | Deferred; schema should support flag branches later |
 | VO | None planned yet |
 | Localization | **Recommendation:** `textKey` on every line from day one; optional inline `textEn` (or default table) for MVP1 authoring — see [story-events § Localization](../docs/02-systems/story-events.md#localization) |
@@ -195,11 +197,9 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 ## Open questions
 
 1. **Combat UI retract** — which panels hide during mid-combat story (command bar, AGI strip, Synchro meter reveal timing, etc.).
-2. **Game #35** — meter/HUD only vs includes story runner.
-3. **Authoring pipeline** — YAML vs ScriptableObject (deferred).
-4. **MVP1 implementation order** — S1 combat unlock vs Act 1 B1F beats first (deferred).
+2. **Authoring pipeline** — YAML vs ScriptableObject (deferred).
 
-Resolve UI retract + #35 before **Accepted**.
+Resolve UI retract before **Accepted** (implementation may proceed on [#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
 ## Related
 
@@ -209,4 +209,6 @@ Resolve UI retract + #35 before **Accepted**.
 - [ADR 027 — Combat cinematic timeline events](027-combat-cinematic-timeline-events.md)
 - [Synchro Protocol — S1 tutorial gating](../docs/02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)
 - [S1 campaign intro](../docs/03-content/campaign/s1-intro.md)
-- [Game #35 — Combat reactive + Synchro tutorial UI](https://github.com/miramocha/griddungeon-game/issues/35)
+- [Game #87 — Story events (StoryEventRunner + S1 scenes)](https://github.com/miramocha/griddungeon-game/issues/87)
+- [Game #88 — Guided tutorials (coach layer)](https://github.com/miramocha/griddungeon-game/issues/88)
+- [Game #35 — Combat reactive + Synchro tutorial UI](https://github.com/miramocha/griddungeon-game/issues/35) (done — HUD only)

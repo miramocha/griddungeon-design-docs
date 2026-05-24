@@ -1,6 +1,6 @@
 # Story event content index
 
-**System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed)
+**System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed) · **Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87)
 
 Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/Content/StoryEvents/` when implementation starts.
 
@@ -8,8 +8,10 @@ Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/C
 
 | storyEventId | once | Prerequisite | Trigger | Status |
 |--------------|------|--------------|---------|--------|
-| `s1_synchro_protocol_unlock` | yes | not `s1_synchro_unlocked` | After crisis AOE UI beat | [draft](s1/s1_synchro_protocol_unlock.md) |
-| `s1_tutorial_hub_return` | yes | `s1_synchro_protocol_tutorial_done` | After Protocol kills FOE | [draft](s1/s1_tutorial_hub_return.md) |
+| `s1_b1f_mouth_briefing` | yes | Act 1; not `s1_intro_movement_complete` | **Exploration:** Event cell on `s1_B1F` `(9, 10)` — before first hub | [draft](s1/s1_b1f_mouth_briefing.md) |
+| `s1_b2f_stalker_briefing` | yes | `s1_tutorial_dive_started`; not `s1_first_foe_tutorial_complete` | **Exploration:** Event cell on `s1_B2F` `(7, 11)` → VN → tutorial combat | [draft](s1/s1_b2f_stalker_briefing.md) |
+| `s1_synchro_protocol_unlock` | yes | not `s1_synchro_unlocked` | **Combat:** after crisis AOE UI beat | [draft](s1/s1_synchro_protocol_unlock.md) |
+| `s1_tutorial_hub_return` | yes | `s1_synchro_protocol_tutorial_done` | **Combat:** after Protocol kills FOE | [draft](s1/s1_tutorial_hub_return.md) |
 
 ## Post-MVP1 (placeholders)
 

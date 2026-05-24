@@ -12,7 +12,7 @@ Grid Dungeon needs **short, actionable coaching** that teaches controls without 
 - **Exploration (S1 Act 1):** movement, wall bump, optional gather/signage, mouth stairs — map stays visible; player keeps (or regains) movement between dismissible lines.
 - **Combat (S1 B2F):** after Navigator **story** lines, pulse **Protocol** and **gate** commands until the player confirms `protocol_strike`.
 
-Today these beats are specified across [synchro-protocol](../docs/02-systems/synchro-protocol.md), [story-events](../docs/02-systems/story-events.md), and [game #35](https://github.com/miramocha/griddungeon-game/issues/35) as “HUD highlights” without a named owner. Hard-coding strings in `CombatHudView` or one-off exploration toasts duplicates behavior [ADR 028](028-story-visual-novel-events.md) is meant to host for **dialogue**, not button coaching.
+Today these beats are specified across [synchro-protocol](../docs/02-systems/synchro-protocol.md), [story-events](../docs/02-systems/story-events.md), and [game #35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro HUD — done) without a named **coach** owner. Implementation: [#88](https://github.com/miramocha/griddungeon-game/issues/88). Hard-coding strings in `CombatHudView` duplicates [ADR 028](028-story-visual-novel-events.md) **dialogue** ([#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
 **Not in scope**
 
@@ -29,7 +29,7 @@ Today these beats are specified across [synchro-protocol](../docs/02-systems/syn
 | **`GuidedTutorialDefinition`** | Content (`Assets/Content/GuidedTutorials/`) | `hintId`, mode, copy keys, highlights, completion rule |
 | **`GuidedTutorialSequence`** (optional) | Content | Ordered hints for one beat (e.g. Act 1 mouth approach) |
 | **`GuidedTutorialController`** | Runtime | Start/complete hints, completion rules, **invoke** gates via combat/explore APIs |
-| **`GuidedTutorialView`** | UI | Banner, target pulses, disabled chrome ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) |
+| **`GuidedTutorialView`** | UI | Banner, target pulses, disabled chrome ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 
 **Player-facing name:** “Tip” or brief on-screen coach text — not “tutorial mode.”
 
@@ -50,7 +50,7 @@ While a **blocking** combat hint is active:
 | Layer | Owner | S1 example |
 |-------|--------|------------|
 | **Rules** | `CombatController`, campaign resolvers, floor data | Crisis AOE, `tutorialUnbeatable`, walk blockers |
-| **Story (VN)** | `StoryEventRunner` | `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
+| **Story (VN)** | `StoryEventRunner` | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Guided coach** | `GuidedTutorialController` | `s1_explore_intro_move`, `s1_combat_guided_protocol` |
 
 **Handoff (locked):** story effect `start_guided_protocol` → sets combat tutorial phase + `GuidedTutorialController.Start("s1_combat_guided_protocol")`. VN must **complete** before coach starts.
@@ -65,7 +65,9 @@ While a **blocking** combat hint is active:
 
 **Early MVP simplification:** one reusable **tutorial panel** layout (screen block + optional still / short clip) for Act 1 and combat coach — not a separate “toast” stack and VN chrome. Full portrait VN remains [ADR 028](028-story-visual-novel-events.md).
 
-**Rejected:** Act 1 as ephemeral corner-only banners with movement continuing (superseded by paginated block). Act 1 as **`storyEventId`** narrative scenes (no campaign effects on movement beats).
+**Rejected:** Act 1 as ephemeral corner-only banners with movement continuing (superseded by paginated block). Act 1 **fully** as **`storyEventId`** scenes for every movement beat.
+
+**Exception (locked):** **`s1_b1f_mouth_briefing`** — single Event-cell VN before first hub; all other Act 1 beats stay guided pages ([s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f)).
 
 ### 5. Codex (replay — stakeholder 2026-05-23)
 
@@ -158,7 +160,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 ### 13. Testing (game repo — when implemented)
 
 - **Edit Mode:** `GuidedTutorialControllerTests` — given hint def + mock campaign, assert completion fires once, gate callbacks invoked.
-- **Play Mode:** DevBootstrap F2 (Act 1) + F3 (forced guided Protocol after crisis) — checklist in [#35](https://github.com/miramocha/griddungeon-game/issues/35).
+- **Play Mode:** DevBootstrap F2 (Act 1) + F3 (forced guided Protocol after crisis) — checklist in [#88](https://github.com/miramocha/griddungeon-game/issues/88).
 
 ## Rejected
 
@@ -176,7 +178,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 - **Design:** [guided-tutorial.md](../docs/02-systems/guided-tutorial.md) (system); [s1-guided-tutorials.md](../docs/03-content/campaign/s1-guided-tutorials.md) (beats).
 - **Content:** `Assets/Content/GuidedTutorials/` + campaign beat table.
 - **Runtime:** `GuidedTutorialController`, `GuidedTutorialView`; `StoryEventRunner` effect `start_guided_protocol` delegates here.
-- **Issues:** [#35](https://github.com/miramocha/griddungeon-game/issues/35) — coach chrome + gates; [#20](https://github.com/miramocha/griddungeon-game/issues/20) — S1 wiring; clarify overlap with ADR 028 runner in #35 description.
+- **Issues:** [#88](https://github.com/miramocha/griddungeon-game/issues/88) — coach; [#87](https://github.com/miramocha/griddungeon-game/issues/87) — story VN; [#20](https://github.com/miramocha/griddungeon-game/issues/20) — S1 wiring.
 - **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design-mvp1.md).
 
 ## Stakeholder decisions (2026-05-23)
@@ -187,7 +189,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | Codex placement | **Pause menu** — `Esc` from exploration, combat, or hub ([input bindings](../docs/02-systems/input-bindings.md)) |
 | MVP1 media | **Stills only** — schema may reserve `videoId` for later |
 | Act 1 G + C | **One** entry `s1_explore_route_features` (signage + gather); not separate codex rows |
-| Shared panel UXML | **Undecided** — implement `GuidedTutorialView` first; revisit sharing with `StoryEventView` in #35 |
+| Shared panel UXML | **Undecided** — implement `GuidedTutorialView` first ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); revisit sharing with `StoryEventView` ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) |
 | Act 1 input | **Blocking** while block is open (flip pages, then dismiss) |
 | Naming | Instructional beats stay **guided tutorial**; **codex** = replay UI for unlocked entries |
 | Codex | Unlock on complete / full read; **no** re-apply of combat gates or flags on replay |
@@ -199,7 +201,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 ## Open questions (deferred)
 
 1. **Act 1 — teach map (`M`)** — defer until explore HUD [#36](https://github.com/miramocha/griddungeon-game/issues/36).
-2. **Shared `TutorialPanel.uxml` with story layer** — undecided; pick during #35 implementation.
+2. **Shared `TutorialPanel.uxml` with story layer** — undecided; pick during #87 / #88 implementation.
 3. **Authoring** — YAML vs ScriptableObject (defer with [ADR 028](028-story-visual-novel-events.md)).
 
 ## Related
@@ -208,4 +210,6 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 - [ADR 028 — Story events](028-story-visual-novel-events.md)
 - [ADR 027 — Combat cinematics](027-combat-cinematic-timeline-events.md)
 - [S1 guided tutorials (content)](../docs/03-content/campaign/s1-guided-tutorials.md)
-- [Game #35 — Combat reactive + Synchro tutorial UI](https://github.com/miramocha/griddungeon-game/issues/35)
+- [Game #88 — Guided tutorials](https://github.com/miramocha/griddungeon-game/issues/88)
+- [Game #87 — Story events](https://github.com/miramocha/griddungeon-game/issues/87)
+- [Game #35 — Combat reactive + Synchro tutorial UI](https://github.com/miramocha/griddungeon-game/issues/35) (done)

@@ -9,8 +9,10 @@ Narrative progression, tutorials, and one-time gates — **not** floor grids or 
 | [../dungeons-and-encounters.md](../dungeons-and-encounters.md) | Floor layouts, FOE placement, random tables (authority for grids) |
 | [../mvp1-enemy-roster.md](../mvp1-enemy-roster.md) | Enemy stats, skills, encounter group compositions |
 
-**Story scenes (VN):** [story-events.md](../../02-systems/story-events.md) · [ADR 028](../../decisions/028-story-visual-novel-events.md) — index under `docs/03-content/story-events/` when authored.
+**Story scenes (VN):** [story-events.md](../../02-systems/story-events.md) · [ADR 028](../../decisions/028-story-visual-novel-events.md) · [#87](https://github.com/miramocha/griddungeon-game/issues/87)
 
-**Guided coaching (HUD):** [guided-tutorial.md](../../02-systems/guided-tutorial.md) — distinct from VN; S1 beat table in [s1-guided-tutorials.md](s1-guided-tutorials.md).
+**Guided coaching (HUD):** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · [ADR 029](../../decisions/029-guided-tutorial.md) · [#88](https://github.com/miramocha/griddungeon-game/issues/88) — distinct from VN; S1 beat table in [s1-guided-tutorials.md](s1-guided-tutorials.md).
 
-**Post-MVP1:** expand `story-events/` for tile scripts and one-off fights beyond S1 tutorial. Game assets stay on existing types (`StratumFloor`, `EncounterGroup`, save flags) — see [05 — Class design](../../05-class-design-mvp1.md#floors--stratum).
+**MVP1 S1:** four story events — B1F **Event cell** before first hub; B2F Event before tutorial fight; mid-combat unlock; hub outro ([story-events index](../story-events/README.md)).
+
+**Post-MVP1:** more hub / exploration tile scripts and one-off fights. Game assets stay on existing types (`StratumFloor`, `EncounterGroup`, save flags) — see [05 — Class design](../../05-class-design-mvp1.md#floors--stratum).

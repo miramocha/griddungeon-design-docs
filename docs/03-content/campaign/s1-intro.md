@@ -5,9 +5,9 @@
 **Enemy stats / encounter groups:** [mvp1-enemy-roster](../mvp1-enemy-roster.md).  
 **Hub services (Act 2):** [hub — S1 intro](../../02-systems/hub-and-services.md#stratum-1-intro)  
 **Guided tutorials (S1):** [s1-guided-tutorials](s1-guided-tutorials.md) · [system](../../02-systems/guided-tutorial.md)  
-**Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe) · **Rules:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) · **UI:** [game #19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35)
+**Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe) · **Rules:** [#10](https://github.com/miramocha/griddungeon-game/issues/10) · **VN:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) · **Coach:** [#88](https://github.com/miramocha/griddungeon-game/issues/88) · **HUD:** [#35](https://github.com/miramocha/griddungeon-game/issues/35) (done)
 
-Terminology: **campaign intro** = this doc (Acts 1–3). **Event** (future) = tile scripts / one-off story cells — see [campaign README](README.md).
+Terminology: **campaign intro** = this doc (Acts 1–3). **Event** = tile scripts / one-off story cells ([dungeons § Encounter types](../dungeons-and-encounters.md#encounter-types)); MVP1 S1 uses **B1F** (before first hub) and **B2F** (before tutorial FOE / scripted hub warp).
 
 ---
 
@@ -21,9 +21,9 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster |
 | **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Mouth spawn** `(10, 11)` (`stairsUp`) from hub; blockers **cleared**; mandatory tutorial FOE |
 
-**Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → mouth **stairs up** → hub ([guided hints](s1-guided-tutorials.md#act-1--movement-b1f)).
+**Act 1 beats:** move from intro cell → wall bump / optional **G** / **C** on route → **Event cell** Navigator briefing → mouth **stairs up** → hub ([guided hints](s1-guided-tutorials.md#act-1--movement-b1f), [mouth briefing](../story-events/s1/s1_b1f_mouth_briefing.md)).
 
-**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **`foe_alley_stalker`** (crisis AOE → VN unlock → guided `protocol_strike` → kill → VN + **warp hub** — [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) → re-enter stratum → B3F boss.
+**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **Event cell briefing VN** → tutorial FOE fight (crisis AOE → VN unlock → guided `protocol_strike` → kill → VN + **warp hub** — [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) → re-enter stratum → B3F boss.
 
 ---
 
@@ -31,9 +31,11 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 | Flag | Set when |
 |------|----------|
+| `s1_b1f_mouth_briefing_seen` | Act 1: Event cell VN before first hub (`s1_b1f_mouth_briefing`) |
 | `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at mouth |
 | `s1_party_ready` | Act 2: guild party requirement met |
 | `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
+| `s1_b2f_stalker_briefing_seen` | After B2F Event-cell approach VN (`s1_b2f_stalker_briefing`) |
 | `s1_synchro_unlocked` | After unlock VN (`s1_synchro_protocol_unlock`), post-crisis AOE |
 | `s1_synchro_protocol_tutorial_done` | `protocol_strike` finisher killed FOE |
 | `s1_first_foe_tutorial_complete` | Hub return VN + scripted warp from B2F tutorial; **B3F** unblocked |

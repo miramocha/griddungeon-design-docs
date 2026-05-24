@@ -89,6 +89,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 | `^` | `stairsUp` — mouth: → **hub** (all strata) | Stairs up icon / `^` |
 | `v` | `stairsDown` — next floor **in same stratum** | Stairs down icon / `v` |
 | `F` | FOE spawn | FOE marker when in LOS |
+| `!` | **Event** tile — story script on enter ([story events § S1](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; MVP1 S1 B2F tutorial briefing |
 | `C` | Chest | Overlay when feature wired (MVP1+ art) |
 | `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Overlay MVP2+ |
 | `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
@@ -159,7 +160,7 @@ entries:
 #........#.#.......#
 #....C...#.#...G...#
 #........#.#.......#
-#........#M#.......#
+#........!M#.......#
 #........#.^.......#
 #......###.###.....#
 #......#.....#.....#
@@ -172,10 +173,11 @@ entries:
 
 - **E** `(4, 2)` — Act 1 intro spawn; funnel north/east to mouth.
 - **M** `(10, 10)` — mouth landing (fiction: camp threshold); pair with **^** `(10, 11)` → hub.
+- **`!` `(9, 10)`** — Act 1 Event cell: **`s1_b1f_mouth_briefing`** before first hub ([story events § Act 1](../../02-systems/story-events.md#act-1--first-hub-b1f)).
 - **v** `(10, 17)` — to B2F; blocked in Act 1.
 - **X** — tutorial blockers on shortcuts to `v` and wide loops.
 
-**Act 1 beats:** move from **E** → bump walls on side alcoves → **G** / **C** on route → **^** → hub (sets `s1_intro_movement_complete`) — [guided hints](campaign/s1-guided-tutorials.md#act-1--movement-b1f).
+**Act 1 beats:** move from **E** → bump walls on side alcoves → **G** / **C** on route → **`!` mouth briefing VN** → **^** → hub (sets `s1_intro_movement_complete`) — [guided hints](campaign/s1-guided-tutorials.md#act-1--movement-b1f) + [mouth briefing](story-events/s1/s1_b1f_mouth_briefing.md).
 
 **Act 3 beats:** hub party ready → spawn **M** → clear blockers → optional B1F chaff fights → **v** → B2F FOE tutorial ([`s1_B2F`](#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
@@ -197,7 +199,7 @@ entries:
 ```yaml
 foeId: foe_alley_stalker
 spawnCell: [12, 11]
-patrolPath: [[12, 11], [12, 12], [13, 12], [13, 11]]
+patrolPath: [[12, 11], [11, 11], [10, 11], [9, 11], [8, 11], [7, 11], [6, 11], [7, 11], [8, 11], [9, 11], [10, 11], [11, 11]]
 stepsPerMove: 4
 tier: green
 encounterGroup: grp_alley_stalker_tutorial   # tutorial variant; enemies tutorialUnbeatable
@@ -207,8 +209,9 @@ encounterTags: [tutorial_synchro, unbeatable]
 synchroUnlockTrigger: after_core_turns_2      # or on_first_party_damage — tune in data
 ```
 
+- **Approach (exploration):** **Event** cell **`!` at `(7, 11)`** on west loop → **`s1_b2f_stalker_briefing`** VN → `start_combat` (`grp_alley_stalker_tutorial`). Main path before scripted **hub** return ([story events § S1 flow](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)).
 - **Unbeatable:** FOE cannot die until **`protocol_strike`** finisher ([synchro § S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
-- **Crisis:** trigger (2 core turns OR FOE at HP floor) → FOE **scripted AOE** → all living core **HP = 1** → unlock VN → guided Protocol → FOE **kill** → **hub warp** ([story events § S1 flow](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)).
+- **Crisis:** trigger (2 core turns OR FOE at HP floor) → FOE **scripted AOE** → all living core **HP = 1** → unlock VN → guided Protocol → FOE **kill** → **hub warp** (same doc).
 - **Progression:** path to `s1_B3F` blocked until `s1_first_foe_tutorial_complete`.
 - Prior combats (B1F random): Synchro still locked.
 
@@ -239,8 +242,8 @@ entries:
 #....#.......#.....#
 #....###..####.....#
 #.......#.#........#
+#......#!#........#
 #.......#F#........#
-#.......#.#........#
 #....####.####.....#
 #....#.......#.....#
 #....#.......#.....#
@@ -249,7 +252,7 @@ entries:
 ####################
 ```
 
-`^` and `v` share column **10** at `(10, 2)` / `(10, 15)` (ASCII `^`/`v` on those rows are visual; constants are authoritative). Entry from B1F lands on **^** at `(10, 2)`. East loop `(12–14, 10–13)` intersects FOE patrol.
+`^` and `v` share column **10** at `(10, 2)` / `(10, 15)` (ASCII `^`/`v` on those rows are visual; constants are authoritative). Entry from B1F lands on **^** at `(10, 2)`. **`!` `(7, 11)`** — tutorial Event cell (west loop); fires before hub warp arc. East loop `(12–14, 10–13)` intersects FOE patrol.
 
 ---
 
