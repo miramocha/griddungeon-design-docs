@@ -102,7 +102,7 @@ GameState (composition root)
 └── SaveSystem           — hub save + per-floor revealed map + FOE state
 ```
 
-**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). **F3** uses two dev cores + slime when the party roster is empty (AGI order 14 → 9 → 5). Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
+**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub → Exploration → Combat → Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). **F3** uses two dev cores + slime when the party roster is empty (AGI order 14 → 9 → 5). Editor: **GridDungeon → Tools → Dev Tools** (phase shortcuts), **Save Editor** (inn save F5, campaign flags, Edit Mode write — [PR #84](https://github.com/miramocha/griddungeon-game/pull/84)), **Dev Tools Map**. Game repo: **GridDungeon → Scenes → Create Dev Bootstrap**.
 
 ## Map system
 

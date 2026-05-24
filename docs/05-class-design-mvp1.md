@@ -1145,6 +1145,11 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
     EnemySlotsView     EnemySlots;
 }
 
+// GridDungeon.Editor.Save — MVP1 save / campaign dev tooling (PR #84)
+class GridDungeonSaveEditorWindow : EditorWindow  // GridDungeon → Tools → Save Editor
+class SaveEditorModel / SaveEditorPanel           // Play: in-memory flags + drift vs disk; Edit: Reload / Write JSON
+class CampaignFlagCatalog                       // Editor descriptors ↔ CampaignFlagId (Core)
+
 // GridDungeon.Editor — floor level painter → StratumFloor.asset (ADR 002)
 class FloorPainterWindow : EditorWindow
 {
