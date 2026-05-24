@@ -17,6 +17,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 ## Map UI
 
+- **Implementation wiring:** [exploration UI](exploration-ui.md) — `ExplorationHudView` → `map-view-mount` → `MapView` (event subscriptions, input, phase visibility).
 - **Presentation:** **2D schematic** in UI Toolkit from `StratumFloor` + revealed state — authored via **floor level painter** → SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
@@ -28,6 +29,8 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 ### Map UI motion
 
 Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
+
+**Implementation target:** presenter + read model + `MapGridPainter` ([exploration UI § Target](exploration-ui.md#target--presenter-based-exploration-hud)) — not yet shipped; today `MapView` updates cells imperatively.
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
@@ -88,7 +91,7 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 ### Implementation notes (if we adopt A or B)
 
-- `MapView` today lives on **`ExplorationHUD`** only ([class design § View controllers](../05-class-design-mvp1.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
+- `MapView` today lives on the **`ExplorationHud`** GameObject only ([exploration UI](exploration-ui.md), [class design § View controllers](../05-class-design-mvp1.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
 - FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
 - Arena stays **slot-based** ([combat scene](combat-scene.md)) — map shows **grid** threat, not live battle positions.
 
@@ -118,6 +121,7 @@ Runtime draw priority today (`MapView`): party → fog → solid `#` → reveale
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [Autopilot (MVP2)](autopilot.md)
 - [FOE encounters](foe-encounters.md) · [Chain / mid-battle FOE](chain-foe-battle.md)
+- [Exploration UI](exploration-ui.md) — HUD composition and bind lifecycle
 - [Combat scene](combat-scene.md) · [Game phase](game-phase.md)
 - [ADR 002 — Mapping model](../../decisions/002-mapping-model.md)
 - [ADR 005 — FOE combat patrol](../../decisions/005-foe-combat-patrol.md) · [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)

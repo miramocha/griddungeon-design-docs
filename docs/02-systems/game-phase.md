@@ -26,7 +26,8 @@ flowchart TB
   subgraph ui [GridDungeon.UI]
     GB[GameBootstrap]
     IR[InputRouter]
-    DevHUD[GamePhaseDevHud / MapView]
+    EHUD[ExplorationHudView / MapView]
+    CHUD[CombatHudView]
   end
   subgraph runtime [GridDungeon.Runtime]
     GS[GameState]
@@ -55,7 +56,8 @@ flowchart TB
   subgraph tests [GridDungeon.Tests]
     T[NUnit Core + Runtime phase tests]
   end
-  DevHUD --> GS
+  EHUD --> GS
+  CHUD --> GS
   GB --> IR
   IR -->|PhaseChanged| GS
   GPC --> GP
@@ -67,7 +69,7 @@ flowchart TB
 
 **Authority rule:** only `GamePhaseController` changes `GamePhase`. UI and gameplay code call `GameState.RequestTransition` or `GameState.RequestCombat`; they do not toggle scenes or input maps directly.
 
-Production **ExplorationHUD / CombatHUD** are future; MVP1 dev acceptance uses `GamePhaseDevHudView` and `MapView` (see [Dev bootstrap HUD](#dev-bootstrap-hud-ui-toolkit)).
+**Exploration HUD** (`ExplorationHudView`, `MapView`, pause overlay) and **Combat HUD** (`CombatHudView`) ship in the game repo; wiring and bind lifecycle are documented in [exploration UI](exploration-ui.md) and [combat](combat.md). **Dev-only** `GamePhaseDevHudView` remains for macro-phase smoke tests (see [Dev bootstrap HUD](#dev-bootstrap-hud-ui-toolkit)).
 
 ## Terminology
 
@@ -391,7 +393,7 @@ MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.u
 
 **F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_medic` (AGI 9, **Skill** = ally heal `dev_field_patch`) + `dev_slime` (AGI 5) — for turn-order strip and ally-target keyboard QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue; **player command** turns highlight the acting core on the **party roster**, not the AGI strip ([combat.md](combat.md#turn-order-strip-agi-queue-ui)).
 
-Dev UI is **not** authoritative — it only calls `GameState` APIs. Production hub/explore/combat HUDs replace this panel later; see [class design MVP1](../05-class-design-mvp1.md#ui-layer).
+Dev UI is **not** authoritative — it only calls `GameState` APIs. Production exploration/combat HUDs are separate `UIDocument` roots; see [exploration UI](exploration-ui.md), [combat](combat.md), and [class design MVP1](../05-class-design-mvp1.md#ui-layer).
 
 ## Visual Scripting (post-MVP1 optional)
 
@@ -408,6 +410,7 @@ If a UVS state graph is added later:
 - [05 — Class design MVP1](../05-class-design-mvp1.md)
 - [04 — Tech notes](../04-tech-notes.md)
 - [MVP1 spec](../mvp1-spec.md)
+- [Exploration UI](exploration-ui.md) — UXML mounts, `MapView` / pause binding, input
 - [Combat](combat.md)
 - [Hub & services](hub-and-services.md)
 - [Side dungeons (MVP3)](side-dungeons.md)

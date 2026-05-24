@@ -20,4 +20,5 @@
 
 - [MVP1 spec](../docs/mvp1-spec.md)
 - [Mapping](../docs/02-systems/mapping.md)
+- [Exploration UI](../docs/02-systems/exploration-ui.md) — `MapView` / pause bind lifecycle
 - [ADR 002](002-mapping-model.md)

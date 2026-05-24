@@ -2,7 +2,7 @@
 
 **Platform:** PC first ([ADR 008](../../decisions/008-campaign-defaults.md)). Keyboard + mouse primary; **gamepad deferred**.
 
-Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action maps: `Exploration`, `Combat`, `UI`, `Map` ([ADR 012](../../decisions/012-unity-6-stack.md)).
+Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action maps: `Exploration`, `Combat`, `UI`, `Map` ([ADR 012](../../decisions/012-unity-6-stack.md)). Runtime routing: `InputRouter` → handlers ([exploration UI](exploration-ui.md#input-routing), [game phase](game-phase.md#input-maps-per-phase)).
 
 ## Design principles
 

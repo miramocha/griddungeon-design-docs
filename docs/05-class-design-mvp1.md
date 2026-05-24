@@ -1124,6 +1124,8 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ### View controllers
 
+**Shipped exploration UI** (bind lifecycle, UXML mounts, input): [exploration UI](02-systems/exploration-ui.md). Types below are the **target** sketch; game repo uses `ExplorationHudView`, `MapView`, `ExplorationPauseView` (party strip / log not wired).
+
 ```csharp
 class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phase
 {
