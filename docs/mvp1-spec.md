@@ -144,7 +144,7 @@ Full Navigator roster unlocks post-MVP1.
 | Traps, encounter suppress | Post-MVP1 |
 | **Protocol Deploy** / **Protocol Transform** ([023](../decisions/023-protocol-deploy-sortie-summon.md), [024](../decisions/024-protocol-transform.md)) | Post-MVP1 |
 | Guest (`MVP1+`) | Stretch |
-| Floor level painter (Editor → `StratumFloor`) | Post-MVP1; MVP1 may hand-author one test floor |
+| Floor level painter (Editor → `StratumFloor`) | Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) — phases [#76](https://github.com/miramocha/griddungeon-game/issues/76)–[#79](https://github.com/miramocha/griddungeon-game/issues/79); MVP1 floors still hand-authored until phase 2 ships |
 | Multi-level map layer toggle in HUD | Post-MVP1 |
 | MapProxy + minimap camera (debug 3D preview) | Deferred / optional |
 | Setting name / tone brief | [00 — Vision § Tone](00-vision.md#tone--setting) (municipal underworks; UI palette in [map cell art](02-systems/map-cell-art.md#visual-tone-municipal-underworks)) |
@@ -176,12 +176,12 @@ UI epic [#19](https://github.com/miramocha/griddungeon-game/issues/19): [#34](ht
 | **1** | `pull-w01` | [#32](https://github.com/miramocha/griddungeon-game/issues/32) Save → [#33](https://github.com/miramocha/griddungeon-game/issues/33) Campaign | **Done** |
 | **2** | `pull-w02` | [#34](https://github.com/miramocha/griddungeon-game/issues/34) Combat HUD skeleton | **Done** |
 | **3** | `pull-w03` | [#13](https://github.com/miramocha/griddungeon-game/issues/13) Hub · [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB · [#52](https://github.com/miramocha/griddungeon-game/issues/52) class skill rules | **Ready** (current) |
-| **4** | `pull-w04` | [#26](https://github.com/miramocha/griddungeon-game/issues/26) map painter · [#20](https://github.com/miramocha/griddungeon-game/issues/20) FoeSystem · [#56](https://github.com/miramocha/griddungeon-game/issues/56) enemy targeting rules | Backlog |
+| **4** | `pull-w04` | [#75](https://github.com/miramocha/griddungeon-game/issues/75) floor painter epic ([#76](https://github.com/miramocha/griddungeon-game/issues/76)→[#79](https://github.com/miramocha/griddungeon-game/issues/79)) · [#26](https://github.com/miramocha/griddungeon-game/issues/26) HUD grid refactor · [#20](https://github.com/miramocha/griddungeon-game/issues/20) FoeSystem · [#56](https://github.com/miramocha/griddungeon-game/issues/56) enemy targeting | Backlog |
 | **5** | `pull-w05` | [#35](https://github.com/miramocha/griddungeon-game/issues/35) Combat reactive + Synchro tutorial UI | Backlog |
 | **6** | `pull-w06` | [#30](https://github.com/miramocha/griddungeon-game/issues/30) B3F · [#11](https://github.com/miramocha/griddungeon-game/issues/11) summon · [#36](https://github.com/miramocha/griddungeon-game/issues/36) Hub + explore HUD | Backlog |
 | **7** | `pull-w07` | [#31](https://github.com/miramocha/griddungeon-game/issues/31) XP + loot | Backlog |
 | **8** | `pull-w08` | [#15](https://github.com/miramocha/griddungeon-game/issues/15) Vertical slice (integration) | Backlog |
-| — | `pull-epic` | [#19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic — closes when #35–#36 done (#34 done) | Backlog |
+| — | `pull-epic` | [#19](https://github.com/miramocha/griddungeon-game/issues/19) UI epic — closes when #35–#36 done (#34 done) · [#75](https://github.com/miramocha/griddungeon-game/issues/75) floor painter — closes when #76–#79 done | Backlog |
 
 **Closed since wave plan was written:** [#29](https://github.com/miramocha/griddungeon-game/issues/29) B2F · [#27](https://github.com/miramocha/griddungeon-game/issues/27) pause · [#60](https://github.com/miramocha/griddungeon-game/issues/60) target selection · [#65](https://github.com/miramocha/griddungeon-game/issues/65) stale targets · design [#1](https://github.com/miramocha/griddungeon-design-docs/issues/1)–[#5](https://github.com/miramocha/griddungeon-design-docs/issues/5) content/review docs.
 

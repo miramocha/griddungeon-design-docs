@@ -54,7 +54,7 @@ During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) 
 | Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** roster keyboard |
 | Cancel the **whole** round plan | Dedicated control + confirm dialog | Deferred to [#44](https://github.com/miramocha/griddungeon-game/issues/44) |
 
-**Input:** Arrows move focus on command bar; **`Z`** confirms command; **`X`** / **Back button** = Back (LIFO or cancel targeting). **`Esc`** = pause when pause UI ships (no-op until then). **`R`** dropped ([input bindings](input-bindings.md), ADR 026).
+**Input:** Arrows or **`W`/`A`/`S`/`D`** move focus on command bar (WASD mirrors arrows in combat); **`Z`** confirms command; **`X`** / **Back button** = Back (LIFO or cancel targeting). **`Esc`** = pause when pause UI ships (no-op until then). **`R`** dropped ([input bindings](input-bindings.md), [ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 
 **UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. Global hint: **Z Confirm · X Cancel · Esc Pause**. Roster **queued** styling clears when a command is popped.
 
@@ -63,7 +63,7 @@ During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) 
 After **Attack** or a **single-target** skill during command planning ([#60](https://github.com/miramocha/griddungeon-game/issues/60)):
 
 1. Valid enemy (or ally, per `TargetingRule`) slots **highlight** on the roster (`ValidTargetCalculator`).
-2. **Focus moves to the target list** (Path B, ADR 026); first valid slot highlighted; **arrow keys** move highlight; **`Z`** confirms `TargetId` and advances planning.
+2. **Focus moves to the target list** (Path B, ADR 026); first valid slot highlighted; **arrow keys or `W`/`A`/`S`/`D`** move highlight; **`Z`** confirms `TargetId` and advances planning.
 3. **LMB** on a valid slot confirms immediately (no **`Z`**).
 4. **`X`** or **Back button** cancels targeting without queuing.
 5. **No valid targets** — command panel shows “No valid targets”; player must pick another command or Back.
@@ -186,7 +186,7 @@ See [combat presentation](combat-presentation.md).
 
 ## Input
 
-PC: combat **menu focus** — arrows, **`Z`** confirm, **`X`** / **Back button** cancel/LIFO ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)); **`Esc`** pause when UI ships; mouse one-click commands and LMB targets — [input bindings](input-bindings.md).
+PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **`X`** / **Back button** cancel/LIFO ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)); **`Esc`** pause when UI ships; mouse one-click commands and LMB targets — [input bindings](input-bindings.md).
 
 ## UI requirements
 
@@ -198,7 +198,7 @@ PC: combat **menu focus** — arrows, **`Z`** confirm, **`X`** / **Back button**
 - Aux label: Summon / Guest
 - **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **focus navigator** on command bar + target list ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md))
 - **Turn phase:** cores play queued commands on their AGI slot; summons use same focus model when player-controlled ([ADR 016](../../decisions/016-summon-control-mvp1.md))
-- **Target selection** during command planning — valid highlights + arrows/`Z` + LMB; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
+- **Target selection** during command planning — valid highlights + arrows/WASD/`Z` + LMB; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
 - Combat log
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)

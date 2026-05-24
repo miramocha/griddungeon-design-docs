@@ -7,7 +7,7 @@ Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action map
 ## Design principles
 
 - **Exploration:** grid actions on keyboard; no mouse movement in FPV.
-- **Combat:** **menu focus** on command bar (+ target list when targeting) — arrows move focus, **`Z`** confirm, **`X`** cancel/Back; **mouse** still one-click queue and LMB targets ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
+- **Combat:** **menu focus** on command bar (+ target list when targeting) — **arrows or `W`/`A`/`S`/`D`** move focus (WASD mirrors arrows; exploration map disabled in combat), **`Z`** confirm, **`X`** cancel/Back; **mouse** still one-click queue and LMB targets ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-05-23-wasd-menu-navigate)).
 - **Map:** mouse pan/zoom when map panel focused or fullscreen.
 - **Rebindable** in settings menu (MVP1: ship with defaults below; store overrides in player prefs).
 
@@ -68,13 +68,13 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ## Combat
 
-**Authority:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md). Global combat UI keys: **arrows** = move focus, **`Z`** = confirm (`Enter` alias), **`X`** = cancel / Back, **`Esc`** = pause (no-op until pause UI ships). **`R`** is not used for Back.
+**Authority:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md). Global combat UI keys: **arrows or `W`/`A`/`S`/`D`** = move focus (`W`↑ `S`↓ `A`← `D`→, same as arrows), **`Z`** = confirm (`Enter` alias), **`X`** = cancel / Back, **`Esc`** = pause (no-op until pause UI ships). **`R`** is not used for Back. Exploration `W`/`S`/`A`/`D` do **not** apply while the Combat map is active.
 
 ### Command bar (planning + player-controlled turns)
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Move focus** | Arrow keys | Active scope: command bar or target list (see targeting) |
+| **Move focus** | Arrow keys or `W` / `A` / `S` / `D` | Active scope: command bar or target list; WASD mirrors arrows ([ADR 026 amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-05-23-wasd-menu-navigate)) |
 | **Confirm** | `Z` or `Enter` | Queue focused command, confirm target, or activate **Back button** |
 | **Cancel / Back** | `X` | Cancel targeting, or LIFO undo last queued command when planning |
 | **Pause** | `Esc` | Pause menu (incl. **Tutorial codex** when unlocked — [ADR 029](../../decisions/029-guided-tutorial.md)); no-op until UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)) |
@@ -99,7 +99,7 @@ After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
-| **Move target focus** | Arrow keys | Valid slots only; first valid slot highlighted on enter |
+| **Move target focus** | Arrow keys or `W` / `A` / `S` / `D` | Valid slots only; first valid slot highlighted on enter |
 | **Confirm target** | `Z` or `Enter` | Queue command with `TargetId`; advance to next core |
 | **Cancel targeting** | `X` or **Back button** (+ `Z` on focused Back) | No command queued; return to command bar (default focus Attack) |
 
@@ -141,11 +141,11 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Hub & menus
 
-**Deferred** until hub service UI ships ([#36](https://github.com/miramocha/griddungeon-game/issues/36)). When built, use the same **arrows / `Z` / `X`** pattern as combat ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) hub addendum).
+**Deferred** until hub service UI ships ([#36](https://github.com/miramocha/griddungeon-game/issues/36)). When built, use the same **arrows / WASD / `Z` / `X`** pattern as combat ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) hub addendum).
 
 | Action | Input (target) |
 |--------|----------------|
-| Navigate | Mouse, arrows |
+| Navigate | Mouse, arrows, `W`/`A`/`S`/`D` |
 | Confirm | `Z` (`Enter` alias) |
 | Cancel / back | `X` or mouse |
 | Assign party / skills | Mouse at **Explorers Guild** (until guild UI ships) |
@@ -164,7 +164,7 @@ Exploration
   MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
 
 Combat
-  MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows / Z / X (wire + remap from legacy Cmd*)
+  MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X on MenuNavigate composite
   ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
   CycleTarget                             # deferred; targeting uses MenuNavigate on roster

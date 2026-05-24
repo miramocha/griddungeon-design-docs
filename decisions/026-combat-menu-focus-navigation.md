@@ -18,7 +18,7 @@ Product direction: **cursor navigation** on the command bar (and target list dur
 
 | Key | Role |
 |-----|------|
-| **Arrow keys** | Move focus within the **active scope** (command bar or target list) |
+| **Arrow keys** or **`W` / `A` / `S` / `D`** | Move focus within the **active scope** (command bar or target list). **`W`/`S`/`A`/`D` mirror arrows** (`W`↑ `S`↓ `A`← `D`→). Exploration movement keys are **not** active in combat — only the Combat `MenuNavigate` composite applies ([amendment](#amendment-2026-05-23-wasd-menu-navigate)). |
 | **`Z`** | **Confirm** focused item (`Enter` is an alias) |
 | **`X`** | **Cancel** or **Back** (same as **Back button** when that action applies) |
 | **`Esc`** | **Pause** in any combat phase when pause UI ships ([ADR 015](015-mvp1-combat.md)); **no-op** until then |
@@ -49,7 +49,7 @@ After **Attack** or single-target **Skill** requires a target:
 
 1. **Focus auto-moves** to the **target list** (valid enemy/ally slots). Command bar does not accept **`Z`** until targeting ends.
 2. **Default highlight:** first valid target in calculator order.
-3. **Arrow keys** move target highlight among valid slots only.
+3. **Arrow keys** or **`W` / `A` / `S` / `D`** move target highlight among valid slots only (same mapping as command bar).
 4. **`Z`** confirms the highlighted target, sets `TargetId`, queues the command, advances planning.
 5. **`X`** or **Back button** (or **`Z`** on focused **Back button**) cancels targeting only.
 6. **LMB** on a valid slot confirms immediately (no **`Z`**).
@@ -65,13 +65,32 @@ Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player con
 ### Implementation notes
 
 - **`MenuFocusNavigator`** (or equivalent) in `GridDungeon.UI` — testable focus index, skip disabled, Confirm/Cancel callbacks; not in Core.
-- **Input maps:** add or remap **MenuConfirm** / **MenuCancel** / **MenuNavigate** on Combat (or bridge `UI.Navigate` + `Submit`/`Cancel` with `Z`/`X` bindings). Remove **`R`** from planning Back.
+- **Input maps:** add or remap **MenuConfirm** / **MenuCancel** / **MenuNavigate** on Combat (or bridge `UI.Navigate` + `Submit`/`Cancel` with `Z`/`X` bindings). **`MenuNavigate`:** arrow keys **and** `W`/`A`/`S`/`D` on the same 2D vector composite. Remove **`R`** from planning Back.
 - **Pause:** bind **`Esc`** when combat pause overlay ships; until then ignore **`Esc`** in combat (do not map to LIFO Back).
 - **Dev HUD** (`GamePhaseDevHud`) is explicitly **out of scope**.
 
 ### Hub (deferred)
 
-When hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), [#36](https://github.com/miramocha/griddungeon-game/issues/36)) ships, apply the same **`Z` / `X` / arrows** pattern to root + service menus. Amend this ADR or add a short hub addendum at that time.
+When hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), [#36](https://github.com/miramocha/griddungeon-game/issues/36)) ships, apply the same **`Z` / `X` / arrows / WASD** pattern to root + service menus. Amend this ADR or add a short hub addendum at that time.
+
+## Amendment (2026-05-23) — WASD menu navigate
+
+**Motivation:** PC players expect **`W`/`A`/`S`/`D`** to behave like arrow keys in menu-style UI. Combat disables the Exploration action map, so `W`/`A`/`S`/`D` must be **re-bound on Combat `MenuNavigate`**, not inherited from exploration displacement.
+
+**Mapping (locked):**
+
+| Key | Same as | Focus direction |
+|-----|---------|-----------------|
+| `W` | ↑ | Previous item (same as Up arrow) |
+| `S` | ↓ | Next item (same as Down arrow) |
+| `A` | ← | Previous item (same as Left arrow) |
+| `D` | → | Next item (same as Right arrow) |
+
+**Scope:** Command bar, target list (Path B), summon / per-slot player control — any surface using `MenuNavigate` in combat.
+
+**Implementation:** [game #80](https://github.com/miramocha/griddungeon-game/issues/80) — add four composite parts to `Combat.MenuNavigate` in `GridDungeon.inputactions`; `CombatInputHandler` unchanged if it already reads `Vector2` from `MenuNavigate`.
+
+**Rebind note:** When settings rebind ships, `W`/`A`/`S`/`D` and arrows may be remapped independently unless product chooses a single “menu navigate” binding group.
 
 ## Consequences
 
@@ -86,4 +105,4 @@ When hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/
 - [Combat — Command planning](../docs/02-systems/combat.md#command-planning--back)
 - [ADR 009 — PC input](009-input-bindings-pc.md) (exploration unchanged)
 - [ADR 015 — MVP1 combat](015-mvp1-combat.md)
-- Implementation: [game #67](https://github.com/miramocha/griddungeon-game/issues/67) (epic — HUD hint labels, summon control deferred), [#68](https://github.com/miramocha/griddungeon-game/issues/68) (navigator), [#69](https://github.com/miramocha/griddungeon-game/issues/69) (command bar), [#70](https://github.com/miramocha/griddungeon-game/issues/70) (targeting Path B)
+- Implementation: [game #67](https://github.com/miramocha/griddungeon-game/issues/67) (epic — HUD hint labels, summon control deferred), [#68](https://github.com/miramocha/griddungeon-game/issues/68) (navigator), [#69](https://github.com/miramocha/griddungeon-game/issues/69) (command bar), [#70](https://github.com/miramocha/griddungeon-game/issues/70) (targeting Path B), [#80](https://github.com/miramocha/griddungeon-game/issues/80) (WASD on `MenuNavigate`)

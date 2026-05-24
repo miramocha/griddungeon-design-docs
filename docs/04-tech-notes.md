@@ -120,7 +120,7 @@ GameState (composition root)
 
 | Concern | Approach |
 |---------|----------|
-| **Authoring (primary)** | **Floor level painter** (Unity Editor) → exports **`StratumFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol |
+| **Authoring (primary)** | **Floor level painter** (Unity Editor) → exports **`StratumFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol — epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
 | **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map |
 | **Runtime HUD (primary)** | **`MapView`** — 2D UI Toolkit grid or blitted `Texture2D` from `StratumFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
@@ -276,7 +276,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping — [mapping § Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
 - [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions — [navigator § Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence)
 - [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
-- [ ] **Floor level painter** → `StratumFloor` export (primary map authoring; MVP1 may hand-fill one test floor)
+- [ ] **Floor level painter** → `StratumFloor` export — [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; MVP1 floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)
 
 ## Related docs
