@@ -66,11 +66,12 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 - Implement under `Assets/Scripts/Runtime/Game/` per [class design MVP1](../docs/05-class-design-mvp1.md).
 - `InputRouter` subscribes to `PhaseChanged` (or is called from phase `OnExit`/`OnEnter`).
 - Systems request transitions through `GameState` / `GamePhaseController`, not by enabling scenes ad hoc.
-- Document flow and APIs in [game phase system](../docs/02-systems/game-phase.md).
+- Document flow and APIs in [game phase system](../docs/02-systems/game-phase.md). UVS integration examples: [uvs-phase-presentation](../docs/02-systems/uvs-phase-presentation.md).
 
 ## Related
 
 - [Game phase (system doc)](../docs/02-systems/game-phase.md)
+- [UVS — phase & presentation hooks](../docs/02-systems/uvs-phase-presentation.md)
 - [05 — Class design MVP1](../docs/05-class-design-mvp1.md)
 - [04 — Tech notes](../docs/04-tech-notes.md)
 - [MVP1 spec](../docs/mvp1-spec.md)

@@ -50,6 +50,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Input bindings](docs/02-systems/input-bindings.md) | Draft | PC keyboard + mouse defaults |
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
+| [02 — UVS phase & presentation](docs/02-systems/uvs-phase-presentation.md) | Draft | Optional Visual Scripting hooks: `GameState`, movement, gates, examples |
 | [05 — Class design MVP1](docs/05-class-design-mvp1.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |

@@ -397,12 +397,14 @@ Dev UI is **not** authoritative — it only calls `GameState` APIs. Production e
 
 ## Visual Scripting (post-MVP1 optional)
 
-If a UVS state graph is added later:
+Full API tables, setup, and **copy-paste examples** (phase change, hub leave, combat entry, `DungeonExplorer` move/spawn, presentation gates): **[UVS — phase & presentation hooks](uvs-phase-presentation.md)**.
 
-- Graph **listens** to `PhaseChanged` only
-- Graph runs presentation (fade, audio sting)
-- Graph **must not** call `TryTransitionTo` except via debug menu
-- C# remains authoritative
+Summary:
+
+- Graph **listens** to `GameState.PhaseChanged` for fades, audio, Timeline
+- Graph **must not** own transition rules or Input System maps
+- Scripted writes go through `GameState.RequestTransition` / `RequestCombat` or `HubController.TryLeaveHub` — not raw `GamePhaseController`
+- C# remains authoritative ([ADR 017](../../decisions/017-game-phase-controller.md))
 
 ## Related docs
 
@@ -416,3 +418,4 @@ If a UVS state graph is added later:
 - [Side dungeons (MVP3)](side-dungeons.md)
 - [ADR 022 — Side dungeons](../../decisions/022-side-dungeons-mvp3.md)
 - [Input bindings](input-bindings.md)
+- [UVS — phase & presentation hooks](uvs-phase-presentation.md)
