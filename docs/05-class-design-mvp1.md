@@ -770,9 +770,10 @@ class FoeSystem : MonoBehaviour
     // Delegates to RetreatCellCalculator (Core); used for flee UI enable
     bool CanRetreatFromFoe(GridPosition fightAnchor, FacingDirection facing);
 
-    // Fires when FOE cell == party cell → triggers combat transition
-    event Action<FoeInstance> OnFoeContact;
-    event Action<FoeInstance> OnFoeVisible;  // for map icon update
+    event Action<FoePatrolMove> OnFoePatrolMoved;   // map FOE marker slide
+    event Action OnFoePresenceChanged;            // marker layer refresh
+    // FOE contact → combat: ExplorationPhaseController (no public OnFoeContact today)
+    // Target / deferred: event Action<FoeInstance> OnFoeContact; OnFoeVisible;
 }
 
 class EncounterTrigger
@@ -867,12 +868,7 @@ class CombatController : MonoBehaviour
     void StepBackCommandPlanning();              // R / Esc — Back (LIFO) — game #61
     void SubmitFlee();
 
-    event Action<TurnQueue> OnQueueRebuilt;
-    event Action<Combatant?> OnCommandTargetChanged;
-    event Action OnPartyCommandsChanged;           // planning queue / Back — game #61
-    event Action<Combatant> OnTurnStart;
-    event Action<CombatActionResult> OnActionResolved;
-    event Action<BattleResult> OnBattleEnded;
+    // Events + command methods for HUD: 04-dev/ui-event-contract.md (keep in sync with game repo)
 }
 
 enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
@@ -1072,7 +1068,7 @@ class SaveSystem : MonoBehaviour
 
 ## UI layer
 
-Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** combat — `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration — **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md).
+Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** combat — `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration — **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md). **Integrator / external HUD:** [UI event contract](04-dev/ui-event-contract.md) (runtime events + examples).
 
 ### Input routing
 
@@ -1135,15 +1131,15 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ### View controllers
 
-**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays): [exploration UI](02-systems/exploration-ui.md). Game repo: `ExplorationHudView`, `MapView`, `Map*MarkersPresenter`, `ExplorationPauseView` (party strip / log not wired). Types below are the **target** full read-model sketch.
+**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays, party strip): [exploration UI](02-systems/exploration-ui.md). Runtime events for custom HUD: [UI event contract](04-dev/ui-event-contract.md). Game repo: `ExplorationHudView`, `MapView`, `Map*MarkersPresenter`, `ExplorationPauseView`, `ExplorationPartyStripView`. Types below are the **target** full read-model sketch (not all shipped).
 
 ```csharp
 class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phase
 {
     DungeonView       DungeonView;
     MapView           Map;
-    PartyStripView    PartyStrip;
-    CombatLogView     Log;
+    PartyStripView    PartyStrip;   // shipped: ExplorationPartyStripView
+    // CombatLogView Log — deferred (no exploration log UXML wired; combat uses CombatHudLogView)
 }
 
 class CombatHUD : MonoBehaviour       // root VisualElement for combat phase

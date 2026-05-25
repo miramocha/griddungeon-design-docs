@@ -12,6 +12,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Systems** — rules engines (movement, mapping, combat, party, hub)
 - **Content** — strata, floors, monsters, FOE placement
 - **Tech** — Unity 6 / URP implementation constraints
+- **Dev / integrator** — [04-dev/](docs/04-dev/README.md) (e.g. [UI event contract](docs/04-dev/ui-event-contract.md) for external HUD authors)
 - **Decisions** — ADRs when we lock a design choice
 - **Refs** — visual / UX scratchpads (screenshots, links; not spec authority)
 - **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
@@ -36,6 +37,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |
 | [02 — Exploration UI](docs/02-systems/exploration-ui.md) | Accepted | UI Toolkit HUD wiring: `ExplorationHudView`, `MapView`, pause, input |
+| [04 — Dev: UI event contract](docs/04-dev/ui-event-contract.md) | Active | Integrator reference: Runtime events + command APIs for custom HUD |
 | [Refs — Map UI](docs/refs/map-ui.md) | Scratchpad | Other games’ map UI screenshots (inspiration) |
 | [02 — Hub & services](docs/02-systems/hub-and-services.md) | Draft | Explorers Guild, Navigator Office, shop, hospital, save |
 | [02 — Combat](docs/02-systems/combat.md) | Draft | AGI turn order, rows |

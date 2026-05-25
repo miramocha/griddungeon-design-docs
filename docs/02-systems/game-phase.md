@@ -369,7 +369,7 @@ sealed class GameState : MonoBehaviour
 | Exploration | `UI`, `Exploration`, `Map` (map overlay pass-through per ADR 014) |
 | Combat | `UI`, `Combat` |
 
-Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)).
+Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)). HUD integrators: full runtime event list in [UI event contract](../04-dev/ui-event-contract.md).
 
 ## Dev bootstrap HUD (UI Toolkit)
 

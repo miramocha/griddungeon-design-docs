@@ -115,6 +115,8 @@ Invalid `RequestTransition` returns `false` and leaves `Current` unchanged.
 | `RequestCombat(CombatEntryContext)` | Write | Sets pending entry, then Combat |
 | `RequestQuitToTitle()` | Write | Pause quit — **not** a phase change |
 | `ExplorationBindingsWired` | Event | Exploration handlers re-attached (e.g. dev reset) |
+
+**Full HUD event tables (integrator):** [UI event contract](../04-dev/ui-event-contract.md).
 | `Combat` | Read | `CombatController` reference |
 
 ### Internal (do not call from UVS)

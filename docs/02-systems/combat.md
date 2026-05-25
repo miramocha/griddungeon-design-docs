@@ -190,7 +190,7 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 
 ## UI requirements
 
-- **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback) and [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)
+- **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback), [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity), and [UI event contract](../04-dev/ui-event-contract.md#combat-phase) (integrator event list)
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
 - **Synchro Charge** (team, 0–100%) — see [synchro-protocol](synchro-protocol.md)
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below

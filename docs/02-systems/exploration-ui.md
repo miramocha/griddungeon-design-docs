@@ -2,7 +2,7 @@
 
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, pause overlay, future party strip) without re-tracing the scene graph.
 
-**Related:** [mapping — Map UI](mapping.md#map-ui) (player-facing behavior), [game phase](game-phase.md) (macro phases + input maps), [input bindings](input-bindings.md), [map cell art](map-cell-art.md), [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md).
+**Related:** [mapping — Map UI](mapping.md#map-ui) (player-facing behavior), [game phase](game-phase.md) (macro phases + input maps), [input bindings](input-bindings.md), [map cell art](map-cell-art.md), [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md). **Integrator event list:** [UI event contract](../04-dev/ui-event-contract.md).
 
 **Game repo entry points:**
 
@@ -22,9 +22,9 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 
 ## Design note: partial map presenters (shipped)
 
-Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration is **split**: cell grid is imperative (`MapView` + `MapGridPainter`); **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); pause stays imperative (`ExplorationPauseView`). A custom HUD can reuse the same event sources without changing phase authority.
+Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration is **split**: cell grid is imperative (`MapView` + `MapGridPainter`); **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); **party strip** + `ExplorationPresentationGate` + `ExplorationHudReactivePresenter` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); pause stays imperative (`ExplorationPauseView`). **Runtime event index:** [UI event contract](../04-dev/ui-event-contract.md). A custom HUD can reuse the same hooks without changing phase authority.
 
-**Target layout (full read-model refactor):** [§ Target — presenter-based exploration HUD](#target--presenter-based-exploration-hud) below — same runtime hooks, shared `MapGridPainter`, no copy-paste of `MapView` paint loops.
+**Future map refactor (optional):** [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) — same runtime hooks, shared `MapGridPainter`; not required for a custom skin.
 
 ---
 
@@ -106,7 +106,7 @@ On `OnDisable`, `MapView.ReleaseFromHud()` and `ExplorationPauseView.ReleaseFrom
 |---------------|----------|--------|
 | `exploration-hud` | `ExplorationHudView` | Root container |
 | `map-view-mount` | `MapView.BindToHud` | **Empty mount** — map UI built in C# |
-| `party-strip` | *(none)* | Placeholder; USS `--hidden`; not wired in MVP1 |
+| `party-strip` | `ExplorationPartyStripView` | Core HP/MP strip; `ExplorationHudReactivePresenter` syncs on step/cell/phase |
 | `exploration-pause` | `ExplorationPauseView` | Pause + quit confirm panels |
 | `exploration-pause-*` buttons | `ExplorationPauseView` | `Q<Button>` + `clicked` handlers |
 
@@ -259,243 +259,49 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 ## Replacing exploration UI (checklist)
 
 1. **Shell:** Replace or extend `ExplorationHud.uxml` / `ExplorationHudView` (keep `UIDocument` + mount pattern, or split documents if needed).
-2. **Map:** Either reuse `MapView` + `MapGridPainter`, or subscribe to the same events (`MapSystem`, `DungeonExplorer`, `GameState.PhaseChanged`) from a new view.
+2. **Map:** Either reuse `MapView` + `MapGridPainter`, or subscribe per [UI event contract § Exploration](../04-dev/ui-event-contract.md#exploration-phase) (see also [§ MapView](#mapview-push-updates) for per-presenter effects).
 3. **Pause:** Reuse `ExplorationPauseView` names or update `MapInputHandler` + `InputRouter` pause wiring.
 4. **Input:** Keep `ExplorationInputHandler` / `MapInputHandler` contracts, or extend `InputRouter.EnableMapsForPhase` for new maps.
 5. **Do not** move floor load, reveal rules, or combat entry into UI — keep `ExplorationPhaseController` + `GameState` as authority ([architecture principles](../../.cursor/rules/architecture-design-principles.mdc)).
 
-**Unwired placeholder:** `party-strip` in UXML — future HP/status strip; no C# binding yet.
+**Party strip:** `party-strip` in UXML — wired via `ExplorationPartyStripView` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); event sources in [UI event contract](../04-dev/ui-event-contract.md#exploration-phase).
 
-For a **clean replacement** (not a fork of `MapView`), follow the target section below.
+For a **clean replacement** (not a fork of `MapView`), see [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) below.
+
+**Not wired (MVP1):** exploration **combat log** panel — `ExplorationHud.uxml` has no log mount; only combat uses `CombatHudLogView` ([#34](https://github.com/miramocha/griddungeon-game/issues/34)). Class-design `ExplorationHUD.Log` is target-only.
 
 ---
 
-## Target — presenter-based exploration HUD
+## Appendix — future map read-model refactor
 
-**Status:** Design sketch (not locked ADR). **Shipped subset ([#90](https://github.com/miramocha/griddungeon-game/pull/90)):** overlay marker presenters + `MapGridMarkerAnimator` (see [§ Map marker overlays](#map-marker-overlays)). **Still target:** `ExplorationMapReadModel`, unified `ExplorationMapPresenter`, optional `ExplorationPresentationGate` for cell reveal beats.
+**Status:** Design sketch (not locked ADR). **Not a blocker** for custom HUD skins — subscribe per [UI event contract](../04-dev/ui-event-contract.md) and reuse shipped `MapView` today.
 
-Use when building production exploration chrome or a full HUD swap. **Does not change** `ExplorationPhaseController`, `MapSystem` reveal rules, or `GameState` phase authority.
+| Shipped (use as-is) | Future extract ([#26](https://github.com/miramocha/griddungeon-game/issues/26)) |
+|---------------------|----------------------------------------------------------------------------------|
+| `MapView`, `MapGridPainter`, marker presenters ([#90](https://github.com/miramocha/griddungeon-game/pull/90)) | `ExplorationMapReadModel` — cell glyph + USS from floor + `MapSystem` |
+| `ExplorationHudView`, pause, party strip, reactive presenter + gate ([#36](https://github.com/miramocha/griddungeon-game/issues/36)) | `ExplorationMapPresenter` — event wiring only; `MapGridRenderer` — paint read model |
+| [Mapping § Map UI motion](mapping.md#map-ui-motion) + [UI event contract](../04-dev/ui-event-contract.md) | Same events; optional stricter gate on `RevealChanged` beats |
 
-**Goals:**
+**Why:** `MapView` today mixes subscribe + floor resolve + paint priority + Toolkit build. Refactor splits **read model** (testable) from **renderer** (`MapGridPainter`) without moving reveal rules out of Runtime.
 
-| Goal | How |
-|------|-----|
-| Reuse runtime hooks | Same subscriptions as today: `GameState.PhaseChanged`, `MapSystem.RevealChanged`, `DungeonExplorer` step/cell/facing, pause → `RequestQuitToTitle` |
-| Avoid duplicating map paint | **Read model** builds cell descriptors; **one** renderer calls existing `MapGridPainter` (or sprites later per [map-cell-art](map-cell-art.md)) |
-| Match combat UI pattern | Orchestrator `MonoBehaviour` + plain C# `*Presenter` + optional **presentation lock** for EO-style beats ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)) |
-| Keep input stable | `InputRouter` + `ExplorationInputHandler` / `MapInputHandler` call **facades** on the orchestrator (toggle map, open pause), not `VisualElement` queries from handlers |
+**Migration (ordered):**
 
-### Layer diagram (target)
+1. Extract `ExplorationMapReadModel` from `MapView.PaintCellAt` (golden cell tests).
+2. Add `MapGridRenderer` + thin `MapPanelView` shell; Dev Tools Map shares renderer.
+3. `ExplorationMapPresenter` — same subscriptions as [§ MapView](#mapview-push-updates).
+4. Deprecate monolithic `MapView`; keep `MapGridPainter` and marker presenters.
 
-```mermaid
-flowchart TB
-    subgraph Runtime["GridDungeon.Runtime — unchanged authority"]
-        GS[GameState]
-        EPC[ExplorationPhaseController]
-        EX[DungeonExplorer]
-        MS[MapSystem]
-        EPC --> EX
-        EPC --> MS
-    end
+**Rules unchanged:** `ExplorationPhaseController`, `MapSystem`, `InputRouter` handlers; presenters never call `TryStepForward` or reveal calculators. Input still goes through `ExplorationHudView` facades (`ToggleMapFullscreen`, `OpenPause`), not presenter types.
 
-    subgraph UI["GridDungeon.UI — target split"]
-        EHV[ExplorationHudView\norchestrator + UIDocument]
-        subgraph Views["Thin views — Q cache, no sim logic"]
-            MPV[MapPanelView]
-            PSV[PauseOverlayView]
-            PST[PartyStripView]
-        end
-        subgraph Presenters["Plain C# presenters"]
-            MAP[ExplorationMapPresenter]
-            RXP[ExplorationHudReactivePresenter]
-        end
-        subgraph MapCore["Shared map presentation — reuse #26"]
-            MRM[ExplorationMapReadModel]
-            MGR[MapGridRenderer\nwraps MapGridPainter]
-        end
-        GATE[ExplorationPresentationGate\noptional MonoBehaviour]
-    end
+**Gate policy:** MVP1 — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
-    IR[InputRouter]
-
-    GS --> MAP
-    GS --> RXP
-    EX --> MAP
-    MS --> MAP
-    MAP --> MRM
-    MRM --> MGR
-    MGR --> MPV
-    RXP --> MPV
-    RXP --> PST
-    RXP --> GATE
-    EX -->|step lerp already blocks| EX
-    GATE -.->|optional: block next step\nuntil map beat done| EX
-    EHV --> Views
-    EHV --> Presenters
-    IR -->|facade| EHV
-```
-
-**Responsibility split (mirror combat):**
-
-| Type | Role | Combat analogue |
-|------|------|-----------------|
-| `ExplorationHudView` | Clone UXML, cache `Q<>`, wire presenters, expose `ToggleMapFullscreen()` / `OpenPause()` for input | `CombatHudView` |
-| `MapPanelView` | Owns `map-view-mount` children; applies layout classes (`map-view--fullscreen`); no `MapSystem` calls | `TurnOrderStripView`, roster strips |
-| `ExplorationMapPresenter` | Subscribes to map-related events; updates `ExplorationMapReadModel`; triggers full/dirty repaint | *(combat has paint on roster views + reactive presenter)* |
-| `ExplorationMapReadModel` | Pure C#: for each cell, glyph + USS class list from floor + `MapSystem` + party cell | *(no direct combat equivalent — extract from `MapView`)* |
-| `MapGridRenderer` | `BuildGrid` / `PaintCell` via `MapGridPainter` + `MapGridStyleClasses.MapView` | Shared with dev map preview ([#26](https://github.com/miramocha/griddungeon-game/issues/26)) |
-| `ExplorationHudReactivePresenter` | DOTween beats: reveal stamp, party slide, FOE slide, fullscreen open — acquire/release gate | `CombatHudReactivePresenter` |
-| `ExplorationPresentationGate` | Ref-count lock; optional hook for “next step ignored while HUD beat plays” | `CombatPresentationGate` |
-| `PauseOverlayView` | Button `clicked` → commands only; presenter or view calls `GameState` | Pause stays thin (no DOTween required) |
-
-Simulation stays in Runtime; **presenters never call** `TryStepForward`, `LoadFloor`, or reveal calculators.
-
-### Data flow — map (avoid copying `MapView` loops)
-
-Today `MapView` mixes **event wiring**, **floor resolve**, **paint priority**, and **Toolkit tree build**. Target extraction:
-
-```mermaid
-sequenceDiagram
-    participant MS as MapSystem
-    participant EX as DungeonExplorer
-    participant MAP as ExplorationMapPresenter
-    participant RM as ExplorationMapReadModel
-    participant REN as MapGridRenderer
-    participant V as MapPanelView
-
-    MS->>MAP: RevealChanged(edges)
-    MAP->>RM: ApplyDirtyCells / full refresh
-    MAP->>REN: PaintCells(RM snapshot)
-    REN->>V: MapGridPainter on cached Labels
-
-    EX->>MAP: OnPartyEnteredCell
-    MAP->>RM: SetPartyCell + facing
-    MAP->>REN: PaintCells(party + previous cell)
-```
-
-**`ExplorationMapReadModel` (sketch):**
-
-```csharp
-// GridDungeon.UI — no UnityEngine in read model if kept testable
-readonly struct MapCellVisual
-{
-    public string Glyph;
-    public string PrimaryClass;  // map-view__cell--floor, --party, …
-}
-
-sealed class ExplorationMapReadModel
-{
-    public void RebuildFloor(StratumFloor floor, MapSystem map, GridPosition party, FacingDirection facing);
-    public bool TryGetCell(int x, int y, out MapCellVisual cell);
-    public IEnumerable<GridPosition> GetDirtyCells(IReadOnlyList<CellEdge> edges);
-}
-```
-
-Paint priority logic moves **once** into `RebuildFloor` / `PaintCellAt` helpers (ported from `MapView.PaintCellAt`, not duplicated in a second view). `MapGridRenderer` only maps `MapCellVisual` → `MapGridPainter.PaintCell`.
-
-**Custom HUD swap:** Replace `MapPanelView` UXML/CSS and how labels are created; keep `ExplorationMapPresenter` + read model + `MapGridPainter` until you move to sprite layers ([map-cell-art](map-cell-art.md)).
-
-### Data flow — reactive beats (mapping motion table)
-
-[event → UI reaction table](mapping.md#map-ui-motion) becomes presenter methods:
-
-| Event (source) | Presenter handler | Blocks input? |
-|----------------|-------------------|---------------|
-| `MapSystem.RevealChanged` (step-sized) | `PlayRevealStamp(cells)` | Optional via gate — align with [ADR 001](../../decisions/001-grid-movement.md) step lerp |
-| `DungeonExplorer.OnPartyEnteredCell` | `PlayPartySlide(from, to)` | Movement already blocked during lerp |
-| FOE patrol tick | `PlayFoeSlide` | **No** — ambient ([mapping](mapping.md#map-ui-motion)) |
-| Fullscreen toggle (`M`) | `PlayMapFullscreenOpen/Close` | **No** — overlay only |
-| `GameState.PhaseChanged` → not Exploration | `ResetAllTweens`, hide panels | — |
-
-```mermaid
-flowchart LR
-    subgraph Events
-        REV[RevealChanged]
-        STEP[PartyEnteredCell]
-        PHASE[PhaseChanged]
-    end
-
-    RXP[ExplorationHudReactivePresenter]
-    GATE[ExplorationPresentationGate]
-    V[MapPanelView / PartyStripView]
-
-    REV --> RXP
-    STEP --> RXP
-    PHASE --> RXP
-    RXP -->|Acquire| GATE
-    RXP -->|DOTween| V
-    RXP -->|Release on complete| GATE
-```
-
-**Gate policy (pick one per beat, document in code):**
-
-1. **Movement-only block (MVP1 default):** `DungeonExplorer` lerp is the lock; map tweens run in parallel (current behavior, minimal gate).
-2. **EO-style HUD lock (target):** `ExplorationPresentationGate` + `DungeonExplorer` checks `!gate.IsLocked` before accepting the next step — map reveal stamp must finish before next cell ([tech notes](../04-tech-notes.md#ui-reactivity)).
-
-Combat uses (2) for command resolution; exploration can adopt (2) incrementally per row in the motion table.
-
-### Input facade (unchanged maps)
-
-`MapInputHandler` and `ExplorationInputHandler` stay; only **targets** change:
-
-```mermaid
-flowchart LR
-    IR[InputRouter]
-    EHV[ExplorationHudView]
-    MIH[MapInputHandler]
-    EIH[ExplorationInputHandler]
-    EX[DungeonExplorer]
-
-    IR --> MIH
-    IR --> EIH
-    MIH -->|ToggleMapFullscreen OpenPause ClosePause| EHV
-    EHV --> MAP[ExplorationMapPresenter]
-    EIH --> EX
-    EHV -->|pause VisibilityChanged| IR
-```
-
-Do **not** move `Input System` callbacks into presenters.
-
-### Pause and party strip
-
-| Surface | Target owner | Notes |
-|---------|--------------|--------|
-| Pause overlay | `PauseOverlayView` + small `PausePresenter` *(optional)* | Same UXML names or new layout; still `RequestQuitToTitle` only |
-| `party-strip` | `PartyStripView` + `ExplorationHudReactivePresenter` | Subscribe `PartyRuntime` / save HP when wired; motion per [mapping](mapping.md#map-ui-motion) |
-
-### Migration path (from shipped `MapView`)
-
-```mermaid
-flowchart LR
-    A[1. Extract ExplorationMapReadModel\nfrom MapView.PaintCellAt] --> B[2. MapGridRenderer +\nMapPanelView shell]
-    B --> C[3. ExplorationMapPresenter\nwire same events]
-    C --> D[4. ExplorationHudReactivePresenter\n+ gate optional]
-    D --> E[5. Deprecate MapView;\nkeep MapGridPainter]
-```
-
-| Step | Risk | Test |
-|------|------|------|
-| 1 — Read model | Paint priority drift | Edit Mode: golden cells for fog/wall/party/FOE ([game #26](https://github.com/miramocha/griddungeon-game/issues/26) shared fixtures) |
-| 2 — Renderer | Grid size / label cache | Dev Tools Map preview uses same renderer |
-| 3 — Presenter | Missed dirty cells | Play Mode: step, bump wall, stairs, floor change |
-| 4 — Reactive | Input feel | F2 exploration: step cadence vs reveal tween |
-| 5 — Remove `MapView` | Scene refs | Regenerate Dev Bootstrap |
-
-**YAGNI:** Skip `ExplorationPresentationGate` until a motion row requires blocking the *next* step after lerp ends; ship read model + thin views first.
-
-### Custom HUD without forking game code
-
-If your UXML is entirely new but you stay in this repo:
-
-1. Replace `ExplorationHud.uxml` / USS; keep `name=` mounts (`map-view-mount`, pause root) or update `ExplorationHudView` queries once.
-2. Implement `MapPanelView` + your styling; inject `ExplorationMapPresenter` + `MapGridRenderer`.
-3. Leave `ExplorationPhaseController`, `MapSystem`, `DungeonExplorer`, `InputRouter` handlers untouched.
-4. Optional: host presenters on your orchestrator type instead of `ExplorationHudView` — same interfaces.
+Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design-mvp1.md#ui-layer).
 
 ---
 
 ## Related docs
 
+- [UI event contract](../04-dev/ui-event-contract.md) — integrator / external HUD (runtime events + examples)
 - [Game phase](game-phase.md) — `GamePhaseController`, dev bootstrap, input maps
 - [Mapping](mapping.md) — map UX, motion table, combat map toggle
 - [Input bindings](input-bindings.md) — `M` / `Esc` / exploration moves

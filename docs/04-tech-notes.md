@@ -61,7 +61,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 
 | Principle | Rule |
 |-----------|------|
-| **Event-driven** | Presenters (`*View` in `GridDungeon.UI`) subscribe to controller events (`CombatController`, `HubController` services, `MapSystem`, `DungeonExplorer`, `GamePhaseController`) and play feedback; views do not poll every frame for diffs. |
+| **Event-driven** | Presenters (`*View` in `GridDungeon.UI`) subscribe to controller events (`CombatController`, `HubController` services, `MapSystem`, `DungeonExplorer`, `GamePhaseController`) and play feedback; views do not poll every frame for diffs. **Full event list:** [04 — Dev: UI event contract](04-dev/ui-event-contract.md). |
 | **DOTween on Toolkit** | Short tweens on `VisualElement` style/transform (fade, scale punch, slide, fill lerp). Enable DOTween **UI** module. No tween logic in `GridDungeon.Core`. |
 | **State first, motion second** | Apply authoritative values immediately (HP, map cells, queue order); animate **from** the previous visual state. |
 | **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock — play the full highlight → VFX → log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted — pick one per beat in the phase doc tables. |
@@ -197,10 +197,10 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `ExplorationPauseView`). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
-- `ExplorationHud.uxml` — `map-view-mount` (map built in C#), `exploration-pause` overlay, `party-strip` placeholder (unwired).
+- `ExplorationHud.uxml` — `map-view-mount` (map built in C#), `exploration-pause` overlay, `party-strip` (`ExplorationPartyStripView`). Integrator events: [04-dev/ui-event-contract.md](04-dev/ui-event-contract.md).
 - `MapView` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
-- **Partial reactive map UI** — overlay presenters shipped; full `ExplorationMapPresenter` + gate still target: [exploration UI § Target](02-systems/exploration-ui.md#target--presenter-based-exploration-hud).
+- **Exploration log** — not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
 
 ## Combat HUD (UI Toolkit)
 

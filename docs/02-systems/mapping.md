@@ -30,7 +30,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
 
-**Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapView`; **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)). Full read-model + `ExplorationMapPresenter` refactor remains the [exploration UI target](exploration-ui.md#target--presenter-based-exploration-hud).
+**Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapView`; **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)). Full read-model + `ExplorationMapPresenter` refactor: [exploration UI appendix](exploration-ui.md#appendix--future-map-read-model-refactor).
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
