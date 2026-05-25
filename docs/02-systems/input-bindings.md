@@ -25,7 +25,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Strafe right** | `D` | Displacement (trial layout — was EO `E`) |
 | **Turn left** | `Q` | No step events (trial layout — was EO `A`) |
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
-| **Interact** | `Space` | Door, chest, stairs, gather |
+| **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub mouth, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
 | **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
 | **Pause** | `Esc` | Pause menu: **Resume**, **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
