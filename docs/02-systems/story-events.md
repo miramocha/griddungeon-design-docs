@@ -233,7 +233,21 @@ Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-
 ## Open design questions
 
 1. **Combat UI retract** — which panels hide during mid-combat story (command bar, AGI strip, enemy row, Synchro meter reveal on scene end only, etc.).
-2. **Authoring** — YAML vs ScriptableObject (deferred).
+2. **Authoring** — YAML vs ScriptableObject for MVP1 ([#87](https://github.com/miramocha/griddungeon-game/issues/87)); graph-UI editor deferred — [ADR 030](../../decisions/030-story-event-graph-authoring.md).
+
+---
+
+## Graph authoring (post-MVP1)
+
+**Authority:** [ADR 030](../../decisions/030-story-event-graph-authoring.md).
+
+Designers author **one graph per `storyEventId`** (nodes = steps, edges = branches/choices). An Editor compile step exports the **same** `StoryEventDefinition` step array `StoryEventRunner` already runs — runtime does not interpret the graph in builds.
+
+| Concern | MVP1 ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) | Post-MVP1 ([ADR 030](../../decisions/030-story-event-graph-authoring.md)) |
+|---------|------|-------------|
+| Branching in play | Linear S1 only | `choice` + flag branches |
+| Authoring UI | Hand YAML / SO | GraphView editor + compile |
+| Tests | Compiled steps | Same — tests use compiled output |
 
 ---
 
@@ -241,6 +255,7 @@ Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-
 
 - [Guided tutorial](guided-tutorial.md) — HUD coaching (exploration + combat); distinct from VN
 - [ADR 028 — Story events](../../decisions/028-story-visual-novel-events.md)
+- [ADR 030 — Story event graph authoring](../../decisions/030-story-event-graph-authoring.md)
 - [Synchro Protocol — S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [FOE encounters — tutorial FOE](foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)

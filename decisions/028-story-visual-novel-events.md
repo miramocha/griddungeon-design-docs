@@ -203,6 +203,7 @@ Resolve UI retract before **Accepted** (implementation may proceed on [#87](http
 
 ## Related
 
+- [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md) — follow-up; graph UI compiles to step list; does not block MVP1
 - [ADR 029 — Guided tutorial (HUD coaching)](029-guided-tutorial.md) — orthogonal; `start_guided_protocol` handoff
 - [Story events (system doc)](../docs/02-systems/story-events.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)

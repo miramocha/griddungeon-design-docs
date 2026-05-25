@@ -1,8 +1,8 @@
 # Story event content index
 
-**System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed) · **Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87)
+**System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed) · **Graph authoring (follow-up):** [030](../../decisions/030-story-event-graph-authoring.md) · **Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87)
 
-Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/Content/StoryEvents/` when implementation starts.
+Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/Content/StoryEvents/` when implementation starts. Post-MVP1: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
 
 ## MVP1 — Stratum 1
 
