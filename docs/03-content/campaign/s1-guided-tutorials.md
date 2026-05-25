@@ -105,7 +105,8 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 - [ ] `GuidedTutorialDefinition` content for table above
 - [ ] Act 1 triggers on `s1_B1F` intro mode (spawn, bump, cells G/C/^)
 - [ ] `s1_combat_guided_protocol` wired from `start_guided_protocol` ([#88](https://github.com/miramocha/griddungeon-game/issues/88))
-- [ ] Command gate matches [combat § S1 tutorial](../../02-systems/combat.md) / `TutorialCombatKind.SynchroFirstFoe`
+- [x] Protocol-only command gate — `CombatTutorialHudRules` + `CombatController` ([#35](https://github.com/miramocha/griddungeon-game/pull/35))
+- [ ] Guided coach UI (`s1_combat_guided_protocol`) — [#88](https://github.com/miramocha/griddungeon-game/issues/88)
 - [ ] Playtest: Act 1 ≤ 8 min with hints; B2F crisis → Protocol path not soft-lockable
 
 ---

@@ -30,7 +30,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
 
-**Implementation target:** presenter + read model + `MapGridPainter` ([exploration UI § Target](exploration-ui.md#target--presenter-based-exploration-hud)) — not yet shipped; today `MapView` updates cells imperatively.
+**Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapView`; **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)). Full read-model + `ExplorationMapPresenter` refactor remains the [exploration UI target](exploration-ui.md#target--presenter-based-exploration-hud).
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
@@ -50,7 +50,7 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | **Walls** | **Bump** blocked side → stamp that wall; **enter cell** → reveal floor + wall on all solid edges of cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
-| **Chest / gather / fish** | Opens chest (**MVP1**); gather/fish nodes (**MVP2**) — marks node on map |
+| **Chest / gather / fish** | Opens chest (**MVP1**); gather node **overlay when visited** ([ADR 014](../../decisions/014-mvp1-exploration-map.md)); fish nodes (**MVP2**) |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
 | **Traps** (optional) | Party **triggers** trap on cell (mark for repeat visits) |
 
@@ -109,7 +109,11 @@ Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest
 
 Locked **cell stack**, **composite walls** (edge segments + alcove — not 16 autotiles), **door overlay** tints, sprite checklist, and USS classes: **[map-cell-art.md](map-cell-art.md)**.
 
-Runtime draw priority today (`MapView`): party → fog → solid `#` → revealed `WallMask` edges (3+ → `█`) → features (stairs only) → FOE → floor `·`. `FeatureType.Door` exists in data; **door glyph/overlay not wired**. Campaign tutorial blockers (e.g. B1F `(10,13)`) are walkability gates ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)), not map icons.
+**Cell labels** (`MapView.PaintCellAt` via `MapGridPainter`): fog → solid `#` → revealed `WallMask` edges (3+ → `█`) → features (**stairs only** in cells) → floor `·`. Party, FOE, gather, and B1F hub-mouth are **not** painted into cell labels — they live in sibling overlay layers (see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)).
+
+**Overlay layers** (bottom → top under `map-view-grid-host`): gather → hub entrance (B1F `stairsUp` when visited) → FOE → party. `MapGridMarkerAnimator` handles fade/slide tweens; FOE patrol slides are **ambient** (do not block input).
+
+`FeatureType.Door` exists in data; **door glyph/overlay not wired** on cells. Campaign tutorial blockers (e.g. B1F `(10,13)`) are walkability gates ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)), not map icons.
 
 ---
 

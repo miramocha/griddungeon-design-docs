@@ -198,9 +198,9 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `ExplorationPauseView`). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
 - `ExplorationHud.uxml` — `map-view-mount` (map built in C#), `exploration-pause` overlay, `party-strip` placeholder (unwired).
-- `MapView` — subscribes to `GameState.PhaseChanged`, `MapSystem.RevealChanged`, `DungeonExplorer` cell/facing; paints via `MapGridPainter`.
+- `MapView` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
-- **No reactive presenter yet** — unlike combat HUD motion work; target sketch: [exploration UI § Target](02-systems/exploration-ui.md#target--presenter-based-exploration-hud).
+- **Partial reactive map UI** — overlay presenters shipped; full `ExplorationMapPresenter` + gate still target: [exploration UI § Target](02-systems/exploration-ui.md#target--presenter-based-exploration-hud).
 
 ## Combat HUD (UI Toolkit)
 
@@ -208,6 +208,7 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 - `CombatRosterView.BindEnemyFormation` — maps `EnemySlots[0..2]` → front container, `[3..5]` → back; party roster stays single `party-roster-slots` strip.
 - AGI `turn-order-strip` — flat list; do not split enemies into front/back in the strip; wider plates + USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
+- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log formatting/scroll; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
 
 ## Combat scene
 

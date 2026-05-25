@@ -29,6 +29,12 @@ FOE fights should be **escapable**, but fleeing must not let the party stay on t
 - `OnFleeSuccess` → `partyPos = backwardCell`
 - Combat UI disables `CmdFlee` when retreat blocked
 
+## Implementation (game)
+
+- **Retreat cell:** `RetreatCellCalculator` (Core); `FoeSystem.CanRetreatFromFoe` for flee enable.
+- **FOE-only pushback:** `CombatEntryContext.ShouldMovePartyToRetreatCell` (`Foe != null` + successful flee); random encounters do not move the party.
+- **Post-combat placement:** `FoeFleeRetreatPlacement.TryResolvePostFleeCell` → `ExplorationPhaseController` on `Combat → Exploration`.
+
 ## Related
 
 - [FOE encounters](../docs/02-systems/foe-encounters.md)

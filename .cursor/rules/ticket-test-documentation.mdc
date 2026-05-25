@@ -53,10 +53,11 @@ Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 01
 
 | Domain | Namespace | Example fixture |
 |--------|-----------|-----------------|
-| `Combat` | `GridDungeon.Tests.Combat` | `DamageCalculatorTests` |
+| `Combat` | `GridDungeon.Tests.Combat` | `DamageCalculatorTests`, `CombatEntryContextTests` |
 | `Exploration` | `GridDungeon.Tests.Exploration` | `GridMovementTests` |
-| `Foe` | `GridDungeon.Tests.Foe` | `RetreatCellCalculatorTests` |
+| `Foe` | `GridDungeon.Tests.Foe` | `RetreatCellCalculatorTests`, `FoeFleeRetreatPlacementTests` |
 | `Map` | `GridDungeon.Tests.Map` | `MapRevealCalculatorTests` |
+| `UI` | `GridDungeon.Tests.UI` | `MapPartyMarkerPresenterTests`, `MapFoeMarkersPresenterTests`, `CombatHudLogViewTests` |
 | `GameFlow` | `GridDungeon.Tests.GameFlow` | `GamePhaseControllerTests` |
 
 Full tree and category filtering: game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).

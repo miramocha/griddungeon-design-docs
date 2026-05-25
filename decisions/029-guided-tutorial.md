@@ -104,7 +104,7 @@ Advance: **Z** or click — same as [ADR 028](028-story-visual-novel-events.md) 
 - View **reflects** allowed commands (grey/disable + pulse Protocol).
 - Finisher clears guided state → story event `s1_tutorial_hub_return`.
 
-Aligns with [game #10](https://github.com/miramocha/griddungeon-game/issues/10) `TutorialCombatKind` / `CombatEntryContext`.
+Aligns with [game #10](https://github.com/miramocha/griddungeon-game/issues/10): tutorial fight via `EncounterGroupId` (`grp_alley_stalker_tutorial`) + `CombatTutorialHudRules` (not a `TutorialCombatKind` field on `CombatEntryContext`).
 
 ### 8. Triggers
 

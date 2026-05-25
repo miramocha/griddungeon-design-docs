@@ -65,10 +65,10 @@ Executed synchronously when a step is entered (or when a choice is picked). Impl
 |--------|------------|-----------|
 | `set_campaign_flag` | `flag`, `value` | `CampaignSaveData` |
 | `set_synchro_charge` | `percent` | `PartyRuntime` / combat session |
-| `combat_tutorial_phase` | `phase` | `CombatController` / `TutorialCombatKind` |
+| `combat_tutorial_phase` | `phase` | **Target** — advance S1 tutorial beat via campaign flags + `CombatController` (crisis / unlock); not a field on `CombatEntryContext` |
 | `show_combat_hint` | `hintId` | Combat HUD (#35) — optional delegation |
-| `start_guided_protocol` | `skillId` | Enable guided Protocol only (`protocol_strike`) |
-| `start_combat` | `encounterGroupId`, `tutorialKind?`, `noFlee?` | `GameState.RequestCombat` — used after exploration Event VN (S1 briefing) |
+| `start_guided_protocol` | `skillId` | Set unlock flags → `CombatTutorialHudRules` Protocol-only gate + guided coach ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
+| `start_combat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` ([`CombatTutorialHudRules.S1FirstFoeEncounterGroupId`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Campaign/CombatTutorialHudRules.cs)) |
 | `teleport_to_hub` | — | `GamePhaseController` scripted `Combat → Hub` |
 | `end_story_event` | — | Runner |
 
@@ -169,7 +169,7 @@ Example index row:
 
 | storyEventId | once | prerequisite | trigger |
 |--------------|------|--------------|---------|
-| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` | Combat: `TutorialCombatKind.SynchroFirstFoe` phase B |
+| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` | Combat: after crisis AOE on `grp_alley_stalker_tutorial` |
 
 ---
 

@@ -70,7 +70,7 @@ Authoring format: **YAML or ScriptableObject** referencing text keys — **TBD**
 |-------------------|-------------|
 | `set_campaign_flag` | `s1_synchro_unlocked` |
 | `set_synchro_charge` | Force 100% at Protocol tutorial unlock |
-| `combat_tutorial_phase` | Advance `TutorialCombatKind` phase (game #10) |
+| `combat_tutorial_phase` | **Target** — advance S1 tutorial beat (campaign flags + `CombatController`; game #10 rules). Supersedes early `TutorialCombatKind` sketch on `CombatEntryContext`. |
 | `unlock_input_hint` | Show combat HUD callout (may delegate to #35) |
 | `start_combat_rule` | Resume AGI after scene ends |
 | `start_guided_protocol` | HUD highlight + command gate (`protocol_strike`) |

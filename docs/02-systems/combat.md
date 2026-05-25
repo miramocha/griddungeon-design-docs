@@ -207,7 +207,7 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 
 Every row below needs a **visible** reaction (DOTween or USS transition). Pair with combat log text; log alone is insufficient for MVP1.
 
-**Blocking:** `CombatController` (or a small presentation gate) holds input until the row’s tweens finish — EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
+**Blocking:** `CombatPresentationGate` — AGI playback waits until `CombatHudReactivePresenter` finishes mandatory beats ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
@@ -223,7 +223,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
 | Combat log line | Newest entry **fade/slide in**; scroll to bottom | Bundled with the beat above (same lock) |
 
-Presenters implement motion; `CombatController` / `CombatScenePresenter` stay authoritative for rules.
+**Shipped presenters:** `CombatHudReactivePresenter` (log fade/slide, HP/Synchro lerp, hit/KO/status flashes, turn-strip handoff), `CombatHudLogView` (log scroll/format), `CombatTutorialHudRules` (Core — S1 stalker command gating). `CombatController` / `CombatScenePresenter` stay authoritative for rules.
 
 ### Turn order strip (AGI queue UI)
 

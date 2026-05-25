@@ -11,7 +11,7 @@
 **Effects on final dismiss:**
 
 - `set_campaign_flag` → `s1_b2f_stalker_briefing_seen = true` (optional replay guard; `once` on content row is authoritative)
-- `start_combat` → `grp_alley_stalker_tutorial`, `tutorialKind = SynchroFirstFoe`, `noFlee = true`
+- `start_combat` → `EncounterGroupId = grp_alley_stalker_tutorial`, `NoFlee = true` on `CombatEntryContext` (tutorial detect: `CombatTutorialHudRules.IsS1FirstFoeTutorial`; floor spawn: `TutorialFirstFoe` on `foe_alley_stalker`)
 
 **Rejected:** FOE grid contact as the only tutorial entry — main path is **Event cell → VN → combat**. FOE patrol remains for map literacy; contact on `foe_alley_stalker` still starts the same tutorial fight if the player reaches the cell without firing the Event (anti-bypass).
 

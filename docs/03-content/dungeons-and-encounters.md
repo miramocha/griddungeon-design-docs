@@ -91,7 +91,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 fr
 | `F` | FOE spawn | FOE marker when in LOS |
 | `!` | **Event** tile — story script on enter ([story events § S1](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; MVP1 S1 B2F tutorial briefing |
 | `C` | Chest | Overlay when feature wired (MVP1+ art) |
-| `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Overlay MVP2+ |
+| `G` | Gather node — instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Gather **overlay** when cell visited (`MapGatherMarkersPresenter`) |
 | `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
 | `X` | Blocked passage (Act 1 — opens Act 3) | Solid/gate tint — not edge wall |
 

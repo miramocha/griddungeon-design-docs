@@ -1,6 +1,6 @@
 # Guided Tutorial (player coaching)
 
-**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). Runtime types proposed, not yet in game repo.
+**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Shipped (partial):** S1 tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Still target:** Act 1 coach, `GuidedTutorialController`, story `StoryEventRunner` ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
 **Authority for S1 beats:** [S1 guided tutorials](../03-content/campaign/s1-guided-tutorials.md)  
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
@@ -16,7 +16,7 @@
 |-------|-----|-------------|
 | **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short copy; arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** |
 | **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
-| **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `TutorialCombatKind`, `tutorialUnbeatable`, save flags |
+| **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `CombatTutorialHudRules`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
 
 A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (story) → guided Protocol (this doc) → finisher (rules).
 
@@ -145,7 +145,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | **Skip** | **Disabled** until Protocol resolves |
 | **VN vs coach** | Navigator **lines** = story event; **“use Protocol now”** = guided hint `s1_combat_guided_protocol` |
 
-**Effect bridge:** story step `start_guided_protocol` → `CombatController` sets `TutorialCombatKind` guided phase + `GuidedTutorialController.Start("s1_combat_guided_protocol")`.
+**Effect bridge (target):** story step `start_guided_protocol` → set `s1_synchro_unlocked` / protocol-tutorial flags → `CombatTutorialHudRules.RequiresProtocolOnlyCommands` (shipped via campaign + `grp_alley_stalker_tutorial`) + `GuidedTutorialController.Start("s1_combat_guided_protocol")` ([#88](https://github.com/miramocha/griddungeon-game/issues/88) — coach UI not yet wired).
 
 **End:** `protocol_strike` resolves and kills FOE → clear guided state → `s1_tutorial_hub_return` story event.
 
@@ -232,4 +232,4 @@ Deferred: map (`M`) coach, shared panel UXML with story layer, authoring format 
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [Story events](story-events.md)
 - [mvp1-spec §1](../mvp1-spec.md#1-player-facing-loop-mvp1)
-- [05 — class design § CombatEntryContext](../05-class-design-mvp1.md) — `TutorialCombatKind`
+- [05 — class design § CombatEntryContext](../05-class-design-mvp1.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via `CombatTutorialHudRules`

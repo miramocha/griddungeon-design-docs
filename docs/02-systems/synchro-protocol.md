@@ -63,7 +63,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 5. **Crisis AOE** — authored scripted enemy action (display-only or minimal rules damage); must not KO cores — clamp living core HP to **1**. FOE HP may stay at floor through crisis.
 6. **Hub return** — exceptional `Combat → Hub` transition ([game phase](game-phase.md)); player re-enters stratum from hub when ready (mouth spawn per [S1 intro](../03-content/campaign/s1-intro.md)).
 
-Random fights before this FOE contact: Synchro **locked**. `CombatEntryContext.tutorialKind = SynchroFirstFoe` in implementation ([combat](combat.md)).
+Random fights before this FOE contact: Synchro **locked**. S1 tutorial FOE: encounter group `TutorialFirstFoe` + `CombatTutorialHudRules` ([combat](combat.md)).
 
 ### During combat
 

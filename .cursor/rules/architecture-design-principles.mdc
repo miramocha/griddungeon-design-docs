@@ -19,6 +19,7 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP
 | Map reveal state | `MapSystem` + `MapRevealCalculator` (Core) |
 | FOE patrol / contact | `FoeSystem` |
 | FOE flee retreat cell (walkable?) | `RetreatCellCalculator` (Core); `FoeSystem.CanRetreatFromFoe` delegates |
+| FOE flee post-combat placement (FOE contact only) | `FoeFleeRetreatPlacement` (Core); `ExplorationPhaseController` applies on flee end |
 | Damage / hit / status math | Core simulators (`DamageCalculator`, `StatusSystem`, …) |
 | Scene composition / lifetime refs | `GameState` (composition root, not phase logic) |
 | Battle arena visuals | `CombatScenePresenter` (not `CombatController`) |

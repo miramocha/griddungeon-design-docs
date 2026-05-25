@@ -12,26 +12,22 @@ MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visua
 
 | Layer | Source | Shown when | Notes |
 |-------|--------|------------|-------|
-| **Party** | `DungeonExplorer` facing | Party on cell | Arrow glyph today; **4 facings** in sprite checklist |
+| **Party** | `DungeonExplorer` facing | Party on cell | **Overlay** — `MapPartyMarkerPresenter` (not a cell glyph) |
 | **Fog** | `!IsVisited` | Unexplored | Void / fog tint; no floor or edges |
 | **Solid mass** | `FloorTileData.IsWalkable == false` | Visited | Authored `#` tiles — impassable rock |
 | **Edge walls** | `WallMask` N/E/S/W on **walkable** cell | Visited + mask ≠ `None` | Bump + enter reveal ([ADR 014](../../decisions/014-mvp1-exploration-map.md)); **not** the same as `#` |
 | **Alcove (3+ edges)** | Same `WallMask`, `count ≥ 3` | Visited | Glyph `█` today; **alcove fill** or low-opacity solid — still walkable floor |
-| **Features** | `FeatureState` on cell | Visited + feature known | Stairs wired; **doors not rendered yet** |
-| **FOE** | `FoeIcons` | In LOS / last known | `F` glyph today |
-| **Floor** | Default walkable | Visited, nothing above | `·` glyph today |
+| **Features** | `FeatureState` on cell | Visited + feature known | Stairs in **cell** labels; **doors not rendered yet** |
+| **Gather** | `HasGatherNode` | Visited (or dev reveal-all) | **Overlay** — `MapGatherMarkersPresenter` · `map-view__marker--gather` |
+| **Hub mouth** | B1F `stairsUp` | Visited | **Overlay** — `MapHubEntranceMarkersPresenter` ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **FOE** | `FoeSystem` / map FOE state | In LOS / last known | **Overlay** — `MapFoeMarkersPresenter` (not cell `F`) |
+| **Floor** | Default walkable | Visited, nothing above | `·` glyph in cell label |
 
-### Draw priority (single top glyph today → layered sprites later)
+### Draw priority
 
-Highest wins for **text** mode; sprite mode uses **underlay + overlays** with the same ordering:
+**Cell labels** (`MapView.PaintCellAt`): fog → solid mass → edge walls → stairs features → floor.
 
-1. Party (always on party cell)
-2. Fog (hides everything else)
-3. Solid `#` / `X` mass (non-walkable tile)
-4. Revealed edge walls (segments or alcove fill)
-5. Features (stairs, door, chest, gather — when wired)
-6. FOE icon
-7. Floor dot / tile
+**Overlays** (sibling layers above the cell grid; see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)): gather → hub entrance → FOE → party. Sprite mode later uses the same split (underlay cells + overlay children).
 
 **Campaign blockers** (e.g. B1F tutorial gate `(10,13)`) are **walkability / interaction** rules ([S1 campaign](https://github.com/miramocha/griddungeon-game/issues/33)) — not a separate map icon. ASCII `D` / `X` in blockouts mark designer intent; runtime may show a **door overlay** only after the player discovers/interacts with a `FeatureType.Door` on that cell.
 
@@ -70,13 +66,13 @@ Authoring legend: [dungeons & encounters — Map legend](../03-content/dungeons-
 | `X` | `#` or solid + **gate tint** | Solid block + `map-view__cell--gate` |
 | `.` | `·` · `map-view__cell--floor` | Floor tile |
 | `^` / `v` | `^` / `v` · stairs classes | Stairs up / down icons |
-| `F` | `F` · `map-view__cell--foe` | FOE marker |
+| `F` | FOE **overlay** (not cell glyph) | `MapFoeMarkersPresenter` |
 | `C` | *(not wired)* | Chest overlay |
-| `G` | *(not wired)* | Gather node overlay |
+| `G` | Gather **overlay** when visited | `map-view__marker--gather` |
 | `D` | *(not wired)* | Door overlay + state tint |
 | `E` / `M` | Party spawn only — not map icons | — |
 | Edge walls | `╵╷╶╴│—█` via `WallGlyph` | Rotated edge segment(s) + alcove fill |
-| Party | Facing arrow | Party ×4 facings |
+| Party | Facing arrow **overlay** | `MapPartyMarkerPresenter` · party ×4 facings in sprite checklist |
 
 ---
 
@@ -155,10 +151,10 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 | `map-view__cell--door-closed` | *(planned)* | Default closed |
 | `map-view__cell--door-locked` | *(planned)* | Key-gated |
 | `map-view__cell--door-open` | *(planned)* | Open / desaturated |
-| `map-view__cell--foe` | FOE icon | Threat accent |
-| `map-view__cell--party` | Party cell | Party highlight |
+| `map-view__cell--foe` | *(legacy cell class)* | FOE uses `map-view__marker` overlay, not cell `--foe` |
+| `map-view__cell--party` | *(legacy cell class)* | Party uses `map-view__marker` overlay |
+| `map-view__marker--gather` | Gather overlay | `MapGatherMarkersPresenter` |
 | `map-view__cell--chest` | *(planned)* | Loot feature |
-| `map-view__cell--gather` | *(planned)* | Gather node |
 
 **Color-friendly rule:** distinguish states with **tint/opacity**, not separate art per door state unless readability fails in playtest.
 
@@ -166,8 +162,9 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 
 ## Implementation notes (game repo)
 
-- **Refactor target:** shared cell painter used by `MapView` + `MapDevPreviewView` ([game #26](https://github.com/miramocha/griddungeon-game/issues/26)).
-- **Layered UI:** prefer child elements (floor → edges ×4 → feature → foe → party) over one Label when moving to sprites.
+- **Shared cell painter:** `MapGridPainter` used by `MapView` + dev map preview ([#85](https://github.com/miramocha/griddungeon-game/pull/85)).
+- **Marker overlays:** `MapGridMarkerAnimator` + `*MarkersPresenter` on layers above the cell grid ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
+- **Layered UI (sprites):** cell underlay + overlay children (gather → hub → foe → party) — same split as today.
 - **Save / reveal:** unchanged — `WallMask`, `FeatureState`, `Visited` ([map-reveal-save-format](map-reveal-save-format.md)).
 - **Tests:** Edit Mode for `WallGlyph` / priority can stay on glyph helper until painter extraction; Play Mode via DevBootstrap **F2**.
 

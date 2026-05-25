@@ -12,6 +12,7 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 | Styles | `ExplorationHud.uss`, `MapView.uss`, `Shared/HudOverlay.uss` |
 | Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
 | Map panel | `Assets/Scripts/UI/Views/MapView.cs` |
+| Map marker overlays | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapHubEntranceMarkerRules`, `MapGatherMarkerRules`, `MapGridMarkerAnimator` |
 | Pause overlay | `Assets/Scripts/UI/Views/ExplorationPauseView.cs` |
 | Grid paint helpers | `Assets/Scripts/UI/MapGridPainter.cs`, `MapGridStyleClasses.cs` |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs`, `ExplorationInputHandler.cs`, `MapInputHandler.cs` |
@@ -19,11 +20,11 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 
 ---
 
-## Design note: no exploration presenter yet
+## Design note: partial map presenters (shipped)
 
-Combat HUD is moving toward **reactive presenters** + presentation gates ([combat](combat.md), [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). **Exploration UI today is imperative:** `MapView` and `ExplorationPauseView` subscribe to `GameState` / `DungeonExplorer` / `MapSystem` and mutate `VisualElement`s directly. A custom UI can follow the same event sources or introduce a thin presenter without changing phase authority.
+Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration is **split**: cell grid is imperative (`MapView` + `MapGridPainter`); **party / FOE / gather / hub-mouth** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); pause stays imperative (`ExplorationPauseView`). A custom HUD can reuse the same event sources without changing phase authority.
 
-**Target layout (recommended for a custom HUD):** [§ Target — presenter-based exploration HUD](#target--presenter-based-exploration-hud) below — same runtime hooks, shared `MapGridPainter`, no copy-paste of `MapView` paint loops.
+**Target layout (full read-model refactor):** [§ Target — presenter-based exploration HUD](#target--presenter-based-exploration-hud) below — same runtime hooks, shared `MapGridPainter`, no copy-paste of `MapView` paint loops.
 
 ---
 
@@ -149,11 +150,27 @@ flowchart LR
 | Subscription | UI effect |
 |--------------|-----------|
 | `GameState.PhaseChanged` | Show map only in `GamePhase.Exploration`; hide on Hub/Combat; reset fullscreen |
-| `MapSystem.RevealChanged` | Repaint fog / walls / features / FOE on dirty cells |
-| `DungeonExplorer.OnPartyEnteredCell` / `OnPartyFacingChanged` | Party glyph on grid |
+| `MapSystem.RevealChanged` | Repaint fog / walls / stairs on dirty cells; marker presenters sync visibility |
+| `DungeonExplorer.OnPartyEnteredCell` / `OnPartyFacingChanged` | `MapPartyMarkerPresenter` slide / snap (not a cell glyph) |
+| `FoeSystem.OnFoePatrolMoved` | `MapFoeMarkersPresenter` slide; `MapView` repaints patrol endpoint **cells** after overlay motion |
+| `GameState.ExplorationBindingsWired` | Re-subscribe party/FOE markers **after** `MapSystem` visit handler so reveal runs before marker handlers ([#90](https://github.com/miramocha/griddungeon-game/pull/90)) |
+| `GameState.PhaseChanged` → Exploration | Restore party marker after combat ([#94](https://github.com/miramocha/griddungeon-game/pull/94)) |
 | Floor layout | `GameState.Content.GetFloor` + `MapSystem` visit/wall/feature state |
 
-Paint priority and glyphs: [map-cell-art](map-cell-art.md), [mapping § Map cell art](mapping.md#map-cell-art-2d-schematic).
+Cell paint priority: [map-cell-art](map-cell-art.md), [mapping § Map cell art](mapping.md#map-cell-art-2d-schematic). Overlay layers: [§ Map marker overlays](#map-marker-overlays).
+
+### Map marker overlays
+
+Built under `map-view-grid-host` (siblings above `map-view-grid`):
+
+| Layer (bottom → top) | Presenter | Visibility / rules |
+|----------------------|-----------|-------------------|
+| `map-view-gather-markers` | `MapGatherMarkersPresenter` | `HasGatherNode` + visited (or dev reveal-all); `map-view__marker--gather` |
+| `map-view-hub-entrance-markers` | `MapHubEntranceMarkersPresenter` | B1F `stairsUp` mouth when visited — `MapHubEntranceMarkerRules` |
+| `map-view-foe-markers` | `MapFoeMarkersPresenter` | FOE in LOS / last known; patrol slide via `MapGridMarkerAnimator` |
+| `map-view-party-markers` | `MapPartyMarkerPresenter` | Party cell + facing; lerp with step; resync on return from combat |
+
+`MapGridMarkerAnimator` — shared fade/slide tweens; FOE patrol is **ambient** (does not block exploration input). Dev **Tools → Dev Tools Map** can pass `revealAllMarkers` for preview.
 
 Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the side layout; `M` / `Esc` behavior is in [input bindings](input-bindings.md) and `MapInputHandler`.
 
@@ -255,7 +272,9 @@ For a **clean replacement** (not a fork of `MapView`), follow the target section
 
 ## Target — presenter-based exploration HUD
 
-**Status:** Design sketch (not locked ADR). Use when building production exploration chrome or a full HUD swap. **Does not change** `ExplorationPhaseController`, `MapSystem` reveal rules, or `GameState` phase authority.
+**Status:** Design sketch (not locked ADR). **Shipped subset ([#90](https://github.com/miramocha/griddungeon-game/pull/90)):** overlay marker presenters + `MapGridMarkerAnimator` (see [§ Map marker overlays](#map-marker-overlays)). **Still target:** `ExplorationMapReadModel`, unified `ExplorationMapPresenter`, optional `ExplorationPresentationGate` for cell reveal beats.
+
+Use when building production exploration chrome or a full HUD swap. **Does not change** `ExplorationPhaseController`, `MapSystem` reveal rules, or `GameState` phase authority.
 
 **Goals:**
 

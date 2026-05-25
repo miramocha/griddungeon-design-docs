@@ -14,7 +14,7 @@ Concrete classes, interfaces, and enums for the MVP1 implementation. Derived fro
 | **Hub ↔ explore ↔ combat loop** | `GamePhaseController` + three `IPhaseController`s ([game phase](02-systems/game-phase.md)) |
 | **Spec-locked combat** | `CombatController` + `TurnQueue` + `EndOfRoundPipeline`; combat sub-phases not on `GamePhase` |
 | **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, …) at simulator boundaries |
-| **FOE + map + flee rules** | `ExplorationPhaseController` wires explorer events; `RetreatCellCalculator` in Core |
+| **FOE + map + flee rules** | `ExplorationPhaseController` wires explorer events; `RetreatCellCalculator` + `FoeFleeRetreatPlacement` in Core |
 | **Phase vs presentation** | C# owns transitions; optional UVS later listens to `PhaseChanged` only ([ADR 017](../decisions/017-game-phase-controller.md)) |
 
 Phase diagrams, exploration/combat sequences, and Enter/Exit checklists: **[game phase](02-systems/game-phase.md)**.
@@ -507,6 +507,13 @@ static class RetreatCellCalculator
     static bool IsRetreatCellWalkable(GridPosition retreatCell, FloorCollisionQuery collision);
 }
 
+static class FoeFleeRetreatPlacement
+{
+    // Post-combat grid cell after flee — FOE contact only (ADR 011)
+    static bool TryResolvePostFleeCell(BattleResult result, CombatEntryContext entry,
+        GridPosition partyCell, FloorCollisionQuery isWalkable, out GridPosition placementCell);
+}
+
 static class MapRevealCalculator
 {
     static IEnumerable<CellEdge> RevealOnEnterCell(GridPosition cell, int gridWidth, int gridHeight);
@@ -880,17 +887,21 @@ class PartyCommandBatch   // Core — queued commands keyed by combatant id
 
 // Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
 
-enum TutorialCombatKind { None, SynchroFirstFoe }
-
 class CombatEntryContext
 {
     FoeInstance? Foe;          // null = random encounter
-    EncounterGroup Group;
+    string EncounterGroupId;
     string BattleBackgroundId;
     GridPosition FightAnchor;
     FacingDirection PartyFacing;
-    TutorialCombatKind TutorialKind;  // SynchroFirstFoe: crisis AOE, VN unlock, guided protocol_strike, hub warp
+    bool NoFlee;
+    bool IsFoeContactFight => Foe != null;
+    // FOE contact + successful flee → party steps back one cell (ADR 011); random fights stay put
+    bool ShouldMovePartyToRetreatCell(BattleResult result);
 }
+// S1 tutorial FOE: identify by EncounterGroupId (grp_alley_stalker_tutorial) via CombatTutorialHudRules.IsS1FirstFoeTutorial.
+// Floor spawn flag: FoeSpawnConfig.TutorialFirstFoe. Content: EncounterGroup.tutorialUnbeatable, NoFlee on entry.
+// Deprecated sketch: enum TutorialCombatKind on CombatEntryContext — do not add.
 
 class CombatAction
 {
@@ -1061,7 +1072,7 @@ class SaveSystem : MonoBehaviour
 
 ## UI layer
 
-Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** hub / explore / combat presenters subscribe to events, play DOTween feedback, and respect a **presentation lock** until beats finish — see [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [hub](02-systems/hub-and-services.md#service-ui-motion).
+Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** combat — `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration — **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md).
 
 ### Input routing
 
@@ -1124,7 +1135,7 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ### View controllers
 
-**Shipped exploration UI** (bind lifecycle, UXML mounts, input): [exploration UI](02-systems/exploration-ui.md). Types below are the **target** sketch; game repo uses `ExplorationHudView`, `MapView`, `ExplorationPauseView` (party strip / log not wired).
+**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays): [exploration UI](02-systems/exploration-ui.md). Game repo: `ExplorationHudView`, `MapView`, `Map*MarkersPresenter`, `ExplorationPauseView` (party strip / log not wired). Types below are the **target** full read-model sketch.
 
 ```csharp
 class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phase
@@ -1257,8 +1268,10 @@ Assets/
 │   ├── Core/                     GridDungeon.Core.asmdef
 │   │   ├── Models/               Combatant.cs, BattleState.cs, FoeInstance.cs, FloorMapState.cs, ...
 │   │   ├── Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
+│   │   ├── Campaign/             S1CampaignResolver.cs, CombatTutorialHudRules.cs, …
 │   │   ├── Simulators/           DamageCalculator.cs, ValidTargetCalculator.cs, CombatTargeting.cs,
-│   │   │                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs, TurnQueueBuilder.cs, ...
+│   │   │                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs,
+│   │   │                         FoeFleeRetreatPlacement.cs, TurnQueueBuilder.cs, ...
 │   │   ├── SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...
 │   │   └── Enums/                GamePhase.cs, CombatantKind.cs, ...
 │   ├── Runtime/                  GridDungeon.Runtime.asmdef
@@ -1268,7 +1281,7 @@ Assets/
 │   │   ├── Exploration/          DungeonExplorer.cs, DungeonView.cs, FoeSystem.cs,
 │   │   │                         EncounterTrigger.cs, GatherInteractor.cs
 │   │   ├── Map/                  MapSystem.cs
-│   │   ├── Combat/               CombatController.cs, CombatScenePresenter.cs, TurnQueue.cs, …
+│   │   ├── Combat/               CombatController.cs, CombatPresentationGate.cs, CombatScenePresenter.cs, …
 │   │   ├── Party/                PartyRuntime.cs, CombatantFactory.cs, NavigatorRuntime.cs, AuraSystem.cs
 │   │   ├── Protocol/             ProtocolSystem.cs
 │   │   ├── Hub/                  HubController.cs, InnService.cs, HospitalService.cs, ...
@@ -1279,7 +1292,8 @@ Assets/
 │       ├── Dev/                  GamePhaseDevHudView.cs (dev bootstrap only)
 │       ├── Game/                 GameBootstrap.cs
 │       ├── Input/                InputRouter.cs, ExplorationInputHandler.cs, ...
-│       └── Views/                ExplorationHUD.cs, CombatHUD.cs, MapView.cs, ...
+│       └── Views/                ExplorationHudView, MapView, CombatHudView, CombatHudReactivePresenter, …
+│       │                         MapPartyMarkerPresenter, MapFoeMarkersPresenter, MapGatherMarkersPresenter, …
 ├── UI/
 │   ├── Settings/                 GamePanelSettings.asset (shared UIDocument panel)
 │   ├── Themes/                   Theme StyleSheets (optional)

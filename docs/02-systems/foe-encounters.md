@@ -75,11 +75,16 @@ Joined FOEs are part of the same encounter; flee from an FOE fight uses the same
 - Flee disabled state: tooltip **“No escape route behind you.”**
 - Optional: show retreat cell highlight on map when Flee hovered (debug/assist mode).
 
-## MVP1
+## MVP1 implementation (game)
 
-- [ ] `CanRetreatFromFoe(fightAnchor, facing)`
-- [ ] Disable Flee button when false
-- [ ] On flee success: teleport party to retreat cell, end combat
+| Rule | Owner |
+|------|--------|
+| Retreat cell math | `RetreatCellCalculator` (Core) |
+| Walkable retreat check / flee UI enable | `FoeSystem.CanRetreatFromFoe` → `RetreatCellCalculator.IsRetreatCellWalkable` |
+| FOE contact vs random flee placement | `CombatEntryContext.ShouldMovePartyToRetreatCell` — **true** only when `Foe != null` and `BattleResult.Flee` |
+| Post-flee exploration cell | `FoeFleeRetreatPlacement.TryResolvePostFleeCell` (Core); `ExplorationPhaseController` applies placement on combat end |
+
+Random encounters: flee succeeds but party **stays on fight anchor**. FOE contact: party moves **one cell backward** when retreat cell is walkable ([#94](https://github.com/miramocha/griddungeon-game/pull/94)).
 
 ### Tutorial FOE (S1 — `foe_alley_stalker`)
 
@@ -93,7 +98,7 @@ Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1]
 | **Victory** | Player **`protocol_strike`** kills FOE; then **hub warp** — not retreat-on-B2F ([story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker)) |
 | **Story** | `s1_b2f_stalker_briefing` (Event cell, pre-fight), `s1_synchro_protocol_unlock` (post-crisis), `s1_tutorial_hub_return` (post-kill) — [ADR 028](../../decisions/028-story-visual-novel-events.md) |
 | **Guided HUD** | `s1_combat_guided_protocol` after unlock VN — [guided-tutorial](guided-tutorial.md), [S1 beats](../03-content/campaign/s1-guided-tutorials.md) |
-| **Contact** | Same cell rules as normal FOE; `CombatEntryContext.TutorialKind = SynchroFirstFoe` |
+| **Contact** | Same cell rules as normal FOE; encounter group `TutorialFirstFoe` + `CombatTutorialHudRules` (S1 stalker) |
 
 ## Related docs
 
