@@ -141,16 +141,16 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Hub & menus
 
-**Deferred** until hub service UI ships ([#36](https://github.com/miramocha/griddungeon-game/issues/36)). When built, use the same **arrows / WASD / `Z` / `X`** pattern as combat ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) hub addendum).
+**Implemented** in hub phase ([game #98](https://github.com/miramocha/griddungeon-game/issues/98), [ADR 026 hub addendum](../../decisions/026-combat-menu-focus-navigation.md#hub-implemented)). Same **arrows / WASD / `Z` / `X`** pattern as combat; `GamePhase.Hub` only — no grid movement.
 
-| Action | Input (target) |
-|--------|----------------|
-| Navigate | Mouse, arrows, `W`/`A`/`S`/`D` |
-| Confirm | `Z` (`Enter` alias) |
-| Cancel / back | `X` or mouse |
-| Assign party / skills | Mouse at **Explorers Guild** (until guild UI ships) |
+| Action | Input |
+|--------|--------|
+| Navigate | Mouse, arrows, `W`/`A`/`S`/`D` (`UI.Navigate` + `Hub.MenuNavigate`) |
+| Confirm | `Z` |
+| Cancel / back | `X` (closes service panel; root menu unchanged) |
+| Assign party / skills | Mouse or keyboard focus at **Explorers Guild** |
 
-No grid movement in hub.
+Presentation lock blocks navigate/confirm while hub reactive beats run ([hub-and-services](hub-and-services.md#service-ui-motion)).
 
 ---
 

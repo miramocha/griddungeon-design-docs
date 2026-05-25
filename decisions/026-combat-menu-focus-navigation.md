@@ -69,9 +69,9 @@ Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player con
 - **Pause:** bind **`Esc`** when combat pause overlay ships; until then ignore **`Esc`** in combat (do not map to LIFO Back).
 - **Dev HUD** (`GamePhaseDevHud`) is explicitly **out of scope**.
 
-### Hub (deferred)
+### Hub (implemented)
 
-When hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), [#36](https://github.com/miramocha/griddungeon-game/issues/36)) ships, apply the same **`Z` / `X` / arrows / WASD** pattern to root + service menus. Amend this ADR or add a short hub addendum at that time.
+Hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), [#36](https://github.com/miramocha/griddungeon-game/issues/36)) uses the same **`Z` / `X` / arrows / WASD** pattern on root + service menus ([game #98](https://github.com/miramocha/griddungeon-game/issues/98)): `HubInputHandler`, `MenuFocusNavigator`, dedicated `Hub` input map (`MenuNavigate`, `MenuConfirm`, `MenuCancel`). `UI.Submit`/`Cancel` disabled in hub so UIToolkit does not steal `Z`/`X`. Camera pan on root-menu focus remains deferred ([hub-and-services](../docs/02-systems/hub-and-services.md#hub-environment-presentation)).
 
 ## Amendment (2026-05-23) — WASD menu navigate
 
