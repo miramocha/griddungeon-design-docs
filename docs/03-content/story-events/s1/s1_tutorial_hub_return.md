@@ -1,6 +1,6 @@
 # Draft — `s1_tutorial_hub_return`
 
-**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet); post-discovery, still **no origin lore**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; MVP1 = click-through block.
 
 **When:** Immediately after **`protocol_strike`** resolves and FOE is removed (tutorial kill).
 
@@ -15,13 +15,13 @@
 
 ---
 
-## Script (placeholder — `textKey` + `textEn`)
+## Script (`textKey` + `textEn`)
 
-| textKey | textEn (draft) |
-|---------|----------------|
-| `story.s1.hub_return.line_01` | It's down. I'm pulling your line to the surface channel before anything else stirs down here. |
-| `story.s1.hub_return.line_02` | Whatever that pulse was — it's still on me. I'll learn the rest topside. For now: recharge it in a fight, hit **Protocol** when the bar tops out. |
-| `story.s1.hub_return.line_03` | Rest at hub. When you're ready, we enter from the mouth again. |
+| textKey | textEn |
+|---------|--------|
+| `story.s1.hub_return.line_01` | It's down. I'm getting us topside before anything else stirs down here. |
+| `story.s1.hub_return.line_02` | Whatever that pulse was, it's still on me. I'll learn the rest topside. For now: build Synchro back up in a fight, then open Protocol when it peaks. |
+| `story.s1.hub_return.line_03` | Rest at the hub. Next dive starts at the gate when we're ready. |
 
 Speaker: **`navigator:guild_handler`** only.
 

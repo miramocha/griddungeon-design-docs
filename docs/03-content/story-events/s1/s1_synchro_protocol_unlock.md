@@ -1,12 +1,12 @@
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet); **first mechanic reveal**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; MVP1 = click-through block.
 
 **When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 
 **Prerequisite:** B2F tutorial FOE; crisis already fired.
 
-**Narrative job:** Navigator **discovers** the channel burst and hears **Synchro / Protocol** as labels for the first time — still no full backstory.
+**Narrative job:** Navigator **discovers** the kit burst and hears **Synchro / Protocol** as labels for the first time — still no full backstory.
 
 **Dismiss:** Z or click per line; **no skip**.
 
@@ -18,13 +18,13 @@
 
 ---
 
-## Script (placeholder — `textKey` + `textEn`)
+## Script (`textKey` + `textEn`)
 
-| textKey | textEn (draft) |
-|---------|----------------|
-| `story.s1.synchro_unlock.line_01` | That should've dropped your line. It didn't. |
-| `story.s1.synchro_unlock.line_02` | There's a pulse in the channel — I didn't know I had it until now. Paperwork calls it **Synchro**. One coordinated shot when it peaks. |
-| `story.s1.synchro_unlock.line_03` | It's lining up. When your turn hits, open **Protocol** — I'll push **Protocol Strike** through. |
+| textKey | textEn |
+|---------|--------|
+| `story.s1.synchro_unlock.line_01` | That should've dropped your crew. It didn't. |
+| `story.s1.synchro_unlock.line_02` | There's a pulse in my kit — I didn't know I had it until now. Paperwork calls it Synchro. One coordinated shot when it peaks. |
+| `story.s1.synchro_unlock.line_03` | It's lining up. When your turn hits, open Protocol — I'll push Protocol Strike through. |
 | `story.s1.synchro_unlock.line_04` | One strike. I don't think we get another window at this range. |
 
 Speaker: **`navigator:guild_handler`** only.

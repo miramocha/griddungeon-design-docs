@@ -1,6 +1,6 @@
 # Draft — `s1_b1f_mouth_briefing`
 
-**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet), **blank state**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b1f_mouth_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; MVP1 = click-through block.
 
 **When:** **Exploration Act 1** — Navigator enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (mouth camp threshold), **solo**, **before** first **hub** via mouth `^` `(10, 11)`.
 
@@ -19,10 +19,10 @@
 
 ---
 
-## Script (sample v4 — `textKey` + `textEn`)
+## Script (`textKey` + `textEn`)
 
-| textKey | textEn (sample) |
-|---------|-----------------|
+| textKey | textEn |
+|---------|--------|
 | `story.s1.b1f_mouth.line_01` | Stairs cut through to topside — and something in me is pulling toward a check-in I don't have words for yet. |
 | `story.s1.b1f_mouth.line_02` | My kit's full of sealed tools. Whatever they do, it isn't ready down here — but topside first still feels mandatory. |
 | `story.s1.b1f_mouth.line_03` | No one else on this floor with me. I'll take the stairs up and see who answers. |

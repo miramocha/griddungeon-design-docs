@@ -1,8 +1,8 @@
 # Draft — `s1_b2f_stalker_briefing`
 
-**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet), **blank state**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b2f_stalker_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; MVP1 = click-through block.
 
-**When:** **Exploration** — party enters the authored **Event** cell on `s1_B2F` (west-loop approach, before the tutorial fight and before any **hub** return).
+**When:** **Exploration Act 3** — party on the sideline enters the authored **Event** cell on `s1_B2F` `(7, 11)` (west-loop approach, before the tutorial fight).
 
 **Prerequisite:** `s1_tutorial_dive_started`; not `s1_first_foe_tutorial_complete`.
 
@@ -19,13 +19,13 @@
 
 ---
 
-## Script (placeholder — `textKey` + `textEn`)
+## Script (`textKey` + `textEn`)
 
-| textKey | textEn (draft) |
-|---------|----------------|
+| textKey | textEn |
+|---------|--------|
 | `story.s1.b2f_briefing.line_01` | My board's throwing spikes. Something heavy on the east loop — not noise I can walk past. |
 | `story.s1.b2f_briefing.line_02` | The contract line says engage if it blocks the route. There's a lock on my side I don't know how to open yet. |
-| `story.s1.b2f_briefing.line_03` | Hold your line. If it commits, I'm calling it in. |
+| `story.s1.b2f_briefing.line_03` | Keep the formation tight. If it commits, I'm calling it in. |
 
 Speaker: **`navigator:guild_handler`** only.
 
