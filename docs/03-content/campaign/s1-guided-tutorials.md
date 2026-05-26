@@ -7,7 +7,7 @@
 
 Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** in MVP1). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
-**Voice:** [narrative POV](../../02-systems/narrative-pov.md) — Navigator **first person**, blank state in Act 1; no Synchro / Protocol names until post-unlock coach.
+**Voice:** **No character speaker** — impersonal coach copy only (system / second-person imperative). No `speakerId`, no portrait. Fiction and emotion live in **story VN** ([narrative POV](../../02-systems/narrative-pov.md)); tutorials teach **controls and UI**. **Act 1** fiction (solo Navigator) is **not** stated in guided rows — only in VN.
 
 ---
 
@@ -26,12 +26,14 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 **Prerequisites:** new game, not `s1_intro_movement_complete`.  
 **End:** first `stairsUp` at mouth **^** `(10, 11)` → hub.
 
+**Party (fiction):** Navigator explores **solo** in Act 1 — see [mouth briefing VN](../story-events/s1/s1_b1f_mouth_briefing.md). Guided rows stay **impersonal** (no crew, Navigator, or backstory).
+
 | Order | `tutorialEntryId` | Trigger | `completion` | Pages (draft `textEn`) |
 |-------|-------------------|---------|--------------|-------------------------|
-| 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “I'm on comms with a line — don't know whose yet.” p2: “Move **north**. My board shows camp ahead.” (+ still: compass / passage) |
+| 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “The map reveals tiles as you move.” p2: “Move **north** toward the camp marker.” (+ still: compass / passage) |
 | 2 | `s1_explore_wall_bump` | First wall bump | last page dismiss | “Blocked. **Strafe** or **turn**, then step forward.” |
-| 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: “Map's filling in as you move — good.” p2: “Cache on the grid. **Interact** on **C** if you want what's in it.” |
-| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs up — surface channel. Report in.” Else: “**Interact** — stairs up.” |
+| 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: “New tiles are added to the map as you explore.” p2: “Cache on the grid. **Interact** on **C** to open it.” |
+| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs lead topside. **Interact** to go up.” Else: “**Interact** — stairs up.” |
 
 **Story VN (Act 1):** [s1_b1f_mouth_briefing](../story-events/s1/s1_b1f_mouth_briefing.md) on Event cell **`!` `(10, 9)`** — fires before row 4; Navigator copy owns hub report fiction.
 
@@ -46,6 +48,8 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 ## Act 2 — Party (Hub)
 
 **MVP1:** no guided entries — guild UI + service motion only ([ADR 029](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
+
+**Navigator framing (S1 copy pass):** MVP1 presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
 
 ---
 
@@ -78,7 +82,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 | `prerequisiteFlags` | `s1_synchro_unlocked` |
 | `highlight` | `combat.command.protocol`, `combat.synchro_meter` |
 | `completion` | `combat_command` → `protocol_strike` queued and confirmed |
-| **Pages (draft)** | p1: “Channel's peaked.” p2: “Open **Protocol** → **Protocol Strike** — I'll ride it through.” (+ still: meter screenshot) |
+| **Pages (draft)** | p1: “Synchro is full.” p2: “Open **Protocol** → **Protocol Strike**.” (+ still: meter screenshot) |
 
 **Start:** story effect `start_guided_protocol` on last step of `s1_synchro_protocol_unlock`.  
 **End:** clear highlight when `protocol_strike` begins resolve; set `s1_synchro_protocol_tutorial_done` on kill.

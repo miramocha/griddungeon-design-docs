@@ -14,7 +14,7 @@
 
 | Layer | Job | S1 examples |
 |-------|-----|-------------|
-| **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short copy; arena or map stays readable; **same Navigator voice** as VN ([narrative POV](narrative-pov.md)) | Act 1: “move north”; combat: pulse **Protocol** after unlock |
+| **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short **impersonal** copy (no character `speakerId`); arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** after unlock |
 | **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase; **blank-state** — no mechanic spoilers before the beat’s job | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `CombatTutorialHudRules`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
 
@@ -80,6 +80,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 |-------|----------|-------|
 | `tutorialEntryId` | yes | Stable id (codex row); may match trigger `hintId` |
 | `pages[]` | yes | `{ textKey, imageId? }` per page — MVP1 **stills only** (`videoId` reserved post-MVP1) |
+| `speakerId` | **no** | Omit for MVP1 — **no** Navigator, core, or NPC speaker; UI shows body text only (no portrait) |
 | `mode` | yes | `exploration` \| `combat` \| `hub` |
 | `codexCategory` | no | Menu grouping (`basics`, `combat`, `synchro`, …) |
 | `once` | yes | In-world trigger once; codex unlock persists |
@@ -143,7 +144,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | **Allowed command** | Only **Protocol → `protocol_strike`** ([synchro § phase D](synchro-protocol.md#s1-tutorial-gating-first-foe)) |
 | **Player agency** | Player still opens Protocol and confirms target — **not** a full auto-cutscene |
 | **Skip** | **Disabled** until Protocol resolves |
-| **VN vs coach** | Navigator **lines** = story event; **“use Protocol now”** = guided hint `s1_combat_guided_protocol` |
+| **VN vs coach** | Navigator **lines** = story event only; **“use Protocol now”** = impersonal guided hint `s1_combat_guided_protocol` |
 
 **Effect bridge (target):** story step `start_guided_protocol` → set `s1_synchro_unlocked` / protocol-tutorial flags → `CombatTutorialHudRules.RequiresProtocolOnlyCommands` (shipped via campaign + `grp_alley_stalker_tutorial`) + `GuidedTutorialController.Start("s1_combat_guided_protocol")` ([#88](https://github.com/miramocha/griddungeon-game/issues/88) — coach UI not yet wired).
 

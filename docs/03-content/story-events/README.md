@@ -4,7 +4,7 @@
 
 Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/Content/StoryEvents/` when implementation starts. Post-MVP1: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
 
-**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — Navigator **first person**, *Amnesia*-style **blank state** at new game; do not name Synchro / Protocol until the unlock beat. Cores never speak in S1 scripts.
+**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — Navigator **first person**; **Act 1 solo**, then **sideline** with crew after hub recruit; *Amnesia*-style **blank state**; guide via **kit / map sense** (avoid comms-or-“line” diction in S1); no Synchro / Protocol until unlock beat. Cores never speak in S1 scripts.
 
 ## MVP1 — Stratum 1
 

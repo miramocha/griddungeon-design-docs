@@ -2,11 +2,11 @@
 
 **Status:** Copy draft — Navigator only, **blank state**; MVP1 = click-through block.
 
-**When:** **Exploration Act 1** — party enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (mouth camp threshold), **before** first **hub** via mouth `^` `(10, 11)`.
+**When:** **Exploration Act 1** — Navigator enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (mouth camp threshold), **solo**, **before** first **hub** via mouth `^` `(10, 11)`.
 
 **Prerequisite:** Act 1 movement path (not `s1_intro_movement_complete`); not already `s1_b1f_mouth_briefing_seen`.
 
-**Narrative job:** Instinct to report topside — **no** Synchro / Protocol / role title. Navigator does not know who they are.
+**Narrative job:** **Solo** recon — no crew yet (recruitment is Act 2 hub). Kit has **sealed tools** / latent power not usable yet. Instinct to report topside — **no** Synchro / Protocol / role title; **no** comms-or-“line” diction.
 
 **Dismiss:** Z or click per line; **no skip**.
 
@@ -19,13 +19,13 @@
 
 ---
 
-## Script (placeholder — `textKey` + `textEn`)
+## Script (sample v4 — `textKey` + `textEn`)
 
-| textKey | textEn (draft) |
-|---------|----------------|
-| `story.s1.b1f_mouth.line_01` | Static on the line — and stairs up ahead. Something's pulling toward a surface channel I don't have a name for yet. |
-| `story.s1.b1f_mouth.line_02` | There's a tag in my kit I can't read. Report in before we go deeper. That's the only part that feels true. |
-| `story.s1.b1f_mouth.line_03` | Your crew moves when you're ready. I'll keep the channel open. |
+| textKey | textEn (sample) |
+|---------|-----------------|
+| `story.s1.b1f_mouth.line_01` | Stairs cut through to topside — and something in me is pulling toward a check-in I don't have words for yet. |
+| `story.s1.b1f_mouth.line_02` | My kit's full of sealed tools. Whatever they do, it isn't ready down here — but topside first still feels mandatory. |
+| `story.s1.b1f_mouth.line_03` | No one else on this floor with me. I'll take the stairs up and see who answers. |
 
 Speaker: **`navigator:guild_handler`** only.
 

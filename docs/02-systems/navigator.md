@@ -8,7 +8,7 @@
 
 | Topic | Locked direction |
 |-------|------------------|
-| **POV** | First-person Navigator on comms — story VN + guided coach share one voice |
+| **POV** | First-person Navigator on the **sideline** with the crew — story VN + guided coach share one voice ([narrative POV](narrative-pov.md)) |
 | **Memory** | No self-knowledge at Act 1 start; first **named** mechanic beat = post-crisis Synchro unlock on B2F |
 | **Cores** | Silent in scripted lines — player builds any six classes |
 | **Display name** | `guild_handler` = data id; in-fiction the Navigator may not say “Sortie Lead” until hub/office beats teach it |
