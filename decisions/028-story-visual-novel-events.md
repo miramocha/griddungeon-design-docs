@@ -99,7 +99,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 
 **Scene timing (locked):** each VN starts **after** the preceding combat UI beat (crisis AOE tween, Protocol resolve VFX).
 
-**Speakers (locked):** **Navigator only** — [story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party).
+**Speakers (locked):** **Navigator only** — [story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party). **POV:** [narrative POV](../docs/02-systems/narrative-pov.md) — blank-state amnesia; first **named** Synchro beat = step **D** unlock VN, not Act 1 mouth briefing.
 
 ### 6. Presentation — phased (locked)
 

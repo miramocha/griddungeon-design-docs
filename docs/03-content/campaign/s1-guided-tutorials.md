@@ -7,6 +7,8 @@
 
 Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** in MVP1). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
+**Voice:** [narrative POV](../../02-systems/narrative-pov.md) — Navigator **first person**, blank state in Act 1; no Synchro / Protocol names until post-unlock coach.
+
 ---
 
 ## Overview
@@ -26,12 +28,12 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 | Order | `tutorialEntryId` | Trigger | `completion` | Pages (draft `textEn`) |
 |-------|-------------------|---------|--------------|-------------------------|
-| 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “Contract crew, check in.” p2: “Move **north** — mouth camp is ahead.” (+ still: compass / passage) |
+| 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “I'm on comms with a line — don't know whose yet.” p2: “Move **north**. My board shows camp ahead.” (+ still: compass / passage) |
 | 2 | `s1_explore_wall_bump` | First wall bump | last page dismiss | “Blocked. **Strafe** or **turn**, then step forward.” |
-| 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: signage / auto-map. p2: supply cache — **Interact** on **C** to take materials. |
-| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs up — report to the **guild hub**.” Else: “**Interact** — stairs up to hub.” |
+| 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: “Map's filling in as you move — good.” p2: “Cache on the grid. **Interact** on **C** if you want what's in it.” |
+| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs up — surface channel. Report in.” Else: “**Interact** — stairs up.” |
 
-**Story VN (Act 1):** [s1_b1f_mouth_briefing](../story-events/s1/s1_b1f_mouth_briefing.md) on Event cell **`!` `(9, 10)`** — fires before row 4; Navigator copy owns hub report fiction.
+**Story VN (Act 1):** [s1_b1f_mouth_briefing](../story-events/s1/s1_b1f_mouth_briefing.md) on Event cell **`!` `(10, 9)`** — fires before row 4; Navigator copy owns hub report fiction.
 
 **Codex:** each completed entry unlocks under category `basics` (four rows in codex for Act 1).
 
@@ -76,7 +78,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 | `prerequisiteFlags` | `s1_synchro_unlocked` |
 | `highlight` | `combat.command.protocol`, `combat.synchro_meter` |
 | `completion` | `combat_command` → `protocol_strike` queued and confirmed |
-| **Pages (draft)** | p1: “**Synchro full.**” p2: “Open **Protocol** → **Protocol Strike**.” (+ still: meter screenshot) |
+| **Pages (draft)** | p1: “Channel's peaked.” p2: “Open **Protocol** → **Protocol Strike** — I'll ride it through.” (+ still: meter screenshot) |
 
 **Start:** story effect `start_guided_protocol` on last step of `s1_synchro_protocol_unlock`.  
 **End:** clear highlight when `protocol_strike` begins resolve; set `s1_synchro_protocol_tutorial_done` on kill.

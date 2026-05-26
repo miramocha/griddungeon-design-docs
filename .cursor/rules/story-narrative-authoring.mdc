@@ -1,0 +1,24 @@
+---
+description: Story and narrative authoring — Navigator POV, amnesia, design-docs only; no game code unless asked
+globs: docs/03-content/story-events/**,docs/03-content/campaign/s1-guided-tutorials.md,docs/02-systems/narrative-pov.md,docs/02-systems/story-events.md
+alwaysApply: false
+---
+
+# Story / narrative authoring
+
+**POV authority:** [narrative-pov.md](../../docs/02-systems/narrative-pov.md) · **Scenes:** [story-events README](../../docs/03-content/story-events/README.md)
+
+## Scope
+
+- Edit **design-docs** story drafts (`textKey` / `textEn`), guided-tutorial copy, and narrative sections in linked system docs.
+- **Do not** change `griddungeon-game` C#, Unity assets, or combat/campaign **rules** unless the user explicitly asks to document a new beat for engineering.
+
+## Navigator (locked)
+
+- Player **is** the active Navigator: **guide** on comms who **travels with** the expedition and **supports** the six cores — not a grid fighter, not a core class voice.
+- **Blank state** at new game ([narrative-pov](../../docs/02-systems/narrative-pov.md)); no Synchro/Protocol vocabulary until the unlock beat teaches it.
+- **First person** in story VN + guided coach; cores **silent** in S1 scripts.
+
+## Handoff to implementation
+
+When copy is final, tell the user to sync `Assets/Content/StoryEvents/` in the game repo — do not invent test results or run Unity from this rule.

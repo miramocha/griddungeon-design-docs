@@ -32,7 +32,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 ### S1 tutorial gating (first FOE)
 
-**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol coach
+**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Narrative:** [narrative POV](narrative-pov.md) — Navigator has **no** Synchro/Protocol vocabulary until unlock VN after crisis AOE · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol coach
 
 **Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
 

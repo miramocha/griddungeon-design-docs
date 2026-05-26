@@ -2,7 +2,7 @@
 
 ## Elevator pitch
 
-Chart an unknown labyrinth from the first person — one grid step at a time. The **map fills in automatically** as you explore. Avoid or bait **FOEs** on the grid. Manage a six-person guild party, return to town before you're spent, and push deeper into the next stratum.
+Lead a contract crew into an unknown labyrinth as their **Navigator** — on comms, off the formation grid, with no memory of who you were when the dive started. The **map fills in automatically** as the line advances. Avoid or bait **FOEs** on the grid. Direct six cores, return to hub before the channel goes cold, and push deeper as you **rediscover** what your link can do.
 
 ## Design pillars (Etrian Odyssey–first)
 
@@ -25,9 +25,11 @@ Full reference notes (scratchpad, not scope authority): **[00 — Game reference
 
 ## Player fantasy
 
-- **Pathfinder** (player fantasy) — Read the auto-map, thread FOE patrols, find shortcuts. *(Class: Marksman for ranged/control.)*
-- **Guildmaster** — Curate six party slots and skill builds for each stratum.
-- **Survivor** — Know when to dive deeper vs return to hub.
+- **Navigator (primary)** — Blank-state flight lead on guild channel; read the auto-map through the crew feed, thread FOE patrols, and **learn** Synchro / Protocol as the story proves them ([narrative POV](02-systems/narrative-pov.md)).
+- **Guildmaster** — Curate six core slots and skill builds between dives (hub); fiction stays Navigator-voiced.
+- **Survivor** — Know when to pull the line topside vs push deeper.
+
+Exploration camera follows the **party on the grid**; identity and dialogue remain **Navigator-first person**, not a single core class.
 
 ## Non-goals (early versions)
 
@@ -75,6 +77,7 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 
 ## Related docs
 
+- [Narrative POV — Navigator, blank state](02-systems/narrative-pov.md)
 - [00 — Game references](00-game-references.md)
 - [01 — Core loop](01-core-loop.md)
 - [02 — Mapping](02-systems/mapping.md)

@@ -2,6 +2,19 @@
 
 **Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
+**Narrative:** The player **is** the active Navigator ([narrative POV](narrative-pov.md)) — *Amnesia*-style **blank state** at new game; Synchro / Protocol and role lore **unlock through play**, not upfront exposition.
+
+## Narrative role (MVP1)
+
+| Topic | Locked direction |
+|-------|------------------|
+| **POV** | First-person Navigator on comms — story VN + guided coach share one voice |
+| **Memory** | No self-knowledge at Act 1 start; first **named** mechanic beat = post-crisis Synchro unlock on B2F |
+| **Cores** | Silent in scripted lines — player builds any six classes |
+| **Display name** | `guild_handler` = data id; in-fiction the Navigator may not say “Sortie Lead” until hub/office beats teach it |
+
+See [narrative POV — reveal pacing](narrative-pov.md#blank-state-locked) for S1 beat table.
+
 ## Role summary
 
 | | Navigator | Core party (6) | Aux summon/guest |

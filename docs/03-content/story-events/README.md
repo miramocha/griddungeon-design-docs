@@ -4,11 +4,13 @@
 
 Authoring drafts live in subfolders (`s1/`, …). Game repo imports to `Assets/Content/StoryEvents/` when implementation starts. Post-MVP1: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
 
+**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — Navigator **first person**, *Amnesia*-style **blank state** at new game; do not name Synchro / Protocol until the unlock beat. Cores never speak in S1 scripts.
+
 ## MVP1 — Stratum 1
 
 | storyEventId | once | Prerequisite | Trigger | Status |
 |--------------|------|--------------|---------|--------|
-| `s1_b1f_mouth_briefing` | yes | Act 1; not `s1_intro_movement_complete` | **Exploration:** Event cell on `s1_B1F` `(9, 10)` — before first hub | [draft](s1/s1_b1f_mouth_briefing.md) |
+| `s1_b1f_mouth_briefing` | yes | Act 1; not `s1_intro_movement_complete` | **Exploration:** Event cell on `s1_B1F` `(10, 9)` — before first hub | [draft](s1/s1_b1f_mouth_briefing.md) |
 | `s1_b2f_stalker_briefing` | yes | `s1_tutorial_dive_started`; not `s1_first_foe_tutorial_complete` | **Exploration:** Event cell on `s1_B2F` `(7, 11)` → VN → tutorial combat | [draft](s1/s1_b2f_stalker_briefing.md) |
 | `s1_synchro_protocol_unlock` | yes | not `s1_synchro_unlocked` | **Combat:** after crisis AOE UI beat | [draft](s1/s1_synchro_protocol_unlock.md) |
 | `s1_tutorial_hub_return` | yes | `s1_synchro_protocol_tutorial_done` | **Combat:** after Protocol kills FOE | [draft](s1/s1_tutorial_hub_return.md) |

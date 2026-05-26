@@ -9,6 +9,8 @@
 
 Terminology: **campaign intro** = this doc (Acts 1–3). **Event** = tile scripts / one-off story cells ([dungeons § Encounter types](../dungeons-and-encounters.md#encounter-types)); MVP1 S1 uses **B1F** (before first hub) and **B2F** (before tutorial FOE / scripted hub warp).
 
+**Narrative frame:** Player is the active **Navigator** with **no memory** at Act 1; Synchro / Protocol are **discovered** on B2F after crisis — [narrative POV](../../02-systems/narrative-pov.md).
+
 ---
 
 ## Three acts (same `s1_B1F` map)

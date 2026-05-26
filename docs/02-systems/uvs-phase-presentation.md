@@ -276,7 +276,7 @@ using GridDungeon.Core.Enums;
 using GridDungeon.Runtime.Exploration;
 
 // Stops active tween, updates cell, fires OnPartyEnteredCell (map reveal hooks).
-explorer.SpawnAt(new GridPosition(9, 10), FacingDirection.North);
+explorer.SpawnAt(new GridPosition(10, 9), FacingDirection.North);
 ```
 
 Use during **presentation lock** (gate acquired) so `InputRouter` does not race the player.

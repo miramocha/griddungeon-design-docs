@@ -14,8 +14,8 @@
 
 | Layer | Job | S1 examples |
 |-------|-----|-------------|
-| **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short copy; arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** |
-| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
+| **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short copy; arena or map stays readable; **same Navigator voice** as VN ([narrative POV](narrative-pov.md)) | Act 1: “move north”; combat: pulse **Protocol** after unlock |
+| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase; **blank-state** — no mechanic spoilers before the beat’s job | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `CombatTutorialHudRules`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
 
 A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (story) → guided Protocol (this doc) → finisher (rules).

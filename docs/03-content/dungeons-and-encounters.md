@@ -160,7 +160,7 @@ entries:
 #........#.#.......#
 #....C...#.#...G...#
 #........#.#.......#
-#........!M#.......#
+#........#!#.......#
 #........#.^.......#
 #......###.###.....#
 #......#.....#.....#
@@ -172,8 +172,7 @@ entries:
 ```
 
 - **E** `(4, 2)` — Act 1 intro spawn; funnel north/east to mouth.
-- **M** `(10, 10)` — mouth landing (fiction: camp threshold); pair with **^** `(10, 11)` → hub.
-- **`!` `(9, 10)`** — Act 1 Event cell: **`s1_b1f_mouth_briefing`** before first hub ([story events § Act 1](../../02-systems/story-events.md#act-1--first-hub-b1f)).
+- **`!` `(10, 9)`** — mouth camp threshold + Act 1 Event cell: **`s1_b1f_mouth_briefing`** before first hub ([story events § Act 1](../../02-systems/story-events.md#act-1--first-hub-b1f)); pair with **^** `(10, 11)` → hub.
 - **v** `(10, 17)` — to B2F; blocked in Act 1.
 - **X** — tutorial blockers on shortcuts to `v` and wide loops.
 

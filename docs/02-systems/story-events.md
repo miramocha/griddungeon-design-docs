@@ -18,6 +18,7 @@ Scripted **story scenes** with visual-novel-style presentation: character portra
 | Combat-safe | Overlay + pause queue; **no** extra `GamePhase` |
 | Rules stay in Core | Effects call campaign/combat APIs; runner does not embed S1 logic |
 | EO-readable pacing | Line-by-line advance; presentation lock until scene completes or skips to safe point |
+| Navigator POV | Player is the Navigator; [blank-state amnesia](narrative-pov.md) — mechanics named only when the beat teaches them |
 
 ---
 
@@ -82,7 +83,7 @@ New effects require an ADR amendment or appendix — avoid ad-hoc string effects
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
-| **`s1_b1f_mouth_briefing`** | Exploration Event cell **`!` `(9, 10)`** on mouth approach — **before** first **`^` → hub** | `s1_b1f_mouth_briefing_seen` |
+| **`s1_b1f_mouth_briefing`** | Exploration Event cell **`!` `(10, 9)`** on mouth approach — **before** first **`^` → hub** | `s1_b1f_mouth_briefing_seen` |
 
 **Trigger (locked):** `ExplorationPhaseController` / tile script → `StoryEventRunner.Play` on `OnPartyEnteredCell`; overlay lock until dismiss; then player walks to **`^`** for `Exploration → Hub`.
 
@@ -185,13 +186,18 @@ Example index row:
 
 ## Speakers and custom party
 
-**Avoid dialogue attributed to specific core members** — player picks classes/names. Prefer:
+**Authority:** [narrative POV](narrative-pov.md) — Navigator **blank state**; player is the active Navigator; cores stay silent in scripted fiction.
 
-- **Navigator** (`navigator:guild_handler`) for tutorials and briefings
-- **Narrator / radio / signage** for impersonal lines (post-MVP1)
-- **FOE** — SFX/UI reaction only unless a beat needs explicit monster voice (not MVP1 unlock)
+| Speaker | Use |
+|---------|-----|
+| **`navigator:guild_handler`** (S1) | All MVP1 story VN + mandatory coach voice — **first person**, amnesia-safe copy |
+| **Narrator / radio / signage** | Impersonal lines only (post-MVP1) |
+| **`core:<id>`** | **Avoid** — roster is player-defined |
+| **FOE** | SFX / UI reaction; no dialogue MVP1 |
 
-**S1 unlock scene (locked):** Navigator only.
+**S1 (locked):** Navigator only. Do **not** explain Synchro / Protocol in Act 1 mouth briefing; first in-fiction **name** of the channel burst = `s1_synchro_protocol_unlock` after crisis AOE.
+
+**Authoring:** Match [reveal pacing](narrative-pov.md#blank-state-locked) before importing `textEn` to game assets.
 
 ## Localization
 
