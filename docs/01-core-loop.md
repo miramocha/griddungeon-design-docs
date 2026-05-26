@@ -3,11 +3,11 @@
 ## Macro loop (EO-style)
 
 ```
-[New game] Stratum 1 movement tutorial on B1F (no combat) → mouth stairs → hub
+[New game] Stratum 1 movement tutorial on B1F (no combat) → gate stairs → hub
     → Hub: recruit 6 core, Navigator, equip (Stratum 1 Act 2)
-    → Enter Stratum 1 at B1F mouth → explore B1F–B3F
-[Loop] Hub → enter stratum at beginning (S1 mouth; S2+ warp gate when unlocked) → explore → fight → loot
-    → Retreat via first-floor mouth stairs up (hub) / return item
+    → Enter Stratum 1 at B1F gate → explore B1F–B3F
+[Loop] Hub → enter stratum at beginning (S1 gate; S2+ warp gate when unlocked) → explore → fight → loot
+    → Retreat via first-floor gate stairs up (hub) / return item
     → Hub: heal, save, skill points → repeat
 [MVP3] Hub → Side expedition → non-strata map (sd01, …) → explore → fight → exit stairs → hub
 ```

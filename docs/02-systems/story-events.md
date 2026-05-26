@@ -83,13 +83,13 @@ New effects require an ADR amendment or appendix — avoid ad-hoc string effects
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
-| **`s1_b1f_mouth_briefing`** | Exploration Event cell **`!` `(10, 9)`** on mouth approach — **before** first **`^` → hub** | `s1_b1f_mouth_briefing_seen` |
+| **`s1_b1f_gate_briefing`** | Exploration Event cell **`!` `(10, 9)`** on gate approach — **before** first **`^` → hub** | `s1_b1f_gate_briefing_seen` |
 
 **Trigger (locked):** `ExplorationPhaseController` / tile script → `StoryEventRunner.Play` on `OnPartyEnteredCell`; overlay lock until dismiss; then player walks to **`^`** for `Exploration → Hub`.
 
-**Act 1 exception:** one story event at the mouth; other Act 1 beats stay **guided tutorial** ([ADR 029](../../decisions/029-guided-tutorial.md) — not a fourth macro phase).
+**Act 1 exception:** one story event at the gate; other Act 1 beats stay **guided tutorial** ([ADR 029](../../decisions/029-guided-tutorial.md) — not a fourth macro phase).
 
-Draft copy: [s1/s1_b1f_mouth_briefing.md](../03-content/story-events/s1/s1_b1f_mouth_briefing.md).
+Draft copy: [s1/s1_b1f_gate_briefing.md](../03-content/story-events/s1/s1_b1f_gate_briefing.md).
 
 ---
 
@@ -154,7 +154,7 @@ Mid-fight intro / separate retreat scene: **not** used — approach VN + crisis 
 
 **Save:** hub inn only — no mid-fight save.
 
-Draft copy: [s1/s1_b1f_mouth_briefing.md](../03-content/story-events/s1/s1_b1f_mouth_briefing.md), [s1/s1_b2f_stalker_briefing.md](../03-content/story-events/s1/s1_b2f_stalker_briefing.md), [s1/s1_synchro_protocol_unlock.md](../03-content/story-events/s1/s1_synchro_protocol_unlock.md), [s1/s1_tutorial_hub_return.md](../03-content/story-events/s1/s1_tutorial_hub_return.md).
+Draft copy: [s1/s1_b1f_gate_briefing.md](../03-content/story-events/s1/s1_b1f_gate_briefing.md), [s1/s1_b2f_stalker_briefing.md](../03-content/story-events/s1/s1_b2f_stalker_briefing.md), [s1/s1_synchro_protocol_unlock.md](../03-content/story-events/s1/s1_synchro_protocol_unlock.md), [s1/s1_tutorial_hub_return.md](../03-content/story-events/s1/s1_tutorial_hub_return.md).
 
 ---
 
@@ -196,9 +196,9 @@ Example index row:
 | **`core:<id>`** | **Avoid** — roster is player-defined |
 | **`foe:*`** | SFX / UI reaction in S1 tutorial; full FOE VN lines post-MVP1 if ever |
 
-**S1 (locked):** Do **not** explain Synchro / Protocol in Act 1 mouth briefing; first in-fiction **name** of the burst = `s1_synchro_protocol_unlock` after crisis AOE. **Current S1 drafts** are Navigator-only monologue; **multi-speaker scenes are allowed** when authored (alternate `speakerId` per step).
+**S1 (locked):** Do **not** explain Synchro / Protocol in Act 1 gate briefing; first in-fiction **name** of the burst = `s1_synchro_protocol_unlock` after crisis AOE. **Current S1 drafts** are Navigator-only monologue; **multi-speaker scenes are allowed** when authored (alternate `speakerId` per step).
 
-**NPC id convention (draft):** `npc:guild_clerk`, `npc:mouth_handler`, … — register in content tables when lines ship; do not reuse `core:` ids.
+**NPC id convention (draft):** `npc:guild_clerk`, `npc:gate_handler`, … — register in content tables when lines ship; do not reuse `core:` ids.
 
 **Authoring:** Match [reveal pacing](narrative-pov.md#blank-state-locked) before importing `textEn` to game assets.
 
@@ -232,7 +232,7 @@ Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Stor
 | Phase | Example trigger |
 |-------|-----------------|
 | Hub | Service script after Navigator unlock |
-| Exploration | Cell script `storyEventId` on `OnPartyEnteredCell` — **MVP1:** `s1_b1f_mouth_briefing` (Act 1, before first hub); `s1_b2f_stalker_briefing` (B2F, before tutorial combat / scripted hub) |
+| Exploration | Cell script `storyEventId` on `OnPartyEnteredCell` — **MVP1:** `s1_b1f_gate_briefing` (Act 1, before first hub); `s1_b2f_stalker_briefing` (B2F, before tutorial combat / scripted hub) |
 | Combat | Tutorial phase callback, boss intro before turn 1 |
 
 Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-and-encounters.md#encounter-types)): **S1 tutorial** = dialogue on enter, then `start_combat` on dismiss (no flee). Other events may use before/after fight — per content row.

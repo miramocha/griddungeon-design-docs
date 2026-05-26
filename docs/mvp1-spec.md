@@ -7,12 +7,12 @@ Single checklist for the **first playable**. Locked exploration/combat rules: [A
 ## 1. Player-facing loop (MVP1)
 
 ```
-New game: s1_B1F movement tutorial (no enemies, blocked path → mouth Event VN → stairs → hub)
+New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN → stairs → hub)
   → Hub Act 2: Guild party (6 core), Navigator, save
-  → Enter Stratum 1 at B1F mouth (no warp gate; Synchro taught on **unbeatable** B2F FOE)
+  → Enter Stratum 1 at B1F gate (no warp gate; Synchro taught on **unbeatable** B2F FOE)
   → Explore B1F–B3F (FPV + auto-map + FOE on B2F+)
   → Random fights + FOE contact → battle arena
-  → Win / flee → loot / XP → retreat via mouth stairs → hub
+  → Win / flee → loot / XP → retreat via gate stairs → hub
   → Defeat stratum 1 boss on B3F (MVP1 vertical slice goal)
   → Hub heal / save / equip
 ```
@@ -101,7 +101,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → mouth Event VN 
 
 | Floor | Goal |
 |-------|------|
-| **B1F** | Shared map: Act 1 movement (0 enemies, blockers); Act 3 mouth entry, **0 FOE**, stairs down |
+| **B1F** | Shared map: Act 1 movement (0 enemies, blockers); Act 3 gate entry, **0 FOE**, stairs down |
 | **B2F** | First bind/poison enemies, 1 FOE |
 | **B3F** | Stratum boss FOE + stairs (MVP1 “win”) |
 

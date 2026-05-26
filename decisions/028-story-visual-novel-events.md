@@ -99,7 +99,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 
 **Scene timing (locked):** each VN starts **after** the preceding combat UI beat (crisis AOE tween, Protocol resolve VFX).
 
-**Speakers (locked):** **Navigator only** — [story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party). **POV:** [narrative POV](../docs/02-systems/narrative-pov.md) — blank-state amnesia; first **named** Synchro beat = step **D** unlock VN, not Act 1 mouth briefing.
+**Speakers (locked):** **Navigator only** — [story-events § Speakers](../docs/02-systems/story-events.md#speakers-and-custom-party). **POV:** [narrative POV](../docs/02-systems/narrative-pov.md) — blank-state amnesia; first **named** Synchro beat = step **D** unlock VN, not Act 1 gate briefing.
 
 ### 6. Presentation — phased (locked)
 
@@ -114,7 +114,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 | **Background (combat)** | **Arena / battle view stays visible**; combat chrome may **retract** — which panels TBD ([open questions](#open-questions)) |
 | **Advance** | **Z** (combat confirm) **or mouse click** on panel — no separate Story map in MVP1 |
 | **Skip** | **Disabled** for MVP1 tutorial |
-| **Act 1 B1F** | **One** Event-cell story scene before first hub (`s1_b1f_mouth_briefing`); other beats = [ADR 029](029-guided-tutorial.md) guided pages + codex |
+| **Act 1 B1F** | **One** Event-cell story scene before first hub (`s1_b1f_gate_briefing`); other beats = [ADR 029](029-guided-tutorial.md) guided pages + codex |
 
 Exploration/hub: use same overlay pattern when content exists; Act 1 + B2F tutorial can land in either order — **implementation order deferred**.
 
@@ -144,7 +144,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | Runner + click-through view; **`s1_b1f_mouth_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
+| **MVP1** | Runner + click-through view; **`s1_b1f_gate_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
 | **MVP1 schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
 | **MVP1 content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
 | **Deferred** | Authoring format (YAML vs SO); hub/explore content beyond S1 |
@@ -187,7 +187,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 | Combat backdrop | Arena visible; UI retract **TBD** |
 | Speakers (S1) | Navigator only; no core dialogue (custom party) |
 | Input | **Z** or click |
-| Act 1 movement | **Guided tutorial** paginated block + codex ([ADR 029](029-guided-tutorial.md)); **one** Event-cell VN before first hub (`s1_b1f_mouth_briefing`) |
+| Act 1 movement | **Guided tutorial** paginated block + codex ([ADR 029](029-guided-tutorial.md)); **one** Event-cell VN before first hub (`s1_b1f_gate_briefing`) |
 | #35 split | **Resolved** — [#35](https://github.com/miramocha/griddungeon-game/issues/35) = combat reactive + Synchro HUD only; [#87](https://github.com/miramocha/griddungeon-game/issues/87) = story events |
 | Branching | Deferred; schema should support flag branches later |
 | VO | None planned yet |

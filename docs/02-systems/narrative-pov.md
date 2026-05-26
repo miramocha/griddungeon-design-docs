@@ -17,7 +17,7 @@
 
 **Not the player:** a disembodied remote commander, or dialogue tied to a **specific core class / roster slot**. The six **cores** stay **silent** in scripted fiction so any player build works — use **NPC `speakerId`s** (guild staff, topside contact, etc.) when another character must talk **with** the Navigator.
 
-**Guide, not fighter (locked):** The Navigator **explores the labyrinth** on every dive — mouth in, hub out. **Act 1 (S1):** **alone** until hub recruitment. **Act 3+:** walks with the recruited party on the **sideline**, **off the 3+3 formation**. They **support** through map sense, sealed **kit tools**, and (when unlocked) Synchro / Protocol — not by fighting on the grid or taking AGI turns.
+**Guide, not fighter (locked):** The Navigator **explores the labyrinth** on every dive — gate in, hub out. **Act 1 (S1):** **alone** until hub recruitment. **Act 3+:** walks with the recruited party on the **sideline**, **off the 3+3 formation**. They **support** through map sense, sealed **kit tools**, and (when unlocked) Synchro / Protocol — not by fighting on the grid or taking AGI turns.
 
 **Camera / grid:** FPV follows the **party blob** on the labyrinth grid ([vision § pillars](../00-vision.md#design-pillars-etrian-odysseyfirst)); in Act 1 that blob is the **solo Navigator**; after recruitment it is the six-core formation with the Navigator off-grid fictionally.
 
@@ -40,7 +40,7 @@ At **new game** the Navigator:
 
 | Beat | Navigator knows (fiction) | Systems unlocked |
 |------|---------------------------|------------------|
-| Act 1 B1F | **Solo**; map/kit sense waking; topside report “feels” mandatory | Movement, gather, mouth → hub |
+| Act 1 B1F | **Solo**; map/kit sense waking; topside report “feels” mandatory | Movement, gather, gate → hub |
 | Act 2 hub | Recruit **six cores**; Navigator Office / kit tools; still light on backstory | Party build, `guild_handler` assigned |
 | B2F approach VN | Threat on board; contract says engage; **something** on their side is locked | Tutorial combat, Synchro **rules** locked |
 | Post-crisis unlock VN | First **conscious** use of kit burst power; hears “Synchro” / “Protocol” as labels | `s1_synchro_unlocked`, meter, guided Protocol |
@@ -57,10 +57,10 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 | First person: “I’m alone down here…”, “My kit…”, “The map’s answering…” (Act 3+: sideline with crew) | Second-person tutorial voice (“You are the navigator”) |
 | Short field cadence — municipal underworks + **low myth** (sealed tools, sense, pull) ([vision § tone](../00-vision.md#tone--setting)) | High fantasy monologues; remote commander voice |
 | Hedge early: “I don’t know yet”, “sealed tools”, “paperwork calls it…” | Front-load mechanic glossary |
-| Name mechanics **when** the scene’s job is teach (unlock VN, coach) | Spoil Synchro in Act 1 mouth briefing |
+| Name mechanics **when** the scene’s job is teach (unlock VN, coach) | Spoil Synchro in Act 1 gate briefing |
 | “The crew / the six” for the formation (Act 3+) | **`core:<id>` lines** — roster is player-defined |
 | NPC lines that **react to** the Navigator (short, in-world) | Long exposition dumps from guest speakers |
-| **Gate** (player-facing) for B1F stratum entry; **mouth** stays in ids/docs only | **Comms / channel / line / radio** in S1 scripts (unless a later beat revisits) |
+| **Gate** for B1F stratum entry (ids and docs) | **Comms / channel / line / radio** in S1 scripts (unless a later beat revisits) |
 | No **you** / **your** (Navigator does not address the player) | Em dashes in VN lines |
 
 ### Story VN speakers

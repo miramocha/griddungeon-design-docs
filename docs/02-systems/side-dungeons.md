@@ -11,7 +11,7 @@
 | Main campaign vertical slice (`s1`, `s2`, …) | Optional combat / loot / story beats |
 | Hub **Enter Stratum** + warp gates (S2+) | Hub **Side expedition** menu only |
 | `UnlockedWarpGateStrata` (strata only) | Unlock via quest / flag / milestone — not warp gates |
-| Mouth `stairsUp` → hub only (strata) | Exit → **hub only** |
+| Gate `stairsUp` → hub only (strata) | Exit → **hub only** |
 
 Side dungeons are **instanced grids reached from the hub menu**, not a free-roam town overworld ([hub & services](hub-and-services.md)).
 
@@ -104,7 +104,7 @@ Reuse the **StratumFloor** tile/FOE shape from [class design — floors](../05-c
 | Field | Side dungeon note |
 |-------|-------------------|
 | `stratumId` | Empty or sentinel; **`locationId`** is authoritative |
-| `partyEntryMouth` | Hub re-entry spawn for that floor |
+| `partyEntryGate` | Hub re-entry spawn for that floor |
 | `stairsUpLinks` | **Hub only** — no inter-stratum targets |
 | `hasWarpGate` | N/A — no hub warp gate |
 

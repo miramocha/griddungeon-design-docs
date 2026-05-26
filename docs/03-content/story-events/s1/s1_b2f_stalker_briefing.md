@@ -23,9 +23,9 @@
 
 | textKey | textEn |
 |---------|--------|
-| `story.s1.b2f_briefing.line_01` | My board's throwing spikes. Something heavy on the east loop, not noise we can walk past. |
-| `story.s1.b2f_briefing.line_02` | The contract says engage if it blocks the route. There's a lock on my side I don't know how to open yet. |
-| `story.s1.b2f_briefing.line_03` | Keep the formation tight. If it commits, I'm calling it in. |
+| `story.s1.b2f_briefing.line_01` | s1_b2f_stalker_briefing Event Line 1 |
+| `story.s1.b2f_briefing.line_02` | s1_b2f_stalker_briefing Event Line 2 |
+| `story.s1.b2f_briefing.line_03` | s1_b2f_stalker_briefing Event Line 3 |
 
 Speaker: **`navigator:guild_handler`** only.
 
@@ -36,7 +36,7 @@ Speaker: **`navigator:guild_handler`** only.
 ## Related
 
 - [narrative POV](../../02-systems/narrative-pov.md)
-- [s1_b1f_mouth_briefing](s1_b1f_mouth_briefing.md) — Act 1 Event cell before first hub
+- [s1_b1f_gate_briefing](s1_b1f_gate_briefing.md) — Act 1 Event cell before first hub
 - [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 - [dungeons — s1_B2F Event cell](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
 - [s1_synchro_protocol_unlock](s1_synchro_protocol_unlock.md)

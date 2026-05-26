@@ -2,7 +2,7 @@
 
 **System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted)  
 **Campaign acts & flags:** [s1-intro.md](s1-intro.md)  
-**Floor layout:** [dungeons — s1_B1F](../dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--mouth)  
+**Floor layout:** [dungeons — s1_B1F](../dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)  
 **Combat + VN sequence:** [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 
 Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** in MVP1). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
@@ -15,7 +15,7 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 | Act | Phase | Guided? | Story VN? |
 |-----|-------|---------|-----------|
-| **1 — Movement** | Exploration `s1_B1F` | **Yes** — movement + interact | **Yes** — mouth Event cell before hub |
+| **1 — Movement** | Exploration `s1_B1F` | **Yes** — movement + interact | **Yes** — gate Event cell before hub |
 | **2 — Party** | Hub | Optional / UI motion only | No |
 | **3 — Tutorial dive** | B1F → B2F combat | **Yes** — Protocol coach | **Yes** — B2F Event briefing + unlock + hub return |
 
@@ -24,18 +24,18 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 ## Act 1 — Movement (B1F)
 
 **Prerequisites:** new game, not `s1_intro_movement_complete`.  
-**End:** first `stairsUp` at mouth **^** `(10, 11)` → hub.
+**End:** first `stairsUp` at gate **^** `(10, 11)` → hub.
 
-**Party (fiction):** Navigator explores **solo** in Act 1 — see [mouth briefing VN](../story-events/s1/s1_b1f_mouth_briefing.md). Guided rows stay **impersonal** (no crew, Navigator, or backstory).
+**Party (fiction):** Navigator explores **solo** in Act 1 — see [gate briefing VN](../story-events/s1/s1_b1f_gate_briefing.md). Guided rows stay **impersonal** (no crew, Navigator, or backstory).
 
 | Order | `tutorialEntryId` | Trigger | `completion` | Pages (draft `textEn`) |
 |-------|-------------------|---------|--------------|-------------------------|
 | 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “The map reveals tiles as you move.” p2: “Move **north** toward the camp marker.” (+ still: compass / passage) |
 | 2 | `s1_explore_wall_bump` | First wall bump | last page dismiss | “Blocked. **Strafe** or **turn**, then step forward.” |
 | 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: “New tiles are added to the map as you explore.” p2: “Cache on the grid. **Interact** on **C** to open it.” |
-| 4 | `s1_explore_mouth_stairs` | On **^** before hub (skip if `s1_b1f_mouth_briefing_seen`) | `interact` | If briefing skipped: “Stairs lead topside. **Interact** to go up.” Else: “**Interact** — stairs up.” |
+| 4 | `s1_explore_gate_stairs` | On **^** before hub (skip if `s1_b1f_gate_briefing_seen`) | `interact` | If briefing skipped: “Stairs lead topside. **Interact** to go up.” Else: “**Interact** — stairs up.” |
 
-**Story VN (Act 1):** [s1_b1f_mouth_briefing](../story-events/s1/s1_b1f_mouth_briefing.md) on Event cell **`!` `(10, 9)`** — fires before row 4; Navigator copy owns hub report fiction.
+**Story VN (Act 1):** [s1_b1f_gate_briefing](../story-events/s1/s1_b1f_gate_briefing.md) on Event cell **`!` `(10, 9)`** — fires before row 4; Navigator copy owns hub report fiction.
 
 **Codex:** each completed entry unlocks under category `basics` (four rows in codex for Act 1).
 
@@ -95,7 +95,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 
 | Flag | Guided / story relevance |
 |------|--------------------------|
-| `s1_b1f_mouth_briefing_seen` | Act 1 mouth VN done; shortens `s1_explore_mouth_stairs` |
+| `s1_b1f_gate_briefing_seen` | Act 1 gate VN done; shortens `s1_explore_gate_stairs` |
 | `s1_intro_movement_complete` | Suppresses all Act 1 explore hints |
 | `s1_party_ready` | Enables `s1_hub_enter_stratum` |
 | `s1_tutorial_dive_started` | Act 3 B1F blockers cleared |

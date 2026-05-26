@@ -15,7 +15,7 @@
 | Layer | Job | S1 examples |
 |-------|-----|-------------|
 | **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short **impersonal** copy (no character `speakerId`); arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** after unlock |
-| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase; **blank-state** — no mechanic spoilers before the beat’s job | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
+| **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase; **blank-state** — no mechanic spoilers before the beat’s job | `s1_b1f_gate_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `CombatTutorialHudRules`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
 
 A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (story) → guided Protocol (this doc) → finisher (rules).
@@ -65,7 +65,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | Type | Assembly | Role |
 |------|----------|------|
 | `GuidedTutorialDefinition` | Content | `hintId`, copy keys, highlight targets, completion rule |
-| `GuidedTutorialSequence` | Content | Ordered hints for one beat (e.g. Act 1 mouth approach) |
+| `GuidedTutorialSequence` | Content | Ordered hints for one beat (e.g. Act 1 gate approach) |
 | `GuidedTutorialController` | Runtime | Active hint, completion, delegates to phase owners |
 | `GuidedTutorialView` | UI | Paginated panel, media slot, HUD pulses ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | `TutorialCodexView` | UI | Pause menu → **Tutorial codex**; index of unlocked `tutorialEntryId`s — read-only |
@@ -154,13 +154,13 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 
 ## Exploration guided tutorial (S1 — Act 1 movement)
 
-**Map:** `s1_B1F` Act 1 — no enemies, blockers funnel **E** → mouth **^** ([dungeons § B1F](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--mouth)).
+**Map:** `s1_B1F` Act 1 — no enemies, blockers funnel **E** → gate **^** ([dungeons § B1F](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)).
 
 | Principle | Detail |
 |-----------|--------|
 | **Teach movement** | WASD / QE — link [input bindings](input-bindings.md), [ADR 001](../../decisions/001-grid-movement.md) |
 | **Teach map literacy** | Optional **G** signage, **C** gather node on route (interact once; no combat) |
-| **Teach exit** | Mouth **^** → hub sets `s1_intro_movement_complete` |
+| **Teach exit** | Gate **^** → hub sets `s1_intro_movement_complete` |
 | **No combat coach** | `baseEncounterRate: 0`; no FOE |
 
 Beat list and copy drafts: [s1-guided-tutorials.md](../03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f).

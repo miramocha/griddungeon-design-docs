@@ -99,7 +99,7 @@ flowchart TB
 |------|-----|-------------------|
 | Hub | Exploration | `HubController.TryLeaveHub` |
 | Exploration | Combat | `GameState.RequestCombat` |
-| Exploration | Hub | Stairs up (mouth), scripted exit |
+| Exploration | Hub | Stairs up (gate), scripted exit |
 | Combat | Exploration | `GameState` on `BattleEnded` (victory / flee) |
 | Combat | Hub | `GameState` on `BattleEnded` (wipe); S1 story `teleport_to_hub` |
 
@@ -310,7 +310,7 @@ Production movement should remain **player input** via `InputRouter` — scripte
 
 | Event | Use |
 |-------|-----|
-| `OnPartyEnteredCell` | Tile `!` story, mouth briefing |
+| `OnPartyEnteredCell` | Tile `!` story, gate briefing |
 | `OnPartyStep` | FOE patrol tick, random encounter roll |
 | `InteractRequested` | Stairs, gather — usually player `Space` / `Z` |
 | `AnimationCompleted` | Chain scripted steps |

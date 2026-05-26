@@ -59,7 +59,7 @@ Exploration camera follows the **party on the grid**; identity and dialogue rema
 
 **Municipal underworks (MVP1 art direction):** Modern, grounded, **not sci-fi**. Strata read as **infrastructure + neglect** (maintenance tunnels, flood channels, sealed transit) rather than castle fantasy or cyberpunk. FOE and place names stay urban (`alley_stalker`, `gutter_crow`, **Flooded Underpass**). Hub **guild** = city **contract crew**, not medieval order.
 
-**Yggdrasil-like labyrinth** structure stays: one mouth, many strata, ecology shifts per depth ([dungeons](03-content/dungeons-and-encounters.md)).
+**Yggdrasil-like labyrinth** structure stays: one gate, many strata, ecology shifts per depth ([dungeons](03-content/dungeons-and-encounters.md)).
 
 **UI:** Warm charcoal panels, off-white type, **amber-gold** accents (Synchro / active turn) — schematic map like a **transit or architectural plan**, not neon HUD ([map cell art](02-systems/map-cell-art.md#visual-tone-municipal-underworks)).
 
@@ -70,8 +70,8 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 - [ ] Explore a test floor in FPV; **map auto-reveals** floor and walls on bump
 - [ ] **FOE** appears on map when visible; combat on contact
 - [ ] Win a fight with **6 party members** and **AGI turn order** visible
-- [ ] New game: B1F movement tutorial → hub party setup → tutorial dive from B1F mouth
-- [ ] Return to hub via **in-world** paths only (mouth stairs, items, exits/gates, events, defeat) — not pause menu; pause → **quit to title**
+- [ ] New game: B1F movement tutorial → hub party setup → tutorial dive from B1F gate
+- [ ] Return to hub via **in-world** paths only (gate stairs, items, exits/gates, events, defeat) — not pause menu; pause → **quit to title**
 - [ ] After hub return: save, heal, spend **skill point**, re-enter with **map intact**
 - [ ] **Synchro** tutorial: B2F FOE crisis AOE → VN → guided `protocol_strike` → hub warp
 

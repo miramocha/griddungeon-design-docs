@@ -19,9 +19,9 @@
 
 | textKey | textEn |
 |---------|--------|
-| `story.s1.hub_return.line_01` | It's down. I'm getting us topside before anything else stirs down here. |
-| `story.s1.hub_return.line_02` | Whatever that pulse was, it's still on me. I'll learn the rest topside. For now: build Synchro back up in a fight, then open Protocol when it peaks. |
-| `story.s1.hub_return.line_03` | Rest at the hub. Next dive starts at the gate when we're ready. |
+| `story.s1.hub_return.line_01` | s1_tutorial_hub_return Event Line 1 |
+| `story.s1.hub_return.line_02` | s1_tutorial_hub_return Event Line 2 |
+| `story.s1.hub_return.line_03` | s1_tutorial_hub_return Event Line 3 |
 
 Speaker: **`navigator:guild_handler`** only.
 

@@ -19,13 +19,13 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 | Act | Phase | Map | Enemies | Paths / spawns |
 |-----|-------|-----|---------|----------------|
-| **1 — Movement** | Exploration | `s1_B1F` | **Off** — `baseEncounterRate: 0`, `foeSpawns: []` | **Intro spawn** `(4, 2)`; **blockers** funnel to mouth; **`v` to B2F blocked** |
+| **1 — Movement** | Exploration | `s1_B1F` | **Off** — `baseEncounterRate: 0`, `foeSpawns: []` | **Intro spawn** `(4, 2)`; **blockers** funnel to gate; **`v` to B2F blocked** |
 | **2 — Party** | **Hub** (no grid) | — | Off | Guild + Navigator: build **6 core** roster |
-| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Mouth spawn** `(10, 11)` (`stairsUp`) from hub; blockers **cleared**; mandatory tutorial FOE |
+| **3 — Tutorial dive** | Exploration | `s1_B1F` → B3F | On per floor; Synchro taught on B2F | **Gate spawn** `(10, 11)` (`stairsUp`) from hub; blockers **cleared**; mandatory tutorial FOE |
 
-**Act 1 beats:** **solo** Navigator — intro cell → wall bump / optional **G** / **C** → **Event cell** briefing → mouth **stairs up** → hub (no cores yet; [guided hints](s1-guided-tutorials.md#act-1--movement-b1f), [mouth briefing](../story-events/s1/s1_b1f_mouth_briefing.md)).
+**Act 1 beats:** **solo** Navigator — intro cell → wall bump / optional **G** / **C** → **Event cell** briefing → gate **stairs up** → hub (no cores yet; [guided hints](s1-guided-tutorials.md#act-1--movement-b1f), [gate briefing](../story-events/s1/s1_b1f_gate_briefing.md)).
 
-**Act 3 beats:** hub **Enter Stratum 1** at mouth → B1F (optional chaff) → B2F **Event cell briefing VN** → tutorial FOE fight (crisis AOE → VN unlock → guided `protocol_strike` → kill → VN + **warp hub** — [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) → re-enter stratum → B3F boss.
+**Act 3 beats:** hub **Enter Stratum 1** at gate → B1F (optional chaff) → B2F **Event cell briefing VN** → tutorial FOE fight (crisis AOE → VN unlock → guided `protocol_strike` → kill → VN + **warp hub** — [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) → re-enter stratum → B3F boss.
 
 ---
 
@@ -33,8 +33,8 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 | Flag | Set when |
 |------|----------|
-| `s1_b1f_mouth_briefing_seen` | Act 1: Event cell VN before first hub (`s1_b1f_mouth_briefing`) |
-| `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at mouth |
+| `s1_b1f_gate_briefing_seen` | Act 1: Event cell VN before first hub (`s1_b1f_gate_briefing`) |
+| `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at gate |
 | `s1_party_ready` | Act 2: guild party requirement met |
 | `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
 | `s1_b2f_stalker_briefing_seen` | After B2F Event-cell approach VN (`s1_b2f_stalker_briefing`) |
@@ -51,8 +51,8 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | **Warp gate** | **None** on any `s1_*` floor |
 | **New game** | Cold start Act 1 on B1F intro spawn — not hub first |
 | **After Act 1** | No hub teleport back to intro cell |
-| **Act 3+ hub entry** | Always **B1F mouth** `(10, 11)` — `stairsUp` cell; same on every repeat dive |
-| **Mouth `stairsUp`** | → Hub only |
+| **Act 3+ hub entry** | Always **B1F gate** `(10, 11)` — `stairsUp` cell; same on every repeat dive |
+| **Gate `stairsUp`** | → Hub only |
 | **Synchro on hub exit** | **0%** / locked until mid–first FOE; **100%** after tutorial complete |
 
 Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — warp gates](../dungeons-and-encounters.md#stratum-entry--warp-gates-locked).

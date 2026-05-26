@@ -297,9 +297,9 @@ class StratumFloor : ScriptableObject
     EncounterTable randomEncounters;
     float baseEncounterRate;
     GridPosition stairsDown;      // next floor, same stratum
-    StairsUpLink[] stairsUpLinks; // mouth + any same-stratum up links
+    StairsUpLink[] stairsUpLinks; // gate + any same-stratum up links
     GridPosition partyEntryIntro; // Act 1 cold start (optional)
-    GridPosition partyEntryMouth; // hub re-entry / stratum mouth
+    GridPosition partyEntryGate; // hub re-entry / stratum gate
     TutorialBlocker[] tutorialBlockers; // cleared when s1_tutorial_dive_started
 }
 

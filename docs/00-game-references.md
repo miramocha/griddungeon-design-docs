@@ -30,10 +30,10 @@ From **Etrian Odyssey IV** onward, enemy lines use the same **front + back row**
 
 | EO beat | What EO does | Grid Dungeon |
 |---------|--------------|--------------|
-| **Camp / guild at the mouth** | Town or camp **fixed** at the labyrinth entrance — not an open overworld | Single **guild town** scene from first hub visit (S1 Act 2); same layout throughout |
+| **Camp / guild at the gate** | Town or camp **fixed** at the labyrinth entrance — not an open overworld | Single **guild town** scene from first hub visit (S1 Act 2); same layout throughout |
 | **Service loop** | Guild, shop, hospital, inn/save, then **re-enter** stratum | MVP1 menu tree: Explorers Guild, Navigator Office, shop, hospital, inn ([hub table](02-systems/hub-and-services.md#hub-locations-mvp1)) |
-| **No marathon in the maze** | Heal, equip, save at hub; push depth deliberately | Inn primary save; no labyrinth save MVP1; Return thread / mouth stairs up |
-| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 mouth spawn; S2+ warp gates ([dungeons § entry](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
+| **No marathon in the maze** | Heal, equip, save at hub; push depth deliberately | Inn primary save; no labyrinth save MVP1; Return thread / gate stairs up |
+| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 gate spawn; S2+ warp gates ([dungeons § entry](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
 | **Hub navigation (EO titles vary)** | Older: **menu / icon** hubs; newer (e.g. Nexus): **walkable** 3D districts | **Menu-first** (EO classic) — **no** avatar walk; post-MVP1 **camera pan** on root-menu focus ([hub environment](02-systems/hub-and-services.md#hub-environment-presentation)) |
 | **Presentation** | Often **static** illustration or simple 3D with direct facility pick | Full-screen 3D backdrop + UI overlay; pans **post-MVP1** |
 
@@ -64,7 +64,7 @@ MSK informs **feel** and **presentation bar**, not MVP1 mechanics. Compare propo
 | Layer | EO (primary) | MSK (secondary) | Our call |
 |-------|--------------|-----------------|----------|
 | **Interaction** | Menus, clear service list | Base facilities, strong zone identity | Root **menu**; no hub walk |
-| **World** | Camp at mouth, return loop | 3D base with readable districts | **One** full-screen town scene |
+| **World** | Camp at gate, return loop | 3D base with readable districts | **One** full-screen town scene |
 | **Camera** | Mostly static / light transitions | Environmental storytelling in base | **Post-MVP1** debounced pan on root focus (~150–300 ms settle); **no pan** on locked rows or sub-menus |
 | **Audio** | Facility jingles, understated camp | More atmospheric base | **Probably no** hub looping ambience; service UI SFX only (for now) |
 | **Life** | Often minimal hub motion | More animated base | **Light ambient** scene motion — **later than MVP1** |

@@ -59,7 +59,7 @@ Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game r
 | Edit Mode tree | `Tests → <Domain> → <Fixture>` — [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
 | Exploration **Esc** (map not fullscreen) | Pause: **Resume** / **Quit to title** (confirm). **No** hub from pause ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7) |
 | Exploration **Esc** (map fullscreen) | Closes fullscreen map only ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
-| Return to **hub** from exploration | In-world only: stairs (mouth), items, exits/gates, events, defeat — not pause ([game phase](../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
+| Return to **hub** from exploration | In-world only: stairs (gate), items, exits/gates, events, defeat — not pause ([game phase](../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
 | Combat **Esc** | Resume / Settings only ([ADR 015](../../decisions/015-mvp1-combat.md)) |
 
 ## Section letters (manual primary)

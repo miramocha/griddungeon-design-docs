@@ -62,7 +62,7 @@ Optional: **F8** or **GridDungeon → Save → Delete MVP1 save file** when test
 | B2 | **M** | Map side panel ↔ fullscreen. |
 | B3 | **Esc** (map fullscreen) | Closes fullscreen map; does **not** open pause. |
 | B4 | **Esc** (exploration, map not fullscreen) | Pause: **Resume** / **Quit to title** only — **no** “Return to Hub” ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7). |
-| B5 | Mouth **`stairsUp`** (`^`) on stratum first floor | Returns to **Hub** (in-world path); FOE reset on re-entry per ADR 008. |
+| B5 | Gate **`stairsUp`** (`^`) on stratum first floor | Returns to **Hub** (in-world path); FOE reset on re-entry per ADR 008. |
 | B6 | **F3** → flee/win → **F2** | Returns Exploration without errors. |
 | B7 | **F1** → **F6** → **F2** or **F7** | Hub → party → stratum entry. |
 

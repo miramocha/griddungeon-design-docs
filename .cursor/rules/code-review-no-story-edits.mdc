@@ -1,0 +1,32 @@
+---
+description: Code review must not edit story or dialogue unless the user explicitly asks.
+alwaysApply: true
+---
+
+# Code review — no story/dialogue edits
+
+During **code review** (PR review, pre-commit review, `fresh-reviewer`, `@code-review-unity`, or any review-only pass), **do not change** story, dialogue, or narrative copy unless the user **explicitly** asked for story/dialogue edits in that request.
+
+## In scope (hands off during review)
+
+| Area | Examples |
+|------|----------|
+| **design-docs** | `docs/03-content/story-events/**`, narrative beats in `docs/02-systems/story-events.md`, `narrative-pov.md`, campaign tutorial copy tied to VN |
+| **game content** | `Assets/Content/StoryEvents/**` (`TextEn`, `TextKey`, steps, speaker lines) |
+| **Localized / authored lines** | Player-facing `textEn` strings in story assets or story tables — not log messages or dev-only labels |
+
+## Allowed during review
+
+- **Report** copy issues in findings (Blocker / Should fix / Nit) with file + line or `textKey`.
+- **Fix** code, wiring, triggers, flags, UI bindings, tests, and mechanics that do not require rewriting dialogue.
+- **Implement** copy changes only when the user’s message clearly requests story/dialogue work (e.g. “rewrite this line”, “sync gate briefing copy”, “author the VN script”).
+
+## If a bug fix needs copy
+
+1. Describe the mismatch in the review (what’s wrong, where).
+2. Propose the fix in prose or a short quoted suggestion.
+3. **Do not** apply the copy change in a review/commit pass — ask the user to request a story pass or confirm the exact line.
+
+## Subagents
+
+When delegating **fresh-reviewer** or similar: include this rule in applicable `.cursor/rules/` and state **no story/dialogue edits** in the subagent prompt.

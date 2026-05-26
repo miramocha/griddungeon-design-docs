@@ -9,7 +9,7 @@
 
 Grid Dungeon needs **short, actionable coaching** that teaches controls without autoplaying the game:
 
-- **Exploration (S1 Act 1):** movement, wall bump, optional gather/signage, mouth stairs — map stays visible; player keeps (or regains) movement between dismissible lines.
+- **Exploration (S1 Act 1):** movement, wall bump, optional gather/signage, gate stairs — map stays visible; player keeps (or regains) movement between dismissible lines.
 - **Combat (S1 B2F):** after Navigator **story** lines, pulse **Protocol** and **gate** commands until the player confirms `protocol_strike`.
 
 Today these beats are specified across [synchro-protocol](../docs/02-systems/synchro-protocol.md), [story-events](../docs/02-systems/story-events.md), and [game #35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro HUD — done) without a named **coach** owner. Implementation: [#88](https://github.com/miramocha/griddungeon-game/issues/88). Hard-coding strings in `CombatHudView` duplicates [ADR 028](028-story-visual-novel-events.md) **dialogue** ([#87](https://github.com/miramocha/griddungeon-game/issues/87)).
@@ -27,7 +27,7 @@ Today these beats are specified across [synchro-protocol](../docs/02-systems/syn
 | Piece | Owner | Responsibility |
 |-------|--------|----------------|
 | **`GuidedTutorialDefinition`** | Content (`Assets/Content/GuidedTutorials/`) | `hintId`, mode, copy keys, highlights, completion rule |
-| **`GuidedTutorialSequence`** (optional) | Content | Ordered hints for one beat (e.g. Act 1 mouth approach) |
+| **`GuidedTutorialSequence`** (optional) | Content | Ordered hints for one beat (e.g. Act 1 gate approach) |
 | **`GuidedTutorialController`** | Runtime | Start/complete hints, completion rules, **invoke** gates via combat/explore APIs |
 | **`GuidedTutorialView`** | UI | Banner, target pulses, disabled chrome ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 
@@ -50,7 +50,7 @@ While a **blocking** combat hint is active:
 | Layer | Owner | S1 example |
 |-------|--------|------------|
 | **Rules** | `CombatController`, campaign resolvers, floor data | Crisis AOE, `tutorialUnbeatable`, walk blockers |
-| **Story (VN)** | `StoryEventRunner` | `s1_b1f_mouth_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
+| **Story (VN)** | `StoryEventRunner` | `s1_b1f_gate_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
 | **Guided coach** | `GuidedTutorialController` | `s1_explore_intro_move`, `s1_combat_guided_protocol` |
 
 **Handoff (locked):** story effect `start_guided_protocol` → sets combat tutorial phase + `GuidedTutorialController.Start("s1_combat_guided_protocol")`. VN must **complete** before coach starts.
@@ -67,7 +67,7 @@ While a **blocking** combat hint is active:
 
 **Rejected:** Act 1 as ephemeral corner-only banners with movement continuing (superseded by paginated block). Act 1 **fully** as **`storyEventId`** scenes for every movement beat.
 
-**Exception (locked):** **`s1_b1f_mouth_briefing`** — single Event-cell VN before first hub; all other Act 1 beats stay guided pages ([s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f)).
+**Exception (locked):** **`s1_b1f_gate_briefing`** — single Event-cell VN before first hub; all other Act 1 beats stay guided pages ([s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f)).
 
 ### 5. Codex (replay — stakeholder 2026-05-23)
 

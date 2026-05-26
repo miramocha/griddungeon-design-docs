@@ -31,7 +31,7 @@ Requirements:
 
 | From | To | Typical trigger |
 |------|-----|-----------------|
-| Hub | Exploration | `HubController.LeaveHub` — S1: **B1F mouth** after Act 2; S2+: warp gate; new game: Act 1 intro spawn ([campaign S1 intro](../docs/03-content/campaign/s1-intro.md)) |
+| Hub | Exploration | `HubController.LeaveHub` — S1: **B1F gate** after Act 2; S2+: warp gate; new game: Act 1 intro spawn ([campaign S1 intro](../docs/03-content/campaign/s1-intro.md)) |
 | Exploration | Combat | FOE contact, random encounter roll |
 | Combat | Exploration | Victory, successful flee |
 | Exploration | Hub | Stairs to surface / retreat item / designer exit |

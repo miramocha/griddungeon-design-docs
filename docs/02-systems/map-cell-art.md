@@ -19,7 +19,7 @@ MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visua
 | **Alcove (3+ edges)** | Same `WallMask`, `count ≥ 3` | Visited | Glyph `█` today; **alcove fill** or low-opacity solid — still walkable floor |
 | **Features** | `FeatureState` on cell | Visited + feature known | Stairs in **cell** labels; **doors not rendered yet** |
 | **Gather** | `HasGatherNode` | Visited (or dev reveal-all) | **Overlay** — `MapGatherMarkersPresenter` · `map-view__marker--gather` |
-| **Hub mouth** | B1F `stairsUp` | Visited | **Overlay** — `MapHubEntranceMarkersPresenter` ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **Hub gate** | B1F `stairsUp` | Visited | **Overlay** — `MapHubEntranceMarkersPresenter` ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **FOE** | `FoeSystem` / map FOE state | In LOS / last known | **Overlay** — `MapFoeMarkersPresenter` (not cell `F`) |
 | **Floor** | Default walkable | Visited, nothing above | `·` glyph in cell label |
 

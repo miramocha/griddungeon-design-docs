@@ -26,7 +26,7 @@ If **none** of the above apply (docs-only repo), skip this rule and commit per t
    - Launch the **fresh-reviewer** subagent (Task tool, `readonly: true`) with a prompt containing **only**:
      - Changed file paths
      - Paste or summary of the diff (if small)
-     - Applicable `.cursor/rules/` paths for touched areas
+     - Applicable `.cursor/rules/` paths for touched areas (always include `code-review-no-story-edits.mdc`) (always include `code-review-no-story-edits.mdc`)
    - Do **not** pass implementation rationale, prior fix attempts, or chat history into the subagent prompt.
    - Apply **code-review-unity** standards via the subagent; parent fixes **Blockers** (or gets explicit user approval) before committing.
 5. **Report** the subagent's findings to the user grouped by severity (Blocker / Should fix / Nit).

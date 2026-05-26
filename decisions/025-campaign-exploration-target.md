@@ -6,11 +6,11 @@
 
 ## Context
 
-MVP1 exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, mouth → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
+MVP1 exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
 
 Macro flow already anticipates **different hub → exploration rules per stratum**:
 
-- [ADR 017](017-game-phase-controller.md) — S1 **B1F mouth** after Act 2; **S2+ warp gate**; new game Act 1 intro on `s1_B1F`.
+- [ADR 017](017-game-phase-controller.md) — S1 **B1F gate** after Act 2; **S2+ warp gate**; new game Act 1 intro on `s1_B1F`.
 - [Hub & services — macro loop](../docs/02-systems/hub-and-services.md) — “spawn rule per stratum.”
 - [ADR 014](014-mvp1-exploration-map.md) — `HubSaveData.UnlockedWarpGateStrata` for stratum warp gates.
 - [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md) — add `Core/Campaign/S2/` (or similar); do not grow `S1CampaignResolver` with unrelated acts.
@@ -31,7 +31,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 
 | Stratum / mode | Policy owner (proposed) | Examples |
 |----------------|-------------------------|----------|
-| S1 | `S1CampaignResolver` (existing) | Intro `(4,2)`, mouth `(10,11)`, B2F tutorial gates, within-stratum stairs |
+| S1 | `S1CampaignResolver` (existing) | Intro `(4,2)`, gate `(10,11)`, B2F tutorial gates, within-stratum stairs |
 | S2+ | `S2CampaignResolver` or `Core/Campaign/S2/*` | Warp-gate spawn, stratum entry floor, Synchro on hub exit per content |
 | Side dungeon (MVP3) | Separate resolver / `HubController.EnterSideDungeon` | Composite keys `sd##_F#`; hub-only exit ([ADR 022](022-side-dungeons-mvp3.md)) |
 
@@ -43,7 +43,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 
 - `ResolveExplorationTarget(save, fromPhase)`
 - `CanDescendStairs` / `CanAscendStairs` / `TargetForStairsDown` / `TargetForStairsUp`
-- `CanAscendToHub` (surface exit — S1 mouth only today)
+- `CanAscendToHub` (surface exit — S1 gate only today)
 - Walkability / encounter-rate overrides (today: `S1ExplorationWalkability` + resolver helpers)
 
 MVP1 may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.

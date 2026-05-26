@@ -18,7 +18,7 @@ Paint MVP1 dungeon floors in Unity and export **`StratumFloor`** assets without 
 | Game `y` | **0 = south** — `y = GridSize - 1 - row` |
 | Index | `x + y * width` (`StratumFloorLayout.ToIndex`) |
 
-Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--mouth) and `Tools/layout_grid_check.py`.
+Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate) and `Tools/layout_grid_check.py`.
 
 ## ASCII symbols (MVP1)
 
@@ -35,7 +35,7 @@ Walkability rules: `S1B1FLayoutBuilder.IsWalkableSymbol` in game repo.
 ## Workflow (target)
 
 1. **GridDungeon → Content → Floor Painter** — paint layout ([#76](https://github.com/miramocha/griddungeon-game/issues/76)).
-2. Place **entry / mouth / stairs** pins ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) → Apply to `Assets/Content/Floors/s1_B*n*F.asset`.
+2. Place **entry / gate / stairs** pins ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) → Apply to `Assets/Content/Floors/s1_B*n*F.asset`.
 3. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
 4. **Export** ASCII for this doc + optional C# snippet ([#79](https://github.com/miramocha/griddungeon-game/issues/79)).
 5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement.

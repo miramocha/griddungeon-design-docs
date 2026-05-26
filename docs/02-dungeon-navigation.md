@@ -121,12 +121,12 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 - Doors, keys, one-way passages
 - Chests (**MVP1**); gather / fish nodes (**MVP2** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
 - **Stairs down (`v`)** — next floor in the **same stratum** (paired `stairsUp` on floor below).
-- **Stairs up (`^`) on first floor of stratum (mouth)** — not the same as mid-stratum stairs:
+- **Stairs up (`^`) on first floor of stratum (gate)** — not the same as mid-stratum stairs:
   - → **Hub** only (Exploration → Hub phase; EO “return to camp”).
 - **Stairs up on B2F+** — previous floor in same stratum only.
 - **Stratum 1:** no warp gate; new game starts on B1F intro path before hub ([campaign S1 intro](03-content/campaign/s1-intro.md)).
-- **Return thread** item — instant hub once (consumable); does not replace mouth stairs.
-- **Hub return paths (locked):** events, items (Return thread), exits/gates, mouth stairs, party **defeat** — not exploration pause ([ADR 014](../decisions/014-mvp1-exploration-map.md) §7, [input bindings](02-systems/input-bindings.md)).
+- **Return thread** item — instant hub once (consumable); does not replace gate stairs.
+- **Hub return paths (locked):** events, items (Return thread), exits/gates, gate stairs, party **defeat** — not exploration pause ([ADR 014](../decisions/014-mvp1-exploration-map.md) §7, [input bindings](02-systems/input-bindings.md)).
 
 ## Party on the grid
 

@@ -13,7 +13,7 @@ Layout **implementation** and scripts live in **griddungeon-game**. This skill a
 
 ## When to use
 
-- Editing [dungeons — s1_B1F ASCII](../docs/03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--mouth) or [s1-intro](../docs/03-content/campaign/s1-intro.md)
+- Editing [dungeons — s1_B1F ASCII](../docs/03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate) or [s1-intro](../docs/03-content/campaign/s1-intro.md)
 - Reviewing whether doc coordinates match playable geometry
 - Layout review before game implementation PR
 
@@ -37,7 +37,7 @@ python Tools/layout_grid_check.py --bfs 4,2 10,17
 | Doc field | Game authority |
 |-----------|----------------|
 | `partyEntryIntro` `(4,2)` | `S1CampaignResolver.B1FIntroSpawn` |
-| Mouth / `stairsUp` `(10,11)` | `B1FMouthSpawn`, `StairsUp` |
+| Gate / `stairsUp` `(10,11)` | `B1FGateSpawn`, `StairsUp` |
 | `stairsDown` `(10,17)` | `StairsDown` |
 | Tutorial blocker `X` `(10,13)` | `B1FTutorialBlockerCell` + `S1TutorialDiveStarted` walkability |
 

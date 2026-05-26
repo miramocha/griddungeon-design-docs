@@ -45,7 +45,7 @@ Prepare at **both** before entering the stratum (order in UI flexible).
 
 ## Hub environment presentation
 
-**Design direction:** the hub is a **readable 3D environment** (guild town at the labyrinth mouth) behind the UI. The player still **picks services from menus** — no free-roam walking, no grid movement ([vision — non-goals](../00-vision.md)). **Menu focus** on the **root hub list** drives the camera so each service feels anchored in the world.
+**Design direction:** the hub is a **readable 3D environment** (guild town at the labyrinth gate) behind the UI. The player still **picks services from menus** — no free-roam walking, no grid movement ([vision — non-goals](../00-vision.md)). **Menu focus** on the **root hub list** drives the camera so each service feels anchored in the world.
 
 ### Locked decisions
 
@@ -58,7 +58,7 @@ Prepare at **both** before entering the stratum (order in UI flexible).
 | **Inside a service** | Camera **holds** the last root-menu anchor for that service; no tighter framing or secondary anchors on sub-menus |
 | **Hub entry default shot** | **TBD** — leaning toward a **wide establishing** town view until the player moves root-menu focus; not locked yet |
 | **Locked / unavailable root rows** | **No pan** — focus on a greyed-out service does not move the camera (avoids teasing buildings the player cannot use yet) |
-| **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth mouth / plaza camera pose |
+| **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth  plaza camera pose |
 | **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
 | **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than MVP1** (author with post-MVP1 hub presentation or polish pass) |
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
@@ -103,7 +103,7 @@ Each hub menu entry maps to an **authored camera pose** (and optional look-at) a
 | **Hospital** | Hospital / clinic building |
 | **Inn / Camp desk** | Inn or camp desk exterior |
 | **Quest counter** | Notice board / guild quest hall wing |
-| **Enter Stratum** *N* (any *N*) | **One shared** labyrinth mouth / gate plaza — same anchor for every stratum entry row |
+| **Enter Stratum** *N* (any *N*) | **One shared** labyrinth gate plaza — same anchor for every stratum entry row |
 | **Side expedition** (MVP3) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
 | **Synthesis** (MVP2) | Workshop / forge annex |
 
@@ -141,7 +141,7 @@ Pattern parallels **combat arena presentation** ([combat presentation](combat-pr
 Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
     → Enter stratum — spawn rule per stratum; Synchro **100%** on exit except S1 before first FOE ([synchro](synchro-protocol.md#s1-tutorial-gating-first-foe))
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
-    → Retreat via first-floor stairs up (mouth) or Return thread when low
+    → Retreat via first-floor stairs up (gate) or Return thread when low
     → Hospital + shop + guild + Navigator Office → Repeat
     → (MVP3) Side expedition — optional non-strata maps; exit → hub only ([side dungeons](side-dungeons.md))
 ```
@@ -154,14 +154,14 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 
 **Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable **Enter Stratum 1** when `s1_party_ready`. Hub only — no labyrinth grid, no combat.
 
-**Act 3 from hub:** **Enter Stratum 1** → always **B1F mouth** `(10, 11)` (`stairsUp`); Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
+**Act 3 from hub:** **Enter Stratum 1** → always **B1F gate** `(10, 11)` (`stairsUp`); Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
 - Example: Stratum 1 "Fallen District" — floors B1F–B5F (MVP1: B1F–B3F + boss on B3F).
-- **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F mouth; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
-- **First-floor mouth `stairsUp`:** → **hub** only (all strata).
+- **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F gate; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
+- **First-floor gate `stairsUp`:** → **hub** only (all strata).
 
 ## Quests (optional MVP1)
 
@@ -184,7 +184,7 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 | **Stratum** labyrinth | **Enter Stratum** *N* | `LeaveHub(stratumId, floorId)` |
 | **Side dungeon** (MVP3) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
 
-Strata: warp-gate unlock + beginning-only hub entry (S2+); S1 mouth entry. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
+Strata: warp-gate unlock + beginning-only hub entry (S2+); S1 gate entry. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
 
 ## Related docs
 

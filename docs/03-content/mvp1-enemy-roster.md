@@ -81,7 +81,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 | `grp_b1_chaff_hound` | `stray_hound`, `stray_hound` | — | 60 |
 | `grp_b1_chaff_mite` | `rust_mite`, `rust_mite` | — | 40 |
 
-`baseEncounterRate: 0.05` — see [B1F §](dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--mouth).
+`baseEncounterRate: 0.05` — see [B1F §](dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate).
 
 ### Random — `s1_B2F`
 
