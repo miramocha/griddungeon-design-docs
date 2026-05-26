@@ -1,0 +1,49 @@
+---
+description: After git commit, run an independent C# code review when this repo contains C# source.
+alwaysApply: true
+---
+
+# Post-commit C# code review
+
+When the user asks you to **create a commit**, review C# changes **after** the commit succeeds (not before), if this repository contains C# code.
+
+## Does this repo have C#?
+
+Treat the repo as a C# project if any of these exist:
+
+- `**/*.cs` under the workspace (excluding generated/vendor trees such as `Library/`, `obj/`, `bin/`)
+- `*.csproj` or `*.sln` at or below the repo root
+
+If **none** of the above apply (docs-only repo), skip review and commit per the user's git instructions.
+
+## Required workflow (C# repos)
+
+1. Gather commit scope: `git status`, `git diff` (staged and unstaged).
+2. If the commit includes **no** `.cs` changes (docs, assets, config only), skip review after commit.
+3. If `.cs` is in scope, **format first** per `pre-commit-csharpier-format.mdc` (CSharpier extension / CLI on changed paths) — formatting stays **before** commit.
+4. `git add` and `git commit` (never skip hooks; never commit secrets).
+5. **Independent review** on the commit you just created — do **not** self-review in this thread:
+   - Use `git show HEAD` or `git diff HEAD~1..HEAD` (include `--staged` only if reviewing an uncommitted follow-up).
+   - List changed `.cs` paths (plus related UXML/asmdef if behavior spans assemblies).
+   - Launch the **fresh-reviewer** subagent (Task tool, `readonly: true`) with a prompt containing **only**:
+     - Changed file paths
+     - Paste or summary of the diff (if small)
+     - Applicable `.cursor/rules/` paths for touched areas (always include `code-review-no-story-edits.mdc`)
+   - Do **not** pass implementation rationale, prior fix attempts, or chat history into the subagent prompt.
+   - Apply **code-review-unity** standards via the subagent.
+6. **Report** the subagent's findings to the user grouped by severity (Blocker / Should fix / Nit).
+7. **Blockers** — fix in a **follow-up commit** (default), or amend only when the user's git rules allow (unpushed commit, explicit amend request, etc.). Do **not** push until Blockers are fixed or the user explicitly approves shipping with them noted.
+
+## Order summary
+
+**CSharpier → commit → fresh-reviewer → (fix Blockers) → push** when the user also asked to push.
+
+## Exceptions
+
+- User explicitly requests **commit without review** or **skip review**.
+- Commit scope is **only** non-C# files in an otherwise C# repo.
+
+## Out of scope
+
+- Ad-hoc review when the user only asked for feedback (use `@code-review-unity` / **fresh-reviewer** on branch diff — no commit required).
+- Pull requests and issue close-out — use normal review when asked; this rule targets **local commits** the agent creates.

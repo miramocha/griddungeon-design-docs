@@ -1,0 +1,46 @@
+---
+description: Unity .meta GUID rules — do not hand-author; validate when unavoidable
+globs: Assets/**
+alwaysApply: false
+---
+
+# Unity `.meta` files (agent)
+
+Invalid GUIDs (wrong length, bad hex) prevent Unity from importing scripts — e.g. `CS0246` for a new `MonoBehaviour` type.
+
+## Default: do not create `.meta`
+
+When adding assets under `Assets/`:
+
+1. Create the **asset only** (`.cs`, `.uxml`, `.uss`, …).
+2. Let the **Unity Editor** generate `.meta` on import/refresh.
+3. Do **not** invent `guid:` values in agent sessions.
+
+## When editing `.meta` is unavoidable
+
+Rare cases: preserving scene `fileID` refs before Unity import, scripted asset creation in Editor tools.
+
+1. `guid:` must be **exactly 32** lowercase hex characters (`[0-9a-f]{32}`).
+2. Must be **unique** under `Assets/` (no duplicates).
+3. Pairing: `Foo.cs.meta` ↔ `Foo.cs`; no orphan `.meta`.
+4. Run validation before commit (skill **validate-unity-meta**):
+
+```powershell
+python Tools/validate_unity_meta.py
+python Tools/validate_unity_meta.py path/to/NewScript.cs.meta
+```
+
+Exit code **0** required. Fix `[FAIL]` lines; do not commit broken meta.
+
+## After agent adds files
+
+| Step | Action |
+|------|--------|
+| 1 | User refreshes Unity (or focus Editor) so missing `.meta` appear |
+| 2 | Agent runs `validate_unity_meta.py` on changed paths under `Assets/` |
+| 3 | Never commit agent-authored `.meta` unless validation passed |
+
+## Related
+
+- Skill: `.cursor/skills/validate-unity-meta/`
+- Tool: [Tools/validate_unity_meta.py](../../Tools/validate_unity_meta.py)

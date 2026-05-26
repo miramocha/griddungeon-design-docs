@@ -24,8 +24,9 @@ $ruleNames = @(
     "unity-ui-toolkit.mdc",
     "unity-meta-files.mdc",
     "ticket-test-documentation.mdc",
-    "pre-commit-csharp-code-review.mdc",
-    "pre-commit-csharpier-format.mdc"
+    "post-commit-csharp-code-review.mdc",
+    "pre-commit-csharpier-format.mdc",
+    "git-commit-agent-workflow.mdc"
 )
 
 foreach ($name in $ruleNames) {

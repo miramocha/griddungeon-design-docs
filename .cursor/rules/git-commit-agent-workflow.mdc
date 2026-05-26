@@ -1,0 +1,34 @@
+---
+description: Git commit and push workflow for agent-created commits (format, commit, then review).
+alwaysApply: true
+---
+
+# Git commit workflow (agent)
+
+When the user asks you to **create a commit** or **commit and push**, follow this order. Aligns with `post-commit-csharp-code-review.mdc` and `pre-commit-csharpier-format.mdc`.
+
+## Git safety
+
+- NEVER update git config
+- NEVER run destructive git commands (push --force, hard reset, etc.) unless the user explicitly requests them
+- NEVER skip hooks (--no-verify, etc.) unless the user explicitly requests it
+- NEVER force push to main/master; warn if requested
+- Avoid `git commit --amend` unless ALL apply: user requested amend, HEAD commit is yours and unpushed, hook did not reject the commit
+- If commit FAILED or was REJECTED by a hook, fix and create a **new** commit — do not amend
+- NEVER commit unless the user explicitly asked; do not push unless explicitly asked
+- Do not use interactive git (`-i` flags)
+
+## Workflow
+
+1. Run in parallel: `git status`, `git diff` (staged + unstaged), `git log -3 --oneline`
+2. Draft a commit message (why, not just what); do not commit secrets
+3. **C# repos:** format changed `.cs` per `pre-commit-csharpier-format.mdc` **before** commit
+4. `git add` relevant paths → `git commit` (HEREDOC message on bash; PowerShell here-string on Windows)
+5. **C# repos:** run post-commit review per `post-commit-csharp-code-review.mdc` (`git show HEAD`, **fresh-reviewer**)
+6. Fix **Blockers** in a follow-up commit (or amend only per rules above); do not push with known Blockers unless the user approves
+7. `git status` after commit; push only when the user asked
+
+## Commit message
+
+- 1–2 sentences focused on **why**
+- Accurate verb (add / fix / refactor / docs)

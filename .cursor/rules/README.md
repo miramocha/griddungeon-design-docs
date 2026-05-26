@@ -31,8 +31,9 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 | `unity-ui-toolkit.mdc` | UI Toolkit bindings |
 | `architecture-design-principles.mdc` | **Design-docs only** — maps principles → MVP1 architecture types |
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
-| `pre-commit-csharp-code-review.mdc` | **Shared** — review C# diff before agent-created commits (skipped in docs-only repos) |
-| `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before review/commit |
+| `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
+| `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before commit |
+| `git-commit-agent-workflow.mdc` | **Shared** — agent git commit order (format → commit → post-commit review → push) |
 | `unity-meta-files.mdc` | **Game** — `.meta` GUID policy (link from game repo via `scripts/link-cursor-rules.ps1`) |
 
 ## Agent skills (design-docs repo)
