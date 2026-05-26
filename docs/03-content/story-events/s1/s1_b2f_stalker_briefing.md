@@ -23,8 +23,8 @@
 
 | textKey | textEn |
 |---------|--------|
-| `story.s1.b2f_briefing.line_01` | My board's throwing spikes. Something heavy on the east loop — not noise I can walk past. |
-| `story.s1.b2f_briefing.line_02` | The contract line says engage if it blocks the route. There's a lock on my side I don't know how to open yet. |
+| `story.s1.b2f_briefing.line_01` | My board's throwing spikes. Something heavy on the east loop, not noise we can walk past. |
+| `story.s1.b2f_briefing.line_02` | The contract says engage if it blocks the route. There's a lock on my side I don't know how to open yet. |
 | `story.s1.b2f_briefing.line_03` | Keep the formation tight. If it commits, I'm calling it in. |
 
 Speaker: **`navigator:guild_handler`** only.

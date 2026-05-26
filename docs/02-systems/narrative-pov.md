@@ -58,9 +58,10 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 | Short field cadence — municipal underworks + **low myth** (sealed tools, sense, pull) ([vision § tone](../00-vision.md#tone--setting)) | High fantasy monologues; remote commander voice |
 | Hedge early: “I don’t know yet”, “sealed tools”, “paperwork calls it…” | Front-load mechanic glossary |
 | Name mechanics **when** the scene’s job is teach (unlock VN, coach) | Spoil Synchro in Act 1 mouth briefing |
-| “Your crew / the six” for the formation (Act 3+) | **`core:<id>` lines** — roster is player-defined |
+| “The crew / the six” for the formation (Act 3+) | **`core:<id>` lines** — roster is player-defined |
 | NPC lines that **react to** the Navigator (short, in-world) | Long exposition dumps from guest speakers |
-| — | **Comms / channel / line / radio** in S1 scripts (unless a later beat revisits) |
+| **Gate** (player-facing) for B1F stratum entry; **mouth** stays in ids/docs only | **Comms / channel / line / radio** in S1 scripts (unless a later beat revisits) |
+| No **you** / **your** (Navigator does not address the player) | Em dashes in VN lines |
 
 ### Story VN speakers
 

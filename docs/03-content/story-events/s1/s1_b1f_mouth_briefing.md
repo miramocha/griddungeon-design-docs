@@ -23,8 +23,8 @@
 
 | textKey | textEn |
 |---------|--------|
-| `story.s1.b1f_mouth.line_01` | Stairs cut through to topside — and something in me is pulling toward a check-in I don't have words for yet. |
-| `story.s1.b1f_mouth.line_02` | My kit's full of sealed tools. Whatever they do, it isn't ready down here — but topside first still feels mandatory. |
+| `story.s1.b1f_mouth.line_01` | Stairs cut through to topside. Something in me is pulling toward a check-in I don't have words for yet. |
+| `story.s1.b1f_mouth.line_02` | My kit's full of sealed tools. Whatever they do, it isn't ready down here, but topside first still feels mandatory. |
 | `story.s1.b1f_mouth.line_03` | No one else on this floor with me. I'll take the stairs up and see who answers. |
 
 Speaker: **`navigator:guild_handler`** only.

@@ -22,9 +22,9 @@
 
 | textKey | textEn |
 |---------|--------|
-| `story.s1.synchro_unlock.line_01` | That should've dropped your crew. It didn't. |
-| `story.s1.synchro_unlock.line_02` | There's a pulse in my kit — I didn't know I had it until now. Paperwork calls it Synchro. One coordinated shot when it peaks. |
-| `story.s1.synchro_unlock.line_03` | It's lining up. When your turn hits, open Protocol — I'll push Protocol Strike through. |
+| `story.s1.synchro_unlock.line_01` | That should've dropped the crew. It didn't. |
+| `story.s1.synchro_unlock.line_02` | There's a pulse in my kit, I didn't know I had it until now. Paperwork calls it Synchro. One coordinated shot when it peaks. |
+| `story.s1.synchro_unlock.line_03` | It's lining up. When their turn comes, open Protocol. I'll push Protocol Strike through. |
 | `story.s1.synchro_unlock.line_04` | One strike. I don't think we get another window at this range. |
 
 Speaker: **`navigator:guild_handler`** only.
