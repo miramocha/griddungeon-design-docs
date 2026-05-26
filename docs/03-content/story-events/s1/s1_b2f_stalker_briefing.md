@@ -1,6 +1,6 @@
 # Draft — `s1_b2f_stalker_briefing`
 
-**Status:** Copy draft — Navigator only, **blank state**; MVP1 = click-through block.
+**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet), **blank state**; MVP1 = click-through block.
 
 **When:** **Exploration** — party enters the authored **Event** cell on `s1_B2F` (west-loop approach, before the tutorial fight and before any **hub** return).
 

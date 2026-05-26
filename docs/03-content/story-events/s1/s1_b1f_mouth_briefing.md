@@ -1,6 +1,6 @@
 # Draft — `s1_b1f_mouth_briefing`
 
-**Status:** Copy draft — Navigator only, **blank state**; MVP1 = click-through block.
+**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet), **blank state**; MVP1 = click-through block.
 
 **When:** **Exploration Act 1** — Navigator enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (mouth camp threshold), **solo**, **before** first **hub** via mouth `^` `(10, 11)`.
 

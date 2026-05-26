@@ -10,12 +10,12 @@
 
 | Layer | Who speaks | Who the player is |
 |-------|------------|-------------------|
-| **Story VN** | Active Navigator only (`navigator:guild_handler` in S1) | The Navigator — first-person **I** / **my**, on the march |
+| **Story VN** | **Navigator** (`navigator:guild_handler` in S1) **+ optional NPCs** who speak **to** the Navigator (see [§ Story VN speakers](#story-vn-speakers)) | The Navigator — **player** lines are first-person **I** / **my**; other characters use their own voice |
 | **Guided tutorial** | **No character speaker** — impersonal system / imperative coach ([guided-tutorial](guided-tutorial.md)) | Same player, but copy does not use Navigator **I** |
 | **Combat log / skills** | System + neutral tags until taught | Navigator directs cores; no core-by-class dialogue |
 | **Hub services** | UI labels + optional Navigator asides (post-MVP1) | Navigator between dives |
 
-**Not the player:** a disembodied “commander” watching from outside, or a named core guild member. Cores stay **silent** in scripted fiction so any class roster works.
+**Not the player:** a disembodied remote commander, or dialogue tied to a **specific core class / roster slot**. The six **cores** stay **silent** in scripted fiction so any player build works — use **NPC `speakerId`s** (guild staff, topside contact, etc.) when another character must talk **with** the Navigator.
 
 **Guide, not fighter (locked):** The Navigator **explores the labyrinth** on every dive — mouth in, hub out. **Act 1 (S1):** **alone** until hub recruitment. **Act 3+:** walks with the recruited party on the **sideline**, **off the 3+3 formation**. They **support** through map sense, sealed **kit tools**, and (when unlocked) Synchro / Protocol — not by fighting on the grid or taking AGI turns.
 
@@ -58,10 +58,25 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 | Short field cadence — municipal underworks + **low myth** (sealed tools, sense, pull) ([vision § tone](../00-vision.md#tone--setting)) | High fantasy monologues; remote commander voice |
 | Hedge early: “I don’t know yet”, “sealed tools”, “paperwork calls it…” | Front-load mechanic glossary |
 | Name mechanics **when** the scene’s job is teach (unlock VN, coach) | Spoil Synchro in Act 1 mouth briefing |
-| “Your crew / the six” for the formation | “Gunner said…” / class-specific banter |
+| “Your crew / the six” for the formation (Act 3+) | **`core:<id>` lines** — roster is player-defined |
+| NPC lines that **react to** the Navigator (short, in-world) | Long exposition dumps from guest speakers |
 | — | **Comms / channel / line / radio** in S1 scripts (unless a later beat revisits) |
 
-**Speakers (MVP1):** Navigator for **story VN** only (`navigator:guild_handler`). **Guided tutorials:** no `speakerId` — system-style tips. **Narrator / signage / FOE voice** only when impersonal ([story-events § speakers](story-events.md#speakers-and-custom-party)). **No core `speakerId`** in S1 scripts.
+### Story VN speakers
+
+| Speaker | MVP1 S1 | Notes |
+|---------|---------|--------|
+| **`navigator:guild_handler`** | **Yes** — default voice for player | First person; blank-state safe |
+| **`npc:*`** | **When the beat needs it** | Guild clerk, topside handler, etc. — stable ids, not `core:<characterId>` |
+| **`narrator`** | Rare | Impersonal signage / system voice only |
+| **`core:<id>`** | **No** | Breaks custom party roster |
+| **`foe:*`** | **No** in S1 tutorial | FOE reaction via combat log / VFX, not VN banter (revisit post-MVP1) |
+
+**S1 drafts today:** four tutorial scenes are **Navigator-only** monologue ([story-events index](../03-content/story-events/README.md)); add `npc:*` lines when a beat needs dialogue **with** someone topside or at hub.
+
+**Guided tutorials:** no `speakerId` — system-style tips ([guided-tutorial](guided-tutorial.md)).
+
+**Authoring:** per-line `speakerId` on story steps ([story-events § speakers](story-events.md#speakers-and-custom-party)).
 
 ---
 

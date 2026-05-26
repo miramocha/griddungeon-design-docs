@@ -186,16 +186,19 @@ Example index row:
 
 ## Speakers and custom party
 
-**Authority:** [narrative POV](narrative-pov.md) — Navigator **blank state**; player is the active Navigator; cores stay silent in scripted fiction.
+**Authority:** [narrative POV](narrative-pov.md) — player **is** the Navigator; **cores stay silent**; other characters may speak **to** the Navigator via **`npc:*`** (or `narrator` when impersonal).
 
 | Speaker | Use |
 |---------|-----|
-| **`navigator:guild_handler`** (S1) | All MVP1 story VN + mandatory coach voice — **first person**, amnesia-safe copy |
-| **Narrator / radio / signage** | Impersonal lines only (post-MVP1) |
+| **`navigator:guild_handler`** (S1) | Player-facing lines — **first person**, amnesia-safe copy |
+| **`npc:<role>`** | Guild staff, topside contact, quest giver — **dialogue with** the Navigator when the beat needs it |
+| **`narrator`** | Impersonal signage / system voice only |
 | **`core:<id>`** | **Avoid** — roster is player-defined |
-| **FOE** | SFX / UI reaction; no dialogue MVP1 |
+| **`foe:*`** | SFX / UI reaction in S1 tutorial; full FOE VN lines post-MVP1 if ever |
 
-**S1 (locked):** Navigator only. Do **not** explain Synchro / Protocol in Act 1 mouth briefing; first in-fiction **name** of the channel burst = `s1_synchro_protocol_unlock` after crisis AOE.
+**S1 (locked):** Do **not** explain Synchro / Protocol in Act 1 mouth briefing; first in-fiction **name** of the burst = `s1_synchro_protocol_unlock` after crisis AOE. **Current S1 drafts** are Navigator-only monologue; **multi-speaker scenes are allowed** when authored (alternate `speakerId` per step).
+
+**NPC id convention (draft):** `npc:guild_clerk`, `npc:mouth_handler`, … — register in content tables when lines ship; do not reuse `core:` ids.
 
 **Authoring:** Match [reveal pacing](narrative-pov.md#blank-state-locked) before importing `textEn` to game assets.
 

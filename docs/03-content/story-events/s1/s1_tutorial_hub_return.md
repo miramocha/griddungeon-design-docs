@@ -1,6 +1,6 @@
 # Draft — `s1_tutorial_hub_return`
 
-**Status:** Copy draft — Navigator only; post-discovery, still **no origin lore**; MVP1 = click-through block.
+**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet); post-discovery, still **no origin lore**; MVP1 = click-through block.
 
 **When:** Immediately after **`protocol_strike`** resolves and FOE is removed (tutorial kill).
 

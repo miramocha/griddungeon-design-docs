@@ -18,7 +18,7 @@ alwaysApply: false
 - Player **is** the active Navigator: **Act 1 solo** in the labyrinth; after hub recruitment, walks **sideline** with the six-core party (off formation). Guides via **kit / map sense** (low myth) — not a grid fighter, not a core class voice.
 - **Avoid** comms / channel / line / radio diction in S1 scripts unless explicitly requested.
 - **Blank state** at new game ([narrative-pov](../../docs/02-systems/narrative-pov.md)); no Synchro/Protocol vocabulary until the unlock beat teaches it.
-- **First person** in **story VN** only; **guided tutorials** = impersonal coach (no Navigator/character speaker). Cores **silent** in S1 scripts.
+- **First person** on **Navigator** story-VN steps only; other characters use **`npc:*`** (or `narrator`) when the scene needs dialogue **with** the Navigator — never **`core:<id>`**. **Guided tutorials** = impersonal coach (no character speaker).
 
 ## Handoff to implementation
 

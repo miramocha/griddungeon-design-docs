@@ -1,6 +1,6 @@
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** Copy draft — Navigator only; **first mechanic reveal**; MVP1 = click-through block.
+**Status:** Copy draft — **Navigator-only** lines (no `npc:*` yet); **first mechanic reveal**; MVP1 = click-through block.
 
 **When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 
