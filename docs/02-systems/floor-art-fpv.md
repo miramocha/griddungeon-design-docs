@@ -35,13 +35,14 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 | Target cells | `IsWalkable == false` on assigned `StratumFloor` |
 | Skip | Layout symbol **`X`** (story / tutorial blocker cells) — hand-place art later |
 | Prefab model | **One full-cell** block per targeted cell |
-| Position | **Cell corner** — `FloorArtGrid.GridToWorld(x, y)` |
-| Rotation | **Prefab default** only (no random Y spin in v1) |
+| Position | **Cell center** — `FloorArtGrid.GridToCellCenterWorld(x, y)` (center-pivoted prefab) |
+| Rotation | **Prefab default** only (random Y spin planned; requires center pivot) |
 | Prefab list | Serialized `GameObject[]` (prefab references); **uniform** random |
 | Re-run Populate | Destroy only objects marked **auto-generated**, then fill again |
 | Auto-generated marker | `FloorArtGeneratedProp` component (or equivalent) on instantiated instances |
 | Undo | `Undo.RegisterCreatedObjectUndo` / destroy via Undo on clear |
 | Parent | All spawned instances under **`Props`** child of `FloorArtRoot` |
+| Lighting / volumes | Under **`FloorArtRoot`** (`Lighting/`, `Volumes/`) — not scene root; mounts with art at runtime ([game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scenes/Floors/README.md#lighting-and-volumes)) |
 | Later | Gather (`C`/`G`), stairs/entry pins, key markers, modular edge walls, seeded/weighted picks |
 
 ## Locked decisions (Runtime v1)
@@ -66,7 +67,7 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 3. Assign **Wall Block Prefabs** list on `FloorArtGrid`.
 4. Click **Populate Wall Blocks** (name TBD).
 5. Tool iterates `x ∈ [0, width)`, `y ∈ [0, height)`; for each cell:
-   - If not walkable **and** not a populate skip → pick random prefab, `Instantiate` under `Props` at corner, add `FloorArtGeneratedProp`.
+   - If not walkable **and** not a populate skip → pick random prefab, `Instantiate` under `Props` at cell center, add `FloorArtGeneratedProp`.
 6. Hand-edit: move/delete individual props; use **Snap Selected To Grid** for tweaks.
 7. Re-run Populate → only removes objects with `FloorArtGeneratedProp`, then regenerates.
 
@@ -157,7 +158,7 @@ If transition is **visual only** (fade on top, same synchronous `TryLoadTargetFl
 
 ## Acceptance criteria
 
-1. With `s1_B1F.asset` assigned, **Populate** fills every `#` wall cell with a prefab from the list at the correct corner; cell `(10,13)` (**X**) has **no** generated prop.
+1. With `s1_B1F.asset` assigned, **Populate** fills every `#` wall cell with a prefab from the list at the cell center; cell `(10,13)` (**X**) has **no** generated prop.
 2. Second **Populate** removes only generated props, not hand-placed props without the marker.
 3. Play Mode on B1F after art is registered: player sees authored wall meshes; movement/collision unchanged from SO.
 4. Switching floors unloads prior art; no duplicate roots.
