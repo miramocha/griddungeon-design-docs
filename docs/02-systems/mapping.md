@@ -39,7 +39,8 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | FOE enters sight | FOE marker **fade in** on map | Yes — before next step if revealed mid-step |
 | FOE patrol step | Marker **slides** to new cell | No — ambient; must not block player input |
 | Party moves | Party arrow **slides** to new cell; optional facing tick | Yes — with step lerp |
-| Chest / gather (MVP1 gather) | Node icon **flash** + loot toast | Yes — before next interact |
+| Chest (MVP1) | Chest overlay **flash** + loot toast — opened from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes — before next interact |
+| Gather (MVP1) | Gather overlay **flash** + loot toast | Yes — before next interact |
 | Open fullscreen map (`M`) | Panel **scale/fade** open | No — overlay only |
 
 ## Auto-reveal rules
@@ -50,7 +51,9 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | **Walls** | **Bump** blocked side → stamp that wall; **enter cell** → reveal floor + wall on all solid edges of cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
-| **Chest / gather / fish** | Opens chest (**MVP1**); gather node **overlay when visited** ([ADR 014](../../decisions/014-mvp1-exploration-map.md)); fish nodes (**MVP2**) |
+| **Chest** | Party **Interact** on adjacent walkable cell **facing** impassable chest tile — loot once; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| **Gather** | Gather node **overlay when visited**; MVP1 instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **Fish** | Fish nodes (**MVP2**) |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
 | **Traps** (optional) | Party **triggers** trap on cell (mark for repeat visits) |
 

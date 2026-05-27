@@ -318,6 +318,7 @@ struct TutorialBlocker
     string requiredSaveFlag;      // e.g. "s1_tutorial_dive_started"
 }
 
+// Chest: IsWalkable=false + ChestItemId; interact adjacent+facing (#105). Gather: HasGatherNode on walkable cell (G).
 struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string ChestItemId; }
 struct FoeSpawnConfig { string foeId; GridPosition spawnCell; GridPosition[] patrolPath; int stepsPerMove; }
 struct EncounterTable { EncounterWeight[] Entries; }

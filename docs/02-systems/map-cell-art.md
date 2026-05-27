@@ -18,7 +18,8 @@ MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visua
 | **Edge walls** | `WallMask` N/E/S/W on **walkable** cell | Visited + mask ≠ `None` | Bump + enter reveal ([ADR 014](../../decisions/014-mvp1-exploration-map.md)); **not** the same as `#` |
 | **Alcove (3+ edges)** | Same `WallMask`, `count ≥ 3` | Visited | Glyph `█` today; **alcove fill** or low-opacity solid — still walkable floor |
 | **Features** | `FeatureState` on cell | Visited + feature known | Stairs in **cell** labels; **doors not rendered yet** |
-| **Gather** | `HasGatherNode` | Visited (or dev reveal-all) | **Overlay** — `MapGatherMarkersPresenter` · `map-view__marker--gather` |
+| **Gather** | `HasGatherNode` (ASCII `G`) | Visited (or dev reveal-all) | **Overlay** — `MapGatherMarkersPresenter` · `map-view__marker--gather` |
+| **Chest** | `ChestItemId` set / ASCII `C` — **impassable** | Visited + chest known | **Overlay** when wired ([#38](https://github.com/miramocha/griddungeon-game/issues/38)); interact from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | **Hub gate** | B1F `stairsUp` | Visited | **Overlay** — `MapHubEntranceMarkersPresenter` ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **FOE** | `FoeSystem` / map FOE state | In LOS / last known | **Overlay** — `MapFoeMarkersPresenter` (not cell `F`) |
 | **Floor** | Default walkable | Visited, nothing above | `·` glyph in cell label |
@@ -67,8 +68,8 @@ Authoring legend: [dungeons & encounters — Map legend](../03-content/dungeons-
 | `.` | `·` · `map-view__cell--floor` | Floor tile |
 | `^` / `v` | `^` / `v` · stairs classes | Stairs up / down icons |
 | `F` | FOE **overlay** (not cell glyph) | `MapFoeMarkersPresenter` |
-| `C` | *(not wired)* | Chest overlay |
-| `G` | Gather **overlay** when visited | `map-view__marker--gather` |
+| `C` | Solid mass (`#`-class) — **not walkable**; chest **overlay** when feature wired | `map-view__cell--chest` (planned) |
+| `G` | Walkable floor + gather **overlay** when visited | `map-view__marker--gather` |
 | `D` | *(not wired)* | Door overlay + state tint |
 | `E` / `M` | Party spawn only — not map icons | — |
 | Edge walls | `╵╷╶╴│—█` via `WallGlyph` | Rotated edge segment(s) + alcove fill |

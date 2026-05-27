@@ -29,10 +29,11 @@ Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_
 | `#` | No | Wall |
 | `X` | No | Tutorial / script blocker |
 | `.` | Yes | Open floor |
-| `C`, `G` | Yes | Gather node (`HasGatherNode`) |
+| `C` | No | **Chest** — `ChestItemId`; party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| `G` | Yes | **Gather** — `HasGatherNode`; MVP1 instant loot on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
 | `v`, `^`, `M`, `E` | Yes | Visual markers; **stairs/entry positions** come from pinned coords on the asset, not from the char alone |
 
-Walkability rules: `S1B1FLayoutBuilder.IsWalkableSymbol` in game repo.
+**Walkability (target):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `S1B1FLayoutBuilder.IsWalkableSymbol` after [#105](https://github.com/miramocha/griddungeon-game/issues/105). Until that ships, B1F layout code may still treat `C` as walkable gather (legacy); painter palette and export ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) should follow this table.
 
 ## Workflow (target)
 

@@ -43,7 +43,7 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 | Undo | `Undo.RegisterCreatedObjectUndo` / destroy via Undo on clear |
 | Parent | All spawned instances under **`Props`** child of `FloorArtRoot` |
 | Lighting / volumes | Under **`FloorArtRoot`** (`Lighting/`, `Volumes/`) — not scene root; mounts with art at runtime ([game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scenes/Floors/README.md#lighting-and-volumes)) |
-| Later | Gather (`C`/`G`), stairs/entry pins, key markers, modular edge walls, seeded/weighted picks |
+| Later | Gather (`G`), chest (`C`), stairs/entry pins, key markers, modular edge walls, seeded/weighted picks |
 
 ## Locked decisions (Runtime v1)
 
