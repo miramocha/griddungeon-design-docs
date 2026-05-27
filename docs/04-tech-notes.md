@@ -52,7 +52,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 - Game runtime assemblies reference `DOTween` / `DOTween.Modules` as needed; no tween logic in `CombatSimulator` (pure C# tests).
 - Prefer `Sequence` / `Tween` over hand-rolled lerps; kill or complete tweens on scene unload, combat end, and explorer disable (`DOTween.Kill` on owning transforms).
 - Exploration input: poll movement/turn `IsPressed` when explorer lerp completes for hold-to-repeat; displacement priority over turn; no buffered input during lerp ([ADR 001](../decisions/001-grid-movement.md)).
-- Exploration lerp durations: four presets (Slow / Normal / Fast / Very Fast); default Normal 0.28s step ([ADR 018](../decisions/018-exploration-animation-speed.md)).
+- Exploration lerp durations: four presets (Slow / Normal / Fast / Very Fast); default Normal **0.32s** step, `OutQuad` ([ADR 018](../decisions/018-exploration-animation-speed.md)).
 - **Timeline** stays the source of truth for sparse cinematic skills; do not duplicate the same beat in both Timeline and DOTween unless one drives the other.
 
 ### UI reactivity
@@ -88,7 +88,9 @@ GameState (composition root)
 │   └── CombatPhaseController
 ├── HubServices          — explorers guild, navigator office, shop, hospital, inn save
 ├── DungeonExplorer      — grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp — see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
-├── DungeonView          — FPV cell rendering (hidden during combat)
+├── ExplorationGridMetrics (Core) — `WorldUnitsPerCell` (10), corner→world math shared with floor art
+├── FloorArtPresenter    — load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102))
+├── DungeonView          — FPV mount / visibility (hidden during combat); per-cell blobber deferred
 ├── CombatScenePresenter — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 ├── MapSystem            — auto-reveal layer, fog, read-only UI
 ├── FoeSystem            — spawn, visibility, step patrol, contact
@@ -121,7 +123,7 @@ GameState (composition root)
 | Concern | Approach |
 |---------|----------|
 | **Authoring (primary)** | **Floor level painter** (Unity Editor) → exports **`StratumFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol — epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
-| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map |
+| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map — [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
 | **Runtime HUD (primary)** | **`MapView`** — 2D UI Toolkit grid or blitted `Texture2D` from `StratumFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
 | **Party / FOE** | Icons on 2D map at `(x, y, level)`; patrol updates view without RT |

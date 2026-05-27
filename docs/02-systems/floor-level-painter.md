@@ -11,6 +11,8 @@ Paint MVP1 dungeon floors in Unity and export **`StratumFloor`** assets without 
 
 ## Coordinate system
 
+Logic indices are **cell counts** (0…19). **FPV world scale** (10 Unity units per cell, corner anchor) is authored separately in [floor art FPV](floor-art-fpv.md) — the painter does not change `ExplorationGridMetrics`.
+
 | Rule | Value |
 |------|--------|
 | Grid | 20×20 for MVP1 strata floors |
@@ -48,7 +50,7 @@ Until the epic ships, use **Apply s1_B*n*F MVP1 layout** (`StratumFloorDevMenu`)
 |------|------------|
 | [#26](https://github.com/miramocha/griddungeon-game/issues/26) | Runtime **HUD** grid refactor (`MapView` + `MapDevPreviewView`) |
 | `MapView` | Read-only player map from reveal state |
-| FPV floor scenes | Corridor art; optional; does not author collision |
+| FPV floor scenes | Corridor art; optional; does not author collision — [floor-art-fpv.md](floor-art-fpv.md) |
 
 ## Epic tracker
 

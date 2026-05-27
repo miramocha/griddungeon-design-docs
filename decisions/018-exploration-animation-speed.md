@@ -1,8 +1,8 @@
 # ADR 018 — Exploration Animation Speed
 
-**Status:** Accepted  
+**Status:** Accepted (amended 2026-05-26)  
 **Date:** 2026-05-21  
-**Aligns with:** [ADR 001 — Grid movement](001-grid-movement.md) (movement rules unchanged)
+**Aligns with:** [ADR 001 — Grid movement](001-grid-movement.md) (movement rules unchanged); [floor art FPV](../docs/02-systems/floor-art-fpv.md) (`WorldUnitsPerCell` = 10)
 
 ## Context
 
@@ -21,12 +21,22 @@ Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-move
 
 | Preset | Step lerp | Turn lerp | Bump segment (each) | Notes |
 |--------|-----------|-----------|---------------------|--------|
-| **Slow** | 0.40 s | 0.36 s | 0.14 s | Deliberate exploration |
-| **Normal** | 0.28 s | 0.26 s | 0.10 s | **Default** |
-| **Fast** | 0.20 s | 0.18 s | 0.08 s | Snappier; prior Normal step target |
-| **VeryFast** | 0.12 s | 0.11 s | 0.05 s | Near-instant; still discrete steps |
+| **Slow** | 0.46 s | 0.36 s | 0.14 s | Deliberate exploration |
+| **Normal** | **0.32 s** | 0.26 s | 0.10 s | **Default** (amended for 10 u/cell FPV — was 0.28 s at 1 u/cell) |
+| **Fast** | 0.23 s | 0.18 s | 0.08 s | Snappier |
+| **VeryFast** | 0.14 s | 0.11 s | 0.05 s | Near-instant; still discrete steps |
 
-Bump animation total = 2 × bump segment. Turn lerp ≈ 93% of step lerp across presets (matched rotation pace to step feel).
+Bump animation total = 2 × bump segment. Turn lerp ≈ 81% of Normal step lerp (rotation pace unchanged from pre-FPV scale).
+
+### Locked easing (DOTween)
+
+| Motion | Ease | Notes |
+|--------|------|--------|
+| **Step** | `OutQuad` | Slight ease-out over **10** world units/cell |
+| **Turn** | `OutQuad` | Unchanged |
+| **Bump out / in** | `OutQuad` / `InQuad` | Unchanged |
+
+**Amendment (2026-05-26):** MVP1 exploration world scale is **10 Unity units per logic cell** (`ExplorationGridMetrics.WorldUnitsPerCell`). Normal **step** duration increases **0.28 s → 0.32 s** so perceived walk pace stays similar; step tween uses **OutQuad** instead of linear. Other presets’ step durations scale by the same ratio (~8/7); turn/bump timings unchanged until `ExplorationAnimationDurations` ships in Core.
 
 ## Rejected
 

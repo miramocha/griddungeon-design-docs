@@ -34,7 +34,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 
 **Movement (`W`/`S`/`A`/`D` and forward/back arrows)** and **turn (`Q`/`E` and left/right arrows)** use **hold** for repeat ([ADR 001](../../decisions/001-grid-movement.md)):
 
-- While an explorer **lerp** is playing (durations per [ADR 018](../../decisions/018-exploration-animation-speed.md) preset; Normal: step ~0.28s, turn ~0.26s): **no** new commit of that action type and **no** buffered input.
+- While an explorer **lerp** is playing (durations per [ADR 018](../../decisions/018-exploration-animation-speed.md) preset; Normal: step ~0.32s, turn ~0.26s): **no** new commit of that action type and **no** buffered input.
 - When the lerp **ends**, re-check `IsPressed` on held actions; if a movement key is still held, take **one** displacement (priority over turn); else if a turn key is still held, take **one** 90° turn.
 - A tap during lerp only leads to another step/turn if the key is **still held** when the lerp finishes (no mid-lerp queue).
 - **Turn** does not fire step events (no FOE tick, no random encounter).

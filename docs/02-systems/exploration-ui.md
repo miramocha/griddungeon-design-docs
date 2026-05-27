@@ -226,7 +226,7 @@ When pause is open, exploration movement actions are **unbound** so the party ca
 
 | Layer | Type | Phase behavior |
 |-------|------|----------------|
-| `DungeonView` | World / FPV stub (`SetVisible`) | `ExplorationPhaseController` shows; `CombatPhaseController` hides |
+| `DungeonView` / `FloorArtPresenter` | World / FPV (`SetVisible`; authored art load [#102](https://github.com/miramocha/griddungeon-game/issues/102)) | `ExplorationPhaseController` shows; `CombatPhaseController` hides |
 | `ExplorationHud` + `MapView` | UI Toolkit | Map/pause gated on `GamePhase.Exploration` inside views |
 | `DungeonExplorer` + `MapSystem` | Simulation | `ExplorationPhaseController` wires on enter, unwires on exit |
 
