@@ -27,7 +27,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 
 | # | Requirement | Doc |
 |---|-------------|-----|
-| ✅ | WASD + QE strafe/turn, ~0.28s step lerp (Normal), hold-to-repeat | [ADR 001](../decisions/001-grid-movement.md) |
+| ✅ | WASD + QE strafe/turn, ~0.32s step lerp (Normal), hold-to-repeat | [ADR 001](../decisions/001-grid-movement.md) |
 | ⬜ | Exploration animation speed preset (Slow / Normal / Fast / Very Fast) — **UI deferred** post-MVP1; Normal timings shipped in code | [ADR 018](../decisions/018-exploration-animation-speed.md) |
 | ✅ | Auto-map, no drawing | [ADR 002](../decisions/002-mapping-model.md) |
 | ✅ | Wall: bump + cell perimeter reveal | [ADR 014](../decisions/014-mvp1-exploration-map.md) |

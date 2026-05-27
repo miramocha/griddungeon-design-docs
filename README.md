@@ -35,6 +35,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [00 — Game references](docs/00-game-references.md) | Draft | EO + Mary Skelter, etc. — future design reference |
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
+| [02 — Floor art (FPV)](docs/02-systems/floor-art-fpv.md) | Draft | `FloorArtGrid`, Populate wall blocks, runtime art load |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |
 | [02 — Exploration UI](docs/02-systems/exploration-ui.md) | Accepted | UI Toolkit HUD wiring: `ExplorationHudView`, `MapView`, pause, input |
 | [04 — Dev: UI event contract](docs/04-dev/ui-event-contract.md) | Active | Integrator reference: Runtime events + command APIs for custom HUD |
@@ -93,7 +94,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 - **Party:** 6 core (3+3) + aux; Navigator off-formation ([ADR 004](decisions/004-auxiliary-slots.md), [007](decisions/007-navigator-role.md))
 - **Mapping:** Auto-reveal; no drawing tools ([ADR 002](decisions/002-mapping-model.md))
-- **Movement:** Discrete steps, strafe, ~0.28s lerp (Normal), hold-to-repeat, speed presets ([ADR 001](decisions/001-grid-movement.md), [018](decisions/018-exploration-animation-speed.md))
+- **Movement:** Discrete steps, strafe, ~0.32s lerp (Normal), hold-to-repeat, speed presets ([ADR 001](decisions/001-grid-movement.md), [018](decisions/018-exploration-animation-speed.md))
 - **FOE patrol:** Party step-based ([ADR 003](decisions/003-foe-step-patrol.md)); **respawn on hub return** ([ADR 008](decisions/008-campaign-defaults.md))
 - **Exploration:** **Unlimited steps** — no TP limit ([ADR 008](decisions/008-campaign-defaults.md))
 - **Platform:** **PC** ([ADR 008](decisions/008-campaign-defaults.md))

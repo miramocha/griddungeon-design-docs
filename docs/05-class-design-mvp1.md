@@ -724,7 +724,7 @@ enum ExplorationAnimationSpeed { Slow, Normal, Fast, VeryFast }
 static class ExplorationAnimationDurations
 {
     static (float step, float turn, float bumpSegment) Get(ExplorationAnimationSpeed speed);
-    // Normal: 0.28s / 0.26s / 0.10s — see ADR 018
+    // Normal: 0.32s / 0.26s / 0.10s — see ADR 018
 }
 
 class DungeonView : MonoBehaviour
