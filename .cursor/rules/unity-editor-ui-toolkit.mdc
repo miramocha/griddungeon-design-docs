@@ -1,0 +1,13 @@
+---
+description: New Unity Editor windows and tools — prefer UI Toolkit over IMGUI (game repo)
+globs: 
+alwaysApply: false
+---
+
+# Editor tools — UI Toolkit first
+
+Authoritative copy: [griddungeon-game `.cursor/rules/unity-editor-ui-toolkit.mdc`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-editor-ui-toolkit.mdc).
+
+When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, UXML/USS under `Assets/UI/Editor/`, `*Panel` / custom `VisualElement`) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
+
+Examples: `FloorPainterWindow`, `GridDungeonSaveEditorWindow`, `GridDungeonDevWindow`.
