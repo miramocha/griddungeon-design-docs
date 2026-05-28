@@ -246,6 +246,12 @@ Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-
 
 ---
 
+## Floor pins & quest gating (post-MVP1)
+
+**Authority:** [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md) (proposed).
+
+Separate from VN step graphs ([ADR 030](../../decisions/030-story-event-graph-authoring.md)): a **floor event graph** decides *which cell* fires *which* handler *when* save flags / quests match (e.g. hide an `!` Event until `quest_cedar_complete`). Compiled rules live on `StratumFloor`; **Core** evaluates conditions; `StoryEventRunner` still runs the dialogue program when an action is `PlayStoryEvent`.
+
 ## Graph authoring (post-MVP1)
 
 **Authority:** [ADR 030](../../decisions/030-story-event-graph-authoring.md).
@@ -265,6 +271,7 @@ Designers author **one graph per `storyEventId`** (nodes = steps, edges = branch
 - [Guided tutorial](guided-tutorial.md) — HUD coaching (exploration + combat); distinct from VN
 - [ADR 028 — Story events](../../decisions/028-story-visual-novel-events.md)
 - [ADR 030 — Story event graph authoring](../../decisions/030-story-event-graph-authoring.md)
+- [ADR 031 — Floor event & pin condition graph](../../decisions/031-floor-event-pin-condition-graph.md)
 - [Synchro Protocol — S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [FOE encounters — tutorial FOE](foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)

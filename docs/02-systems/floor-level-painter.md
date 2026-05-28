@@ -78,6 +78,8 @@ Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](
 
 **Follow-up epic:** [#109](https://github.com/miramocha/griddungeon-game/issues/109) — story Event cells (`!`) + `storyEventId` on floor assets ([#110](https://github.com/miramocha/griddungeon-game/issues/110)–[#113](https://github.com/miramocha/griddungeon-game/issues/113)).
 
+**Post-MVP1 (idea):** quest- and flag-gated pins / triggers — compile from a Graph Toolkit floor graph to `StratumFloor` rules; see [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md). MVP1 ships static pins + C# triggers; gating graph is not required for [#109](https://github.com/miramocha/griddungeon-game/issues/109).
+
 ## Related
 
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)

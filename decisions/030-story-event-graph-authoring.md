@@ -61,7 +61,7 @@ Validation at compile time:
 
 ### 4. Editor UX (target)
 
-Unity **GraphView**-based custom Editor window (or embedded Inspector graph):
+Unity **GraphView**-based custom Editor window (or embedded Inspector graph). **Alternative:** [ADR 031](031-floor-event-pin-condition-graph.md) proposes evaluating **[Unity Graph Toolkit](https://docs.unity3d.com/Packages/com.unity.graphtoolkit@0.4/manual/introduction.html)** as a shared editor shell for floor gating + story step graphs — decide before implementing either tool twice.
 
 - One graph asset per `storyEventId` (matches [content index](../docs/03-content/story-events/README.md)).
 - Preview compiled step list (read-only) for diff review.
@@ -100,6 +100,7 @@ When accepted, open a **game** issue (suggested title): *Editor: Story event gra
 
 ## Related
 
+- [ADR 031 — Floor event & pin condition graph](031-floor-event-pin-condition-graph.md) (placement / quest gating — orthogonal to step graphs)
 - [ADR 028 — Story events (VN)](028-story-visual-novel-events.md)
 - [ADR 029 — Guided tutorial](029-guided-tutorial.md)
 - [story-events.md](../docs/02-systems/story-events.md)
