@@ -31,14 +31,25 @@ Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_
 | `.` | Yes | Open floor |
 | `C` | No | **Chest** — `ChestItemId`; party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | `G` | Yes | **Gather** — `HasGatherNode`; MVP1 instant loot on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
-| `v`, `^`, `M`, `E` | Yes | Visual markers; **stairs/entry positions** come from pinned coords on the asset, not from the char alone |
+| `v`, `^`, `M`, `E` | Yes | **Role markers** — intro (`E`), gate (`M`), stairs up (`^`), stairs down (`v`); Apply scans the grid for these chars and writes `StratumFloor` entry/stairs coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). |
 
 **Walkability (target):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `S1B1FLayoutBuilder.IsWalkableSymbol` after [#105](https://github.com/miramocha/griddungeon-game/issues/105). Until that ships, B1F layout code may still treat `C` as walkable gather (legacy); painter palette and export ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) should follow this table.
+
+## Markers vs parallel pin store ([#107](https://github.com/miramocha/griddungeon-game/issues/107))
+
+| Layer | Authority |
+|-------|-----------|
+| **Grid char** | Authoring truth for entry/stairs — `E` / `M` / `^` / `v` on cells |
+| **Painter UI** | Marker palette tools write those chars; coord summary **derived** from grid scan on refresh |
+| **`StratumFloor` asset** | Runtime exploration reads serialized coords + tiles — **not** ASCII scan at play time |
+| **Anti-pattern** | Parallel pin coord store (e.g. `FloorPainterPinState`) — removed; grid is the only painter state for markers |
+
+When gate and hub stairs share a cell (canonical B1F), only `^` appears on the grid; Apply sets `partyEntryGate` to the `^` cell when `M` is absent.
 
 ## Workflow (target)
 
 1. **GridDungeon → Content → Floor Painter** — paint layout ([#76](https://github.com/miramocha/griddungeon-game/issues/76)).
-2. Place **entry / gate / stairs** pins ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) → Apply to `Assets/Content/Floors/s1_B*n*F.asset`.
+2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v` on cells) → **Apply** to `Assets/Content/Floors/s1_B*n*F.asset` ([#77](https://github.com/miramocha/griddungeon-game/issues/77), [#107](https://github.com/miramocha/griddungeon-game/issues/107)).
 3. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
 4. **Export** ASCII for this doc + optional C# snippet ([#79](https://github.com/miramocha/griddungeon-game/issues/79)).
 5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement.
