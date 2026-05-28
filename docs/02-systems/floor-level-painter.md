@@ -7,7 +7,7 @@ Design-time tool only. Players never draw on the map ([ADR 002](../decisions/002
 
 ## Goal
 
-Paint MVP1 dungeon floors in Unity and export **`StratumFloor`** assets without editing `S1B*FLayoutBuilder.k_Rows` in C# or mirroring rows in Python by hand.
+Paint MVP1 dungeon floors in Unity and export **`StratumFloor`** assets. **Authoritative layout:** `Assets/Content/Floors/s1_B*n*F.asset` after Floor Painter **Apply** — not parallel ASCII in design-docs or `S1B*FLayoutBuilder.k_Rows`.
 
 ## Coordinate system
 
@@ -52,12 +52,11 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v` on cells) → **Apply** to `Assets/Content/Floors/s1_B*n*F.asset` ([#77](https://github.com/miramocha/griddungeon-game/issues/77)).
 3. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
 4. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
-5. **Export** ASCII for this doc + optional C# snippet ([#79](https://github.com/miramocha/griddungeon-game/issues/79)).
-6. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Apply during Play Mode** refreshes runtime walkability via Floor Painter sync; exit/re-enter Play Mode after Edit Mode Apply.
+5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Apply during Play Mode** refreshes runtime walkability via Floor Painter sync; exit/re-enter Play Mode after Edit Mode Apply.
 
 **Create Dev Bootstrap** registers MVP1 floors in `ContentDatabase` and **does not overwrite** existing `StratumFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon → Content → Apply s1_B*n*F MVP1 layout** (`StratumFloorDevMenu`) — destructive to painted layouts.
 
-Python/builder path: [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) when editing `S1B*FLayoutBuilder` rows instead of the painter.
+Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) on `S1B*FLayoutBuilder` rows — not the day-to-day authoring path.
 
 ## Not the same as
 
@@ -75,7 +74,7 @@ Python/builder path: [stratum-floor-layout-check](https://github.com/miramocha/g
 | 1 Window + paint | [#76](https://github.com/miramocha/griddungeon-game/issues/76) |
 | 2 Export asset | [#77](https://github.com/miramocha/griddungeon-game/issues/77) |
 | 3 Validate | [#78](https://github.com/miramocha/griddungeon-game/issues/78) |
-| 4 Export rows | [#79](https://github.com/miramocha/griddungeon-game/issues/79) |
+| ~~4 Export rows~~ | [#79](https://github.com/miramocha/griddungeon-game/issues/79) — **cancelled** (Unity asset is source of truth; no ASCII export to docs) |
 
 ## Related
 
