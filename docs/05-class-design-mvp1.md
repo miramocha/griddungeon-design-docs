@@ -1160,12 +1160,13 @@ class GridDungeonSaveEditorWindow : EditorWindow  // GridDungeon → Tools → S
 class SaveEditorModel / SaveEditorPanel           // Play: in-memory flags + drift vs disk; Edit: Reload / Write JSON
 class CampaignFlagCatalog                       // Editor descriptors ↔ CampaignFlagId (Core)
 
-// GridDungeon.Editor — floor level painter → StratumFloor.asset (ADR 002)
-class FloorPainterWindow : EditorWindow
-{
-    void PaintCell(int x, int y, int level, FloorPaintTool tool);
-    void ExportToStratumFloor(StratumFloor target);
-}
+// GridDungeon.Editor — floor level painter → StratumFloor.asset (ADR 002, #107)
+class FloorPainterWindow : EditorWindow       // thin shell; UI Toolkit CreateGUI
+class FloorPainterPanel : VisualElement         // palette, Apply, StratumFloor ObjectField
+class FloorPainterGridElement : VisualElement   // per-cell paint + undo
+class FloorPainterGridModel                     // session grid (north-up storage, y=0 south)
+class FloorPainterMarkerResolver                // scan E/M/^/v → entry/stairs Vector2Int
+class FloorPainterExport                        // BuildTiles + TryApplyToStratumFloor
 
 class MapView : MonoBehaviour
 {

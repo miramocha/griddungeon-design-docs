@@ -46,15 +46,18 @@ Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_
 
 When gate and hub stairs share a cell (canonical B1F), only `^` appears on the grid; Apply sets `partyEntryGate` to the `^` cell when `M` is absent.
 
-## Workflow (target)
+## Workflow
 
-1. **GridDungeon → Content → Floor Painter** — paint layout ([#76](https://github.com/miramocha/griddungeon-game/issues/76)).
-2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v` on cells) → **Apply** to `Assets/Content/Floors/s1_B*n*F.asset` ([#77](https://github.com/miramocha/griddungeon-game/issues/77), [#107](https://github.com/miramocha/griddungeon-game/issues/107)).
-3. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
-4. **Export** ASCII for this doc + optional C# snippet ([#79](https://github.com/miramocha/griddungeon-game/issues/79)).
-5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement.
+1. **GridDungeon → Content → Floor Painter** (UI Toolkit) — paint layout ([#76](https://github.com/miramocha/griddungeon-game/issues/76), [#107](https://github.com/miramocha/griddungeon-game/issues/107)).
+2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v` on cells) → **Apply** to `Assets/Content/Floors/s1_B*n*F.asset` ([#77](https://github.com/miramocha/griddungeon-game/issues/77)).
+3. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
+4. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
+5. **Export** ASCII for this doc + optional C# snippet ([#79](https://github.com/miramocha/griddungeon-game/issues/79)).
+6. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Apply during Play Mode** refreshes runtime walkability via Floor Painter sync; exit/re-enter Play Mode after Edit Mode Apply.
 
-Until the epic ships, use **Apply s1_B*n*F MVP1 layout** (`StratumFloorDevMenu`) and Python tools per [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check).
+**Create Dev Bootstrap** registers MVP1 floors in `ContentDatabase` and **does not overwrite** existing `StratumFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon → Content → Apply s1_B*n*F MVP1 layout** (`StratumFloorDevMenu`) — destructive to painted layouts.
+
+Python/builder path: [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) when editing `S1B*FLayoutBuilder` rows instead of the painter.
 
 ## Not the same as
 

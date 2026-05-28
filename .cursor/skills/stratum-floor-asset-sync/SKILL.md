@@ -10,6 +10,10 @@ description: >-
 
 Runs in **griddungeon-game** only. Update design ASCII first, then mirror rows in the game builder before sync.
 
+**Floor Painter** ([#107](https://github.com/miramocha/griddungeon-game/issues/107)) is the preferred path for layout edits in Unity (**GridDungeon → Content → Floor Painter** → Apply). Use Python/builder sync when `S1B1FLayoutBuilder` rows are authoritative.
+
+**Create Dev Bootstrap** registers floors only — it does **not** overwrite painted `StratumFloor` assets.
+
 ## Workflow
 
 1. Layout check green (game repo):
@@ -25,6 +29,6 @@ python Tools/layout_grid_check.py
 python Tools/sync_b1f_asset_tiles.py
 ```
 
-3. Commit game repo: builder + `Tools/layout_grid_check.py` + `s1_B1F.asset`.
+3. Commit game repo: builder + `Tools/layout_grid_check.py` + `s1_B1F.asset` (+ design-docs ASCII if changed).
 
 Canonical steps: [stratum-floor-asset-sync](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-asset-sync) in **griddungeon-game**.
