@@ -6,7 +6,7 @@
 
 ## Summary
 
-When the party **changes exploration floor** (stairs, hub re-entry, campaign target), MVP1 plays a short **loading-room style** beat: **black background**, **3D threshold prop** (door, hatch, closet), **Cinemachine** camera move, then reveals the new floor. Gameplay state commits **during** the beat; macro phase stays **Exploration**.
+When the party **changes exploration floor** (stairs, hub re-entry, campaign target) or **returns to hub** from exploration (gate `stairsUp`), MVP1 plays a short **loading-room style** beat: **black background**, **3D threshold prop** (door, hatch, closet), **Cinemachine** camera move, then reveals the destination. Floor data commits **during** the beat; macro phase stays **Exploration** for floor-to-floor moves and switches to **Hub** when leaving the stratum.
 
 References: Resident Evil door transitions; *Labyrinth of Galleria* closet step-in on black.
 
@@ -18,11 +18,12 @@ References: Resident Evil door transitions; *Labyrinth of Galleria* closet step-
 
 | Trigger | Caller | Default beat |
 |---------|--------|----------------|
-| Stairs up / down | `ExplorationPhaseController.TryChangeFloor` | `stairs_default` |
+| Stairs up / down (exploration floors) | `ExplorationPhaseController.TryChangeFloor` | `stairs_default` |
+| Exploration → **Hub** (gate `stairsUp`) | `ExplorationPhaseController.TryReturnToHub` | `hub_return_from_exploration` or fade fallback |
 | Hub → Enter Stratum | `HubController.TryLeaveHub` → exploration load | `hub_enter_stratum` or fade fallback |
 | Campaign floor jump (same API) | `TryChangeFloor` | catalog resolve |
 
-Act 1 tutorial stairs (B1F → hub) use the **same presenter** so first descent matches the rest of S1.
+Hub enter/leave use catalog destination key **`hub`** (no floor art load). Other scripted hub returns (story, wipe) may stay instant until wired to the same presenter.
 
 ---
 

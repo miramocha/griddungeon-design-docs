@@ -18,9 +18,9 @@ Floor changes (stairs, hub re-entry, campaign warp) today load map data and floo
 
 | Topic | MVP1 |
 |-------|------|
-| **Triggers** | S1 **stairs up/down** (B1F↔B2F↔B3F); **hub → stratum** enter; campaign **floor change** via `TryChangeFloor` |
+| **Triggers** | S1 **stairs up/down** (B1F↔B2F↔B3F); **exploration → hub** (gate `stairsUp`); **hub → stratum** enter; campaign **floor change** via `TryChangeFloor` |
 | **Presentation** | Black-backed **3D vignette** (door / hatch / threshold prop) + **Cinemachine 3** virtual cameras; optional Timeline |
-| **Gameplay** | Stay in **`GamePhase.Exploration`**; input gated via `ExplorationPresentationGate` |
+| **Gameplay** | Stay in **`GamePhase.Exploration`** for floor-to-floor; **→ Hub** switches phase under black; input gated via `ExplorationPresentationGate` during exploration beats |
 | **Floor commit** | C# **only** — map, foes, spawn, save slices, `FloorArtPresenter` unload/load **during** the beat |
 | **Fallback** | Missing beat asset → **fade + sequential load** (no hard block) |
 | **Content** | **One default** beat (`stairs_default`) + catalog override per `leaveKey`→`enterKey` when authored |
