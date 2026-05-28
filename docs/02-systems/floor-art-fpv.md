@@ -105,29 +105,27 @@ sequenceDiagram
 - **Combat:** `CombatPhaseController` hides `DungeonView` (existing); floor art root hides with it.
 - **Alignment:** Art root at world origin `(0,0,0)`; same as Editor floor scenes.
 
-## Floor transitions — MVP1 vs planned transition scene
+## Floor transitions — MVP1 locked
 
-**MVP1 (shipped):** Stairs and campaign floor changes stay in **Exploration**. `ExplorationPhaseController.TryLoadTargetFloor` calls `FloorArtPresenter.LoadFloorArt` once per floor key after map/foe data are ready. Each call begins with `UnloadFloorArt()` (cancel in-flight additive load, destroy mounted root, unload prior additive scene path). Manual QA (rapid stair use with **Z**) is the primary check; this path is **sequential**, not same-frame B1F→B2F.
+**Authority:** [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md) · [floor transition](floor-transition.md)
 
-**Deferred hardening ([game #102](https://github.com/miramocha/griddungeon-game/issues/102) follow-up):** Play Mode tests that rapid-fire `LoadFloorArt` without a transition beat exposed edge cases (stale coroutine after back-to-back calls, cancel mid additive load at 90% progress, flaky `sceneLoaded` vs in-flight flags). **Not treated as a release blocker** while stairs behave in Play Mode; follow-up PR was reverted after test hangs.
+MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cinemachine) for stairs and hub stratum entry. Floor art loads **only during** that beat, in order:
 
-**Planned transition scene (post-MVP1):** When a dedicated **floor transition** beat exists (fade / full-screen / short additive scene), floor art should load **only during that beat**, in order:
-
-1. Transition starts (input gated, exploration hidden or masked).
+1. Transition starts (`FloorTransitionPresenter`; input gated via `ExplorationPresentationGate`).
 2. `UnloadFloorArt()` for the leaving floor — wait until unload completes if additive.
-3. `LoadFloorArt(floorKey, catalog)` for the entering floor — wait until mount or fail before ending transition.
-4. Transition ends — show exploration on the new floor.
+3. **OnThreshold** (or beat end if no marker): commit map/foes/spawn; then `LoadFloorArt(enterKey)` — wait until mount or fail.
+4. Transition ends — exploration FPV visible on the new floor.
 
-**Design rules (lock when implementing transition):**
+**Interim code (until presenter lands):** `ExplorationPhaseController.TryLoadTargetFloor` still calls `LoadFloorArt` synchronously after map/foe ready. Refactor removes that direct call when the presenter owns the change ([#102](https://github.com/miramocha/griddungeon-game/issues/102)).
+
+**Design rules (locked):**
 
 | Rule | Why |
 |------|-----|
-| **Single owner** for committing floor art per floor change | Avoid `LoadFloorArt` from both transition and `ExplorationPhaseController` on the same frame. |
+| **Single owner** (`FloorTransitionPresenter`) per floor change | Avoid `LoadFloorArt` from both transition and `ExplorationPhaseController` on the same frame. |
 | **No overlapping additive loads** | Prevents stale `s1_B*n*F` scenes and wrong mounted `FloorArtRoot`. |
-| **Revisit cancel / `sceneLoaded` unsubscribe** when transition can abort or skip | Only needed if load can be interrupted mid-beat; happy-path transition makes this rare. |
-| **Replace or rewrite** `FloorArtPresenterPlayModeTests` | Tests should drive transition enter → load → exit, not raw double `LoadFloorArt` on one frame. |
-
-If transition is **visual only** (fade on top, same synchronous `TryLoadTargetFloor` underneath), runtime behavior stays close to MVP1; the win is when transition **serializes** unload before load.
+| **Replace or rewrite** `FloorArtPresenterPlayModeTests` | Drive transition enter → load → exit, not raw double `LoadFloorArt` on one frame. |
+| **Fade-only fallback** if beat asset missing | Floor change must still complete. |
 
 ## Out of scope (this feature)
 
@@ -187,6 +185,7 @@ If transition is **visual only** (fade on top, same synchronous `TryLoadTargetFl
 
 ## Related
 
+- [Floor transition vignette](floor-transition.md) · [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
 - [04-tech-notes — Map authoring](../04-tech-notes.md#map-authoring--hud-adr-002)
 - [Exploration UI — DungeonView](exploration-ui.md#phase-system-vs-ui-visibility)
 - Game: `Assets/Scenes/Floors/README.md`, [#92](https://github.com/miramocha/griddungeon-game/issues/92), [#102](https://github.com/miramocha/griddungeon-game/issues/102)

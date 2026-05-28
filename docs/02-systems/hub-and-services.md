@@ -29,7 +29,7 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Shop buy / sell | Gold + stock row **pulse**; inventory slot update | Yes |
 | Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
-| Leave hub → stratum | Transition **fade** (pairs with phase change) | Yes — until exploration phase ready |
+| Leave hub → stratum | **Floor transition vignette** or fade fallback ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until exploration phase ready |
 | Menu item **focus** (hover / scroll) | Background camera **pans** to service building ([§ below](#hub-environment-presentation)) — **post-MVP1** | No — navigation stays live |
 
 ### Guild vs Navigator Office

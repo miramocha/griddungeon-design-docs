@@ -19,7 +19,9 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
   → Hub heal / save / equip
 ```
 
-**Not in MVP1:** synthesis, gather **minigame**, fishing, **FOE combat patrol / mid-battle join**, **autopilot**, cinematics, gamepad, 3D hub walk, multiplayer.
+**Not in MVP1:** synthesis, gather **minigame**, fishing, **FOE combat patrol / mid-battle join**, **autopilot**, **combat skill cinematics / QTE**, gamepad, 3D hub walk, multiplayer.
+
+**In MVP1 (presentation):** short **floor transition vignette** on stairs / hub stratum entry ([floor transition](02-systems/floor-transition.md), [ADR 032](../decisions/032-floor-transition-vignette-mvp1.md)) — not full combat cinematics.
 
 ---
 
@@ -46,6 +48,8 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 | ⬜ | Map cell art — composite walls, door overlay, sprites | [map-cell-art](02-systems/map-cell-art.md), [game #38](https://github.com/miramocha/griddungeon-game/issues/38) |
 | ✅ | Shared map grid painter (dedupe MapView + dev preview) | [game #26](https://github.com/miramocha/griddungeon-game/issues/26) |
 | ⬜ | Floor verticality + jump pads — **deferred**; flat B1F–B3F OK | [ADR 019](../decisions/019-floor-verticality.md) |
+| ⬜ | **Floor transition vignette** — black + 3D threshold, Cinemachine, serialized art load | [floor transition](02-systems/floor-transition.md), [ADR 032](../decisions/032-floor-transition-vignette-mvp1.md) · epic [#114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118)) |
+| ✅ | FPV floor art load/unload by `floorKey` | [floor art FPV](02-systems/floor-art-fpv.md), [game #102](https://github.com/miramocha/griddungeon-game/issues/102) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
 
