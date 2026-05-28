@@ -76,6 +76,8 @@ Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](
 | 3 Validate | [#78](https://github.com/miramocha/griddungeon-game/issues/78) |
 | ~~4 Export rows~~ | [#79](https://github.com/miramocha/griddungeon-game/issues/79) — **cancelled** (Unity asset is source of truth; no ASCII export to docs) |
 
+**Follow-up epic:** [#109](https://github.com/miramocha/griddungeon-game/issues/109) — story Event cells (`!`) + `storyEventId` on floor assets ([#110](https://github.com/miramocha/griddungeon-game/issues/110)–[#113](https://github.com/miramocha/griddungeon-game/issues/113)).
+
 ## Related
 
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
