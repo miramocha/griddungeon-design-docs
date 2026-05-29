@@ -95,8 +95,9 @@ FloorTransitionBeat (prefab)
 |--------|-------------------|
 | **`NotifyBeatEnd()`** | **Required** — ends door vignette; commit + floor art load run **after** this (or `durationMax` timeout) |
 | **`NotifyThreshold()`** | Optional mid-beat (SFX, door open); does **not** commit floor in current presenter |
+| **`FloorTransitionBeatTimelineEnd`** | Optional — `PlayableDirector.stopped` → `NotifyBeatEnd()`; skips auto beat-end timer on `FloorTransitionBeat` |
 
-Auto-timed signals: root component `m_thresholdSeconds` / `m_beatEndSeconds`, or Timeline/animation events with **Auto Schedule Signals** off.
+Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSeconds`, or Timeline via the helper above.
 
 ---
 

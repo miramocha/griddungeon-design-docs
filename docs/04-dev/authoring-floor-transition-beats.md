@@ -88,15 +88,31 @@ Component on the prefab root:
 
 | Field / API | Role |
 |-------------|------|
-| **`m_autoScheduleSignals`** | When enabled, `Start()` runs timed `NotifyThreshold` / `NotifyBeatEnd` |
-| **`m_thresholdSeconds`** | Time before `NotifyThreshold()` (default **1.5** s) — optional mid-beat hook |
-| **`m_beatEndSeconds`** | Total time before `NotifyBeatEnd()` (default **3** s) |
-| **`NotifyThreshold()`** | Timeline animation event or custom mid-beat (SFX, door open) |
+| **`FloorTransitionBeatTimelineEnd`** | Optional sibling component — director `stopped` → `NotifyBeatEnd()` (see below) |
+| **`m_autoScheduleSignals`** | Timer fallback on `FloorTransitionBeat` when no Timeline drives beat end |
+| **`m_thresholdSeconds`** | Auto mid-beat `NotifyThreshold()` (default **1.5** s) when auto schedule runs |
+| **`m_beatEndSeconds`** | Auto `NotifyBeatEnd()` only when **no** Timeline drives beat end (default **3** s) |
+| **`NotifyThreshold()`** | Timeline Signal / animation event / auto timer |
 | **`NotifyBeatEnd()`** | **Ends the door vignette** — presenter waits for this before second fade |
 
-**MVP1 presenter timing (locked in code):** floor **commit + map load** run **after** `BeatEndFired` (or catalog `durationMax` timeout), **not** on `OnThreshold`. Use threshold only for presentation inside the beat.
+**MVP1 presenter timing (locked in code):** floor **commit + map load** run **after** `BeatEndFired` (or catalog `durationMax` timeout), **not** on `OnThreshold`.
 
-Disable **Auto Schedule Signals** when Timeline (or Animator events) call `NotifyBeatEnd()` explicitly.
+### Timeline drives beat end (recommended)
+
+Uses optional **`FloorTransitionBeatTimelineEnd`** so timer-only beats (`stairs_default` without Timeline) stay unchanged.
+
+1. Add **`PlayableDirector`** on the beat root (or child) and assign a **Timeline** asset.
+2. Add **`FloorTransitionBeatTimelineEnd`** on the same root as **`FloorTransitionBeat`** (references auto-fill from the hierarchy).
+3. On Timeline end, **`PlayableDirector.stopped`** → **`NotifyBeatEnd()`**. No end-of-track Signal required.
+4. **Auto schedule:** `FloorTransitionBeat` skips the beat-end timer when the timeline helper is active; optional **`m_thresholdSeconds`** still runs if **Auto Schedule Signals** is on. Turn auto off if threshold also comes from Timeline Signals.
+5. Set catalog **`DurationMaxSeconds`** ≥ Timeline length (safety timeout if `stopped` never fires).
+6. If **Play On Awake** is off, enable **Play On Start If Not Awake** on the timeline helper (default on).
+
+You can still place a Timeline **Signal** calling `NotifyBeatEnd()` (redundant with `stopped`, harmless).
+
+### Timer-only (placeholder prefab)
+
+No Timeline asset → **Auto Schedule Signals** runs threshold + beat end from `m_thresholdSeconds` / `m_beatEndSeconds` (menu-generated `stairs_default` path).
 
 **Catalog `DurationMaxSeconds`** must be ≥ real beat length (Sync menu uses **3.5** s for stairs / hub enter). If the beat never fires `BeatEndFired`, the presenter logs a warning and continues at the safety limit.
 
