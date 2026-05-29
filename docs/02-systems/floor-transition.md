@@ -37,17 +37,18 @@ sequenceDiagram
     participant Art as FloorArtPresenter
     participant Map as MapSystem / FoeSystem
 
-    EPC->>FTP: BeginTransition(leave, enter, beatId)
-    FTP->>Gate: Acquire(floor_transition)
-    FTP->>FTP: Spawn vignette, CM priority up
-    Note over FTP: Black + 3D prop + camera
+    EPC->>FTP: RunTransition(leave, enter, beatId, commit)
+    FTP->>Gate: Acquire + HUD suppress
+    Note over FTP: Snap black; spawn beat; CM brain on
     FTP->>Art: UnloadFloorArt (await)
-    FTP->>FTP: OnThreshold
-    FTP->>Map: Load floor, spawn, saves
-    FTP->>Art: LoadFloorArt(enter) (await)
-    FTP->>FTP: End vignette, CM priority down
+    Note over FTP: Fade from black — door vignette
+    FTP->>FTP: BeatEndFired
+    Note over FTP: Fade to black; destroy beat
+    FTP->>Map: CommitFloorSession (map/foes; spawn per caller)
+    FTP->>Art: LoadFloorArt(enter) under black (await)
+    Note over FTP: FPV rig attach; fade in to level
     FTP->>Gate: Release
-    FTP->>EPC: Complete
+    FTP->>EPC: OnFinished → wire bindings
 ```
 
 | Type | Responsibility |
@@ -56,8 +57,10 @@ sequenceDiagram
 | **`ExplorationPhaseController`** | Campaign validation; builds `S1ExplorationTarget`; does **not** call `LoadFloorArt` directly when presenter is active |
 | **`FloorTransitionCatalog`** | `beatId` or `(leaveKey, enterKey)` → prefab / Timeline |
 | **`ExplorationPresentationGate`** | Blocks explore input + HUD interaction |
-| **`ExplorationCameraRig`** | Unchanged for FPV; deactivated or lower priority while transition vcams live |
-| **Beat prefab** | Prop + `CinemachineCamera`(s) + `PlayableDirector` optional |
+| **`ExplorationCameraRig`** | Off during beat; FPV re-attached **under black** before final fade-in |
+| **`ExplorationCameraSession`** | Cinemachine brain lock during beat; manual FPV parenting when brain off |
+| **`ScreenFadePresenter`** | UITK full-screen fade; lerps from **current** alpha (no flash when already black) |
+| **Beat prefab** | Prop + `CinemachineCamera`(s) + `PlayableDirector` optional; runtime spawn at **`y = -100`** by default |
 
 **Authority:** [ADR 017](../../decisions/017-game-phase-controller.md) — no new `GamePhase`.
 
@@ -118,6 +121,8 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 - Package: `com.unity.cinemachine` **3.x** (see game `Packages/manifest.json`).
 - **One** `CinemachineBrain` on main camera in bootstrap.
 - Transition vcams use **priority** over exploration follow (exploration may keep `ExplorationCameraRig` without CM migration in MVP1).
+- **`ExplorationCameraSession.SetTransitionBrainLock`** keeps the brain enabled for the whole beat; do not disable mid-vignette from rig detach or bootstrap hooks.
+- Main camera stays on the scene root during beats (not parented to `PartyPose`) so hiding party visuals does not trigger “no cameras rendering”.
 
 ---
 
@@ -160,13 +165,13 @@ Exploration must never soft-lock if art is missing.
 
 ## Implementation checklist (game repo)
 
-- [ ] `CinemachineBrain` on main camera (DevBootstrap)
-- [ ] `FloorTransitionPresenter` + `FloorTransitionCatalog`
-- [ ] Refactor `TryChangeFloor` / hub enter to use presenter
-- [ ] Remove duplicate `LoadFloorArt` from direct `TryLoadTargetFloor` path when presenter runs
-- [ ] Content: `Assets/Scenes/Transitions/stairs_default` prefab
-- [ ] `FloorTransitionBeat.NotifyBeatEnd` ends vignette; commit after second fade (see [authoring guide](../04-dev/authoring-floor-transition-beats.md))
-- [ ] Play Mode / manual QA per acceptance criteria above
+- [x] `CinemachineBrain` on main camera (DevBootstrap)
+- [x] `FloorTransitionPresenter` + `FloorTransitionCatalog` + `ScreenFadePresenter` (UITK)
+- [x] `TryChangeFloor` / hub enter via presenter; hub commit spawns party before final fade-in
+- [x] Presenter-owned `LoadFloorArt` / unload (no duplicate load on same transition)
+- [x] Content: `Assets/Scenes/Transitions/Prefabs/stairs_default.prefab` + catalog sync menu
+- [x] `NotifyBeatEnd` ends door vignette; commit + load after second fade (see [authoring guide](../04-dev/authoring-floor-transition-beats.md))
+- [ ] Play Mode automated transition test ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); manual QA per acceptance criteria above
 
 ---
 

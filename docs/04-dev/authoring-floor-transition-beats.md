@@ -72,7 +72,7 @@ stairs_default                    ← FloorTransitionBeat (root)
 
 | Rule | Why |
 |------|-----|
-| Root at world origin when spawned | Presenter `Instantiate`s with no parent offset |
+| Prefab authored at origin | Presenter spawns at **`y = -100`** by default (`m_beatSpawnWorldY`) so beat + transition vcams stay under the MVP1 dungeon plane (`y = 0`) |
 | **No colliders** on backdrop / door primitives | Beat is presentation-only |
 | **Two+ `CinemachineCamera`** under root | Presenter sets priority **100+** on all child vcams |
 | Look target = door / threshold | Wide + close shots share one `TrackingTarget` |
@@ -125,7 +125,9 @@ No Timeline asset → **Auto Schedule Signals** runs threshold + beat end from `
 | Package | `com.unity.cinemachine` **3.x** (game manifest) |
 | Session brain | **One** `CinemachineBrain` on main camera — **Create Dev Bootstrap** / `DevSceneComposition` |
 | Beat cameras | `CinemachineCamera` children; presenter raises **Priority** to **100+** while beat lives |
-| Exploration FPV | `ExplorationCameraRig` **disabled** during beat; re-enabled before final unfade to level |
+| Exploration FPV | `ExplorationCameraRig` **disabled** during beat; re-attached at spawn **under black**, then final unfade |
+| Brain lock | `ExplorationCameraSession.SetTransitionBrainLock` — brain stays on for whole beat |
+| Party pose hide | `m_partyPoseRoot` or auto from `ExplorationCameraRig.PartyPose`; hides **PartyVisual** child when present |
 
 Authoring tips:
 
@@ -163,16 +165,20 @@ sequenceDiagram
     participant F as ScreenFade
     participant B as Beat prefab
 
-    P->>F: Fade to black
-    P->>P: Unload prior floor art
-    P->>B: Spawn beat (dungeon hidden)
+    Note over P,F: Transition start — snap black (hub: hide DungeonView)
+    P->>B: Spawn beat early (y=-100); CM brain lock on
+    P->>P: Unload prior floor art (under black)
     P->>F: Fade from black (door visible)
     B-->>P: BeatEndFired
     P->>F: Fade to black
-    P->>P: Commit floor session (map, spawn, saves)
+    P->>B: Destroy beat; brain lock off
+    P->>P: Commit (map/foes; hub also SpawnParty here)
     P->>P: Load destination floor art (under black)
-    P->>F: Fade in to exploration FPV
+    P->>P: Attach ExplorationCameraRig at spawn FPV
+    P->>F: Fade in to exploration
 ```
+
+**Hub enter (`hub_enter_stratum`):** `LeaveFloorKey` is empty — no extra fade-to at vignette start (already black). Party must be at entry cell **before** the final fade-in (`CommitHubEnterFloorSession`); `CompleteExplorationEnter` does **not** re-spawn from Hub.
 
 Input and exploration HUD are suppressed for the whole transition (`ExplorationPresentationGate`).
 
@@ -195,7 +201,13 @@ Post-MVP1: per-pair rows such as `leave=s1_B1F`, `enter=s1_B2F` without code cha
 
 ## Screen fade (UITK)
 
-Floor transitions use **`ScreenFadePresenter`** on a child **`ScreenFade`** under `Game` (UI Toolkit full-screen `backgroundColor`, high sort order). Wired on `GameState` by Dev Bootstrap.
+Floor transitions use **`ScreenFadePresenter`** on a child **`ScreenFade`** under `Game` (UI Toolkit full-screen `backgroundColor`, sort order **10000**). Wired on `GameState` by Dev Bootstrap.
+
+| Behavior | Detail |
+|----------|--------|
+| Alpha | `FadeTo` / `FadeFrom` lerp from **current** overlay alpha — no flash when already opaque |
+| Vignette start | `SnapFadeOpaque` at transition start; **no** redundant fade-to before door when already black |
+| Final reveal | FPV attached while opaque, then single fade-in |
 
 If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `ScreenFadePresenter` refs are assigned. Do not stack uGUI `Image` fades on the same HUD.
 
@@ -222,7 +234,11 @@ If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `
 | Door flashes, level never loads | `BeatEnd` never fires and `durationMax` too low | Raise **Duration Max**; fix Timeline / auto schedule |
 | Stuck on door, old floor | Commit failed; check Console | Campaign gates (B1F `v` needs Act 3); save errors |
 | Fade invisible | `ScreenFade` unwired | **Create Dev Bootstrap** |
+| Door flashes during fade | Fade lerped from α0 while already black | Fixed in `ScreenFadePresenter` — update game repo if regressed |
+| Camera snaps to spawn mid-fade | Party placed after fade-in | Hub: spawn in commit; rig attach before `FadeFromColor` on reveal |
+| Party mesh visible during beat | `m_partyPoseRoot` unset | **Create Dev Bootstrap** or ensure `ExplorationCameraRig` on `PartyPose` (runtime resolves pose) |
 | Door visible but FPV wrong | Art load after commit | Check `FloorArtCatalog` entry for `enterFloorKey` |
+| No Cinemachine motion | Brain disabled mid-beat | Check transition brain lock; no `AfterSceneLoad` brain disable during vignette |
 | No Cinemachine motion | Brain missing on main cam | Dev Bootstrap → `EnsureCinemachineBrain` |
 
 ---

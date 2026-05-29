@@ -1,12 +1,42 @@
 ---
-description: UI Toolkit UXML, USS, and C# binding conventions
+description: UI Toolkit first — UXML/USS conventions; ask the user before any new uGUI (Canvas/Image)
 globs: "**/*.{uxml,uss}"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # UI Toolkit (Unity style guide)
 
 From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). C# scripts: `unity-csharp-naming` + `unity-csharp-formatting`. **UXML/USS class names use BEM**, not C# PascalCase.
+
+## UI Toolkit vs uGUI (Canvas)
+
+**Default for Grid Dungeon:** **UI Toolkit** (`UIDocument`, UXML/USS, `VisualElement`) for player-facing HUD, menus, full-screen overlays (e.g. `ScreenFadePresenter`), and Editor tools ([`unity-editor-ui-toolkit.mdc`](unity-editor-ui-toolkit.mdc) in design-docs).
+
+**Do not add new uGUI** (`UnityEngine.UI` — `Canvas`, `Image`, `Button`, legacy `Text`) without **explicit user approval**.
+
+### Before implementing uGUI — ask first
+
+If a task would use any of the following, **stop and ask the user** before coding. Propose a UITK approach and wait for confirmation:
+
+- `Canvas`, `CanvasScaler`, `GraphicRaycaster`, `ScreenSpaceOverlay`
+- `Image`, `RawImage`, `Mask`, uGUI `Text` / `Button`
+- A second overlay stack that competes with existing `UIDocument` + `GamePanelSettings`
+
+**UITK alternatives to suggest:** full-screen `VisualElement` + `style.backgroundColor` / opacity; shared `Assets/UI/Settings/GamePanelSettings.asset`; `UIDocument.sortingOrder` above HUD (e.g. screen fade at **10000**).
+
+### When uGUI may be acceptable (still confirm with user)
+
+- User explicitly requested uGUI for that feature
+- Third-party asset requires uGUI and has no UITK path (state why in code or PR)
+- Touching legacy uGUI already in scene — prefer migrating to UITK unless user scopes a uGUI-only fix
+
+### Project examples (UITK)
+
+| Feature | Approach |
+|---------|----------|
+| Exploration / Hub / Combat HUD | `UIDocument` + UXML under `Assets/UI/Screens/` |
+| Screen fade | `ScreenFadePresenter` on child `ScreenFade` — UITK overlay, not `Image` |
+| Editor tools | UITK `CreateGUI` — see design-docs `unity-editor-ui-toolkit.mdc` |
 
 ## Separation of concerns
 

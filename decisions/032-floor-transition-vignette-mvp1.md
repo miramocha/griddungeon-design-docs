@@ -36,19 +36,20 @@ Floor changes (stairs, hub re-entry, campaign warp) today load map data and floo
 | 3D prop, camera, audio | Beat prefab / Timeline under `Assets/Scenes/Transitions/` |
 | Macro phase | Unchanged — **no** `GamePhase.FloorTransition` |
 
-**Commit timing (locked):** floor data + art load at **`OnThreshold`** animation/Timeline notification (door open / step into closet). If beat has no marker, commit at **beat end** before fade-up.
+**Commit timing (locked):** floor **map/foe commit** runs **after** the door vignette ends (`NotifyBeatEnd` or catalog `durationMax`), on the **second fade to black** — **not** on `NotifyThreshold`. `NotifyThreshold` is optional (SFX / door open) only. Hub → stratum also **spawns the party** in the commit delegate (`CommitHubEnterFloorSession`) before the final fade-in.
 
 ### 3. Load sequence (replaces same-frame load)
 
-During `TryChangeFloor` / hub enter exploration:
+During `TryChangeFloor` / hub enter exploration (vignette path — see [authoring guide](../docs/04-dev/authoring-floor-transition-beats.md#what-the-player-sees-stairs_default)):
 
-1. `ExplorationPresentationGate.Acquire("floor_transition")`
-2. Hide or freeze FPV + map HUD under black
-3. Play vignette (Cinemachine priority → transition vcams)
-4. `FloorArtPresenter.UnloadFloorArt()` — await complete
-5. Commit logic floor (`MapSystem`, foes, spawn) — **not** before threshold unless beat specifies end-only
-6. `FloorArtPresenter.LoadFloorArt(enterKey)` — await complete
-7. End vignette; release gate; restore exploration camera
+1. `ExplorationPresentationGate` acquire + HUD suppress; exploration rig off; screen **snap/fade to black**
+2. Spawn beat prefab (if catalog resolves); Cinemachine brain **on** for transition vcams
+3. `UnloadFloorArt()` — await complete (dungeon view may stay hidden for hub enter)
+4. Fade **from** black — door beat visible
+5. Wait for `BeatEndFired` → fade **to** black → destroy beat
+6. **Commit** delegate (map, foes; stairs: spawn via `ApplyFloorSessionSideEffects`; hub: spawn in commit)
+7. `LoadFloorArt(enterKey)` under black — await complete
+8. Attach `ExplorationCameraRig` at spawn FPV — fade **in** to level; release gate
 
 **Rule:** `LoadFloorArt` must **not** be called from both `ExplorationPhaseController` and `FloorTransitionPresenter` on the same change ([floor art FPV](../docs/02-systems/floor-art-fpv.md)).
 

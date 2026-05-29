@@ -109,14 +109,16 @@ sequenceDiagram
 
 **Authority:** [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md) · [floor transition](floor-transition.md)
 
-MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cinemachine) for stairs and hub stratum entry. Floor art loads **only during** that beat, in order:
+MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cinemachine) for stairs and hub stratum entry. Floor art loads **only** through `FloorTransitionPresenter`, in order:
 
-1. Transition starts (`FloorTransitionPresenter`; input gated via `ExplorationPresentationGate`).
-2. `UnloadFloorArt()` for the leaving floor — wait until unload completes if additive.
-3. **OnThreshold** (or beat end if no marker): commit map/foes/spawn; then `LoadFloorArt(enterKey)` — wait until mount or fail.
-4. Transition ends — exploration FPV visible on the new floor.
+1. Transition starts (`FloorTransitionPresenter`; input/HUD gated via `ExplorationPresentationGate`).
+2. `UnloadFloorArt()` for the leaving floor — await complete.
+3. Door beat plays (fade from black → vignette → fade to black on `BeatEndFired`).
+4. **Commit** delegate (map/foes; spawn per caller — hub spawns in commit before reveal).
+5. `LoadFloorArt(enterKey)` under black — await mount or fail.
+6. FPV rig attach at spawn — fade in to exploration.
 
-**Interim code (until presenter lands):** `ExplorationPhaseController.TryLoadTargetFloor` still calls `LoadFloorArt` synchronously after map/foe ready. Refactor removes that direct call when the presenter owns the change ([#102](https://github.com/miramocha/griddungeon-game/issues/102)).
+**Authoring / QA:** [authoring floor transition beats](../04-dev/authoring-floor-transition-beats.md). `NotifyThreshold` does **not** commit floor in the current presenter.
 
 **Design rules (locked):**
 
