@@ -65,6 +65,8 @@ sequenceDiagram
 
 ## Beat content (authoring)
 
+**Step-by-step prefab + catalog guide:** [Authoring floor transition beats](../04-dev/authoring-floor-transition-beats.md) (game menu paths, `stairs_default` hierarchy, QA).
+
 ### Prefab layout
 
 ```text
@@ -84,15 +86,17 @@ FloorTransitionBeat (prefab)
 |-------|---------|
 | `beatId` | e.g. `stairs_default` |
 | `prefab` | Vignette root |
-| `durationMax` | Safety timeout if Timeline missing |
-| `leaveFloorKey` / `enterFloorKey` | Optional filter; null = wildcard |
+| `durationMax` | Safety timeout if `BeatEndFired` never fires |
+| `leaveFloorKey` / `enterFloorKey` | Optional filter; empty = wildcard |
 
-### Animation / Timeline signals
+### Beat signals (`FloorTransitionBeat`)
 
-| Signal | When |
-|--------|------|
-| **`OnThreshold`** | Commit floor + load art (preferred) |
-| **`OnBeatEnd`** | Fade up exploration; use if no threshold marker |
+| Signal | MVP1 presenter use |
+|--------|-------------------|
+| **`NotifyBeatEnd()`** | **Required** — ends door vignette; commit + floor art load run **after** this (or `durationMax` timeout) |
+| **`NotifyThreshold()`** | Optional mid-beat (SFX, door open); does **not** commit floor in current presenter |
+
+Auto-timed signals: root component `m_thresholdSeconds` / `m_beatEndSeconds`, or Timeline/animation events with **Auto Schedule Signals** off.
 
 ---
 
@@ -160,13 +164,14 @@ Exploration must never soft-lock if art is missing.
 - [ ] Refactor `TryChangeFloor` / hub enter to use presenter
 - [ ] Remove duplicate `LoadFloorArt` from direct `TryLoadTargetFloor` path when presenter runs
 - [ ] Content: `Assets/Scenes/Transitions/stairs_default` prefab
-- [ ] Wire `OnThreshold` → commit
+- [ ] `FloorTransitionBeat.NotifyBeatEnd` ends vignette; commit after second fade (see [authoring guide](../04-dev/authoring-floor-transition-beats.md))
 - [ ] Play Mode / manual QA per acceptance criteria above
 
 ---
 
 ## Related
 
+- [Authoring floor transition beats](../04-dev/authoring-floor-transition-beats.md)
 - [Floor art FPV — transitions](floor-art-fpv.md#floor-transitions--mvp1-locked)
 - [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
 - [mvp1-spec](../mvp1-spec.md)
