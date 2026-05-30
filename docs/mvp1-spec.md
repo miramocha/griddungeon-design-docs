@@ -2,7 +2,7 @@
 
 Single checklist for the **first playable**. Locked exploration/combat rules: [ADR 014](../decisions/014-mvp1-exploration-map.md), [ADR 015](../decisions/015-mvp1-combat.md). Scope table: [release scope](00-release-scope.md).
 
-**Status (synced 2026-05-28):** Core explore/combat/save/campaign and S1 floor assets are in. **Blocking first playable:** [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB · [#52](https://github.com/miramocha/griddungeon-game/issues/52) / [#11](https://github.com/miramocha/griddungeon-game/issues/11) skills · [#31](https://github.com/miramocha/griddungeon-game/issues/31) XP+loot · [#88](https://github.com/miramocha/griddungeon-game/issues/88) guided tutorials · [#15](https://github.com/miramocha/griddungeon-game/issues/15) vertical slice.
+**Status (synced 2026-05-29):** Core explore/combat/save/campaign and S1 floor assets are in. **Blocking first playable:** [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB · [#52](https://github.com/miramocha/griddungeon-game/issues/52) / [#11](https://github.com/miramocha/griddungeon-game/issues/11) skills · [#31](https://github.com/miramocha/griddungeon-game/issues/31) XP+loot · [#88](https://github.com/miramocha/griddungeon-game/issues/88) guided tutorials · [#15](https://github.com/miramocha/griddungeon-game/issues/15) vertical slice.
 
 ---
 
@@ -48,7 +48,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 | ⬜ | Map cell art — composite walls, door overlay, sprites | [map-cell-art](02-systems/map-cell-art.md), [game #38](https://github.com/miramocha/griddungeon-game/issues/38) |
 | ✅ | Shared map grid painter (dedupe MapView + dev preview) | [game #26](https://github.com/miramocha/griddungeon-game/issues/26) |
 | ⬜ | Floor verticality + jump pads — **deferred**; flat B1F–B3F OK | [ADR 019](../decisions/019-floor-verticality.md) |
-| ⬜ | **Floor transition vignette** — black + 3D threshold, Cinemachine, serialized art load | [floor transition](02-systems/floor-transition.md), [ADR 032](../decisions/032-floor-transition-vignette-mvp1.md) · epic [#114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118)) |
+| ✅ | **Floor transition vignette** — black + 3D threshold, Cinemachine, serialized art load | [floor transition](02-systems/floor-transition.md), [ADR 032](../decisions/032-floor-transition-vignette-mvp1.md) · epic [#114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118), [#120](https://github.com/miramocha/griddungeon-game/issues/120)) |
 | ✅ | FPV floor art load/unload by `floorKey` | [floor art FPV](02-systems/floor-art-fpv.md), [game #102](https://github.com/miramocha/griddungeon-game/issues/102) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
