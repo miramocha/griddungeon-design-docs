@@ -60,7 +60,7 @@ After **Attack** or single-target **Skill** requires a target:
 
 ### Summon / per-slot player turns
 
-Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player control ([ADR 016](016-summon-control-mvp1.md)). Skill/item **sub-menus** when shipped ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+) use the same navigator.
+Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player control ([ADR 016](016-summon-control-mvp1.md)). **Skill use picker** ([ADR 035](035-skill-use-picker.md)): row list uses this navigator; **tab cycle** uses **`Q`/`E`** (MVP1); gamepad **`L1`/`R1`** deferred. Item sub-menu deferred.
 
 ### Implementation notes
 

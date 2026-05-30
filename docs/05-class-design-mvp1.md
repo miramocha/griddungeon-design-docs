@@ -135,6 +135,7 @@ class SkillDefinition : ScriptableObject
     string cinematicAssetId;      // when presentation != Fixed; Timeline prefab ref ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
     StatusInflict? inflictStatus; // optional on-hit status
     string summonDefinitionId;    // set if skillType == Deploy
+    // SkillUseContext flags (Combat / Field) — ADR 035; picker tabs: default All + SkillType ([ADR 035](../decisions/035-skill-use-picker.md))
     // CinematicQTE: qteBonus multipliers on skill or linked SO — prompt timing on Timeline markers only
 }
 
@@ -994,6 +995,7 @@ class GuildService
     IReadOnlyList<Combatant> Roster { get; }
     void CreateCharacter(string name, string classId, string portraitId);
     void AssignToParty(string characterId, int coreSlot);
+    /// <summary>Hub or exploration party menu — [ADR 034](../decisions/034-skill-point-allocation-outside-combat.md).</summary>
     void AllocateSkillPoint(string characterId, string skillId);
 }
 

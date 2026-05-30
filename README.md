@@ -89,6 +89,8 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 024 — Protocol Transform](decisions/024-protocol-transform.md) | Accepted | `protocol_transform` slot-replaces one core with Navigator transform profile |
 | [ADR 025 — Campaign exploration target](decisions/025-campaign-exploration-target.md) | Proposed (stub) | Neutral `ExplorationTarget` DTO; per-stratum campaign policy (`S1` / `S2+`); defer until second stratum |
 | [ADR 027 — Combat cinematic Timeline events](decisions/027-combat-cinematic-timeline-events.md) | Accepted | `PlayableDirector.stopped` + QTE markers; no `at_sec` in skill data |
+| [ADR 034 — Skill point allocation outside combat](decisions/034-skill-point-allocation-outside-combat.md) | Accepted | Class trees in hub or labyrinth when not in combat / story / cutscene |
+| [ADR 035 — Skill use picker](decisions/035-skill-use-picker.md) | Accepted | Modal picker; default tab **All**; type tabs from `SkillType`; swappable `ISkillUsePickerView` |
 
 ## Resolved
 
@@ -106,6 +108,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Input:** PC defaults ([input bindings](docs/02-systems/input-bindings.md), [ADR 009](decisions/009-input-bindings-pc.md))
 - **FOE mid-battle join:** MVP2 with combat patrol ([ADR 005](decisions/005-foe-combat-patrol.md), [010](decisions/010-chain-foe-battle.md)); **off in MVP1**
 - **FOE flee:** Escapable; success → **1 cell back**; **disabled** if wall behind ([ADR 011](decisions/011-foe-flee-retreat.md))
+- **Skill points:** Spend on class trees in hub or labyrinth when safe — not combat / VN / cutscene ([ADR 034](decisions/034-skill-point-allocation-outside-combat.md))
 
 ## MVP2 (scoped)
 

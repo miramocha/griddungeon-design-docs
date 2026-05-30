@@ -80,7 +80,7 @@ After **Attack** or a **single-target** skill during command planning ([#60](htt
 |---------|-------|
 | Attack | Weapon hit; target enemy slot |
 | Guard | Damage reduction until next turn |
-| Skill | Class skill; may **place summon** in aux slot |
+| Skill | Class skill; opens **use picker** (default tab **All**, type tabs per [ADR 035](../../decisions/035-skill-use-picker.md)); may **place summon** in aux slot |
 | Item | Usable consumables |
 | Flee | Queued in command planning like other commands; **resolves on that core’s AGI turn** (not instant). Success roll via `FleeCalculator` (see [§ Flee success](#flee-success-mvp1)); may fail (wasted turn). Retreat cell rule: [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) |
 | Protocol | **Navigator executes**; Synchro 100%; uses the acting **core** member’s AGI turn (`CombatCommand.Protocol` + skill id) |

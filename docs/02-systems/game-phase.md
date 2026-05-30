@@ -361,6 +361,18 @@ sealed class GameState : MonoBehaviour
 
 `TryTransitionTo` calls `OnExit` on the old controller, updates `Current`, calls `OnEnter` on the new controller, then raises `PhaseChanged` (forwarded by `GameState`). Boot uses `BeginAt(Hub)` so initial `OnEnter` runs without a transition event.
 
+## Skill point allocation (UI gate)
+
+**Locked:** [ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md). Class skill trees are editable only when **not** in combat, an active story/VN event, or a cutscene / presentation lock ([character progression § Skill points](character-progression.md#skill-points)).
+
+| Macro phase | Skill trees |
+|-------------|-------------|
+| **Hub** | Yes — Explorers Guild and party menu paths |
+| **Exploration** | Yes — `Tab` party menu / pause **Skills** when no story runner or vignette lock |
+| **Combat** | **No** — including post-battle reward UI until back to Exploration or Hub |
+
+Implementation: gate `GuildService` / party skill UI on `GamePhase` + `StoryEventRunner` + presentation gates — not “hub only.”
+
 ## Input maps per phase
 
 | Game phase | Input System maps (enabled) |

@@ -72,7 +72,7 @@ See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
 - [ ] Win a fight with **6 party members** and **AGI turn order** visible
 - [ ] New game: B1F movement tutorial → hub party setup → tutorial dive from B1F gate
 - [ ] Return to hub via **in-world** paths only (gate stairs, items, exits/gates, events, defeat) — not pause menu; pause → **quit to title**
-- [ ] After hub return: save, heal, spend **skill point**, re-enter with **map intact**
+- [ ] After hub return: save, heal, re-enter with **map intact**; spend **skill points** in hub or in labyrinth when not in combat / story / cutscene
 - [ ] **Synchro** tutorial: B2F FOE crisis AOE → VN → guided `protocol_strike` → hub warp
 
 ## Related docs

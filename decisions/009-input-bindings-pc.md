@@ -21,6 +21,8 @@
 
 Combat **player command UI** (planning, targeting, summon/per-slot control): superseded by [ADR 026 — Combat menu focus navigation](026-combat-menu-focus-navigation.md) (`Z` confirm, `X` cancel/Back, arrows + `W`/`A`/`S`/`D` on `MenuNavigate` per [2026-05-23 amendment](026-combat-menu-focus-navigation.md#amendment-2026-05-23-wasd-menu-navigate), no direct `Z`/`X`/`C`/`V`/`B` commands, no `R` Back). Exploration, map, and hub deferrals unchanged.
 
+**Skill use picker** ([ADR 035](035-skill-use-picker.md)): while modal open, **`Q`/`E`** = previous/next tab (not exploration turn). Gamepad **`L1`/`R1`** tab cycle **deferred** with general gamepad support.
+
 ## Related
 
 - [Input bindings](../docs/02-systems/input-bindings.md)

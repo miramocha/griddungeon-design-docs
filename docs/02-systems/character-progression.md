@@ -23,7 +23,25 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 ## Skill points
 
-- Spent at **hub only** on class trees.
+**Locked:** [ADR 034 — Skill point allocation outside combat](../../decisions/034-skill-point-allocation-outside-combat.md).
+
+**When:** Spend unspent points on **class skill trees** whenever the player is **not** in:
+
+| Blocked | Examples |
+|---------|----------|
+| **Combat** | `GamePhase.Combat` — command planning, AGI playback, battle end flow |
+| **Story / VN** | `StoryEventRunner` active ([ADR 028](../../decisions/028-story-visual-novel-events.md)) |
+| **Cutscenes / presentation locks** | Floor-transition vignette, guided-tutorial coach blocking input, any full-screen sequence that disables exploration/hub menus |
+
+**Allowed:** **Hub** (Explorers Guild) and **Exploration** (e.g. `Tab` party menu, exploration pause overlay) — same tree UI and rules in both places. Level-ups during a fight apply **after** the battle ends; the player may spend new points on the next safe screen without returning to hub.
+
+**UI entry points (MVP1):**
+
+| Location | How |
+|----------|-----|
+| Hub | Explorers Guild → skill tree per roster member |
+| Labyrinth | Party / pause menu → **Skills** (when not blocked above) |
+
 - Respec: expensive NPC service or none in MVP1.
 
 ## Equipment

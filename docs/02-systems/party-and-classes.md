@@ -65,7 +65,7 @@ Coordinated team skills via [Synchro Charge](synchro-protocol.md); **Navigator e
 ## Skill trees (EO model)
 
 - Each class has a **skill tree** (tabs or tiers).
-- **Skill points** on level up; allocate at hub only.
+- **Skill points** on level up; allocate on class trees per [ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md) — hub Guild or labyrinth party menu when safe.
 - Skills cost **levels** in prerequisites; some grant passives.
 - Summon skills target **aux front** or **aux back** per definition.
 - No multiclass in MVP1.

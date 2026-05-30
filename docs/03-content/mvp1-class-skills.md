@@ -13,7 +13,8 @@
 | **Presentation** | **Fixed** for every MVP1 class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
 | **Deploy** | **Summoner only** — `deploy_test_drone` per [ADR 016](../../decisions/016-summon-control-mvp1.md); targets **aux back** |
 | **Summon turns** | **Player-controlled** — minimal kit on `SummonDefinition` ([summons & guests](../02-systems/summons-and-guests.md)) |
-| **Tree (MVP1)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node at hub |
+| **Tree (MVP1)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
 | **Numbers** | `mpCost`, `powerByRank[]`, inflict `%` — **tuning** in data; structure locked |
 
 ### Targeting (`TargetKind`)

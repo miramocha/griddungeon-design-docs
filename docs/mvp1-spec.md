@@ -85,7 +85,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 | ✅ | Inn save, hospital, shop, Guild + **Navigator Office** (services + UX) | [game #13](https://github.com/miramocha/griddungeon-game/issues/13), [hub](02-systems/hub-and-services.md) |
 | ✅ | **SaveGame** JSON persist (inn, map, FOE, S1 campaign flags) | [game #32](https://github.com/miramocha/griddungeon-game/issues/32), [map save format](02-systems/map-reveal-save-format.md) |
 | ✅ | **Campaign:** S1 flags, new-game bootstrap, spawn routing | [game #33](https://github.com/miramocha/griddungeon-game/issues/33), [campaign/s1-intro](03-content/campaign/s1-intro.md) · S2+ resolver split [ADR 025](../decisions/025-campaign-exploration-target.md) (stub) |
-| ✅ | 6 classes day one; skill points at hub | [party](02-systems/party-and-classes.md) |
+| ✅ | 6 classes day one; skill points (hub + labyrinth when safe) | [ADR 034](../decisions/034-skill-point-allocation-outside-combat.md), [party](02-systems/party-and-classes.md) |
 | ✅ | Stats: HP, MP, STR, TEC, AGI, VIT, LUC | [progression](02-systems/character-progression.md) |
 | ✅ | 1 Navigator + 2 Protocol skills (MVP1 kit) | [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md) |
 | ⬜ | 3 skills per class minimum — **kits authored** ([design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3) closed) | [MVP1 class skills](03-content/mvp1-class-skills.md) · ship in [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |

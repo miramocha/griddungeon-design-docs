@@ -6,7 +6,7 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 
 | Service | Function |
 |---------|----------|
-| **Explorers Guild** | Create/recruit **core** characters; register **6-member** party; allocate **skill points**; view class skill trees |
+| **Explorers Guild** | Create/recruit **core** characters; register **6-member** party; **skill trees** ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit — **2D portrait roster** in UI ([navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)); **not** the labyrinth bottom-right 3D rig ([navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
@@ -39,10 +39,10 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 |---|---------------------|------------------------|
 | **Who** | Six **core** guild members | **Navigators** (party leads, off-formation) |
 | **Recruitment** | Yes — create/recruit core roster | **No** — unlock via strata / quests / events |
-| **Party prep** | Formation, equipment, skill trees | Pick **one active** Navigator + aura/Protocol preview |
-| **In labyrinth** | Fight, explore, earn XP | Protocol execution + passives only |
+| **Party prep** | Formation, equipment, skill trees (hub) | Pick **one active** Navigator + aura/Protocol preview |
+| **In labyrinth** | Fight, explore, earn XP; **skill trees** via party menu when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) | Protocol execution + passives only |
 
-Prepare at **both** before entering the stratum (order in UI flexible).
+Prepare roster and Navigator before a dive when convenient; **skill points** need not wait for hub return.
 
 ## Hub environment presentation
 

@@ -176,6 +176,8 @@ Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the sid
 
 ### ExplorationPauseView
 
+**Skills (spec):** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)), pause or `Tab` party menu opens the same class skill tree as hub Guild.
+
 | Action | Behavior |
 |--------|----------|
 | Open (`Esc` when map not fullscreen) | `MapInputHandler` → `Open()`; toggles `hud-overlay--hidden` on `exploration-pause` |

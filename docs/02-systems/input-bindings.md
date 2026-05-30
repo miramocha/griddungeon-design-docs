@@ -27,8 +27,8 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
 | **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
-| **Party / menu** | `Tab` | Inventory, formation summary (exploration-safe) |
-| **Pause** | `Esc` | Pause menu: **Resume**, **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
+| **Party / menu** | `Tab` | Inventory, formation summary, **skill trees** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Pause** | `Esc` | Pause menu: **Resume**, **Skills** (same gate as party menu), **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 
@@ -117,6 +117,23 @@ Living cores already queued during planning — **no** per-core command bar on A
 
 Optional **confirm all assignments** before AGI playback — [#44](https://github.com/miramocha/griddungeon-game/issues/44); **not** the same as per-command **`Z`** confirm.
 
+### Skill use picker (modal)
+
+When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-picker.md)) — after **Skill** on the command bar or **Use skill** in field UI:
+
+| Action | Keyboard (MVP1) | Notes |
+|--------|-----------------|-------|
+| **Previous tab** | **`Q`** | Cycles visible tabs (wrap); default tab **All** |
+| **Next tab** | **`E`** | |
+| **Move row focus** | Arrows or `W` / `A` / `S` / `D` | Active tab’s skill list only |
+| **Confirm skill** | `Z` or `Enter` | Then combat targeting or field apply |
+| **Cancel picker** | `X` | Close modal; no command queued |
+| **Pick tab (optional)** | LMB on tab | Same tabs as Q/E cycle |
+
+**Deferred:** gamepad — **`L1`/`R1`** tab cycle and shoulder/d-pad row nav when platform gamepad support ships ([ADR 009](../../decisions/009-input-bindings-pc.md)); not required for picker MVP1.
+
+**Scope:** `InputRouter` enables **`SkillPickerTabPrev` / `SkillPickerTabNext`** only while the picker is open. **`Q`/`E`** must **not** emit exploration turn events during this overlay (combat has no exploration map; field picker runs under pause/party modal with movement already blocked).
+
 ### Combat UI (any time in fight)
 
 | Action | Input | Notes |
@@ -165,6 +182,7 @@ Exploration
 
 Combat
   MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X on MenuNavigate composite
+  SkillPickerTabPrev, SkillPickerTabNext    # ADR 035 — Q / E (MVP1); L1 / R1 deferred; only while picker open
   ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
   CycleTarget                             # deferred; targeting uses MenuNavigate on roster
