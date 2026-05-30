@@ -3,7 +3,8 @@ name: blender-bone-remap
 description: >-
   Remaps and renames Blender armature bones (especially VRoid/VRM rigs) to a
   consistent lowercase convention with .l/.r mirror suffixes, updates vertex
-  groups and animation paths, and handles hair strand mirror pairs. Use when the
+  groups and animation paths, and optional hair strand mirror pairing when the user
+  confirms pairs. Use when the
   user asks to rename, clean up, or standardize bones, vertex groups, rig
   naming, VRoid hair bones, or symmetry/mirror bone pairs in Blender.
 ---
@@ -25,7 +26,9 @@ Requires a **connected Blender MCP** (`execute_blender_code`) unless the user on
 3. **Dry-run** the full `old → new` map; report duplicates and unmapped bones.
 4. **Save** or remind the user to save before applying.
 
-Use AskQuestion when rules are ambiguous (abbreviation expansion, mirror strand pairs, `.l` vs `.L`, `_hairends` handling).
+Use AskQuestion when rules are ambiguous (abbreviation expansion, `.l` vs `.L`, `_hairends` handling).
+
+**Before any hair mirror pairing:** VRoid strand numbers in bone names (`Hair1_03`, `Hair2_07_L`) are **not** mirror metadata — they are independent strand ids. **Ask the user** whether any physical strands should be treated as left/right pairs for Blender X-Axis Mirror (see below). Do **not** assume 01↔03 / 02↔04 unless they confirm.
 
 ## Naming standard (default)
 
@@ -42,20 +45,30 @@ Use AskQuestion when rules are ambiguous (abbreviation expansion, mirror strand 
 **Mirror rule:** Blender symmetrize expects the **same base name** with `.l` / `.r` as the **last** suffix (after `.end` if present).
 
 **Wrong for mirror:** `hair07l.7` (side embedded in strand id)  
-**Right:** `hair07.7.l` ↔ `hair07.7.r`
-
-**Hair mirror pairs (example):** physical strands 01↔03 and 02↔04 share one logical strand id:
-
-- Strand 01 bones → `hair01.{link}.l`
-- Strand 03 bones → `hair01.{link}.r` (not `hair03.*`)
+**Right:** `hair07.7.l` ↔ `hair07.7.r` (same logical strand, opposite sides)
 
 ## VRoid hair: parse old names
 
 Old pattern: `Hair{segment}_{strand}` or `Hair{segment}_{strand}_end` or `Hair{seg}_{strand}_end_{L|R}`.
 
 - First number = link along chain (1 = near head)
-- After `_` = strand id (`06`, `07_L`, …)
-- Remap to `hair{strand}.{link}` with side at end
+- After `_` = **physical strand id** (`01`, `03`, `06`, `07_L`, …) — VRoid does **not** mark “this strand mirrors that one” in the name
+- Default remap: `hair{physicalStrand}.{link}` (and `.l`/`.r` only when the **old** name already had `_L`/`_R` or you moved side to the suffix)
+
+## VRoid hair: mirror strands (optional — ask first)
+
+Only if the user wants Blender symmetrize across **paired** bangs/twin strands:
+
+1. **AskQuestion** (or equivalent): “Does this rig use mirrored hair strand pairs? If yes, which physical strand ids map together (e.g. 01↔03, 02↔04)?”
+2. If **no** — skip `build_hair_mirror_mapping`; keep distinct `hair03.*`, `hair04.*`, etc.
+3. If **yes** — apply their pair list so both physical strands share one logical base + `.l`/`.r`:
+
+| User-confirmed pair (example) | Result |
+|-------------------------------|--------|
+| physical `01` + `03` | `hair01.{link}.l` / `hair01.{link}.r` (not `hair03.*`) |
+| physical `02` + `04` | `hair02.{link}.l` / `hair02.{link}.r` |
+
+The 01↔03 / 02↔04 table is a **common project convention**, not something VRoid encodes in export names.
 
 Common typo fix when user asks: `Fung` → `Fang` (shape keys; separate from bones).
 
@@ -90,12 +103,12 @@ Rename **only groups with weights** if user wants minimal diff; rename **all** m
 ```
 Progress:
 - [ ] 1. List bones + categorize (hair / body / prop / other armature)
-- [ ] 2. Agree naming rules + mirror pairs with user
+- [ ] 2. Agree naming rules; **ask** whether any hair strands are mirrored pairs (list physical ids); skip pair merge if none
 - [ ] 3. Build mapping dict; dry-run (duplicates, unmapped)
 - [ ] 4. Apply bones (temp rename → final)
 - [ ] 5. Apply vertex groups on scoped meshes
 - [ ] 6. Patch F-Curves + constraint subtargets
-- [ ] 7. Verify (mirror pairs, weights, pose test)
+- [ ] 7. Verify (paired `.l`/`.r` hair only if user requested; weights; pose test)
 ```
 
 ### Apply order (bones)
@@ -131,8 +144,10 @@ For apply logic and parsers, read and run (via MCP) [scripts/remap_bones.py](scr
 ```python
 # Minimal MCP usage pattern:
 # 1) exec open('path/to/remap_bones.py').read()  OR paste functions
-# 2) mapping = build_hair_mapping(arm) + build_body_mapping(arm)
-# 3) apply_mapping(mapping, armature_name='Armature', mesh_names=[...])
+# 2) mapping = build_vroid_hair_mapping(arm) + build_body_mapping(arm)
+# 3) Only after user confirms mirror pairs:
+#    mapping.update(build_hair_mirror_mapping(arm, pairs=(("01","03"), ("02","04"))))
+# 4) apply_mapping(mapping, armature_name='Armature', mesh_names=[...])
 ```
 
 ## Additional reference

@@ -47,9 +47,18 @@ def side_to_end(old):
     return f"hair{strand}.{link}{end}.{side}"
 ```
 
-## Mirror strand pairs (01↔03, 02↔04)
+## Mirror strand pairs (optional — ask user first)
 
-Strand 03 bones become `hair01.{link}.r`; strand 01 becomes `hair01.{link}.l`. Same for 02↔04 on `hair02.*`.
+VRoid exports use independent strand ids (`Hair1_03` = strand **03**, not “mirror of 01”). **Do not** run pair merging until the user lists which physical strands are mirrored.
+
+If they confirm pairs (example convention 01↔03, 02↔04):
+
+```python
+# Only after AskQuestion / user confirmation:
+mapping.update(build_hair_mirror_mapping(arm, pairs=(("01", "03"), ("02", "04"))))
+```
+
+Strand 03 bones → `hair01.{link}.r`; strand 01 → `hair01.{link}.l`. Custom rigs may use different ids or no pairs at all.
 
 ```python
 def link_suffix(name):

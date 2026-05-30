@@ -19,16 +19,16 @@
 
 After side-at-end fix: same names (already correct if mapped from `hair07l.7` → `hair07.7.l`).
 
-## Mirror strands 01 + 03
+## Optional: mirrored strands 01 + 03 (only if user confirms)
 
-| Old (physical strand) | New (logical pair) |
-|-----------------------|-------------------|
+VRoid names `Hair1_01` and `Hair1_03` as separate strands — **not** labeled as mirrors. Default pass: `hair01.1` and `hair03.1`. Apply this table **only** when the user wants 01↔03 paired for Blender symmetrize:
+
+| Old (physical strand) | New (shared logical pair) |
+|-----------------------|---------------------------|
 | `Hair1_01` | `hair01.1.l` |
 | `Hair1_03` | `hair01.1.r` |
 | `Hair4_01_end` | `hair01.4.end.l` |
 | `Hair4_03_end` | `hair01.4.end.r` |
-
-Strand ids `03` and `04` disappear from names; pair is encoded in `.l`/`.r`.
 
 ## Body samples
 
@@ -44,7 +44,7 @@ Strand ids `03` and `04` disappear from names; pair is encoded in `.l`/`.r`.
 
 1. Hair VRoid names → `hair{strand}.{link}`
 2. Side embedded in strand → `hair07.7.l`
-3. Mirror pairs 01/03, 02/04 → shared `hair01.*` / `hair02.*` + `.l`/`.r`
+3. *(Optional, user-confirmed)* Mirror pairs 01/03, 02/04 → shared `hair01.*` / `hair02.*` + `.l`/`.r`
 4. Body 70 bones → lowercase + `.l`/`.r`
 5. Skirt armature — pending separate pass
 

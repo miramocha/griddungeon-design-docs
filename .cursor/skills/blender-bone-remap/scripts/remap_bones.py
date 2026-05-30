@@ -6,9 +6,9 @@ Usage:
     mapping = {}
     mapping.update(build_vroid_hair_mapping(armature_data))
     mapping.update(build_body_mapping(armature_data))
-  # optional: side at end, then mirror pairs
+  # optional: side at end; mirror pairs ONLY after user confirms physical strand pairs
     mapping = {o: side_suffix_at_end(n) or n for o, n in mapping.items() if side_suffix_at_end(n)}
-    mapping.update(build_hair_mirror_mapping(arm))
+    # mapping.update(build_hair_mirror_mapping(arm, pairs=(("01", "03"), ("02", "04"))))
     report = dry_run_mapping(mapping, armature_data)
     apply_mapping(mapping, armature_object_name="Armature")
 """
@@ -90,8 +90,11 @@ def build_hair_mirror_mapping(
     pairs: Iterable[Tuple[str, str]] = (("01", "03"), ("02", "04")),
 ) -> Dict[str, str]:
     """
-    Map physical strands to logical mirror pairs.
-    Left strand (e.g. 01) -> hair01.{link}.l ; right strand (e.g. 03) -> hair01.{link}.r
+    Merge user-confirmed physical strand pairs into one logical id + .l/.r.
+
+    VRoid does not encode mirror relationships in Hair* bone names — call only after
+    the user lists which strand numbers are left/right pairs. Default pairs are an
+    example convention, not automatic truth for every rig.
     """
     mapping: Dict[str, str] = {}
     for bone in armature_data.bones:
