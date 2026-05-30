@@ -65,7 +65,7 @@ MSK informs **feel** and **presentation bar**, not MVP1 mechanics. Compare propo
 |-------|--------------|-----------------|----------|
 | **Interaction** | Menus, clear service list | Base facilities, strong zone identity | Root **menu**; no hub walk |
 | **World** | Camp at gate, return loop | 3D base with readable districts | **One** full-screen town scene |
-| **Camera** | Mostly static / light transitions | Environmental storytelling in base | **Post-MVP1** debounced pan on root focus (~150–300 ms settle); **no pan** on locked rows or sub-menus |
+| **Camera** | Mostly static / light transitions | Environmental storytelling in base | **Post-MVP1** debounced pan on root focus (~150–300 ms settle) via **Cinemachine 3** ([ADR 033](../decisions/033-hub-environment-cinemachine.md)); **no pan** on locked rows or sub-menus |
 | **Audio** | Facility jingles, understated camp | More atmospheric base | **Probably no** hub looping ambience; service UI SFX only (for now) |
 | **Life** | Often minimal hub motion | More animated base | **Light ambient** scene motion — **later than MVP1** |
 

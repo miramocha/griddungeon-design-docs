@@ -2,46 +2,69 @@
 name: stratum-floor-layout-check
 description: >-
   Validates Grid Dungeon authored StratumFloor ASCII layouts (row width,
-  walkability BFS, Act 1 funnel and tutorial gates) using griddungeon-game
-  Tools/layout_grid_check.py. Use when editing floor layout ASCII in design-docs,
-  reviewing s1_B1F map specs, or debugging path bypasses to stairsDown.
+  walkability BFS, Act 1 funnel and tutorial gates) using Tools/layout_grid_check.py.
+  Use when editing S1B1FLayoutBuilder, floor layout ASCII in design-docs, debugging
+  path bypasses to stairsDown, or before committing map layout changes.
 ---
 
-# Stratum floor layout check (design-docs)
-
-Layout **implementation** and scripts live in **griddungeon-game**. This skill applies when you edit MVP1 ASCII or campaign funnel rules here; run checks in the game repo.
+# Stratum floor layout check
 
 ## When to use
 
-- Editing [dungeons — s1_B1F ASCII](../docs/03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate) or [s1-intro](../docs/03-content/campaign/s1-intro.md)
-- Reviewing whether doc coordinates match playable geometry
-- Layout review before game implementation PR
+- Editing `S1B1FLayoutBuilder.k_RowsNorthUp` or MVP1 ASCII in [dungeons-and-encounters.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/dungeons-and-encounters.md)
+- User reports reaching `stairsDown` / `v` without passing tutorial blocker `(10, 13)`
+- Before `sync_b1f_asset_tiles` or Unity **Apply s1_B1F MVP1 layout**
+- After layout patch — confirm Edit Mode `S1B1FLayoutTests` and this script agree
+
+## Coordinate system (locked)
+
+| Rule | Value |
+|------|--------|
+| Grid | 20×20 |
+| Row order in code | **North-up** — `k_RowsNorthUp[0]` = y=19, last row = y=0 (south) |
+| Cell lookup | `row = GRID - 1 - y`, then `rows[row][x]` |
+| Tile index | `x + y * width` (matches `StratumFloorLayout.ToIndex`) |
+| Impassable symbols | `#` (wall), `X` (tutorial blocker until campaign opens cell) |
+| Authoritative markers | C# constants (`StairsUp`, `StairsDown`, spawns) — `v`/`^`/`M` in ASCII are visual hints only |
 
 ## Workflow
 
-1. Update ASCII in **design-docs** (keep rows **20 characters**, north-up, y=0 south — same as game builder).
-2. Implement the same rows in game repo `S1B1FLayoutBuilder.cs` + `Tools/layout_grid_check.py` → `S1_B1F_ROWS`.
-3. From **griddungeon-game** root:
+1. Edit layout in **`Assets/Scripts/Runtime/Content/S1B1FLayoutBuilder.cs`** (`k_RowsNorthUp`).
+2. **Mirror the same 20 strings** in `Tools/layout_grid_check.py` → `S1_B1F_ROWS` (keep in sync until shared extract exists).
+3. **Validate row width** — every string must be **exactly 20** characters (common bug: 21 on north-cap rows).
+4. Run checks from **griddungeon-game** repo root:
 
 ```powershell
 python Tools/layout_grid_check.py
 python Tools/layout_grid_check.py --bfs 4,2 10,17
+python Tools/layout_grid_check.py --bfs 10,11 10,17
 ```
 
-4. Full agent workflow: read game repo skill  
-   `griddungeon-game/.cursor/skills/stratum-floor-layout-check/SKILL.md`  
-   (coordinate table, built-in regressions, C# test parity).
+5. Exit code **0** = built-in regressions passed; **1** = fix layout before sync/commit.
+6. Run Unity **Test Runner → Map → `S1B1FLayoutTests`** (user-driven; no CLI batch Unity per project rules).
 
-## Doc ↔ code checklist
+## Built-in regressions (s1_B1F)
 
-| Doc field | Game authority |
-|-----------|----------------|
-| `partyEntryIntro` `(4,2)` | `S1CampaignResolver.B1FIntroSpawn` |
-| Gate / `stairsUp` `(10,11)` | `B1FGateSpawn`, `StairsUp` |
-| `stairsDown` `(10,17)` | `StairsDown` |
-| Tutorial blocker `X` `(10,13)` | `B1FTutorialBlockerCell` + `S1TutorialDiveStarted` walkability |
+Script prints `[ok]` / `[FAIL]` for:
+
+- `(10, 16)` walkable — link from `v` alcove to `stairsDown` `(10, 17)`
+- North cap walls: `(9,17)`, `(11,17)`, `(9,18)`, `(10,18)`, `(11,18)` not walkable
+- Intro `(4,2)` → gate `(10,11)` reachable
+- Intro → `stairsDown` **no** static path (west bypass blocked)
+- Gate → `stairsDown` **no** static path (`X` at `(10,13)` still impassable in tiles)
+
+Add new checks in `default_checks()` when locking new campaign geometry.
+
+## Ad-hoc BFS
+
+`--bfs START GOAL` uses comma cells, e.g. `4,2` and `10,17`. Prints step path or `no route`.
+
+## C# parity
+
+Edit Mode uses `FloorLayoutConnectivity` in `Assets/Tests/Map/` — same 4-neighbor BFS on `StratumFloor` tiles. Python rows and C# strings **must match** or tests and script diverge.
 
 ## Related
 
-- Game implementation skill: [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (canonical)
-- Asset sync: [stratum-floor-asset-sync](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-asset-sync)
+- Asset sync: skill **stratum-floor-asset-sync**
+- Scripts: [Tools/README.md](../../Tools/README.md)
+- Design ASCII: [dungeons — s1_B1F](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)

@@ -63,6 +63,7 @@ Prepare at **both** before entering the stratum (order in UI flexible).
 | **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
 | **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than MVP1** (author with post-MVP1 hub presentation or polish pass) |
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
+| **Camera stack** | **Cinemachine 3** virtual cameras + session `CinemachineBrain` — **not** DOTween on a manual camera rig ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)) |
 
 **Reference synthesis (EO + Mary Skelter):** [game references — hub & town](../00-game-references.md#etrian-odyssey--hub--town-loop).
 
@@ -88,7 +89,7 @@ Tune duration post-MVP1 if keyboard taps feel laggy or fast gamepad flicks never
 | **Confirm** (open service) | Open service UI; camera **stays** on that service’s root anchor — **no** sub-menu pans or zoom |
 | **Back** (close service to root list) | Resume pan from **current root highlight**; if none focused, use entry default ([TBD](#locked-decisions), lean wide town) |
 
-Pan uses a **smooth lerp** (e.g. DOTween on a rig or virtual camera) after the debounce window elapses.
+After debounce, **`HubEnvironmentPresenter`** blends via **Cinemachine 3** — raise the target service vcam **priority** (session brain on; exploration FPV rig off). Use brain blend settings or default Cinemachine blend; tune duration in playtest ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)).
 
 **Rejected for this model:** requiring the player to walk an avatar to a door before the shop opens — that is “full 3D hub walk,” out of scope for early versions.
 
@@ -108,7 +109,7 @@ Each hub menu entry maps to an **authored camera pose** (and optional look-at) a
 | **Side expedition** (MVP3) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
 | **Synthesis** (MVP2) | Workshop / forge annex |
 
-Anchors are **data** (Transforms in scene, or `HubCameraAnchor` ScriptableObjects keyed by service id) so layout artists can tune without code changes.
+Anchors are **authored `CinemachineCamera` poses** in the hub town scene (one per root slot + optional establishing wide shot), mapped to `HubRootMenuSlot` in presenter data so layout artists tune framing in Inspector without code changes ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)).
 
 ### Presentation vs gameplay lock
 
@@ -120,11 +121,15 @@ Service screens may still use the **Service UI motion** table above for panel tw
 
 | Piece | Role |
 |-------|------|
-| `HubEnvironmentPresenter` (or scene-local rig) | Owns backdrop camera; `PanToAnchor(serviceId)` on focus events |
-| `HubMenuView` / hub UI controller | Emits `MenuItemFocused(serviceId)` on hover and selection change |
-| `HubPhaseController` | Enables backdrop + UI on enter; no combat/exploration subsystems |
+| `HubEnvironmentPresenter` | Hub phase: enable session `CinemachineBrain`, disable `ExplorationCameraRig`; after debounce, `PanToAnchor(HubRootMenuSlot)` via **vcam priority** |
+| Hub town scene | `CinemachineCamera` per service + optional `CM_Establishing_Wide`; shared gate vcam for **Enter Stratum** |
+| `HubHudView` / root focus | Emits slot focus changes (`MenuFocusNavigator` + `HubRootMenuSlot`); no pan while service panel open |
+| `HubPhaseController` | Enables backdrop + presenter on enter; tears down on exit |
+| `ExplorationCameraSession` | Brain on/off coordinated with floor-transition lock so vignette and hub do not fight |
 
-Pattern parallels **combat arena presentation** ([combat presentation](combat-presentation.md), [ADR 013](../../decisions/013-combat-scene-rendering.md)): phase owns lifecycle; presenter owns camera/VFX only.
+Pattern parallels **floor transition** ([ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) for brain + priority, and **combat arena presentation** ([combat presentation](combat-presentation.md), [ADR 013](../../decisions/013-combat-scene-rendering.md)) for phase-owned lifecycle.
+
+**Cinemachine detail:** [ADR 033](../../decisions/033-hub-environment-cinemachine.md).
 
 ### Release scope
 

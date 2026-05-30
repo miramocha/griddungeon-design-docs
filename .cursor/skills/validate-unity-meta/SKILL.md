@@ -1,22 +1,86 @@
 ---
 name: validate-unity-meta
 description: >-
-  Validates Unity .meta GUIDs in griddungeon-game. Use when creating Assets from
-  design-docs sessions or diagnosing CS0246 after agent-added scripts.
+  Validates Unity .meta GUID format (32 lowercase hex), uniqueness, and asset pairing
+  under Assets/. Use when creating or editing .meta files, after adding Unity assets
+  from the agent, before commit, or when diagnosing missing script types (CS0246).
 ---
 
-# Validate Unity metadata (game repo)
+# Validate Unity metadata
 
-Implementation lives in **griddungeon-game** only (this repo has no `Assets/`).
+## When to use
 
-Follow the full workflow in:
+- Agent created or edited any file under `Assets/**/*.meta`
+- User reports `CS0246` / missing `MonoBehaviour` after agent added a script
+- Before commit that includes new `Assets/` files or `.meta` changes
+- After consolidating scenes/prefabs that reference script GUIDs
 
-[griddungeon-game/.cursor/skills/validate-unity-meta/SKILL.md](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/skills/validate-unity-meta/SKILL.md)
+## Default policy
 
-Quick run from game repo root:
+**Do not hand-author `.meta` files.** Add the asset; let Unity Editor generate `.meta`.
+
+Only write `.meta` when unavoidable (document why in the PR). Never guess GUIDs.
+
+## Workflow
+
+```
+Task Progress:
+- [ ] 1. Create/edit asset under Assets/ (prefer no .meta in diff)
+- [ ] 2. Unity import (user) OR validate existing .meta if agent touched them
+- [ ] 3. Run validate_unity_meta.py
+- [ ] 4. Fix [FAIL] before commit
+```
+
+### 1. Run validator (griddungeon-game root)
+
+Full `Assets/` scan:
 
 ```powershell
 python Tools/validate_unity_meta.py
 ```
 
-Rule (game repo): `unity-meta-files.mdc` — link via `scripts/link-cursor-rules.ps1` if needed.
+Changed paths only:
+
+```powershell
+python Tools/validate_unity_meta.py Assets/Scripts/UI/Views/MyView.cs.meta
+python Tools/validate_unity_meta.py Assets/UI/Screens/Exploration
+```
+
+Strict (missing `.meta` warnings fail too — use after Unity import):
+
+```powershell
+python Tools/validate_unity_meta.py --strict-warnings
+```
+
+GUID + duplicates only (no pairing):
+
+```powershell
+python Tools/validate_unity_meta.py --no-pairing path/to/file.meta
+```
+
+### 2. Interpret output
+
+| Prefix | Meaning |
+|--------|---------|
+| `[ok]` | All checked meta files valid |
+| `[FAIL]` | Block commit — fix GUID length/format, duplicates, orphan `.meta` |
+| `[warn]` | Missing `.meta` — normal until Unity imports; re-run after refresh |
+
+### 3. Common fixes
+
+| Failure | Fix |
+|---------|-----|
+| `guid length 33` | Delete `.meta`; let Unity regenerate, or correct to 32 chars |
+| `must be 32 lowercase hex` | Remove invalid characters; use `a-f0-9` only |
+| `duplicate guid` | Delete one `.meta`; Unity regenerates a new GUID |
+| `orphan (no asset)` | Delete stray `.meta` or restore missing asset |
+| `missing .meta` | Open project in Unity; do not invent meta in agent |
+
+## Rule gate
+
+Follow [.cursor/rules/unity-meta-files.mdc](../../rules/unity-meta-files.mdc) whenever touching `Assets/**`.
+
+## Related
+
+- [Tools/README.md](../../Tools/README.md)
+- Unity pitfall: broken script import → `unity-common-pitfalls.mdc`
