@@ -8,15 +8,22 @@ On Windows, rule files here are **hard links** to `griddungeon-game/.cursor/rule
 
 Symbolic links require elevated PowerShell; use hard links or the setup script below.
 
-## Fresh clone / link broken
+## Fresh clone / sync both repos
 
-From repo root, with sibling `griddungeon-game` at `../griddungeon-game`:
+From **design-docs** repo root, with sibling `griddungeon-game` at `../griddungeon-game`:
 
 ```powershell
-./scripts/link-cursor-rules.ps1
+./scripts/sync-cursor-config.ps1
 ```
 
-The script recreates hard links when possible; otherwise **copies** from the game repo.
+This runs, in order:
+
+1. `link-cursor-rules.ps1` — hard links (or copies) **shared** rules from game → design-docs
+2. `sync-cursor-skills.ps1` — mirrors skill folders per canonical repo
+3. Copies `fresh-reviewer.md` to design-docs `.cursor/agents/`
+4. Clears `.cursor/local/` drafts in **both** repos
+
+Rules-only repair: `./scripts/link-cursor-rules.ps1`
 
 ## Canonical source
 
@@ -42,8 +49,16 @@ The script recreates hard links when possible; otherwise **copies** from the gam
 |-------|---------|
 | [test-plan-grid-dungeon](../skills/test-plan-grid-dungeon/SKILL.md) | Consistent GitHub/PR test plans (tables, sign-off, N/A deferrals) |
 | [validate-unity-meta](../skills/validate-unity-meta/SKILL.md) | Unity `.meta` validation — runs in **griddungeon-game** |
+| [blender-bone-remap](../skills/blender-bone-remap/SKILL.md) | VRoid/VRM bone rename + mirror pairs (Blender MCP) |
+| [vroid-shapekey-remap](../skills/vroid-shapekey-remap/SKILL.md) | VRoid `Fcl_*` shape key → `vroid*` naming (Blender MCP) |
 
-Mirrored under `griddungeon-game/.cursor/skills/` for the implementation repo (`test-plan-grid-dungeon`, `validate-unity-meta`, …).
+**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `blender-bone-remap`, `vroid-shapekey-remap`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script).
+
+## Agents
+
+| Agent | Notes |
+|-------|--------|
+| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1` |
 
 ## Architecture mapping
 

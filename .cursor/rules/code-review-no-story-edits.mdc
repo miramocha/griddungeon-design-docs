@@ -5,15 +5,15 @@ alwaysApply: true
 
 # Code review — no story/dialogue edits
 
-During **code review** (PR review, pre-commit review, `fresh-reviewer`, `@code-review-unity`, or any review-only pass), **do not change** story, dialogue, or narrative copy unless the user **explicitly** asked for story/dialogue edits in that request.
+During **code review** (PR review, post-commit review, `fresh-reviewer`, `@code-review-unity`, or any review-only pass), **do not change** story, dialogue, or narrative copy unless the user **explicitly** asked for story/dialogue edits in that request.
 
 ## In scope (hands off during review)
 
 | Area | Examples |
 |------|----------|
-| **design-docs** | `docs/03-content/story-events/**`, narrative beats in `docs/02-systems/story-events.md`, `narrative-pov.md`, campaign tutorial copy tied to VN |
+| **design-docs** | `docs/03-content/story-events/**`, narrative beats in linked system docs, campaign tutorial VN copy |
 | **game content** | `Assets/Content/StoryEvents/**` (`TextEn`, `TextKey`, steps, speaker lines) |
-| **Localized / authored lines** | Player-facing `textEn` strings in story assets or story tables — not log messages or dev-only labels |
+| **Localized / authored lines** | Player-facing `textEn` in story ScriptableObjects — not `Debug.Log`, dev menus, or test fixture stubs unless they are the story under test |
 
 ## Allowed during review
 
