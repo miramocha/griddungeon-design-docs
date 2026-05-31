@@ -270,7 +270,7 @@ Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — 
 
 Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards with a visual gap or left-aligned pair per HUD style ([04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit)).
 
-**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster remains one row per core formation (6 + aux later).
+**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster remains one row per core formation (6 + aux later). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

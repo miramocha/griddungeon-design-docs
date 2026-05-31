@@ -8,13 +8,15 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — assemblies `GridDungeon.Core` → `GridDungeon.Runtime` → `GridDungeon.UI` (UI references Runtime; Runtime does **not** reference UI).
 
-**Related (behavior, not event lists):** [exploration UI](../02-systems/exploration-ui.md), [combat § UI](../02-systems/combat.md#ui-requirements), [game phase](../02-systems/game-phase.md), [UVS phase presentation](../02-systems/uvs-phase-presentation.md), [04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+**Related (behavior, not event lists):** [exploration UI](../02-systems/exploration-ui.md), [combat § UI](../02-systems/combat.md#ui-requirements), [game phase](../02-systems/game-phase.md), [UVS phase presentation](../02-systems/uvs-phase-presentation.md), [04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity). **Replace modals / plates:** [custom skill picker UI](custom-skill-picker-ui.md), [custom party UI](custom-party-ui.md).
 
 ### Documentation map (avoid duplicating this file)
 
 | Topic | Authoritative doc | This file |
 |-------|-------------------|-----------|
 | **Runtime `public event` list + commands** | **Here** | Edit when C# API changes |
+| Replace combat skill modal | [custom skill picker UI](custom-skill-picker-ui.md) | `ISkillUsePickerView` + host; events/commands here |
+| Replace exploration strip / combat party roster | [custom party UI](custom-party-ui.md) | Event names + `CombatRosterView` API |
 | Exploration HUD wiring, UXML mounts, scene graph | [exploration UI](../02-systems/exploration-ui.md) | Link only |
 | MapView **per-event UI effect** (which presenter repaints what) | [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates) | Cross-link |
 | Combat **motion** (flash, lerp, block?) | [combat § UI motion](../02-systems/combat.md#ui-motion--feedback) | Event names only |
@@ -112,7 +114,7 @@ FOE **contact → combat** is handled in `ExplorationPhaseController` (`RequestC
 
 Read `CoreSlots` / `AuxSlots` / `SynchroBar` directly. Refresh on `DungeonExplorer` step/cell, `PhaseChanged` (especially **Combat → Exploration**), and `ExplorationBindingsWired`.
 
-Shipped reference: `ExplorationPartyStripView` + `ExplorationHudReactivePresenter` in game repo.
+Shipped reference: `ExplorationPartyStripView` + `ExplorationHudReactivePresenter` in game repo. Step-by-step replacement: [custom party UI](custom-party-ui.md#exploration-party-strip).
 
 ### `ExplorationPauseView` (UI, optional to reuse)
 
@@ -165,7 +167,7 @@ Map panel: also subscribe `gs.Map.RevealChanged`, `gs.Foes.OnFoePatrolMoved` —
 
 **Read during fight:** `State` (`BattleState`), `CurrentPhase`, `IsCommandPlanning`, `IsWaitingForPlayer`, `IsSelectingTarget`, `ValidTargets`, `CommandTarget`, `PlanningPrompt`, `CanUseProtocol`, `RequiresProtocolOnlyCommands`, `IsPresentationLocked`.
 
-Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy).
+Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy). Roster wiring and `CombatRosterView` API: [custom party UI — combat roster](custom-party-ui.md#combat-party-roster).
 
 **Commands (wire buttons / focus nav):**
 
@@ -243,7 +245,9 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 | Bootstrap | `Assets/Scripts/UI/Game/GameBootstrap.cs` |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs` |
 | Exploration shell | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
+| Party strip (exploration) | `ExplorationPartyStripView.cs` · `CombatRosterView.cs` · [custom party UI](custom-party-ui.md) |
 | Map | `Assets/Scripts/UI/Views/MapView.cs` |
+| Map party glyph | `MapPartyMarkerPresenter` (runtime presenter) · [custom party UI § Map](custom-party-ui.md#map-party-marker-optional) |
 | Combat | `Assets/Scripts/UI/Views/CombatHudView.cs` |
 | Skill use picker (UITK) | `Assets/Scripts/UI/Views/SkillUsePickerToolkitView.cs` · [custom skill picker UI](custom-skill-picker-ui.md) |
 | Hub | `Assets/Scripts/UI/Views/HubHudView.cs` |
@@ -268,6 +272,7 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 |---------|--------|
 | Exploration combat log | No log mount in `ExplorationHud.uxml`; combat uses `CombatHudLogView` only |
 | `PartyRuntime` events | Read slots directly; refresh on explorer step / phase change |
+| `IPartyRosterView` / party swap port | No single port — use events here + [custom party UI](custom-party-ui.md) |
 
 ---
 
@@ -275,4 +280,5 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 
 | Date | Note |
 |------|------|
+| 2026-05-30 | Cross-links to [custom party UI](custom-party-ui.md); doc map + shipped entry points |
 | 2026-05-25 | Initial integrator contract (MVP1 shipped events); doc dedup pass |
