@@ -21,7 +21,7 @@ Aux slots ([ADR 004](004-auxiliary-slots.md)) can hold **summons** with their ow
 
 ### Deploy (core turn)
 
-- **`deploy_test_drone`** on occupied aux back: **fail cast**, **no MP spent**, player feedback ([mvp1-class-skills](../docs/03-content/mvp1-class-skills.md#locked-implementation-rules)).
+- **`deploy_test_drone`** may be **queued** while aux back is occupied (e.g. player expects current drone to die before the summoner’s AGI turn). On **resolve**, if the slot is still occupied: **fail**, **no MP spent**, player feedback ([mvp1-class-skills](../docs/03-content/mvp1-class-skills.md#locked-implementation-rules)).
 
 ## Rejected for MVP1
 

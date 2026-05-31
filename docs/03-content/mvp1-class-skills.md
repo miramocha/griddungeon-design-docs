@@ -41,7 +41,7 @@
 | `medic_purify` | Purify | Medic | Heal | SingleAlly | — | — | Cleanse **Control** + **DoT** categories on ally |
 | `medic_revive` | Revive | Medic | Heal | SingleAlly | — | — | **Downed** allies only → 25% max HP |
 | `summoner_volt_bolt` | Volt Bolt | Summoner | Elemental | SingleEnemy | yes | — | Volt damage (weak personal bolt) |
-| `deploy_test_drone` | Deploy Test Drone | Summoner | Deploy | AuxBack | — | — | Spawn `test_drone` aux back, **3** rounds; fail if occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| `deploy_test_drone` | Deploy Test Drone | Summoner | Deploy | AuxBack | — | — | Spawn `test_drone` aux back, **3** rounds; queue OK if occupied, fail on resolve if still occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | `summoner_focus` | Focus | Summoner | Buff | Self | — | — | `magic_up` 2 turns on caster |
 | `marksman_aimed_shot` | Aimed Shot | Marksman | Physical | SingleEnemy | yes | yes | Pierce-tagged physical shot |
 | `marksman_bind_shot` | Bind Shot | Marksman | Physical | SingleEnemy | yes | yes | Pierce damage; 30% `bind_arm` |
@@ -141,7 +141,7 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 |------|--------|
 | **`medic_revive`** | Target validator: **downed allies only**; reject living |
 | **`vanguard_protect`** | **Single** `SingleAlly` target; must share caster **`FormationRow`**; Guard mod on that ally only (core or aux) |
-| **`deploy_test_drone`** | Aux back occupied → **fail**, **no MP** |
+| **`deploy_test_drone`** | May queue while aux back occupied; on AGI resolve if still occupied → **fail**, **no MP** |
 | **`AllAllies`** | Living **core six + aux** summons/guests (not Navigator) |
 | **`AllEnemies`** | All **occupied** enemy slots; after **row collapse**, shifted enemies count as front for melee |
 | **Row collapse** | On enemy death, survivors shift forward ([combat](../02-systems/combat.md)) |

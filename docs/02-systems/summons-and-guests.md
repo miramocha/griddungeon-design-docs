@@ -38,7 +38,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Death** | Disappears; no hospital revive |
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
-**Stacking:** One summon per aux slot. **`deploy_test_drone`:** if aux back occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
+**Stacking:** One summon per aux slot. **`deploy_test_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
 
 ### Navigator sortie (Protocol Deploy — post-MVP1)
 
