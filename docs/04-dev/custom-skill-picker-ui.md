@@ -15,13 +15,19 @@ How to replace or extend the **combat skill selection modal** without changing c
 | **Host** | `GridDungeon.Runtime` | `SkillPickerBuildRequest`, skill id list (allocated vs summon kit), `SubmitPlayerAction(Skill)` |
 | **View** | `GridDungeon.UI` (your code) | Render tabs + rows only; fire `Selected(skillId)` / `Cancelled` |
 
-```text
-Command bar Skill
-  → ICombatSkillPickerHost.OpenForCommandActor(actor)
-  → CombatSkillPickerHost → SkillPickerCoordinator.BeginPick
-  → SkillPickerCatalog.Build (Core) → ISkillUsePickerView.Show(model)
-  → player confirms → host → CombatController.SubmitPlayerAction(Skill)
-  → existing targeting (#60) if required
+```mermaid
+flowchart LR
+  skill[Command bar Skill]
+  host[ICombatSkillPickerHost.OpenForCommandActor]
+  coord[SkillPickerCoordinator.BeginPick]
+  catalog[SkillPickerCatalog.Build Core]
+  view[ISkillUsePickerView.Show]
+  submit[CombatController.SubmitPlayerAction Skill]
+  target[Targeting #60 if required]
+
+  skill --> host --> coord --> catalog --> view
+  view -->|Selected skillId| submit
+  submit --> target
 ```
 
 **Do not** filter by `SkillType`, compute MP costs, or read `SkillDefinition` assets inside the view — the catalog already did that.

@@ -191,6 +191,8 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 ## UI requirements
 
 - **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback), [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity), and [UI event contract](../04-dev/ui-event-contract.md#combat-phase) (integrator event list)
+- **Skill** command — tabbed skill-use modal ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)); then targeting when required ([#60](https://github.com/miramocha/griddungeon-game/issues/60))
+- **Party / enemy plates** — formation roster slots ([custom party UI](../04-dev/custom-party-ui.md)); acting highlight on **party roster** during core command turns (not AGI strip)
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
 - **Synchro Charge** (team, 0–100%) — see [synchro-protocol](synchro-protocol.md)
 - **Turn order strip** — see [§ Turn order strip](#turn-order-strip-agi-queue-ui) below
@@ -270,7 +272,7 @@ Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — 
 
 Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards with a visual gap or left-aligned pair per HUD style ([04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit)).
 
-**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster remains one row per core formation (6 + aux later). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses **Front** / **Back** rows (`party-roster-front`, `party-roster-back`) — one portrait card per occupied core slot (6 + aux later). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

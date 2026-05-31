@@ -38,14 +38,15 @@ Batch / CI (Editor closed):
 
 ## Folder layout
 
-```text
-Assets/Scenes/Transitions/
-├── README.md
-├── Materials/
-│   ├── TransitionVoid.mat      # black backdrop
-│   └── TransitionDoor.mat        # placeholder door panel
-└── Prefabs/
-    └── stairs_default.prefab   # MVP1 default beat
+```mermaid
+flowchart TB
+  root[Assets/Scenes/Transitions/]
+  root --> readme[README.md]
+  root --> mats[Materials/]
+  mats --> void[TransitionVoid.mat]
+  mats --> doorMat[TransitionDoor.mat]
+  root --> prefabs[Prefabs/]
+  prefabs --> stairs[stairs_default.prefab]
 ```
 
 **Catalog (not under Transitions/):** `Assets/Content/FloorTransition/FloorTransitionCatalog.asset`
@@ -58,16 +59,17 @@ Transition prefabs are **referenced by the catalog**; they do **not** need a row
 
 Root GameObject must have **`FloorTransitionBeat`** (`GridDungeon.Runtime.Exploration.FloorTransition`).
 
-```text
-stairs_default                    ← FloorTransitionBeat (root)
-├── Environment/
-│   ├── BlackBackdrop             ← inverted sphere, unlit black, no collider
-│   └── KeyLight                  ← dim directional (optional tweak)
-├── Props/
-│   └── ThresholdDoor             ← frame + DoorPanel (look target for vcams)
-└── Cameras/
-    ├── CM_Wide                   ← CinemachineCamera
-    └── CM_Threshold              ← CinemachineCamera
+```mermaid
+flowchart TB
+  root[stairs_default<br/>FloorTransitionBeat root]
+  root --> env[Environment/]
+  env --> backdrop[BlackBackdrop]
+  env --> light[KeyLight optional]
+  root --> props[Props/]
+  props --> door[ThresholdDoor]
+  root --> cams[Cameras/]
+  cams --> wide[CM_Wide CinemachineCamera]
+  cams --> thresh[CM_Threshold CinemachineCamera]
 ```
 
 | Rule | Why |

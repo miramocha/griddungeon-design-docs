@@ -91,7 +91,7 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 ### Protocol (Synchro 100%)
 
-On command bar when **Synchro Charge = 100%** and **unlocked** ([synchro-protocol](synchro-protocol.md)). Confirm with **`Z`** (not a separate `U` one-shot). **`1`–`9` skill picker** deferred ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+).
+On command bar when **Synchro Charge = 100%** and **unlocked** ([synchro-protocol](synchro-protocol.md)). Confirm with **`Z`** (not a separate `U` one-shot). **`1`–`9` hotkey skill slots** on the Protocol bar deferred ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+) — not the tabbed **Skill** modal ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)).
 
 ### Command planning — targeting
 
@@ -119,7 +119,7 @@ Optional **confirm all assignments** before AGI playback — [#44](https://githu
 
 ### Skill use picker (modal)
 
-When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-picker.md)) — after **Skill** on the command bar or **Use skill** in field UI:
+When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)) — after **Skill** on the command bar (shipped [#138](https://github.com/miramocha/griddungeon-game/issues/138)) or **Use skill** in field UI ([#140](https://github.com/miramocha/griddungeon-game/issues/140) deferred):
 
 | Action | Keyboard (MVP1) | Notes |
 |--------|-----------------|-------|

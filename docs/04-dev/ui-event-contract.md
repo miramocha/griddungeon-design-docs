@@ -281,4 +281,5 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 | Date | Note |
 |------|------|
 | 2026-05-30 | Cross-links to [custom party UI](custom-party-ui.md); doc map + shipped entry points |
+| 2026-05-30 | mvp1-spec [#138](https://github.com/miramocha/griddungeon-game/issues/138) combat picker shipped; tech-notes party roster fix |
 | 2026-05-25 | Initial integrator contract (MVP1 shipped events); doc dedup pass |

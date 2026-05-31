@@ -1134,22 +1134,22 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ### View controllers
 
-**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays, party strip): [exploration UI](02-systems/exploration-ui.md). Runtime events for custom HUD: [UI event contract](04-dev/ui-event-contract.md). Game repo: `ExplorationHudView`, `MapView`, `Map*MarkersPresenter`, `ExplorationPauseView`, `ExplorationPartyStripView`. Types below are the **target** full read-model sketch (not all shipped).
+**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays, party strip): [exploration UI](02-systems/exploration-ui.md). Runtime events: [UI event contract](04-dev/ui-event-contract.md). Replace plates / picker: [custom party UI](04-dev/custom-party-ui.md), [custom skill picker UI](04-dev/custom-skill-picker-ui.md). Game repo: `ExplorationHudView`, `MapView`, `Map*MarkersPresenter`, `ExplorationPauseView`, `ExplorationPartyStripView` (wraps `CombatRosterView`). Types below are the **target** full read-model sketch (not all shipped).
 
 ```csharp
 class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phase
 {
     DungeonView       DungeonView;
     MapView           Map;
-    PartyStripView    PartyStrip;   // shipped: ExplorationPartyStripView
+    PartyStripView    PartyStrip;   // shipped: ExplorationPartyStripView + CombatRosterView
     // CombatLogView Log — deferred (no exploration log UXML wired; combat uses CombatHudLogView)
 }
 
 class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
 {
     TurnOrderStripView TurnOrder;
-    PartyRowsView      PartyRows;    // 6 core + 2 aux
-    CommandPanelView   Commands;
+    PartyRowsView      PartyRows;    // shipped: CombatRosterView front/back in CombatHudView
+    CommandPanelView   Commands;     // Skill → CombatSkillPickerHost (ADR 035)
     TargetSelectorView Targets;
     NavigatorView      Navigator;
     SynchroBarView       SynchroBar;
