@@ -20,18 +20,72 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 
 **Do not** read `PartyRuntime` for HP/MP during an active fight — use `BattleState` on `CombatController` ([UI event contract — Combat](ui-event-contract.md#combat-phase)). After `BattleEnded`, exploration strip refreshes from `PartyRuntime` (often with `forceRebuild` when returning from combat).
 
+```mermaid
+flowchart LR
+  subgraph exploration [Exploration]
+    PR[(PartyRuntime.CoreSlots)]
+    DE[(DungeonExplorer)]
+    PR --> strip[ExplorationPartyStripView]
+    DE --> map[MapPartyMarkerPresenter]
+    strip --> CRVs[CombatRosterView]
+  end
+
+  subgraph combat [Combat]
+    BS[(BattleState.CoreSlots)]
+    CC[CombatController events]
+    BS --> hud[CombatHudView]
+    CC --> hud
+    hud --> CRVc[CombatRosterView]
+  end
+
+  combat -->|BattleEnded sync| exploration
+```
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  [*] --> Exploration
+  Exploration --> Combat: RequestCombat
+  Combat --> Exploration: BattleEnded
+
+  note right of Exploration
+    Strip: PartyRuntime.CoreSlots
+    Map: DungeonExplorer
+  end note
+
+  note right of Combat
+    Roster: State.CoreSlots
+    not PartyRuntime
+  end note
+```
+
 ---
 
 ## Architecture (do not invert)
 
-```text
-PartyRuntime (exploration)          CombatController.State (combat)
-        │                                      │
-        ▼                                      ▼
- ExplorationPartyStripView              CombatHudView
-        │                                      │
-        └──────────► CombatRosterView ◄────────┘
-                   (programmatic slots, BEM classes)
+```mermaid
+flowchart TB
+  subgraph core_runtime [Core + Runtime — rules, no UITK]
+    PR[PartyRuntime]
+    CC[CombatController + BattleState]
+    DE[DungeonExplorer]
+    VTC[ValidTargetCalculator / queue]
+    CC --- VTC
+  end
+
+  subgraph ui_layer [GridDungeon.UI — subscribe + render]
+    EPS[ExplorationPartyStripView]
+    CHV[CombatHudView]
+    MPM[MapPartyMarkerPresenter]
+    CRV["CombatRosterView<br/>slots + BEM classes"]
+  end
+
+  PR -->|pull CoreSlots| EPS
+  CC -->|State + events| CHV
+  DE -->|cell, facing| MPM
+  EPS --> CRV
+  CHV --> CRV
+  CHV -->|commands| CC
 ```
 
 | Layer | Owns | Must not own |
