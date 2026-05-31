@@ -31,7 +31,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Source** | **Summoner class** deploy skills (MVP1+); post-MVP1 **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
-| **Commands (MVP1)** | **Player-controlled** — Attack / Guard + summon `skillIds` on summon AGI turn ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Commands (MVP1)** | **Player-controlled** — Attack / Guard + summon `skillIds`; queued in **command planning** with cores, then executed on AGI slot ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Commands (later)** | Optional **stance hybrid** (AI picks from kit) |
 | **AGI** | Summon has own AGI; enters turn queue; **waits for player** like core |
 | **XP** | No XP to summons |
@@ -57,7 +57,7 @@ Does **not** violate “Navigator fills aux slot” — the **summon** occupies 
 
 ### MVP1 summon kit (`test_drone`)
 
-Player picks commands on each drone AGI turn ([ADR 016](../../decisions/016-summon-control-mvp1.md)). Data on `SummonDefinition`:
+Player picks the drone’s command during **command planning** (after cores, before “Party commands locked — executing AGI queue”). Same round as first deploy: drone is **not** in planning until the **next** round. Data on `SummonDefinition`:
 
 ```yaml
 summon_id: test_drone
@@ -73,7 +73,7 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 | **Guard** | Self guard |
 | **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([mvp1-class-skills](../03-content/mvp1-class-skills.md#summon-kit-test_drone)) |
 
-**UI on summon turn:** highlight aux portrait in strip + roster; **command panel** active (same path as core); presentation lock per [#35](https://github.com/miramocha/griddungeon-game/issues/35) when shipped.
+**UI during planning:** aux portrait in party roster (front/back slot); highlight when `CommandTarget`; command panel Attack / Guard / Skill (summon kit). **UI during AGI:** strip highlight on acting aux; command panel **disabled** — playback only.
 
 **Synchro Charge:** Summon actions do **not** gain Synchro Charge ([synchro-protocol](synchro-protocol.md)). **Protocol** not offered on summon turns.
 
