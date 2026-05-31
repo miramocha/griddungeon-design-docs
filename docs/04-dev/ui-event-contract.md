@@ -173,6 +173,7 @@ Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (b
 |--------|-----|
 | `SelectCommandTarget(Combatant core)` | Planning roster pick |
 | `SubmitPlayerAction(CombatAction action)` | Attack/guard/skill/item/protocol/flee |
+| `ICombatSkillPickerHost.OpenForCommandActor` | **Skill** button — opens picker; do not submit `Skill` until player picks (see [custom skill picker UI](custom-skill-picker-ui.md)) |
 | `SelectTarget(string combatantId)` | Targeting confirm |
 | `CancelTargetSelection()` | Back from targeting |
 | `StepBackCommandPlanning()` | LIFO undo in planning |
@@ -202,6 +203,8 @@ void OnAttack() => combat.SubmitPlayerAction(CombatAction.Attack(/* … */));
 ```
 
 Respect `combat.IsPresentationLocked` before accepting player commands (same as `CombatPlayerCommandGate`).
+
+While a skill picker is open, also respect `CombatPlayerCommandGate` with `skillPickerOpen: true` (command bar blocked). Wire `CombatPlayerCommandGate.TryBack(combat, skillPickerHost)` for cancel. Full replacement guide: [custom skill picker UI](custom-skill-picker-ui.md).
 
 ---
 
@@ -242,6 +245,7 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 | Exploration shell | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
 | Map | `Assets/Scripts/UI/Views/MapView.cs` |
 | Combat | `Assets/Scripts/UI/Views/CombatHudView.cs` |
+| Skill use picker (UITK) | `Assets/Scripts/UI/Views/SkillUsePickerToolkitView.cs` · [custom skill picker UI](custom-skill-picker-ui.md) |
 | Hub | `Assets/Scripts/UI/Views/HubHudView.cs` |
 | Scene wiring | `Assets/Scripts/Editor/DevSceneComposition.cs` |
 

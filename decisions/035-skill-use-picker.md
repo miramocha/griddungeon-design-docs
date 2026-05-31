@@ -94,6 +94,7 @@ While picker open: command-bar confirm blocked (same class of gate as targeting 
 
 ## Related
 
+- [Custom skill picker UI (dev)](../docs/04-dev/custom-skill-picker-ui.md) — implement `ISkillUsePickerView`, wire `CombatSkillPickerHost`
 - [Combat](combat.md), [character progression § Skill points](../docs/02-systems/character-progression.md#skill-points)
 - [05 — Class design MVP1](../docs/05-class-design-mvp1.md) — `SkillType`, `SkillDefinition`
 - [Game #52](https://github.com/miramocha/griddungeon-game/issues/52) — skill rules; [#12](https://github.com/miramocha/griddungeon-game/issues/12) — ContentDB
