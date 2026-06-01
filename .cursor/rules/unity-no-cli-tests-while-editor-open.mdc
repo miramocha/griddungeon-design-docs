@@ -10,14 +10,16 @@ Implementation and tests live in **griddungeon-game**. The user typically has th
 ## Do not run
 
 - `Unity.exe -batchmode … -runTests` against `griddungeon-game`
+- `griddungeon-game/Tools/ci-compile.ps1` (same `projectPath` lock)
 - Any shell command that opens the same Unity `projectPath` while the user may be editing
 
 ## Do instead
 
 1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo — expand `Tests → <Domain> → <Fixture>` ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
 2. Give **manual Play Mode** steps when closing tickets (see `ticket-test-documentation.mdc`).
+3. **Editor open, compile signal only:** `griddungeon-game/Tools/read-unity-editor-log.ps1` (read-only; no second Unity instance).
 
 ## Exceptions
 
-- User explicitly requests CLI tests **and** confirms the Unity project is not open.
+- User explicitly requests CLI tests or `Tools/ci-compile.ps1` **and** confirms the Unity project is **not** open in the Editor.
 - Do not invent test results; rely on user-reported or CI output.
