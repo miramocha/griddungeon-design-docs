@@ -42,6 +42,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before commit |
 | `git-commit-agent-workflow.mdc` | **Shared** — agent git commit order (format → commit → post-commit review → push) |
 | `unity-meta-files.mdc` | **Game** — `.meta` GUID policy (link from game repo via `scripts/link-cursor-rules.ps1`) |
+| `github-backlog-project.mdc` | **Shared** — read `.cursor/backlog-project.json` before backlog/ticket queries (project #3) |
 
 ## Agent skills (design-docs repo)
 

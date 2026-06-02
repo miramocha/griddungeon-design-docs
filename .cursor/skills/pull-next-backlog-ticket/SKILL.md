@@ -23,15 +23,17 @@ End-to-end: **discover** → **rank** → **claim** → **implement**. Works wit
 
 ## Configuration
 
-Resolve settings in this order (first match wins):
+**Step 0 — always:** read `.cursor/backlog-project.json` at the root of any open workspace repo (`griddungeon-game`, `griddungeon-design-docs`). Grid Dungeon ships this file pre-filled for [project 3](https://github.com/users/miramocha/projects/3). Do **not** search the repo or ask the user for the project URL when this file exists.
+
+Resolve overrides in this order (first match wins after Step 0):
 
 | Setting | Sources |
 |---------|---------|
-| Project URL | User message, e.g. `https://github.com/users/miramocha/projects/3` |
-| Owner + number | Explicit args, or parse URL: `/users/{owner}/projects/{n}` or `/orgs/{owner}/projects/{n}` |
-| Per-repo defaults | Optional `.cursor/backlog-project.json` in workspace root (see [project-config.example.json](project-config.example.json)) |
+| `.cursor/backlog-project.json` | **Default** — `owner`, `number`, `projectUrl`, status columns, priorities |
+| User message | Explicit project URL or `owner` + `number` override |
+| Parse URL | `/users/{owner}/projects/{n}` or `/orgs/{owner}/projects/{n}` |
 
-If nothing is specified, read `.cursor/backlog-project.json` when present; otherwise **ask once** for project URL or `owner` + `number`.
+If no config file exists in any open workspace root, **ask once** for project URL or `owner` + `number`.
 
 ### Typical overrides (optional JSON)
 

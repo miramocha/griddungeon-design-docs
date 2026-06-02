@@ -1,0 +1,32 @@
+---
+description: GitHub Project backlog for Grid Dungeon — read config before ticket/backlog queries
+alwaysApply: true
+---
+
+# GitHub backlog project
+
+Grid Dungeon MVP1 work is tracked on **[Codename: GridDungeon](https://github.com/users/miramocha/projects/3)** (GitHub Project #3, owner `miramocha`).
+
+## Config file (read first)
+
+Before searching for a project URL or asking the user which board to use:
+
+1. Read **`.cursor/backlog-project.json`** at the repo root of any open workspace folder (`griddungeon-game` or `griddungeon-design-docs`).
+2. Use `owner` + `number` (or `projectUrl`) for `gh project view`, `gh project item-list`, and `gh project item-edit`.
+3. Honor `readyStatus`, `backlogStatus`, `priorityOrder`, `excludeLabels`, and `limit` from the config.
+4. When both repos are open, prefer issues whose repository matches `repoPrefer` (`game` vs `docs`) when ranking ties.
+
+The only per-repo difference is **`repoPrefer`** — project identity and column names are the same in both copies.
+
+## Pull order
+
+Wave labels (`pull-w01` … `pull-w08`) and epic trackers are documented in design-docs [mvp1-spec §7](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/mvp1-spec.md#7-pull-order-github-backlog) (also linked as `pullOrderDoc` in the JSON).
+
+## Skill workflow
+
+For “next ticket”, “pull backlog”, or “what should I work on” requests, follow the **pull-next-backlog-ticket** skill after reading this config.
+
+## Do not
+
+- Ask the user for the project URL when `.cursor/backlog-project.json` exists in an open workspace root.
+- Invent work that is not on the project board.

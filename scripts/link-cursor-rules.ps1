@@ -27,7 +27,8 @@ $ruleNames = @(
     "post-commit-csharp-code-review.mdc",
     "pre-commit-csharpier-format.mdc",
     "git-commit-agent-workflow.mdc",
-    "code-review-no-story-edits.mdc"
+    "code-review-no-story-edits.mdc",
+    "github-backlog-project.mdc"
 )
 
 foreach ($name in $ruleNames) {
