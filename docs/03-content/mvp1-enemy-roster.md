@@ -47,16 +47,16 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling in MVP1). **ATK** in
 
 Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design-mvp1.md#skills)); enemy AI picks from `skillIds` (MVP1: weighted random or cycle — implementation in game #12).
 
-| Skill ID | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
-|----------|------|---------|------|----|----------------|--------|---------------|---------|
-| `enemy_attack` | Physical | Slash | None | 0 | 10 | Single enemy | — | All |
-| `atk_peck_volt` | Elemental | Volt | None | 0 | 8 | Single enemy | — | `gutter_crow` |
-| `atk_bind_arm` | Physical | Slash | Arm | 0 | 6 | Single enemy | `bind_arm` 40%, 2 turns | `shackle_rat` |
-| `atk_poison_spit` | Elemental | Ice | None | 0 | 6 | Single enemy | `poison` 50%, 3 turns | `venom_slime` |
-| `atk_heavy_swing` | Physical | Slash | Arm | 0 | 14 | Single enemy | — | `alley_thug` |
-| `atk_guard_slam` | Physical | Slash | None | 0 | 12 | Single enemy | — | `rubble_guard` |
-| `atk_warden_bind` | Physical | Slash | Head | 0 | 10 | Single enemy | `bind_head` 35%, 2 turns | `s1_warden` |
-| `atk_warden_venom` | Elemental | Ice | None | 0 | 12 | All enemies | `poison` 25%, 3 turns | `s1_warden` |
+| Skill ID | `descriptionEn` | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
+|----------|-----------------|------|---------|------|----|----------------|--------|---------------|---------|
+| `enemy_attack` | Deal slash damage to one enemy. | Physical | Slash | None | 0 | 10 | Single enemy | — | All |
+| `atk_peck_volt` | Deal volt damage to one enemy; may hit the back row. | Elemental | Volt | None | 0 | 8 | Single enemy | — | `gutter_crow` |
+| `atk_bind_arm` | Deal slash damage and may bind an enemy arm. | Physical | Slash | Arm | 0 | 6 | Single enemy | `bind_arm` 40%, 2 turns | `shackle_rat` |
+| `atk_poison_spit` | Deal damage to one enemy and may inflict poison. | Elemental | Ice | None | 0 | 6 | Single enemy | `poison` 50%, 3 turns | `venom_slime` |
+| `atk_heavy_swing` | Deal heavy slash damage to one enemy. | Physical | Slash | Arm | 0 | 14 | Single enemy | — | `alley_thug` |
+| `atk_guard_slam` | Deal slash damage to one enemy. | Physical | Slash | None | 0 | 12 | Single enemy | — | `rubble_guard` |
+| `atk_warden_bind` | Deal slash damage and may bind an enemy head. | Physical | Slash | Head | 0 | 10 | Single enemy | `bind_head` 35%, 2 turns | `s1_warden` |
+| `atk_warden_venom` | Deal damage to all enemies and may inflict poison. | Elemental | Ice | None | 0 | 12 | All enemies | `poison` 25%, 3 turns | `s1_warden` |
 
 Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and-buffs.md). `bind_*` blocks skills tagged with matching `BodyPart`.
 

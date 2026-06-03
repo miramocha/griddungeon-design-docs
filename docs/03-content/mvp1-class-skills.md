@@ -16,6 +16,7 @@
 | **Tree (MVP1)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
 | **Numbers** | `mpCost`, `powerByRank[]`, inflict `%` — **tuning** in data; structure locked |
+| **Descriptions** | `descriptionEn` on every `SkillDefinition` — **mechanical summary only**, no exact MP/power/% in prose ([game #149](https://github.com/miramocha/griddungeon-game/issues/149)) |
 
 ### Targeting (`TargetKind`)
 
@@ -29,26 +30,26 @@
 
 ## Master table — 18 class skills
 
-| `skill_id` | Display name | Class | Type | Target | Back | Pierce | Effect stub |
-|------------|--------------|-------|------|--------|------|--------|-------------|
-| `vanguard_guard` | Guard Stance | Vanguard | Buff | Self | — | — | `defense_up` 2 turns on caster |
-| `vanguard_shield_bash` | Shield Bash | Vanguard | Physical | SingleEnemy | — | — | Slash damage; 25% `bind_arm` |
-| `vanguard_protect` | Protect Ally | Vanguard | Buff | SingleAlly | — | — | **Guard** battle mod on **one** ally sharing caster `FormationRow` (core or aux), 1 turn |
-| `breaker_power_slash` | Power Slash | Breaker | Physical | SingleEnemy | — | — | Slash damage (single-hit bread-and-butter) |
-| `breaker_cleave` | Cleave | Breaker | Physical | AllEnemies | — | — | Slash damage to **all occupied enemy slots** |
-| `breaker_pierce_drive` | Pierce Drive | Breaker | Physical | SingleEnemy | yes | yes | Pierce damage; may hit back row per pierce rules |
-| `medic_heal` | Patch | Medic | Heal | SingleAlly | — | — | HP restore (`skillPower + TEC`); **living** allies only |
-| `medic_purify` | Purify | Medic | Heal | SingleAlly | — | — | Cleanse **Control** + **DoT** categories on ally |
-| `medic_revive` | Revive | Medic | Heal | SingleAlly | — | — | **Downed** allies only → 25% max HP |
-| `summoner_volt_bolt` | Volt Bolt | Summoner | Elemental | SingleEnemy | yes | — | Volt damage (weak personal bolt) |
-| `deploy_test_drone` | Deploy Test Drone | Summoner | Deploy | AuxBack | — | — | Spawn `test_drone` aux back, **3** rounds; queue OK if occupied, fail on resolve if still occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
-| `summoner_focus` | Focus | Summoner | Buff | Self | — | — | `magic_up` 2 turns on caster |
-| `marksman_aimed_shot` | Aimed Shot | Marksman | Physical | SingleEnemy | yes | yes | Pierce-tagged physical shot |
-| `marksman_bind_shot` | Bind Shot | Marksman | Physical | SingleEnemy | yes | yes | Pierce damage; 30% `bind_arm` |
-| `marksman_volley` | Volley | Marksman | Physical | AllEnemies | yes | — | Pierce damage to all occupied enemy slots |
-| `tactician_rally` | Rally | Tactician | Buff | AllAllies | — | — | `offense_up` 2 turns on **living core six + aux** summons/guests |
-| `tactician_weaken` | Demoralize | Tactician | Debuff | SingleEnemy | — | — | `offense_down` 2 turns |
-| `tactician_field_mend` | Field Mend | Tactician | Heal | SingleAlly | — | — | Minor HP restore (lower `skillPower` than `medic_heal`) |
+| `skill_id` | Display name | `descriptionEn` | Class | Type | Target | Back | Pierce | Effect stub |
+|------------|--------------|-----------------|-------|------|--------|------|--------|-------------|
+| `vanguard_guard` | Guard Stance | Raise your defense for a short time. | Vanguard | Buff | Self | — | — | `defense_up` 2 turns on caster |
+| `vanguard_shield_bash` | Shield Bash | Strike one enemy and may bind an arm. | Vanguard | Physical | SingleEnemy | — | — | Slash damage; 25% `bind_arm` |
+| `vanguard_protect` | Protect Ally | Guard one ally on your formation row for one turn. | Vanguard | Buff | SingleAlly | — | — | **Guard** battle mod on **one** ally sharing caster `FormationRow` (core or aux), 1 turn |
+| `breaker_power_slash` | Power Slash | Deal slash damage to one enemy. | Breaker | Physical | SingleEnemy | — | — | Slash damage (single-hit bread-and-butter) |
+| `breaker_cleave` | Cleave | Deal slash damage to all occupied enemy slots. | Breaker | Physical | AllEnemies | — | — | Slash damage to **all occupied enemy slots** |
+| `breaker_pierce_drive` | Pierce Drive | Piercing attack that can reach the back row. | Breaker | Physical | SingleEnemy | yes | yes | Pierce damage; may hit back row per pierce rules |
+| `medic_heal` | Patch | Restore HP to one living ally. | Medic | Heal | SingleAlly | — | — | HP restore (`skillPower + TEC`); **living** allies only |
+| `medic_purify` | Purify | Remove control and poison effects from one ally. | Medic | Heal | SingleAlly | — | — | Cleanse **Control** + **DoT** categories on ally |
+| `medic_revive` | Revive | Revive a downed ally with a portion of max HP. | Medic | Heal | SingleAlly | — | — | **Downed** allies only → 25% max HP |
+| `summoner_volt_bolt` | Volt Bolt | Deal volt damage to one enemy; may hit the back row. | Summoner | Elemental | SingleEnemy | yes | — | Volt damage (weak personal bolt) |
+| `deploy_test_drone` | Deploy Test Drone | Deploy a test drone to the aux back slot for limited rounds. | Summoner | Deploy | AuxBack | — | — | Spawn `test_drone` aux back, **3** rounds; queue OK if occupied, fail on resolve if still occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| `summoner_focus` | Focus | Raise your magic offense for a short time. | Summoner | Buff | Self | — | — | `magic_up` 2 turns on caster |
+| `marksman_aimed_shot` | Aimed Shot | Piercing shot that can reach the back row. | Marksman | Physical | SingleEnemy | yes | yes | Pierce-tagged physical shot |
+| `marksman_bind_shot` | Bind Shot | Piercing shot that may bind an enemy arm. | Marksman | Physical | SingleEnemy | yes | yes | Pierce damage; 30% `bind_arm` |
+| `marksman_volley` | Volley | Piercing damage to all occupied enemy slots. | Marksman | Physical | AllEnemies | yes | — | Pierce damage to all occupied enemy slots |
+| `tactician_rally` | Rally | Raise offense for all living allies and aux units. | Tactician | Buff | AllAllies | — | — | `offense_up` 2 turns on **living core six + aux** summons/guests |
+| `tactician_weaken` | Demoralize | Lower one enemy's offense for a short time. | Tactician | Debuff | SingleEnemy | — | — | `offense_down` 2 turns |
+| `tactician_field_mend` | Field Mend | Restore a small amount of HP to one living ally. | Tactician | Heal | SingleAlly | — | — | Minor HP restore (lower `skillPower` than `medic_heal`) |
 
 ---
 
@@ -127,9 +128,9 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 | Guard | *(built-in)* | Self | Guard |
 | Skill | `volt_burst` | SingleEnemy | Volt damage |
 
-| `skill_id` | Display name | Type | Notes |
-|------------|--------------|------|-------|
-| `volt_burst` | Volt Burst | Elemental | `SkillDefinition` in ContentDB; **not** allocatable on Summoner tree |
+| `skill_id` | Display name | `descriptionEn` | Type | Notes |
+|------------|--------------|-----------------|------|-------|
+| `volt_burst` | Volt Burst | Deal volt damage to one enemy; may hit the back row. | Elemental | `SkillDefinition` in ContentDB; **not** allocatable on Summoner tree |
 
 ---
 
