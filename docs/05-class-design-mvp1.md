@@ -125,6 +125,7 @@ class SkillDefinition : ScriptableObject
 {
     string skillId;
     string displayName;
+    string descriptionEn;         // mechanical summary for picker detail / tooltips — no exact MP/power/% in prose ([mvp1-class-skills](03-content/mvp1-class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
     SkillType skillType;
     DamageElement element;
     BodyPart bodyPartTag;         // which bind blocks this skill

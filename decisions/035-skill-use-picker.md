@@ -41,6 +41,8 @@ Picker shows **horizontal tabs**. **Default selected tab: `All`** — lists ever
 
 **Switching tabs** filters the list; selection + confirm applies the highlighted skill. Disabled rows (MP, bind, context) stay visible on every tab with a short disabled reason.
 
+**Row chrome (MVP1, [#149](https://github.com/miramocha/griddungeon-game/issues/149)):** each row shows **display name** + **MP cost label** (`CostLabel`, catalog-formatted). **Mechanical description** (`descriptionEn` from content) appears in a **detail panel** for the **focused** row only — not as a subtitle on every row. Description text is **authored** on `SkillDefinition`; do not auto-build it from `SkillData` stats. Copy rules: [mvp1-class-skills](../docs/03-content/mvp1-class-skills.md).
+
 **Tab navigation (MVP1 — keyboard):** while the picker is open, cycle visible tabs (wrap at ends):
 
 | Action | Keyboard (MVP1) | Notes |
@@ -86,8 +88,8 @@ While picker open: command-bar confirm blocked (same class of gate as targeting 
 
 ## Consequences
 
-- **Game:** `ISkillUsePickerView`, coordinator, UITK modal with tab strip + list; combat host replaces `ResolvePrimarySkillId` shortcut
-- **Content:** `SkillDefinition.useContexts` (Combat / Field flags); `skillType` already on SO — drives non-All tabs
+- **Game:** `ISkillUsePickerView`, coordinator, UITK modal with tab strip + list + detail panel; combat host replaces `ResolvePrimarySkillId` shortcut
+- **Content:** `SkillDefinition.useContexts` (Combat / Field flags); `skillType` already on SO — drives non-All tabs; `descriptionEn` on all MVP1 skills ([mvp1-class-skills](../docs/03-content/mvp1-class-skills.md))
 - **Docs:** [mvp1-class-skills](../docs/03-content/mvp1-class-skills.md) Type column = tab mapping; pause menu label **Skill trees** (ADR 034) vs **Use skill** for field picker
 - **Input:** `SkillPickerTabPrev` / `SkillPickerTabNext` on Combat (+ Field scope); **`Q`/`E`** only for MVP1 — see [input bindings § Skill use picker](../docs/02-systems/input-bindings.md#skill-use-picker-modal). Gamepad **`L1`/`R1`** deferred.
 - **Tests:** Core `SkillPickerCatalogTests` (All vs Physical tab counts, empty tab omission); Runtime coordinator + `NullSkillUsePicker`; UI tab wrap with Q/E (no gamepad tests in MVP1)

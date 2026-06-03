@@ -10,7 +10,7 @@ How to replace or extend the **combat skill selection modal** without changing c
 
 | Layer | Assembly | Owns |
 |-------|----------|------|
-| **Catalog** | `GridDungeon.Core` | `SkillPickerCatalog.Build`, `SkillPickerPresentationModel`, MP/bind/context enable rules — **no Unity UI** |
+| **Catalog** | `GridDungeon.Core` | `SkillPickerCatalog.Build`, `SkillPickerPresentationModel`, MP/bind/context enable rules, `CostLabel` via `SkillPickerRowCostLabel` — **no Unity UI** |
 | **Coordinator** | `GridDungeon.Runtime` | Show/hide view, `Selected` / `Cancelled` events, supersede in-flight picks |
 | **Host** | `GridDungeon.Runtime` | `SkillPickerBuildRequest`, skill id list (allocated vs summon kit), `SubmitPlayerAction(Skill)` |
 | **View** | `GridDungeon.UI` (your code) | Render tabs + rows only; fire `Selected(skillId)` / `Cancelled` |
@@ -30,7 +30,7 @@ flowchart LR
   submit --> target
 ```
 
-**Do not** filter by `SkillType`, compute MP costs, or read `SkillDefinition` assets inside the view — the catalog already did that.
+**Do not** filter by `SkillType`, format MP cost strings, or read `SkillDefinition` assets inside the view — the catalog already supplies `CostLabel`, `DescriptionEn`, and enable flags.
 
 **Do not** add `GridDungeon.UI` references to `GridDungeon.Runtime` (asmdef boundary). Implement `ISkillUsePickerView` in UI; pass the instance into `CombatSkillPickerHost` in your HUD bootstrap.
 
@@ -64,7 +64,7 @@ Implement on the same class as the view (or a wrapper). `CombatInputHandler` cal
 | `ConfirmFocused` | Z / Enter (`MenuConfirm`) |
 | `SelectPreviousTab` / `SelectNextTab` | Q / E (`SkillPickerTabPrev` / `SkillPickerTabNext` on **Combat** map) |
 
-Disabled rows (`SkillPickerRowModel.IsEnabled == false`) stay visible; ignore confirm on them (show `DisabledReason`).
+Disabled rows (`SkillPickerRowModel.IsEnabled == false`) stay visible; ignore confirm on them (show `DisabledReason` on the row). The **detail panel** still shows `DescriptionEn` for the focused row even when disabled.
 
 ### `ICombatSkillPickerHost` (wire from command bar)
 
@@ -96,6 +96,16 @@ Required `name` hooks (query in code):
 - `skill-picker` — root; toggle `skill-picker--hidden` when closed
 - `skill-picker-tabs` — tab strip host
 - `skill-picker-rows` — `ScrollView` for rows
+- `skill-picker-detail` — focused-row mechanical description (`DescriptionEn`)
+
+**Shipped row chrome** (bind from `SkillPickerRowModel` only):
+
+| Element | Source | Notes |
+|---------|--------|--------|
+| Name | `DisplayName` | Primary list label |
+| Cost | `CostLabel` | e.g. `6 MP` — from catalog (`SkillPickerRowCostLabel.Format`); do not rebuild from `MpCost` in the view |
+| Disabled hint | `DisabledReason` | Only when `IsEnabled == false` |
+| Detail panel | `DescriptionEn` | Update on row focus change; clear when nothing focused |
 
 BEM classes follow project UITK rules ([unity-ui-toolkit](https://github.com/miramocha/griddungeon-design-docs/blob/main/.cursor/rules/unity-ui-toolkit.mdc)).
 
@@ -172,7 +182,9 @@ Built only by `SkillPickerCatalog` in Core. Read-only at the view boundary.
 | DTO | Fields |
 |-----|--------|
 | `SkillPickerTabModel` | `TabId`, `Label`, `Rows[]` |
-| `SkillPickerRowModel` | `SkillId`, `DisplayName`, `IsEnabled`, `DisabledReason` |
+| `SkillPickerRowModel` | `SkillId`, `DisplayName`, `DescriptionEn`, `CostLabel`, `MpCost`, `SkillType`, `IsEnabled`, `DisabledReason` |
+
+Copy authority: [mvp1-class-skills](../03-content/mvp1-class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
 
 Tab rules (MVP1):
 
@@ -199,9 +211,11 @@ Skill ids for the request (host, not view):
 
 Edit Mode paths: `Tests → Combat → SkillPickerCatalogTests`, `SkillPickerCoordinatorTests`, `CombatSkillPickerHostTests`; `Tests → UI → SkillUsePickerToolkitViewTests` for UITK.
 
+Catalog tests ([#149](https://github.com/miramocha/griddungeon-game/issues/149)): `Build_RowIncludesDescriptionEnFromSkillData`, `Build_RowCostLabel_ShowsMpOnly`. UI: focus row → `skill-picker-detail` text; row shows `CostLabel`.
+
 Do not simulate `<Keyboard>/q` in Edit Mode — test tab/row via `ICombatSkillPickerKeyboardView` or view public methods ([unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc)).
 
-Manual: **DevBootstrap → F3** → **Skill** on medic (allocated heal) vs full guild party (empty list per core).
+Manual: **DevBootstrap → F3** → **Skill** → focus rows: detail panel updates; MP on row; medic/breaker kits; empty allocation → All tab, zero rows.
 
 ---
 
@@ -214,7 +228,8 @@ ADR 035 reserves `FieldSkillPickerHost` + Field UI scope for hub/exploration **U
 ## Checklist
 
 - [ ] View implements `ISkillUsePickerView` (+ keyboard interface for MVP1 PC binds)
-- [ ] No skill filtering or MP math in view
+- [ ] No skill filtering or MP formatting in view — bind `CostLabel` and `DescriptionEn` from the model
+- [ ] Detail panel tracks focused row (`DescriptionEn`); list rows show name + cost (+ disabled reason)
 - [ ] `Selected` only for enabled rows with valid `skillId`
 - [ ] Empty allocation → open picker, All tab, zero rows
 - [ ] `Detach()` on HUD disable; picker not left `IsOpen`

@@ -17,6 +17,7 @@
 | **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
 | **Numbers** | `mpCost`, `powerByRank[]`, inflict `%` — **tuning** in data; structure locked |
 | **Descriptions** | `descriptionEn` on every `SkillDefinition` — **mechanical summary only**, no exact MP/power/% in prose ([game #149](https://github.com/miramocha/griddungeon-game/issues/149)) |
+| **Picker display** | Row **`CostLabel`** (`{n} MP` from data); **`descriptionEn`** in focused detail panel only — see [custom skill picker UI](../04-dev/custom-skill-picker-ui.md) |
 
 ### Targeting (`TargetKind`)
 
