@@ -170,7 +170,7 @@ Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design-mvp1.md#
 | Add stack / instance | `InventoryRules.TryAdd` | Shop, chest, loot, gather |
 | Remove / sell | `InventoryRules.TryRemove` | `ShopService.TrySell` |
 | Bag full check | `InventoryRules.HasEmptySlot` | Grant UIs show message |
-| Equip / unequip | `InventoryRules.TryEquip` / `TryUnequip` | Guild / party menu |
+| Equip / unequip | `InventoryRules.TryEquip` / `TryUnequip` | Party menu **Equipment** pane (hub + exploration) |
 | Identify instance | `InventoryRules.Identify` | `ShopService.TryIdentify` |
 | Loot roll | `LootResolver` (from `LootTable`) | Post-battle [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
 | Tabbed bag view model | `InventoryBagCatalog.BuildTabs` | `InventoryBagCoordinator` → UI |
@@ -179,9 +179,28 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 
 ---
 
-## Bag UI — category tabs (MVP1)
+## Party menu shell (MVP1)
 
-Party menu **Inventory** uses **horizontal category tabs**, same interaction model as the skill use picker ([ADR 035](../../decisions/035-skill-use-picker.md)).
+**`Tab`** opens the party menu when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md) §5).
+
+| Section | Pane | v1 |
+|---------|------|-----|
+| **Inventory** | Shared bag (category tabs below) | Yes |
+| **Equipment** | Active party — one member, five worn slots, slot-first bag sub-picker | Yes |
+| **Skills** | Class skill trees | Deferred ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Formation** | Row assignment | Deferred |
+
+**Navigation:** vertical section list — **W/S** changes focus; **pane swaps immediately** when focus moves (hub service pattern). **X** closes menu. **Q/E** are **not** used at shell level.
+
+**Explorers Guild (hub):** assign six cores + roster summary only — **no** equip/unequip actions ([hub-and-services](hub-and-services.md)).
+
+**Game:** [#166](https://github.com/miramocha/griddungeon-game/issues/166) (shell + Inventory hosting) · [#167](https://github.com/miramocha/griddungeon-game/issues/167) (Equipment pane).
+
+---
+
+## Bag UI — Inventory pane category tabs (MVP1)
+
+Party menu section **Inventory** uses **horizontal category tabs**, same interaction model as the skill use picker ([ADR 035](../../decisions/035-skill-use-picker.md)).
 
 | Tab id | Label | Contents |
 |--------|-------|----------|
@@ -195,8 +214,9 @@ Party menu **Inventory** uses **horizontal category tabs**, same interaction mod
 - Show **`All`** when bag has ≥1 occupied slot.
 - Show a category tab only if ≥1 slot matches (no empty tabs).
 - Tab switch **filters the slot grid**; focus/confirm on visible slots.
-- **Keyboard:** `Q` / `E` cycle tabs while overlay open; arrows / `WASD` move slot focus; `Z` / `X` confirm / cancel ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
-- **`InputRouter`** enables inventory tab actions **only** while bag modal is open — do not steal exploration **turn** `Q`/`E` ([input bindings § Party inventory](input-bindings.md#party-inventory-modal)).
+- **Keyboard:** `Q` / `E` cycle category tabs **only while Inventory pane is active**; arrows / `WASD` move slot focus; `Z` / `X` confirm / cancel row ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
+- **Z** on equipment in bag: **no equip** in v1 — use **Equipment** pane.
+- **`InputRouter`** enables inventory tab actions **only** while Inventory pane is open — do not steal exploration **turn** `Q`/`E` ([input bindings § Party menu](input-bindings.md#party-menu-tab)).
 - **LMB** on tab headers optional.
 
 **Architecture:**
@@ -209,7 +229,21 @@ Party menu **Inventory** uses **horizontal category tabs**, same interaction mod
 
 Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
 
-**Entry points:** `Tab` — party menu in **hub** and **exploration** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)); not combat command bar. See [exploration UI](exploration-ui.md#party-menu-inventory).
+**Entry points:** `Tab` — party menu shell in **hub** and **exploration** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)); not combat command bar. See [exploration UI](exploration-ui.md#party-menu).
+
+---
+
+## Equipment pane (MVP1)
+
+**Scope:** active party cores only (filled core slots). **Q/E** = prev/next member. **WASD** = worn slot focus. **Z** on slot → filtered bag sub-picker → equip via `InventoryRules.TryEquip`. Filled slots: sub-picker includes **Remove** (`TryUnequip`) and **Replace**.
+
+| Layer | Type |
+|-------|------|
+| Core | `PartyEquipmentCatalog`, bag-row filter for slot + class |
+| Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations` |
+| UI | BEM e.g. `party-menu__equipment`, `party-menu__slot` |
+
+Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](https://github.com/miramocha/griddungeon-game/issues/155)).
 
 ---
 
@@ -230,7 +264,7 @@ Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-me
 |------|-------|
 | Fixed bag, tabs (All / Consumables / Equipment) | **Materials** tab + stacks |
 | Shop buy/sell, identify | **Synthesis** ([gathering & fishing](gathering-and-fishing.md)) |
-| Guild equip, stat aggregation | Quest “bring N material” checks bag |
+| Party menu equip, stat aggregation | Quest “bring N material” checks bag |
 | Loot [#31](https://github.com/miramocha/griddungeon-game/issues/31), chest [#105](https://github.com/miramocha/griddungeon-game/issues/105) | Expanded item effects |
 
 ---
@@ -245,7 +279,7 @@ Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-me
 | Battle victory | `LootTable` → stacks / instances / credits | `PartyInventory`, `Hub.Credits`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
 | Chest interact | `ChestItemId` | `PartyInventory` |
 | Gather node | Material or consumable (MVP1 stub: consumable) | `PartyInventory` |
-| Guild equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
+| Party menu equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
 
 **Tutorial FOE:** `grp_alley_stalker_tutorial` — no standard farmable loot/XP per [#31](https://github.com/miramocha/griddungeon-game/issues/31).
 
@@ -259,8 +293,10 @@ Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-me
 | 1 | [#152](https://github.com/miramocha/griddungeon-game/issues/152) | Core + save + `InventoryBagCatalog` |
 | 2 | [#31](https://github.com/miramocha/griddungeon-game/issues/31) | Post-battle loot |
 | 3 | [#153](https://github.com/miramocha/griddungeon-game/issues/153) | `ItemDefinition` + shop |
-| 4 | [#154](https://github.com/miramocha/griddungeon-game/issues/154) | Tabbed bag UI |
-| 5 | [#155](https://github.com/miramocha/griddungeon-game/issues/155) | Equip + `EquipmentStatAggregator` |
+| 4 | [#154](https://github.com/miramocha/griddungeon-game/issues/154) | Tabbed bag UI (closed — superseded by shell) |
+| 4b | [#166](https://github.com/miramocha/griddungeon-game/issues/166) | Party menu shell + Inventory pane |
+| 5 | [#155](https://github.com/miramocha/griddungeon-game/issues/155) | `EquipmentStatAggregator` + save/combatant stats |
+| 5b | [#167](https://github.com/miramocha/griddungeon-game/issues/167) | Equipment pane + slot-first equip (hub + exploration) |
 | 6 | [#156](https://github.com/miramocha/griddungeon-game/issues/156) | Chest + identify |
 | 7 | [#157](https://github.com/miramocha/griddungeon-game/issues/157) | Combat consumable picker |
 
@@ -277,8 +313,8 @@ Coordinate equipment SOs with [#12](https://github.com/miramocha/griddungeon-gam
 ### Manual (Play Mode)
 
 - **Scene:** `DevBootstrap.unity` — **F1** hub / **F2** exploration / **F3** combat
-- **Steps:** Buy `patch_kit` at shop → **Tab** → Inventory → **Consumables** tab → win fight → loot in **All** tab → equip `guild_shortsword` at guild → F3 fight with higher STR
-- **Expected:** Tabs hide when empty; `Q`/`E` do not turn party on F2 while bag open; unidentified chest charm shows `???` until shop identify
+- **Steps:** Buy `patch_kit` + `guild_shortsword` at shop → **Tab** → **Inventory** → Consumables tab → **Tab** → **Equipment** → member → Weapon slot → **Z** → pick sword → **F3** fight with higher STR
+- **Expected:** Shell sections switch on W/S; bag `Q`/`E` only on Inventory pane; `Q`/`E` do not turn party on F2 while menu open; equip works on F1 and F2; Guild has no equip buttons
 
 ### Regressions
 

@@ -241,7 +241,7 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 
 ```json
 {
-  "hub": { "gold": 0, "unlockedWarpGateStrata": ["s1", "s2"] },
+  "hub": { "credits": 0, "unlockedWarpGateStrata": ["s1", "s2"] },
   "party": [ /* 6 characters + skill allocations */ ],
   "maps": {
     "s1_B2F": { "visited": [], "walls": [], "features": [], "foeIcons": [] }

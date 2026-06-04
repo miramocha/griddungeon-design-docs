@@ -219,9 +219,9 @@ Hub has **fewer runtime events**; services mutate `PartyRuntime` / save and retu
 | API | Notes |
 |-----|-------|
 | `PresentationGate` | `HubPresentationGate` — lock during service feedback |
-| `TryHealPartyAtHospital`, `TryReviveFirstFallenAtHospital`, … | Refresh gold/party UI **after** success |
+| `TryHealPartyAtHospital`, `TryReviveFirstFallenAtHospital`, … | Refresh credits/party UI **after** success |
 | `TryLeaveHub(stratumId, floorId)` | → Exploration (sets up floor) |
-| `HubGold` | Label refresh |
+| `HubCredits` | Wallet label refresh (display text from content/l10n) |
 
 No `PartyChanged` event — refresh on button handler success or `PhaseChanged`.
 

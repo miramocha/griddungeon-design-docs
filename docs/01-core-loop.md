@@ -55,7 +55,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | Depth | FOE tiers, encounter rate | Materials, gear, quest flags |
 | FOE engagement | Hard fights | Better drops, shortcuts unlocked |
 | Exploration coverage | Time in labyrinth | More map revealed, faster return routes |
-| Resource spend | Gold, consumables | Safer boss/FOE attempts |
+| Resource spend | Credits, consumables | Safer boss/FOE attempts |
 
 ## Modes of play
 

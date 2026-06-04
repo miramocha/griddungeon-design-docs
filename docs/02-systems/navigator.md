@@ -62,7 +62,7 @@ While a Navigator is active, the **core six** receive that Navigator’s **aura*
 | **Route Analyst** | `route_analyst` | +5% accuracy to core | Course / grid planning — not combat targeting |
 | **Wellness Lead** | `wellness_lead` | −5% MP cost on core heals | Crew care; pairs with **Medic** kits, not the `medic` class |
 | **Sync Relay** | `sync_relay` | +3% Synchro Charge gain from core actions | Comms loop for team Synchro; stratum unlock candidate |
-| **Ledger Chief** | `ledger_chief` | +8% gold from battles | Post-sortie accounts / manifest payouts |
+| **Ledger Chief** | `ledger_chief` | +8% Credits from battles | Post-sortie accounts / manifest payouts |
 
 Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same hub-lead layer as [party classes](party-and-classes.md) field jobs — do not reuse core `class_id` labels (`tactician`, `medic`, …).
 

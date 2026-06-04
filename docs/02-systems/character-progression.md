@@ -90,7 +90,7 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 
 ## Economy
 
-- Gold from FOEs, random fights, chests, quest
+- **Credits** from FOEs, random fights, chests, quest — save field `HubSaveData.Credits`; display label swappable ([items & inventory § Hub currency](items-and-inventory.md#hub-currency-credits))
 - Sinks: hospital, shop, synthesis, return thread items
 
 ## Consumables (starter)

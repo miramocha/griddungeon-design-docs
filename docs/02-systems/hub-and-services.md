@@ -26,8 +26,9 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Open / close service screen | Panel **fade/slide** | No — navigation only |
 | Inn save | Brief **confirm flash** + text | Yes — before another service action |
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
-| Shop buy / sell | Gold + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
-| Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
+| Shop buy / sell | **Credits** balance + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
+| Guild assign party / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
+| Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional MVP1 |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
 | Return to hub (exploration gate `stairsUp`) | **Floor transition** fade/vignette via `TryReturnToHub` ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until hub phase ready |
 | Leave hub → stratum | **Floor transition vignette** or fade fallback ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until exploration phase ready |
@@ -39,8 +40,8 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 |---|---------------------|------------------------|
 | **Who** | Six **core** guild members | **Navigators** (party leads, off-formation) |
 | **Recruitment** | Yes — create/recruit core roster | **No** — unlock via strata / quests / events |
-| **Party prep** | Formation, equipment, skill trees (hub) | Pick **one active** Navigator + aura/Protocol preview |
-| **In labyrinth** | Fight, explore, earn XP; **skill trees** via party menu when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) | Protocol execution + passives only |
+| **Party prep** | Assign six cores; **skill trees** (hub Guild). **Equipment** via **`Tab` party menu** (hub + exploration) — not Guild service buttons ([ADR 036](../../decisions/036-party-inventory-model.md)) | Pick **one active** Navigator + aura/Protocol preview |
+| **In labyrinth** | Fight, explore, earn XP; **equipment** + future **skill trees** via **`Tab` party menu** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)) | Protocol execution + passives only |
 
 Prepare roster and Navigator before a dive when convenient; **skill points** need not wait for hub return.
 
@@ -173,7 +174,7 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 
 | Type | Objective | Example reward |
 |------|-----------|----------------|
-| Hunt | Kill N of enemy type | Gold, item |
+| Hunt | Kill N of enemy type | Credits, item |
 | Survey | Reach floor | Unlock shop stock |
 | Gather | Bring materials | Synthesis unlock |
 

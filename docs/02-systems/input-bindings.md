@@ -27,7 +27,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
 | **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
-| **Party / menu** | `Tab` | Inventory, formation summary, **skill trees** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Party / menu** | `Tab` | Party menu: **Inventory** + **Equipment** (v1); **skill trees** / formation deferred ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)) |
 | **Pause** | `Esc` | Pause menu: **Resume**, **Skills** (same gate as party menu), **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
@@ -134,22 +134,45 @@ When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-p
 
 **Scope:** `InputRouter` enables **`SkillPickerTabPrev` / `SkillPickerTabNext`** only while the picker is open. **`Q`/`E`** must **not** emit exploration turn events during this overlay (combat has no exploration map; field picker runs under pause/party modal with movement already blocked).
 
-### Party inventory modal
+### Party menu (`Tab`)
 
-When the **party menu Inventory** panel is open ([ADR 036](../../decisions/036-party-inventory-model.md), [items & inventory](items-and-inventory.md)) — **`Tab`** in hub or exploration when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)):
+When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-model.md), [items & inventory](items-and-inventory.md)) — **`Tab`** in hub or exploration when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)):
+
+#### Shell (always while menu open)
 
 | Action | Keyboard (MVP1) | Notes |
 |--------|-----------------|-------|
-| **Previous tab** | **`Q`** | Cycles **All** / Consumables / Equipment (Materials MVP2); default tab **All** |
-| **Next tab** | **`E`** | |
-| **Move slot focus** | Arrows or `W` / `A` / `S` / `D` | Active tab’s slot grid only |
-| **Confirm** | `Z` | Use / equip / context action per focused slot |
-| **Cancel** | `X` | Close inventory panel |
-| **Pick tab (optional)** | LMB on tab | Same tabs as Q/E cycle |
+| **Open / close menu** | **`Tab`** | Toggle |
+| **Previous section** | **`W`** or **↑** | **Inventory** ↔ **Equipment** (v1 only) |
+| **Next section** | **`S`** or **↓** | Focus change **immediately swaps pane** (hub service style) |
+| **Cancel** | **`X`** | Close entire party menu (and any bag sub-picker) |
 
-**Scope:** `InputRouter` enables **`InventoryBagTabPrev` / `InventoryBagTabNext`** (or reuse skill-picker action names with mutual exclusion) **only** while the inventory modal is open. **`Q`/`E`** must **not** emit exploration **turn** events on F2 while this overlay is open.
+**Scope:** section navigation uses **`MenuNavigate`** / hub menu pattern — **not** `Q`/`E` at shell level.
 
-**Deferred:** gamepad **`L1`/`R1`** tab cycle — same as skill picker ([ADR 009](../../decisions/009-input-bindings-pc.md)).
+#### Inventory pane (when section = Inventory)
+
+| Action | Keyboard (MVP1) | Notes |
+|--------|-----------------|-------|
+| **Previous category tab** | **`Q`** | Cycles **All** / Consumables / Equipment (Materials MVP2); default **All** |
+| **Next category tab** | **`E`** | |
+| **Move slot focus** | Arrows or `W` / `A` / `S` / `D` | Active category’s bag rows only |
+| **Confirm** | `Z` | Use consumable when implemented; **no equip** from bag in v1 |
+| **Pick tab (optional)** | LMB on tab | Same tabs as Q/E |
+
+#### Equipment pane (when section = Equipment)
+
+| Action | Keyboard (MVP1) | Notes |
+|--------|-----------------|-------|
+| **Previous member** | **`Q`** | Active party cores only (wrap) |
+| **Next member** | **`E`** | |
+| **Move worn-slot focus** | Arrows or `W` / `A` / `S` / `D` | Weapon / Head / Body / Legs / Accessory |
+| **Confirm slot** | `Z` | Open **bag sub-picker** filtered to slot + class |
+| **Sub-picker: confirm row** | `Z` | Equip, **Replace**, or **Remove** |
+| **Sub-picker: cancel** | `X` | Back to worn-slot grid |
+
+**Scope:** `InputRouter` enables **`InventoryBagTabPrev` / `InventoryBagTabNext`** **only** while the **Inventory** pane is active; routes **`Q`/`E`** to **member cycle** while **Equipment** pane is active. **`Q`/`E`** must **not** emit exploration **turn** events on F2 while the party menu is open.
+
+**Deferred:** gamepad **`L1`/`R1`** — same as skill picker ([ADR 009](../../decisions/009-input-bindings-pc.md)); Skills / Formation party-menu sections.
 
 ### Combat UI (any time in fight)
 
@@ -200,7 +223,7 @@ Exploration
 Combat
   MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X on MenuNavigate composite
   SkillPickerTabPrev, SkillPickerTabNext    # ADR 035 — Q / E (MVP1); L1 / R1 deferred; only while picker open
-  InventoryBagTabPrev, InventoryBagTabNext  # ADR 036 — Q / E (MVP1); only while party inventory open
+  InventoryBagTabPrev, InventoryBagTabNext  # ADR 036 — Q / E on Inventory pane OR member cycle on Equipment pane
   ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
   CycleTarget                             # deferred; targeting uses MenuNavigate on roster
