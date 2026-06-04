@@ -1,6 +1,6 @@
 # Items & inventory
 
-Party **bag** (shared, fixed slots) and **worn equipment** (per core member). Gold stays on hub save — not a bag slot.
+Party **bag** (shared, fixed slots) and **worn equipment** (per core member). **Credits** (hub wallet) stay on save — not a bag slot.
 
 **Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked) · equipment stats table [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked)
 
@@ -37,6 +37,20 @@ flowchart TB
 | Content defs, shop, coordinators | **Runtime** — `ItemDefinition`, `EquipmentDefinition`, `ShopService` |
 | Tabbed bag panel, party menu | **UI** — UITK `party-inventory` (swappable port) |
 | Persist | **`SaveGame`** — source of truth; `PartyRuntime` mirrors on load |
+
+---
+
+## Hub currency (Credits)
+
+| Layer | Name | Notes |
+|-------|------|--------|
+| **Code / save** | `HubSaveData.Credits` (`int`) | Authoritative balance — use **`Credits`** in new backend code, not `Gold` |
+| **Player-facing label** | Content or localization | Default display **"Credits"**; swappable per act/region/settings **without** renaming save fields |
+| **Loot / rewards** | `LootEntry` / reward DTO | May grant **credits** alongside bag items ([#31](https://github.com/miramocha/griddungeon-game/issues/31)) |
+
+**Wire (save JSON):** `Hub.Credits` (Unity `JsonUtility` PascalCase). Pre-release builds do not load legacy `Gold` ([#158](https://github.com/miramocha/griddungeon-game/issues/158)).
+
+Shop/hospital/identify copy uses the **display label** via `Mvp1HubConstants.CurrencyDisplayName` / `FormatAmount` ("Not enough Credits" or future "Funds"); HUD uses `FormatWalletLabel`.
 
 ---
 
@@ -111,7 +125,7 @@ Stat and resist bonuses: full table in [character progression § MVP1 equipment]
 | State | Bag display | Shop |
 |-------|-------------|------|
 | **Identified** | `EquipmentDefinition.displayName` | Buy/sell as normal |
-| **Unidentified** | `???` (optional slot hint: Weapon / Head / … from `EquipSlot` only) | **Identify** service — gold sink; sets `IsIdentified = true` |
+| **Unidentified** | `???` (optional slot hint: Weapon / Head / … from `EquipSlot` only) | **Identify** service — Credits sink; sets `IsIdentified = true` |
 
 **MVP1 content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#mvp1-equipment-locked)). Shop purchases are **identified** on buy.
 
@@ -141,7 +155,7 @@ Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design-mvp1.md#
 |------|----------|
 | `PartyInventory` | `SaveGame` (new field) |
 | `EquipmentLoadout` per member | `CharacterSaveData` (guild roster + active party rows) |
-| Gold | `HubSaveData.Gold` (unchanged) |
+| Credits | `HubSaveData.Credits` |
 
 **Load flow:** inn / bootstrap → hydrate `PartyRuntime` from save → `Mvp1GuildCombatantBuilder` applies `Equipment` + aggregated stats.
 
@@ -225,10 +239,10 @@ Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-me
 
 | Source | Grants | Save touch |
 |--------|--------|------------|
-| Shop buy | Stack or identified equipment instance | `PartyInventory`, `Hub.Gold` |
-| Shop sell | Removes from bag | `PartyInventory`, `Hub.Gold` |
-| Shop identify | Flips instance flag | `PartyInventory` |
-| Battle victory | `LootTable` → stacks / instances / gold | `PartyInventory`, `Hub.Gold`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
+| Shop buy | Stack or identified equipment instance | `PartyInventory`, `Hub.Credits` |
+| Shop sell | Removes from bag | `PartyInventory`, `Hub.Credits` |
+| Shop identify | Flips instance flag | `PartyInventory`, `Hub.Credits` |
+| Battle victory | `LootTable` → stacks / instances / credits | `PartyInventory`, `Hub.Credits`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
 | Chest interact | `ChestItemId` | `PartyInventory` |
 | Gather node | Material or consumable (MVP1 stub: consumable) | `PartyInventory` |
 | Guild equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
