@@ -50,7 +50,7 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 | **Marksman traps** | Separate system — not aux slot allies |
 | **Items / bosses** | Rare exceptions; not on core class trees |
 
-**MVP1:** one test deploy — `deploy_test_drone` → `test_drone` (aux back, 3 rounds, **player-controlled** Attack/Guard/`volt_burst`). Full six-class kits: [MVP1 class skills](../03-content/mvp1-class-skills.md).
+**MVP1:** one scout deploy — `deploy_scout_drone` → `scout_drone` (aux back, 3 rounds, **player-controlled** Attack/Guard/`volt_burst`). Full six-class kits: [MVP1 class skills](../03-content/mvp1-class-skills.md).
 
 **Party build:** Up to **two** deploys if both aux rows filled and Summoner has the skills.
 

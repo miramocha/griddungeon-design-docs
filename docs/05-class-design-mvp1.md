@@ -275,7 +275,7 @@ enum ProtocolEffectType { DamageAllEnemies, HealAllAllies }
 // Assets/Content/Summons/
 class SummonDefinition : ScriptableObject
 {
-    string summonId;              // "test_drone"
+    string summonId;              // "scout_drone"
     string displayName;
     CharacterBaseStats stats;
     int durationRounds;
@@ -1345,9 +1345,9 @@ These string IDs must be stable across code and SO assets.
 | Class | `vanguard`, `breaker`, `medic`, `summoner`, `marksman`, `tactician` | Day-one roster |
 | Navigator | `guild_handler` | Sortie Lead; day one; aura: `synchroGainBonus = 0.05` — [navigator](02-systems/navigator.md) |
 | Protocol skill | `protocol_strike`, `protocol_mend` | Damage all enemies / heal all living core — [synchro-protocol](02-systems/synchro-protocol.md) |
-| Summon | `test_drone` | Summoner-only; 3 rounds; **player-controlled** kit |
-| Summon deploy skill | `deploy_test_drone` | Summoner tree only; `SkillType.Deploy` → `test_drone`, aux back ([ADR 016](../decisions/016-summon-control-mvp1.md)) |
-| Summon skill | `volt_burst` | On `test_drone` summon kit only — not on Summoner class tree |
+| Summon | `scout_drone` | Summoner-only; 3 rounds; **player-controlled** kit |
+| Summon deploy skill | `deploy_scout_drone` | Summoner tree only; `SkillType.Deploy` → `scout_drone`, aux back ([ADR 016](../decisions/016-summon-control-mvp1.md)) |
+| Summon skill | `volt_burst` | On `scout_drone` summon kit only — not on Summoner class tree |
 | Stratum | `s1` | Stratum 1 |
 | Floors | `s1_B1F`, `s1_B2F`, `s1_B3F` | Save/map keys |
 | Items | `patch_kit`, `stim_draft`, `trauma_kit`, `return_thread`, `analysis_glass` | Starter consumables |
@@ -1366,7 +1366,7 @@ These string IDs must be stable across code and SO assets.
 | Vanguard | `vanguard_guard` | `vanguard_shield_bash` | `vanguard_protect` |
 | Breaker | `breaker_power_slash` | `breaker_cleave` | `breaker_pierce_drive` |
 | Medic | `medic_heal` | `medic_purify` | `medic_revive` |
-| Summoner | `summoner_volt_bolt` | `deploy_test_drone` | `summoner_focus` |
+| Summoner | `summoner_volt_bolt` | `deploy_scout_drone` | `summoner_focus` |
 | Marksman | `marksman_aimed_shot` | `marksman_bind_shot` | `marksman_volley` |
 | Tactician | `tactician_rally` | `tactician_weaken` | `tactician_field_mend` |
 
