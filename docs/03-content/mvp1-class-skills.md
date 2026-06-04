@@ -11,7 +11,7 @@
 |------|--------|
 | **ID format** | `{class_id}_{snake_name}` — stable in `SkillDefinition.skillId` and save data |
 | **Presentation** | **Fixed** for every MVP1 class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
-| **Deploy** | **Summoner only** — `deploy_test_drone` per [ADR 016](../../decisions/016-summon-control-mvp1.md); targets **aux back** |
+| **Deploy** | **Summoner only** — `deploy_scout_drone` per [ADR 016](../../decisions/016-summon-control-mvp1.md); targets **aux back** |
 | **Summon turns** | **Player-controlled** — minimal kit on `SummonDefinition` ([summons & guests](../02-systems/summons-and-guests.md)) |
 | **Tree (MVP1)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
@@ -43,7 +43,7 @@
 | `medic_purify` | Purify | Remove control and poison effects from one ally. | Medic | Heal | SingleAlly | — | — | Cleanse **Control** + **DoT** categories on ally |
 | `medic_revive` | Revive | Revive a downed ally with a portion of max HP. | Medic | Heal | SingleAlly | — | — | **Downed** allies only → 25% max HP |
 | `summoner_volt_bolt` | Volt Bolt | Deal volt damage to one enemy; may hit the back row. | Summoner | Elemental | SingleEnemy | yes | — | Volt damage (weak personal bolt) |
-| `deploy_test_drone` | Deploy Test Drone | Deploy a test drone to the aux back slot for limited rounds. | Summoner | Deploy | AuxBack | — | — | Spawn `test_drone` aux back, **3** rounds; queue OK if occupied, fail on resolve if still occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| `deploy_scout_drone` | Deploy Scout Drone | Deploy a scout drone to the aux back slot for limited rounds. | Summoner | Deploy | AuxBack | — | — | Spawn `scout_drone` aux back, **3** rounds; queue OK if occupied, fail on resolve if still occupied ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | `summoner_focus` | Focus | Raise your magic offense for a short time. | Summoner | Buff | Self | — | — | `magic_up` 2 turns on caster |
 | `marksman_aimed_shot` | Aimed Shot | Piercing shot that can reach the back row. | Marksman | Physical | SingleEnemy | yes | yes | Pierce-tagged physical shot |
 | `marksman_bind_shot` | Bind Shot | Piercing shot that may bind an enemy arm. | Marksman | Physical | SingleEnemy | yes | yes | Pierce damage; 30% `bind_arm` |
@@ -85,17 +85,17 @@
 | Node | `skill_id` | Role in kit |
 |------|------------|-------------|
 | 1 | `summoner_volt_bolt` | Personal ranged volt (no Elementalist in MVP1) |
-| 2 | `deploy_test_drone` | **Only** MVP1 aux deploy — aux **back**, `test_drone` |
+| 2 | `deploy_scout_drone` | **Only** MVP1 aux deploy — aux **back**, `scout_drone` |
 | 3 | `summoner_focus` | Self buff before deploy / bolt spam |
 
 **Deploy skill data:**
 
 ```yaml
-skill_id: deploy_test_drone
+skill_id: deploy_scout_drone
 skill_type: Deploy
 targeting: { kind: AuxBack }
 presentation: Fixed
-summon_definition_id: test_drone
+summon_definition_id: scout_drone
 # Occupied aux back: fail cast, no MP spent
 ```
 
@@ -119,7 +119,7 @@ summon_definition_id: test_drone
 
 ---
 
-## Summon kit (`test_drone`)
+## Summon kit (`scout_drone`)
 
 Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** command menu on drone turns ([ADR 016](../../decisions/016-summon-control-mvp1.md)).
 
@@ -143,12 +143,12 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 |------|--------|
 | **`medic_revive`** | Target validator: **downed allies only**; reject living |
 | **`vanguard_protect`** | **Single** `SingleAlly` target; must share caster **`FormationRow`**; Guard mod on that ally only (core or aux) |
-| **`deploy_test_drone`** | May queue while aux back occupied; on AGI resolve if still occupied → **fail**, **no MP** |
+| **`deploy_scout_drone`** | May queue while aux back occupied; on AGI resolve if still occupied → **fail**, **no MP** |
 | **`AllAllies`** | Living **core six + aux** summons/guests (not Navigator) |
 | **`AllEnemies`** | All **occupied** enemy slots; after **row collapse**, shifted enemies count as front for melee |
 | **Row collapse** | On enemy death, survivors shift forward ([combat](../02-systems/combat.md)) |
 | **Inflict order** | **Damage**, then status roll if still alive |
-| **Summon control** | Player command phase; **no** `SummonScriptRunner` for `test_drone` |
+| **Summon control** | Player command phase; **no** `SummonScriptRunner` for `scout_drone` |
 | **MP / power** | Stub `powerByRank[0]` until balance pass |
 
 ---
@@ -156,7 +156,7 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 ## Related
 
 - [Party & classes](../02-systems/party-and-classes.md) — roster, deploy rules
-- [Summons & guests](../02-systems/summons-and-guests.md) — aux slots, `test_drone` kit
+- [Summons & guests](../02-systems/summons-and-guests.md) — aux slots, `scout_drone` kit
 - [Combat](../02-systems/combat.md) — damage pipeline, targeting, row collapse
 - [05 — Class design MVP1 § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked)
 - [MVP1 spec](../mvp1-spec.md) — checklist row
