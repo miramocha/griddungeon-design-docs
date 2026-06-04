@@ -1,6 +1,6 @@
 # Guided Tutorial (player coaching)
 
-**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Shipped (partial):** S1 tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Still target:** Act 1 coach, `GuidedTutorialController`, story `StoryEventRunner` ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [#87](https://github.com/miramocha/griddungeon-game/issues/87)).
+**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **MVP1 (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Post-MVP1:** Act 1 coach, `GuidedTutorialController`, pause-menu codex ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 
 **Authority for S1 beats:** [S1 guided tutorials](../03-content/campaign/s1-guided-tutorials.md)  
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
@@ -45,7 +45,7 @@ A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (
 | **Hub** | `Hub` | Page block when used | **Blocking** while open |
 | **Codex** | **Pause menu** (`Esc` — exploration / combat / hub) | Read-only replay of unlocked entries | Non-blocking navigation inside codex UI |
 
-MVP1 **ships** Act 1 exploration entries + B2F Protocol coach + **codex replay**. Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
+**Post-MVP1** ships Act 1 exploration entries + B2F Protocol coach + **codex replay** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). **MVP1** uses VN + Protocol HUD gate only ([mvp1-spec §5](../../docs/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)). Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
 
 Early MVP: one simple **tutorial panel** layout (screen block + optional still / short clip) — not separate toast vs VN chrome stacks.
 

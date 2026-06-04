@@ -1,4 +1,6 @@
-# S1 — Guided tutorial beats (MVP1)
+# S1 — Guided tutorial beats (post-MVP1 target)
+
+**MVP1:** S1 teaching uses story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) only — full coach + codex deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [mvp1-spec §5](../../mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)).
 
 **System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted)  
 **Campaign acts & flags:** [s1-intro.md](s1-intro.md)  

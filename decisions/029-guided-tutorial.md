@@ -148,10 +148,11 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1 — S1 Act 1** | Paginated tutorial entries per [s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f); unlock codex rows on complete |
-| **MVP1 — S1 B2F** | `s1_combat_guided_protocol` after `s1_synchro_protocol_unlock` (+ HUD gate) |
-| **MVP1 — Codex UI** | Read-only replay — **Pause menu** row (`Esc`; exploration, combat, hub when pause ships) |
-| **MVP1 — Hub** | **No** guild / Enter Stratum coach unless playtest fails |
+| **MVP1 — S1 teach (shipped path)** | Story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` Protocol-only gate ([#35](https://github.com/miramocha/griddungeon-game/issues/35)); campaign rules unchanged |
+| **Post-MVP1 — S1 Act 1** | Paginated tutorial entries per [s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f); unlock codex rows on complete ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
+| **Post-MVP1 — S1 B2F** | `s1_combat_guided_protocol` coach after `s1_synchro_protocol_unlock` (in addition to HUD gate) |
+| **Post-MVP1 — Codex UI** | Read-only replay — **Pause menu** row (`Esc`; exploration, combat, hub) |
+| **Post-MVP1 — Hub** | Guild / Enter Stratum coach only if playtest requires (was cut for MVP1) |
 | **Deferred** | Map-key entry; full codex categories; story scenes in codex |
 | **Post-MVP1** | S2+ entries, tile triggers, boss mechanic pages |
 
@@ -195,6 +196,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | Codex | Unlock on complete / full read; **no** re-apply of combat gates or flags on replay |
 | Hub Act 2 hints | **Cut in MVP1** unless playtest fails |
 | Combat Protocol coach | **Blocking** + command gate; may use same page block for copy + HUD pulse |
+| **MVP1 full coach + codex** | **Deferred post-MVP1** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); MVP1 relies on VN + `CombatTutorialHudRules` only ([mvp1-spec §5](../docs/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)) |
 | Progression storage | **Campaign flags** for gates + **codex unlock list** for replay index |
 | Story vs guided | **S1 unlock/outro** remain **story events** ([ADR 028](028-story-visual-novel-events.md)); Act 1 movement + Protocol coach = **guided** |
 
