@@ -91,6 +91,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 | ✅ | 1 Navigator + 2 Protocol skills (MVP1 kit) | [navigator](02-systems/navigator.md), [synchro-protocol](02-systems/synchro-protocol.md) |
 | ⬜ | 3 skills per class minimum — **kits authored** ([design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3) closed) | [MVP1 class skills](03-content/mvp1-class-skills.md) · ship in [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
 | ⬜ | Weapon + 3 armor + 1 accessory — **IDs locked** ([design #4](https://github.com/miramocha/griddungeon-design-docs/issues/4) closed) | [locked table](02-systems/character-progression.md#mvp1-equipment-locked) · [game #12](https://github.com/miramocha/griddungeon-game/issues/12) |
+| ⬜ | **Party inventory + equip** — fixed bag, category tabs, shop/loot/chest | [items & inventory](02-systems/items-and-inventory.md) · [ADR 036](../decisions/036-party-inventory-model.md) · [design #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) · epic [game #151](https://github.com/miramocha/griddungeon-game/issues/151) |
 
 ### Tech ([ADR 012](../decisions/012-unity-6-stack.md))
 

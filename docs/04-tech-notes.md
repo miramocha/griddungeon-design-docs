@@ -94,7 +94,8 @@ GameState (composition root)
 ├── CombatScenePresenter — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 ├── MapSystem            — auto-reveal layer, fog, read-only UI
 ├── FoeSystem            — spawn, visibility, step patrol, contact
-├── PartyRuntime         — 6 core + 0–2 aux combatants, skills
+├── PartyRuntime         — 6 core + 0–2 aux combatants, skills; mirrors SaveGame.PartyInventory
+├── InventoryRules (Core) — bag add/stack/equip; InventoryBagCatalog (tab filter); EquipmentStatAggregator
 ├── NavigatorRuntime     — active navigator, aura application, roster
 ├── ProtocolSystem       — Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
 ├── CombatController     — AGI queue + command planning + Protocol → EndRound; `ActionStepDelaySeconds` default **0.55s** between resolved actions (0 in tests)

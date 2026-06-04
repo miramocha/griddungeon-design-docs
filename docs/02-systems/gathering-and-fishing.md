@@ -112,7 +112,7 @@ Map: icon for node type; **depleted** icon variant or greyed ([mapping](mapping.
 
 ## Materials & synthesis
 
-Materials are **stackable inventory items** (not gear).
+Materials are **stackable inventory items** (not gear). Bag model: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) (Materials tab MVP2).
 
 ```
 MaterialId, quantity → PartyInventory

@@ -26,7 +26,7 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Open / close service screen | Panel **fade/slide** | No — navigation only |
 | Inn save | Brief **confirm flash** + text | Yes — before another service action |
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
-| Shop buy / sell | Gold + stock row **pulse**; inventory slot update | Yes |
+| Shop buy / sell | Gold + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
 | Guild assign slot / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
 | Return to hub (exploration gate `stairsUp`) | **Floor transition** fade/vignette via `TryReturnToHub` ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until hub phase ready |

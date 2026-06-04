@@ -46,6 +46,8 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 ## Equipment
 
+**System authority:** bag, worn loadout, shop, identify, and tabbed bag UI — [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md).
+
 | Slot | Notes |
 |------|-------|
 | Weapon | Class restrictions via `weaponType` + optional `allowedClassIds` on `EquipmentDefinition` ([05 — Class design](../05-class-design-mvp1.md)) |
@@ -72,11 +74,11 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 
 **Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only for MVP1.
 
-**Implementation:** `EquipmentDefinition` ScriptableObjects under `Assets/Content/Equipment/`; lookup via `ContentDatabase.GetEquipment(equipId)` ([05 — Class design](../05-class-design-mvp1.md)).
+**Implementation:** `EquipmentDefinition` ScriptableObjects under `Assets/Content/Equipment/`; lookup via `ContentDatabase.GetEquipment(equipId)` ([05 — Class design](../05-class-design-mvp1.md)). Runtime flow: [items & inventory](items-and-inventory.md).
 
 ## Identify & codex
 
-- **Unknown equipment** in labyrinth; identify at shop or with skill.
+- **Unknown equipment** in labyrinth; identify at shop ([items & inventory § identify](items-and-inventory.md#equipment-instances--identify)) or with skill (post-MVP1).
 - **Monstrous Codex** (bestiary): weaknesses fill in as you kill/analyze — EO knowledge metagame.
 
 ## Synthesis (EO crafting)
@@ -92,6 +94,8 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 - Sinks: hospital, shop, synthesis, return thread items
 
 ## Consumables (starter)
+
+Locked IDs and combat/field context — [items & inventory § consumables](items-and-inventory.md#consumables).
 
 | Item | Use |
 |------|-----|
@@ -114,6 +118,7 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 
 ## Related docs
 
+- [Items & inventory](items-and-inventory.md)
 - [Party & classes](party-and-classes.md)
 - [Hub & services](hub-and-services.md)
 - [01 — Core loop](../01-core-loop.md)

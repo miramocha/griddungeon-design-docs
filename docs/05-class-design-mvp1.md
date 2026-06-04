@@ -167,6 +167,8 @@ class StatusDefinition : ScriptableObject
 
 ### Equipment & items
 
+**Runtime behavior:** [items & inventory](02-systems/items-and-inventory.md) · [ADR 036](../decisions/036-party-inventory-model.md).
+
 ```csharp
 // Assets/Content/Equipment/
 class EquipmentDefinition : ScriptableObject
@@ -484,6 +486,10 @@ static class StatusSystem
     static bool IsBlocked(Combatant actor, SkillData skill);
 }
 
+static class InventoryRules { /* TryAdd, TryEquip, bag-full — ADR 036 */ }
+static class InventoryBagCatalog { /* tab filter for party bag UI */ }
+static class EquipmentStatAggregator { /* worn bonuses → CombatantStats */ }
+
 static class ValidTargetCalculator
 {
     static IReadOnlyList<Combatant> GetValidTargets(
@@ -574,7 +580,8 @@ class FoeInstance
 [Serializable] class SaveGame
 {
     HubSaveData Hub;
-    CharacterSaveData[] Party;     // 6 characters
+    CharacterSaveData[] Party;     // 6 characters; each row includes EquipmentLoadout
+    PartyInventory Inventory;      // fixed bag slots — ADR 036
     string ActiveNavigatorId;
     float SynchroBar;
     Dictionary<string, FloorMapStateSave> Maps;   // key: "s1_B1F"
@@ -1271,6 +1278,7 @@ Assets/
 │   │   ├── Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
 │   │   ├── Campaign/             S1CampaignResolver.cs, CombatTutorialHudRules.cs, …
 │   │   ├── Simulators/           DamageCalculator.cs, ValidTargetCalculator.cs, CombatTargeting.cs,
+│   │   │                         InventoryRules.cs, InventoryBagCatalog.cs, EquipmentStatAggregator.cs,
 │   │   │                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs,
 │   │   │                         FoeFleeRetreatPlacement.cs, TurnQueueBuilder.cs, ...
 │   │   ├── SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...

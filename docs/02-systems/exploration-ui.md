@@ -174,9 +174,13 @@ Built under `map-view-grid-host` (siblings above `map-view-grid`):
 
 Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the side layout; `M` / `Esc` behavior is in [input bindings](input-bindings.md) and `MapInputHandler`.
 
+### Party menu inventory
+
+**`Tab`** opens the **party menu** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) — includes **Inventory** (category-tabbed bag: All / Consumables / Equipment), formation, equip, and skill trees. Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md). UITK not wired in MVP1 exploration HUD yet ([#154](https://github.com/miramocha/griddungeon-game/issues/154)); distinct from **`Esc`** pause overlay below.
+
 ### ExplorationPauseView
 
-**Skills (spec):** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)), pause or `Tab` party menu opens the same class skill tree as hub Guild.
+**Skills (spec):** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)), pause or `Tab` party menu opens the same class skill tree as hub Guild (and **Inventory** per ADR 036).
 
 | Action | Behavior |
 |--------|----------|

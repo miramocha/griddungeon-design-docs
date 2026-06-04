@@ -1,0 +1,284 @@
+# Items & inventory
+
+Party **bag** (shared, fixed slots) and **worn equipment** (per core member). Gold stays on hub save — not a bag slot.
+
+**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked) · equipment stats table [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked)
+
+**Implementation tracker:** [design-docs #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) · [game epic #151](https://github.com/miramocha/griddungeon-game/issues/151) (#152–#157, loot [#31](https://github.com/miramocha/griddungeon-game/issues/31))
+
+---
+
+## Overview
+
+Etrian Odyssey–style loop: one **party bag** for consumables and unequipped gear; each core wears up to five pieces. Hub shop, battle loot, chests, and gather nodes grant into the bag; guild / party menu moves gear between bag and characters.
+
+```mermaid
+flowchart TB
+  subgraph worn [PerCharacter]
+    EL[EquipmentLoadout on CharacterSaveData]
+  end
+  subgraph bag [PartyShared]
+    Slots[FixedSlotBag]
+  end
+  subgraph sources [GrantSources]
+    Loot[BattleLoot]
+    Shop[ShopBuy]
+    Chest[ChestInteract]
+    Gather[GatherNode]
+  end
+  sources --> Slots
+  Slots -->|Equip| EL
+  EL -->|EquipmentStatAggregator| Stats[CombatantStats]
+```
+
+| Concern | Owner |
+|---------|--------|
+| Bag slots, stack rules, tab filter | **Core** — `InventoryRules`, `InventoryBagCatalog` |
+| Content defs, shop, coordinators | **Runtime** — `ItemDefinition`, `EquipmentDefinition`, `ShopService` |
+| Tabbed bag panel, party menu | **UI** — UITK `party-inventory` (swappable port) |
+| Persist | **`SaveGame`** — source of truth; `PartyRuntime` mirrors on load |
+
+---
+
+## Bag model (MVP1)
+
+- **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([mvp1-spec §6](../mvp1-spec.md#6-open-for-tuning-only-locked-structure)); tune in data, not code forks.
+- Each slot holds **at most one** of:
+  - **Empty**
+  - **Consumable stack** — one `itemId`, quantity ≤ `ItemDefinition.maxStack`
+  - **Equipment instance** — unequipped gear (`equipId` + identify flag)
+  - **Material stack** (MVP2) — same stack shape as consumables; `InventorySlotKind.Material`
+- **No stacking across slots** — a full stack occupies one slot; overflow needs another empty slot or fails (bag-full).
+- **Equipped gear does not occupy bag slots** — worn on `CharacterSaveData.Equipment` / runtime `Combatant.Equipment`.
+
+### Slot DTOs (Core)
+
+```csharp
+sealed class ItemStack { string ItemId; int Quantity; }
+sealed class EquipmentInstance { string InstanceId; string EquipId; bool IsIdentified; }
+
+enum InventorySlotKind { Empty, Consumable, Equipment, Material }
+
+sealed class InventorySlot
+{
+    InventorySlotKind Kind;
+    ItemStack? Stack;
+    EquipmentInstance? Equipment;
+}
+
+sealed class PartyInventory
+{
+    InventorySlot[] Slots; // length = partyBagSlotCount
+}
+```
+
+**Migration:** replace `PartyRuntime.GatheredItemIds` (`List<string>` stub) with `SaveGame.PartyInventory` ([#152](https://github.com/miramocha/griddungeon-game/issues/152)).
+
+---
+
+## Worn equipment (per character)
+
+Five slots per core — `EquipSlot`: Weapon, Head, Body, Legs, Accessory ([05 — Class design](../05-class-design-mvp1.md)).
+
+```csharp
+sealed class EquipmentLoadout
+{
+    string WeaponId;
+    string HeadId;
+    string BodyId;
+    string LegsId;
+    string AccessoryId;
+}
+```
+
+**MVP1 equip reference model:**
+
+| Source | On loadout |
+|--------|----------------|
+| Shop purchase (identified) | **`equipId`** string per slot — sufficient when one copy per piece |
+| Chest / loot (may be unidentified) | **`instanceId`** on bag row until equipped; loadout stores **`equipId`** after equip; identify flag on **instance** while in bag |
+
+**Duplicate gear:** multiple instances of the same `equipId` may sit in different bag slots; only one worn per `EquipSlot` per character.
+
+**Class gates:** `EquipmentDefinition.allowedClassIds` + `weaponType` — validate in `InventoryRules.TryEquip` (Core).
+
+Stat and resist bonuses: full table in [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked). Applied via **`EquipmentStatAggregator`** when building combatants ([combat status & buffs](combat-status-and-buffs.md)).
+
+---
+
+## Equipment instances & identify
+
+| State | Bag display | Shop |
+|-------|-------------|------|
+| **Identified** | `EquipmentDefinition.displayName` | Buy/sell as normal |
+| **Unidentified** | `???` (optional slot hint: Weapon / Head / … from `EquipSlot` only) | **Identify** service — gold sink; sets `IsIdentified = true` |
+
+**MVP1 content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#mvp1-equipment-locked)). Shop purchases are **identified** on buy.
+
+**Codex / analyze skills:** post-MVP1; MVP1 identify at shop only.
+
+---
+
+## Consumables
+
+Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked):
+
+| `itemId` | MVP1 use context |
+|----------|------------------|
+| `patch_kit` | Combat + field — `HealHp` |
+| `stim_draft` | Combat + field — `HealMp` |
+| `trauma_kit` | Combat + field — full HP (`HealHp` high power) |
+| `return_thread` | **Field only** — retreat to hub ([dungeon navigation](../02-dungeon-navigation.md)) |
+| `analysis_glass` | Combat — weakness reveal (optional MVP1 ship) |
+
+`ItemDefinition` (Runtime SO): `itemId`, `displayName`, `ItemEffectType`, `power`, `maxStack`, **`useContexts`** (Combat / Field flags — mirror skill pattern).
+
+---
+
+## Ownership & save
+
+| Data | Location |
+|------|----------|
+| `PartyInventory` | `SaveGame` (new field) |
+| `EquipmentLoadout` per member | `CharacterSaveData` (guild roster + active party rows) |
+| Gold | `HubSaveData.Gold` (unchanged) |
+
+**Load flow:** inn / bootstrap → hydrate `PartyRuntime` from save → `Mvp1GuildCombatantBuilder` applies `Equipment` + aggregated stats.
+
+**Exploration dive:** bag and worn gear persist on save; no labyrinth autosave — same as roster vitals ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
+
+---
+
+## Operations (who calls what)
+
+| Operation | Core | Runtime service / phase |
+|-----------|------|-------------------------|
+| Add stack / instance | `InventoryRules.TryAdd` | Shop, chest, loot, gather |
+| Remove / sell | `InventoryRules.TryRemove` | `ShopService.TrySell` |
+| Bag full check | `InventoryRules.HasEmptySlot` | Grant UIs show message |
+| Equip / unequip | `InventoryRules.TryEquip` / `TryUnequip` | Guild / party menu |
+| Identify instance | `InventoryRules.Identify` | `ShopService.TryIdentify` |
+| Loot roll | `LootResolver` (from `LootTable`) | Post-battle [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
+| Tabbed bag view model | `InventoryBagCatalog.BuildTabs` | `InventoryBagCoordinator` → UI |
+
+Reject putting stack math or equip validation in UITK views ([architecture principles](../../.cursor/rules/architecture-design-principles.mdc)).
+
+---
+
+## Bag UI — category tabs (MVP1)
+
+Party menu **Inventory** uses **horizontal category tabs**, same interaction model as the skill use picker ([ADR 035](../../decisions/035-skill-use-picker.md)).
+
+| Tab id | Label | Contents |
+|--------|-------|----------|
+| **`all`** | **All** | **Default.** Every occupied slot, **slot index ascending** |
+| `consumables` | Consumables | `InventorySlotKind.Consumable` |
+| `equipment` | Equipment | `InventorySlotKind.Equipment` |
+| `materials` | Materials | MVP2 — tab visible only when ≥1 material slot occupied |
+
+**Rules:**
+
+- Show **`All`** when bag has ≥1 occupied slot.
+- Show a category tab only if ≥1 slot matches (no empty tabs).
+- Tab switch **filters the slot grid**; focus/confirm on visible slots.
+- **Keyboard:** `Q` / `E` cycle tabs while overlay open; arrows / `WASD` move slot focus; `Z` / `X` confirm / cancel ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
+- **`InputRouter`** enables inventory tab actions **only** while bag modal is open — do not steal exploration **turn** `Q`/`E` ([input bindings § Party inventory](input-bindings.md#party-inventory-modal)).
+- **LMB** on tab headers optional.
+
+**Architecture:**
+
+| Layer | Type |
+|-------|------|
+| Core | `InventoryBagCatalog` → `InventoryBagPresentationModel` with `Tabs[]` / slot rows |
+| Runtime | `IInventoryBagView`, coordinator |
+| UI | UITK — BEM `party-inventory`, `party-inventory__tab`, `party-inventory__slot` |
+
+Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
+
+**Entry points:** `Tab` — party menu in **hub** and **exploration** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)); not combat command bar. See [exploration UI](exploration-ui.md#party-menu-inventory).
+
+---
+
+## Combat & field item UI (narrower than bag)
+
+| Context | UI |
+|---------|-----|
+| **Combat `Item` command** | **Consumable row list** only — combat-usable items from bag; **no category tab strip** ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) sub-menu) |
+| **Field** | Use from party menu **Consumables** tab, or filtered field-usable rows (`return_thread`, heals) |
+
+Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)); catalog filters by `ItemEffectType` + `useContexts`, not `InventoryBagCatalog` tabs.
+
+---
+
+## MVP1 vs MVP2
+
+| MVP1 | MVP2+ |
+|------|-------|
+| Fixed bag, tabs (All / Consumables / Equipment) | **Materials** tab + stacks |
+| Shop buy/sell, identify | **Synthesis** ([gathering & fishing](gathering-and-fishing.md)) |
+| Guild equip, stat aggregation | Quest “bring N material” checks bag |
+| Loot [#31](https://github.com/miramocha/griddungeon-game/issues/31), chest [#105](https://github.com/miramocha/griddungeon-game/issues/105) | Expanded item effects |
+
+---
+
+## Integration table
+
+| Source | Grants | Save touch |
+|--------|--------|------------|
+| Shop buy | Stack or identified equipment instance | `PartyInventory`, `Hub.Gold` |
+| Shop sell | Removes from bag | `PartyInventory`, `Hub.Gold` |
+| Shop identify | Flips instance flag | `PartyInventory` |
+| Battle victory | `LootTable` → stacks / instances / gold | `PartyInventory`, `Hub.Gold`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
+| Chest interact | `ChestItemId` | `PartyInventory` |
+| Gather node | Material or consumable (MVP1 stub: consumable) | `PartyInventory` |
+| Guild equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
+
+**Tutorial FOE:** `grp_alley_stalker_tutorial` — no standard farmable loot/XP per [#31](https://github.com/miramocha/griddungeon-game/issues/31).
+
+---
+
+## Implementation waves (game repo)
+
+| Wave | Issue | Scope |
+|------|-------|--------|
+| 0 | [design-docs #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) | This doc + ADR 036 |
+| 1 | [#152](https://github.com/miramocha/griddungeon-game/issues/152) | Core + save + `InventoryBagCatalog` |
+| 2 | [#31](https://github.com/miramocha/griddungeon-game/issues/31) | Post-battle loot |
+| 3 | [#153](https://github.com/miramocha/griddungeon-game/issues/153) | `ItemDefinition` + shop |
+| 4 | [#154](https://github.com/miramocha/griddungeon-game/issues/154) | Tabbed bag UI |
+| 5 | [#155](https://github.com/miramocha/griddungeon-game/issues/155) | Equip + `EquipmentStatAggregator` |
+| 6 | [#156](https://github.com/miramocha/griddungeon-game/issues/156) | Chest + identify |
+| 7 | [#157](https://github.com/miramocha/griddungeon-game/issues/157) | Combat consumable picker |
+
+Coordinate equipment SOs with [#12](https://github.com/miramocha/griddungeon-game/issues/12) ContentDB.
+
+---
+
+## Test plan (stub)
+
+### Automated (Edit Mode)
+
+- `Tests` → *(future)* `InventoryRulesTests`, `InventoryBagCatalogTests` — stack, bag-full, tab visibility, equip validation, save round-trip ([#152](https://github.com/miramocha/griddungeon-game/issues/152))
+
+### Manual (Play Mode)
+
+- **Scene:** `DevBootstrap.unity` — **F1** hub / **F2** exploration / **F3** combat
+- **Steps:** Buy `patch_kit` at shop → **Tab** → Inventory → **Consumables** tab → win fight → loot in **All** tab → equip `guild_shortsword` at guild → F3 fight with higher STR
+- **Expected:** Tabs hide when empty; `Q`/`E` do not turn party on F2 while bag open; unidentified chest charm shows `???` until shop identify
+
+### Regressions
+
+- [ ] `GatheredItemIds` migration does not break hub sell stub tests
+- [ ] Skill picker `Q`/`E` unchanged in combat ([#138](https://github.com/miramocha/griddungeon-game/issues/138))
+
+---
+
+## Related docs
+
+- [Character progression](character-progression.md) — equipment table, economy
+- [Hub & services](hub-and-services.md) — shop motion, guild
+- [Gathering & fishing](gathering-and-fishing.md) — MVP2 materials
+- [Input bindings](input-bindings.md) — `Tab`, inventory modal
+- [Combat](combat.md) — Item command
+- [05 — Class design](../05-class-design-mvp1.md) — SO sketches, save types
+- [UI event contract](../04-dev/ui-event-contract.md) — phase events
