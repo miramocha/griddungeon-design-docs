@@ -190,7 +190,9 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 | **Skills** | Class skill trees | Deferred ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Formation** | Row assignment | Deferred |
 
-**Navigation:** vertical section list — **W/S** changes focus; **pane swaps immediately** when focus moves (hub service pattern). **X** closes menu. **Q/E** are **not** used at shell level.
+**Navigation:** vertical section list — **W/S** changes section (shell or when pane is open but disengaged); **pane swaps immediately** when section changes. **Z** opens the active section body; **X** backs out (pane → shell → close). **Q/E** are **not** used at shell level.
+
+**Exploration:** closing the party menu after equip/unequip refreshes the bottom **party strip** HP/MP labels immediately (`PartyMenuOverlayView` → `ExplorationHudView.SyncPartyStripAfterPartyMenuClosed()`; overlay already wires `m_explorationHud` in Dev Bootstrap).
 
 **Explorers Guild (hub):** assign six cores + roster summary only — **no** equip/unequip actions ([hub-and-services](hub-and-services.md)).
 
@@ -225,7 +227,7 @@ Party menu section **Inventory** uses **horizontal category tabs**, same interac
 |-------|------|
 | Core | `InventoryBagCatalog` → `InventoryBagPresentationModel` with `Tabs[]` / slot rows |
 | Runtime | `IInventoryBagView`, coordinator |
-| UI | UITK — BEM `party-inventory`, `party-inventory__tab`, `party-inventory__slot` |
+| UI | UITK — BEM `party-inventory`, `party-inventory__tab`, `party-inventory__row` (column layout in party menu pane; no standalone modal chrome) |
 
 Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
 
@@ -235,13 +237,13 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 
 ## Equipment pane (MVP1)
 
-**Scope:** active party cores only (filled core slots). **Q/E** = prev/next member. **WASD** = worn slot focus. **Z** on slot → filtered bag sub-picker → equip via `InventoryRules.TryEquip`. Filled slots: sub-picker includes **Remove** (`TryUnequip`) and **Replace**.
+**Scope:** active party cores only (filled core slots). **Member tabs** (horizontal strip, same visual language as Inventory category tabs) show who is selected; **Q/E** or LMB cycle/select member. **W/S** = worn slot focus after **Z** engage. **Z** on slot → filtered bag sub-picker → equip via `InventoryRules.TryEquip`. Filled slots: sub-picker includes **Remove** (`TryUnequip`) and **Replace**. Stat preview shows effective stats (and picker deltas before confirm).
 
 | Layer | Type |
 |-------|------|
-| Core | `PartyEquipmentCatalog`, bag-row filter for slot + class |
-| Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations` |
-| UI | BEM e.g. `party-menu__equipment`, `party-menu__slot` |
+| Core | `PartyEquipmentCatalog`, `PartyEquipmentStatPreview`, bag-row filter for slot + class |
+| Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations`, `PartyEquipmentApply` |
+| UI | BEM `party-equipment`, `party-equipment__tab`, `party-equipment__slot` (embedded in party menu pane — no standalone modal chrome) |
 
 Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](https://github.com/miramocha/griddungeon-game/issues/155)).
 

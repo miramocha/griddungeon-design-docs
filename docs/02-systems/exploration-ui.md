@@ -181,7 +181,9 @@ Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the sid
 | Section (v1) | Contents |
 |--------------|----------|
 | **Inventory** | Category-tabbed bag (All / Consumables / Equipment) — [#154](https://github.com/miramocha/griddungeon-game/issues/154) bag UI hosted in shell [#166](https://github.com/miramocha/griddungeon-game/issues/166) |
-| **Equipment** | Active party member + five worn slots; slot-first bag sub-picker — [#167](https://github.com/miramocha/griddungeon-game/issues/167) |
+| **Equipment** | Member tabs + stat preview + five worn slots; slot-first bag sub-picker — [#167](https://github.com/miramocha/griddungeon-game/issues/167) |
+
+Closing the party menu after equipment changes refreshes the exploration **party strip** (HP/MP) without requiring a dungeon step.
 
 **Deferred:** Formation, Skills (same trees as hub Guild — ADR 034). **Not** on hub Guild panel: equip/unequip (party menu only).
 

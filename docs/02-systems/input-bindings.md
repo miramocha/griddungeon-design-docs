@@ -143,11 +143,12 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 | Action | Keyboard (MVP1) | Notes |
 |--------|-----------------|-------|
 | **Open / close menu** | **`Tab`** | Toggle |
-| **Previous section** | **`W`** or **↑** | **Inventory** ↔ **Equipment** (v1 only) |
-| **Next section** | **`S`** or **↓** | Focus change **immediately swaps pane** (hub service style) |
-| **Cancel** | **`X`** | Close entire party menu (and any bag sub-picker) |
+| **Open active pane** | **`Z`** | Shows Inventory or Equipment body (section nav stays visible) |
+| **Previous section** | **`W`** or **↑** | **Inventory** ↔ **Equipment** (v1 only); works on shell and when pane is open but **not** engaged |
+| **Next section** | **`S`** or **↓** | Pane swaps immediately when section changes (hub service style) |
+| **Back** | **`X`** | Hide pane → shell; from shell, closes entire menu |
 
-**Scope:** section navigation uses **`MenuNavigate`** / hub menu pattern — **not** `Q`/`E` at shell level.
+**Scope:** section navigation uses **`MenuNavigate`** vertical axis — **not** `Q`/`E` at shell level. While a pane is **engaged** (bag rows, worn slots, or equipment sub-picker), **W/S** navigate inside the pane instead of sections.
 
 #### Inventory pane (when section = Inventory)
 
@@ -163,9 +164,10 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 | Action | Keyboard (MVP1) | Notes |
 |--------|-----------------|-------|
-| **Previous member** | **`Q`** | Active party cores only (wrap) |
+| **Previous member** | **`Q`** | Active party cores only (wrap); updates **member tab** strip |
 | **Next member** | **`E`** | |
-| **Move worn-slot focus** | Arrows or `W` / `A` / `S` / `D` | Weapon / Head / Body / Legs / Accessory |
+| **Pick member (optional)** | LMB on member tab | Same members as Q/E |
+| **Move worn-slot focus** | Arrows or `W` / `S` | Weapon / Head / Body / Legs / Accessory (after **Z** engage) |
 | **Confirm slot** | `Z` | Open **bag sub-picker** filtered to slot + class |
 | **Sub-picker: confirm row** | `Z` | Equip, **Replace**, or **Remove** |
 | **Sub-picker: cancel** | `X` | Back to worn-slot grid |
