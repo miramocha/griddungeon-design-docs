@@ -50,6 +50,7 @@ New game: s1_B1F movement tutorial (no enemies, blocked path → gate Event VN �
 | ⬜ | Floor verticality + jump pads — **deferred**; flat B1F–B3F OK | [ADR 019](../decisions/019-floor-verticality.md) |
 | ✅ | **Floor transition vignette** — black + 3D threshold, Cinemachine, serialized art load | [floor transition](02-systems/floor-transition.md), [ADR 032](../decisions/032-floor-transition-vignette-mvp1.md) · epic [#114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118), [#120](https://github.com/miramocha/griddungeon-game/issues/120)) |
 | ✅ | FPV floor art load/unload by `floorKey` | [floor art FPV](02-systems/floor-art-fpv.md), [game #102](https://github.com/miramocha/griddungeon-game/issues/102) |
+| ✅ | FPV populate walkable tiles (hallway / corner / floor) | [floor art FPV § v1.5](02-systems/floor-art-fpv.md#locked-decisions-populate-v15--walkable-tiles), [game #172](https://github.com/miramocha/griddungeon-game/issues/172) |
 
 ### Combat ([ADR 015](../decisions/015-mvp1-combat.md))
 

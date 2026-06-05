@@ -1,7 +1,7 @@
 # Floor art — FPV corridor props
 
 **Status:** Draft  
-**Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102)  
+**Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor)  
 **Follows:** [Editor floor art grid rig #92](https://github.com/miramocha/griddungeon-game/issues/92)  
 **Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [floor level painter](floor-level-painter.md) (logic tiles / FOE / export)
 
@@ -43,7 +43,43 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 | Undo | `Undo.RegisterCreatedObjectUndo` / destroy via Undo on clear |
 | Parent | All spawned instances under **`Props`** child of `FloorArtRoot` |
 | Lighting / volumes | Under **`FloorArtRoot`** (`Lighting/`, `Volumes/`) — not scene root; mounts with art at runtime ([game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scenes/Floors/README.md#lighting-and-volumes)) |
-| Later | Gather (`G`), chest (`C`), stairs/entry pins, key markers, modular edge walls, seeded/weighted picks |
+| Later (v1.5+) | Walkable hallway / corner / floor populate ([#172](https://github.com/miramocha/griddungeon-game/issues/172)); gather (`G`), chest (`C`), stairs/entry pins, key markers; modular edge walls; seeded/weighted picks |
+
+## Locked decisions (Populate v1.5 — walkable tiles)
+
+**Tracks:** [game #172](https://github.com/miramocha/griddungeon-game/issues/172). **Complements** Populate v1 wall blocks on `#` — does **not** replace them.
+
+| Topic | Decision |
+|-------|----------|
+| Wall blocks (`#`) | Unchanged — [#102](https://github.com/miramocha/griddungeon-game/issues/102) **Populate Wall Blocks** |
+| Target cells | `IsWalkable == true` on assigned `StratumFloor` |
+| Classification | 4-bit cardinal mask: which N/E/S/W neighbors are walkable |
+| Kinds | `HallwayStraight` (two opposite walkable neighbors), `HallwayCorner` (two adjacent), `FloorDefault` (0, 1, 3, or 4 walkable neighbors — open room, dead-end, T, cross until dedicated art) |
+| Position | **Cell center** — `GridToCellCenterWorld` (center-pivoted prefab, 10 u/cell) |
+| Rotation | **Y** from mask: straight 0° (N+S) / 90° (E+W); corner 0°/90°/180°/270° for NE/SE/SW/NW pairs |
+| Prefabs | Three `GameObject[]` lists on `FloorArtGrid` (hallway, corner, floor); **uniform random** per cell like wall blocks — **not** merged into `m_wallBlockPrefabs` |
+| Skip | `HasGatherNode` (`G`); story **`X`** is non-walkable (wall pass only); stairs/key markers manual (future) |
+| Marker / clear / Undo | Same as v1 — `FloorArtGeneratedProp`, **Clear Generated Props**, Undo on create/destroy |
+| First art | Dev primitives (menu-created cubes/planes); swap for modular kit later |
+| Not in v1.5 | Modular N/E/S/W edge segments from `GetSolidEdges` / runtime `WallMask` — FPV v2 |
+
+### Walkable classification (reference)
+
+Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
+
+| Mask pattern | Kind | Rotation |
+|--------------|------|----------|
+| N+S or E+W | HallwayStraight | 0° if N+S; 90° if E+W |
+| Two adjacent (L-turn) | HallwayCorner | From opening pair (NE → 0°, etc.) |
+| Other | FloorDefault | 0° |
+
+### Editor workflow (v1.5)
+
+1. Assign `StratumFloor`; enable **Show Walkable** + **Show Blocked** overlays.
+2. **Clear Generated Props** (when re-running either pass).
+3. **Populate Wall Blocks** — `#` cells (unchanged).
+4. **Populate Walkable Tiles** — `.` corridor / room cells.
+5. Optional: **Populate All** (Clear → wall blocks → walkable) in one Undo group.
 
 ## Locked decisions (Runtime v1)
 
@@ -134,7 +170,7 @@ MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cin
 | Item | Track separately |
 |------|------------------|
 | Modular N/E/S/W wall pieces from `WallMask` | FPV v2 or shared with map art rules |
-| Auto-place gather, doors, stairs meshes | Follow-up populate modes |
+| Auto-place gather, doors, stairs meshes | Follow-up populate modes (gather skipped in [#172](https://github.com/miramocha/griddungeon-game/issues/172)) |
 | `DungeonView.RenderCell` blobber / per-cell swaps | Optional later |
 | Replacing `StratumFloor` collision from meshes | Never — logic SO only |
 
@@ -147,6 +183,14 @@ MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cin
 - [x] `FloorArtPopulate` static/editor service: enumerate cells, skip rules, instantiate, Undo
 - [x] `FloorArtGridEditor`: **Populate Wall Blocks** + **Clear Generated Props** buttons; validation (floor assigned, list non-empty)
 - [x] Update `Assets/Scenes/Floors/README.md`
+
+### Phase C — Editor Populate v1.5 (walkable tiles) — [#172](https://github.com/miramocha/griddungeon-game/issues/172)
+
+- [x] `FloorArtWalkableTileClassifier` + `GetWalkableTilePlacements` (Core / planner)
+- [x] `FloorArtGrid`: hallway / corner / floor prefab slots
+- [x] `FloorArtPopulateUtility.PopulateWalkableTiles` + `FloorArtGridEditor` buttons (+ **Populate All**)
+- [x] Dev prefabs menu + `FloorArtPopulateTests` (classifier, gather skip)
+- [x] Game `Assets/Scenes/Floors/README.md` workflow
 
 ### Phase B — Runtime load
 
@@ -190,4 +234,4 @@ MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cin
 - [Floor transition vignette](floor-transition.md) · [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
 - [04-tech-notes — Map authoring](../04-tech-notes.md#map-authoring--hud-adr-002)
 - [Exploration UI — DungeonView](exploration-ui.md#phase-system-vs-ui-visibility)
-- Game: `Assets/Scenes/Floors/README.md`, [#92](https://github.com/miramocha/griddungeon-game/issues/92), [#102](https://github.com/miramocha/griddungeon-game/issues/102)
+- Game: `Assets/Scenes/Floors/README.md`, [#92](https://github.com/miramocha/griddungeon-game/issues/92), [#102](https://github.com/miramocha/griddungeon-game/issues/102), [#172](https://github.com/miramocha/griddungeon-game/issues/172) (populate walkable tiles)
