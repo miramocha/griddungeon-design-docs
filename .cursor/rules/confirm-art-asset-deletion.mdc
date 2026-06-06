@@ -1,0 +1,39 @@
+---
+description: Ask user before deleting Shader Graph, materials, PSD, or Aseprite assets
+alwaysApply: true
+---
+
+# Confirm before deleting art / shader assets
+
+Before **deleting**, **moving to trash**, or **omitting from a refactor** any of these under `Assets/` (or equivalent project art paths), **stop and ask the user to confirm**:
+
+| Kind | Extensions / patterns |
+|------|------------------------|
+| Shader Graph | `*.shadergraph`, `*.shadersubgraph` |
+| Material | `*.mat` |
+| Photoshop | `*.psd` |
+| Aseprite | `*.aseprite` |
+
+Include the **paired `.meta`** in the list when you would remove the asset.
+
+## Required workflow
+
+1. **List every path** you intend to delete (full paths, one per line).
+2. **State why** (unused, replaced by USS, refactor scope, etc.).
+3. **Wait for explicit approval** — e.g. “yes, delete them”, “delete shader only”, “keep Aseprite”.
+4. Only then use `Delete`, `git rm`, or edits that remove the files.
+
+## Do not
+
+- Delete these files because a feature switched to code/USS/sprites-off without asking.
+- Batch-delete “cleanup” art assets in the same turn as implementation unless the user already approved that list.
+- Substitute “I removed the reference” for deleting the asset without confirmation when deletion is still on the table.
+
+## Allowed without extra confirmation
+
+- Removing **C# / USS references** to an asset the user asked to stop using (catalog field, sync binding) when the **files stay on disk**.
+- Deleting **generated** or **clearly ephemeral** copies only if the user requested that cleanup in the same message.
+
+## Example
+
+> I can remove `Assets/Shaders/Graph/Map/MapCellWall.shadergraph` and `Assets/UI/Materials/MapCellWall.mat` since walls use UITK borders now. **Confirm delete these two (+ .meta)?** (Keep / delete / list only)
