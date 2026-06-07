@@ -96,6 +96,38 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 - Toggle state with **BEM modifier classes** (`element.AddToClassList("combat-log__entry--selected")`) before inline styles.
 - Custom controls: inherit `VisualElement`, use `UxmlElement` / `UxmlFactory` + `UxmlTraits` (Unity 6) for designer-friendly UXML.
 
+### Prefer USS class toggles over `element.style` in C#
+
+**Default:** layout, size, colour, visibility, and state styling live in **USS**. C# **toggles classes** (`EnableInClassList`, `AddToClassList` / `RemoveFromClassList`) — do **not** set `VisualElement.style` properties for those concerns unless an exception below applies.
+
+| Do in USS + class toggle | Avoid in C# |
+|--------------------------|-------------|
+| Width / height / min-max size | `style.width = 336f`, `style.height = …` |
+| Opacity, display, flex alignment | `style.opacity`, `style.display` (when a `--hidden` / `--fullscreen` modifier exists) |
+| Colours, borders, padding | `style.backgroundColor`, `style.borderTopWidth`, … |
+| **Transitions** (`transition-property`, duration) | Animating via per-frame `style` writes |
+
+**Pattern:** one active modifier per axis when values are discrete — e.g. `map-view--panel-cols-20`, `map-view--panel-rows-20`, `map-view--panel-cell-24`, `map-view__grid--cell-size-24`. Centralize toggles in a small helper (e.g. `MapViewLayoutClasses`) when many mutually exclusive classes exist.
+
+```csharp
+// ✅ GOOD — behaviour picks a USS modifier; stylesheet owns pixels and transitions
+m_root.EnableInClassList("map-view--fullscreen", fullscreen);
+MapViewLayoutClasses.SetPanelCellSize(m_root, cellSizePx);
+
+// ❌ BAD — duplicates USS, blocks transitions, drifts from design tokens
+m_root.style.width = 496f;
+m_root.style.minWidth = 496f;
+cell.style.width = cellSize;
+```
+
+**Inline `style` is OK when:**
+
+- **Layout-derived coordinates** that USS cannot know ahead of time (e.g. marker `left` / `top` from `worldBound` / `MapGridOverlayAnchor`, or **DOTween `translate`** in `MapGridMarkerAnimator`). **Do not** put `left` / `top` / `translate` in USS `transition-property` on those markers — it fights step tweens and reads as stagger.
+- **One-off Editor or dev tools** not worth a modifier matrix.
+- **No stable discrete set** of values and adding dozens of USS classes would be noise — document why in a short comment.
+
+When adding a new modifier family, add matching **`transition-property`** on the base block in USS so class swaps animate (see `MapView.uss` panel + cell scale).
+
 ```csharp
 // naming: PascalCase type; query by kebab-case name matching UXML name=""
 public class CombatHudView : MonoBehaviour
