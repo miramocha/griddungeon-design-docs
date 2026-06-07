@@ -132,7 +132,7 @@ Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — reused
 | `SetStaleTargetHighlights(staleIds)` | `--stale-target` + tooltip *Target down — will retarget* ([#65](https://github.com/miramocha/griddungeon-game/issues/65)) |
 | `TryGetSlotElement(string id, out VisualElement?)` | VFX / pulse without rebuilding DOM |
 
-Slots are created in code (`BuildSlot`) with BEM classes `combat-roster__slot`, `combat-roster__slot-name`, `combat-roster__slot-hp`, `combat-roster__slot-mp`, optional `combat-roster-slot-action` (`name` for queries).
+Slots are created in code (`BuildSlot`) with BEM classes `combat-roster__slot`, `combat-roster__slot-name`, `combat-roster__slot-hp`, optional `combat-roster__slot-mp` (**party cores / aux only** — omitted for `CombatantKind.Enemy`), optional `combat-roster-slot-action` (`name` for queries).
 
 **Planning highlight rule:** During a **core command turn**, gold **acting** highlight belongs on the **party roster** slot for that core, **not** on the AGI turn-order strip ([combat § Turn order strip](../02-systems/combat.md#turn-order-strip-agi-queue-ui)). Strip highlight is for auto/AI/enemy turns.
 

@@ -202,7 +202,7 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 - **Turn phase:** cores and summons play **queued** commands on their AGI slot; no mid-playback summon menu ([ADR 016](../../decisions/016-summon-control-mvp1.md))
 - **Target selection** during command planning — valid highlights + arrows/WASD/`Z` + LMB; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
 - **Combat log** — one-line preview + full-history modal — [§ Combat log (preview + modal)](#combat-log-preview--modal)
-- **Frame layout** — full-screen rails + center arena — [§ Combat HUD frame layout](#combat-hud-frame-layout) (epic [#179](https://github.com/miramocha/griddungeon-game/issues/179))
+- **Frame layout** — full-screen rails + center arena — [§ Combat HUD frame layout](#combat-hud-frame-layout) (shipped [#179](https://github.com/miramocha/griddungeon-game/issues/179) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182))
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
 
@@ -230,11 +230,11 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 ### Combat HUD frame layout
 
-**Status:** Implemented — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Full-screen frame replaces the bottom-stacked panel ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so the 3D battle arena stays visible in the center.
+**Status:** Shipped — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) closed via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Full-screen frame replaces the bottom-stacked panel ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so the 3D battle arena stays visible in the center.
 
 | Zone | UITK element | Layout |
 |------|--------------|--------|
-| **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → Protocol / Back) |
+| **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → **Protocol** → **Back**); Protocol shown only when `CanUseProtocol` |
 | **Top center** | `enemy-roster` | Front / Back labeled rows (unchanged formation rules) |
 | **Bottom center** | `synchro-bar` then `party-roster` | Synchro meter **directly above** party formation |
 | **Under party** | `combat-log-preview-row` | Round label + latest log line — [§ Combat log](#combat-log-preview--modal) |
@@ -247,7 +247,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 ### Combat log (preview + modal)
 
-**Status:** Shipped — [#181](https://github.com/miramocha/griddungeon-game/issues/181) under epic [#179](https://github.com/miramocha/griddungeon-game/issues/179).
+**Status:** Shipped — [#181](https://github.com/miramocha/griddungeon-game/issues/181) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) under epic [#179](https://github.com/miramocha/griddungeon-game/issues/179).
 
 | Surface | Behavior |
 |---------|----------|
@@ -301,9 +301,11 @@ Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — 
 | Front | `0`, `1`, `2` | `EnemySlot_0` … `EnemySlot_2` |
 | Back | `3`, `4`, `5` | `EnemySlot_3` … `EnemySlot_5` |
 
-Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards with a visual gap or left-aligned pair per HUD style ([04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit)).
+Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards **centered** in the row (flex `justify-content: center` on `combat-roster__slots`).
 
-**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses **Front** / **Back** rows (`party-roster-front`, `party-roster-back`) — one portrait card per occupied core slot (6 + aux later). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**Roster vitals (MVP1):** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
+
+**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses **Front** / **Back** rows (`party-roster-front`, `party-roster-back`) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

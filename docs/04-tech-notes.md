@@ -207,19 +207,19 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 
 ## Combat HUD (UI Toolkit)
 
-**Frame layout (target):** epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) — [combat § Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`inset: 0`, `flex-direction: row`):
+**Shipped** — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Spec: [combat § Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`position: absolute; inset: 0`, `flex-direction: row`):
 
 ```
 command-rail | center column (enemy → arena-spacer → synchro → party → log-preview) | turn-order-strip
 ```
 
-- **Left rail** — `command-panel` (vertical column).
-- **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows, up to 3 cards each; empty `EnemySlots[]` indices omitted).
-- **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back`.
-- **Log** — `combat-log-preview-row` (one line) + `combat-log-modal` overlay ([#181](https://github.com/miramocha/griddungeon-game/issues/181)).
+- **Left rail** — `combat-hud__command-rail` → `command-panel` (vertical column, centered in rail). Button order: Attack → … → Flee → **Protocol** → **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
+- **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** — no MP on enemies).
+- **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back` (party slots show HP + MP).
+- **Log** — `combat-log-preview-row` (round + one line) + `combat-log-modal` (`hud-overlay`; X dismisses before command Back).
 - **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
 
-`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindCoreFormation` for party. Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindPartyFormation` for party (+ aux). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
 
 - **Skill use picker** — modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
 - AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
