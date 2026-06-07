@@ -65,6 +65,8 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 Random fights before this FOE contact: Synchro **locked**. S1 tutorial FOE: encounter group `TutorialFirstFoe` + `CombatTutorialHudRules` ([combat](combat.md)).
 
+**Protocol-only command rail (phase D):** `RequiresProtocolOnlyCommands` hides Attack/Guard/Skill/Item/Flee; **Protocol** button appears only when `CanUseProtocol` (bar full). Planning prompt via `CombatTutorialHudRules.TutorialPlanningPrompt`: *Gain Synchro in combat…* until ready, then *Synchro is full. Open Protocol → Protocol Strike.* Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182).
+
 ### During combat
 
 While charge is below 100%, **core formation members** add to the shared pool:
