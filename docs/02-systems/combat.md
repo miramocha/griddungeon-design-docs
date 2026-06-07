@@ -201,7 +201,8 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 - **Command planning:** one queued action per living core before AGI playback; roster `CommandTarget` highlight + queued/pending styling; **focus navigator** on command bar + target list ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md))
 - **Turn phase:** cores and summons play **queued** commands on their AGI slot; no mid-playback summon menu ([ADR 016](../../decisions/016-summon-control-mvp1.md))
 - **Target selection** during command planning — valid highlights + arrows/WASD/`Z` + LMB; stale-target affordance ([#60](https://github.com/miramocha/griddungeon-game/issues/60), [#65](https://github.com/miramocha/griddungeon-game/issues/65))
-- Combat log
+- **Combat log** — one-line preview + full-history modal — [§ Combat log (preview + modal)](#combat-log-preview--modal)
+- **Frame layout** — full-screen rails + center arena — [§ Combat HUD frame layout](#combat-hud-frame-layout) (epic [#179](https://github.com/miramocha/griddungeon-game/issues/179))
 - Enemy weakness icons when identified
 - Status icons + turns remaining on portraits — [status & buffs](combat-status-and-buffs.md#ui)
 
@@ -223,13 +224,43 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Stale queued target | Dashed roster frame + tooltip *Target down — will retarget* ([#65](https://github.com/miramocha/griddungeon-game/issues/65)) | No — informational during planning / playback |
 | Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
 | FOE join (MVP2) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
-| Combat log line | Newest entry **fade/slide in**; scroll to bottom | Bundled with the beat above (same lock) |
+| Combat log line | Newest entry **fade/slide in** on **preview** line; full history in log modal ([#181](https://github.com/miramocha/griddungeon-game/issues/181)) | Bundled with the beat above (same lock) |
 
-**Shipped presenters:** `CombatHudReactivePresenter` (log fade/slide, HP/Synchro lerp, hit/KO/status flashes, turn-strip handoff), `CombatHudLogView` (log scroll/format), `CombatTutorialHudRules` (Core — S1 stalker command gating). `CombatController` / `CombatScenePresenter` stay authoritative for rules.
+**Shipped presenters:** `CombatHudReactivePresenter` (log fade/slide, HP/Synchro lerp, hit/KO/status flashes, turn-strip handoff), `CombatHudLogView` (log format + preview/modal — [#181](https://github.com/miramocha/griddungeon-game/issues/181)), `CombatTutorialHudRules` (Core — S1 stalker command gating). `CombatController` / `CombatScenePresenter` stay authoritative for rules.
+
+### Combat HUD frame layout
+
+**Status:** Implemented — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Full-screen frame replaces the bottom-stacked panel ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so the 3D battle arena stays visible in the center.
+
+| Zone | UITK element | Layout |
+|------|--------------|--------|
+| **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → Protocol / Back) |
+| **Top center** | `enemy-roster` | Front / Back labeled rows (unchanged formation rules) |
+| **Bottom center** | `synchro-bar` then `party-roster` | Synchro meter **directly above** party formation |
+| **Under party** | `combat-log-preview-row` | Round label + latest log line — [§ Combat log](#combat-log-preview--modal) |
+| **Right rail** | `turn-order-strip` | **Vertical** flat AGI queue — [§ Turn order strip](#turn-order-strip-agi-queue-ui) |
+| **Center** | `combat-hud__arena-spacer` | Transparent flex-grow; no opaque full-width HUD panel |
+
+**Locked UX (unchanged from MVP1 skeleton):** core command turns highlight the **party roster** slot, not the AGI strip; reactive beats and `CombatPresentationGate` pacing unchanged ([#35](https://github.com/miramocha/griddungeon-game/issues/35)).
+
+**UXML / USS:** `CombatHud.uxml`, `CombatHud.uss` — hooks in [04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit).
+
+### Combat log (preview + modal)
+
+**Status:** Shipped — [#181](https://github.com/miramocha/griddungeon-game/issues/181) under epic [#179](https://github.com/miramocha/griddungeon-game/issues/179).
+
+| Surface | Behavior |
+|---------|----------|
+| **Preview row** | Under party roster; shows **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. |
+| **Open** | Click preview row or **Log** button → `combat-log-modal` (`hud-overlay` panel) |
+| **Modal body** | Scrollable full fight history (`combat-log` ScrollView); higher line cap than legacy inline strip |
+| **Close** | **X** / Close button; read-only — does not pause combat. **X** dismisses modal before command Back/LIFO when open |
+
+`CombatHudLogView.Append` updates preview label and modal scroll. Reactive presenter keeps calling the same API ([#35](https://github.com/miramocha/griddungeon-game/issues/35)).
 
 ### Turn order strip (AGI queue UI)
 
-Combat must show a **horizontal strip** (left → right = soonest → latest) listing **every combatant in the current round’s AGI queue**:
+Combat must show a **vertical strip** on the **right rail** (top → bottom = soonest → latest) listing **every combatant in the current round’s AGI queue** (flat queue — no front/back grouping):
 
 | Included | Excluded |
 |----------|----------|

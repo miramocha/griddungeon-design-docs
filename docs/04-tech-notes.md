@@ -207,13 +207,24 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 
 ## Combat HUD (UI Toolkit)
 
-- `CombatHud.uxml` — enemy panel uses **two rows** (`enemy-roster-front`, `enemy-roster-back`), each `flex-direction: row`, up to **3** cards; empty `EnemySlots[]` indices omitted ([combat § Enemy roster UI](02-systems/combat.md#enemy-roster-ui-formation-rows)).
-- `CombatRosterView.BindEnemyFormation` — maps `EnemySlots[0..2]` → `enemy-roster-front`, `[3..5]` → `enemy-roster-back`.
-- Party roster — `party-roster-front` / `party-roster-back` via `BindCoreFormation` (one card per core; front/back rows). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+**Frame layout (target):** epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) — [combat § Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`inset: 0`, `flex-direction: row`):
+
+```
+command-rail | center column (enemy → arena-spacer → synchro → party → log-preview) | turn-order-strip
+```
+
+- **Left rail** — `command-panel` (vertical column).
+- **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows, up to 3 cards each; empty `EnemySlots[]` indices omitted).
+- **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back`.
+- **Log** — `combat-log-preview-row` (one line) + `combat-log-modal` overlay ([#181](https://github.com/miramocha/griddungeon-game/issues/181)).
+- **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
+
+`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindCoreFormation` for party. Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+
 - **Skill use picker** — modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
-- AGI `turn-order-strip` — flat list; do not split enemies into front/back in the strip; wider plates + USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
+- AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
-- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log formatting/scroll; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
+- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
 
 ## Combat scene
 
