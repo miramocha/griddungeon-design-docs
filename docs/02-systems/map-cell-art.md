@@ -2,7 +2,7 @@
 
 MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
 
-**Implementation today (#38):** `MapView` paints visited cells with **USS background fills** and per-edge **wall border overlays** (`MapGridCellWallBorders` + `MapGridCellPaint`). Cell glyphs are hidden; **marker overlays** (party, FOE, gather, stairs, story) use `MapCellArtCatalog` sprites anchored to cell layout (`MapGridOverlayAnchor`). Optional per-cell sprite mode remains behind `UsePerCellSpriteRendering` for dev preview. **Do not** ship 16-tile wall autotile PNGs — composite edges only ([game `MapView.cs`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/Views/MapView.cs)).
+**Implementation today (#38):** `MapView` paints visited cells with **USS background fills** and per-edge **wall border overlays** (`MapGridCellWallBorders` + `MapGridCellPaint`). Cell glyphs are hidden; **marker overlays** (party, FOE, gather, stairs, story) use `MapCellArtCatalog` sprites anchored to cell layout (`MapGridOverlayAnchor`). Overlay art is authored in **`MapPSD.psd`** (PSD layers synced into catalog slots via editor tooling). Party/FOE shells can scale above cell size (`MarkerCellScale`); feature markers (stairs, gather, story) stay cell-sized. **Do not** ship 16-tile wall autotile PNGs — composite edges only ([game `MapView.cs`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/Views/MapView.cs)).
 
 **Inspiration (other games):** [Refs — Map UI](../refs/map-ui.md) — screenshot board; locked art rules stay in this doc.
 
@@ -164,14 +164,14 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 
 ## Implementation notes (game repo)
 
-- **Overlay sprites vs cell grid:** `map_party`, `map_foe`, stairs, and gather art bind through `MapCellArtCatalog` on marker layers — **not** per-cell sprite stacks (UITK texture-slot limit). Party marker **rotates** one north-up `map_party` sprite per `FacingDirection`.
-- **Marker overlays:** default **16×16 px** in side panel; **fullscreen** (`M`) scales cells (up to 48px) via `MapGridPainter.ApplyCellDimensions` and hides the party strip. Snapped via `MapGridOverlayAnchor` (layout) with metrics fallback.
+- **Overlay sprites vs cell grid:** `map_party`, `map_foe`, stairs, and gather art bind through `MapCellArtCatalog` on marker layers — **not** per-cell sprite stacks (UITK texture-slot limit). Party marker **rotates** one north-up `map_party` sprite per `FacingDirection`. PSD layer names are listed per catalog slot; **GridDungeon → Map → Sync Catalog Sprites from PSD** bulk-fills slots.
+- **Marker overlays:** default **16×16 px** shell in side panel; `MarkerCellScale` &gt; 1 centers an oversized party/FOE shell on the cell. **Fullscreen** (`M`) scales cells (up to 48px) via `MapViewLayoutClasses.SetGridCellSize` and hides the party strip. Snapped via `MapGridOverlayAnchor` (layout `worldBound`) with metrics fallback; `left`/`top` are pixel-rounded to match `MapGridMarkerAnimator`.
 - **Fullscreen chrome:** wall border width and marker inset use `map-view--fullscreen-inset-N` modifier classes (2–6px, scales with cell size).
 - **Shared cell painter:** `MapGridPainter` used by `MapView` + dev map preview ([#85](https://github.com/miramocha/griddungeon-game/pull/85)).
 - **Marker overlays:** `MapGridMarkerAnimator` + `*MarkersPresenter` on layers above the cell grid ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
 - **Layered UI (sprites):** cell underlay + overlay children (gather → hub → foe → party) — same split as today.
 - **Save / reveal:** unchanged — `WallMask`, `FeatureState`, `Visited` ([map-reveal-save-format](map-reveal-save-format.md)).
-- **Tests:** Edit Mode — `MapGridCellPaintTests`, `MapGridCellWallBordersTests`, `MapGridLayoutMetricsTests`, `MapGridPainterTests`, marker presenter tests; Play Mode via DevBootstrap **F2**.
+- **Tests:** Edit Mode — `MapGridCellPaintTests`, `MapGridCellWallBordersTests`, `MapGridLayoutMetricsTests`, `MapGridOverlayAnchorTests`, marker presenter tests; Play Mode via DevBootstrap **F2**.
 
 ---
 

@@ -225,6 +225,8 @@ command-rail | center column (enemy → arena-spacer → synchro → party → l
 - AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
 - **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
+- **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control — `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
+- **Shared panel scale:** `GamePanelSettings.asset` — Scale With Screen Size, reference **1920×1080**, **Match Height** (exploration + combat `UIDocument` panels).
 
 ## Combat scene
 
