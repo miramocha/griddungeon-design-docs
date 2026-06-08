@@ -188,21 +188,53 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 ---
 
+## Global input hints
+
+**Status:** Shipped — replaces per-panel bind footers on command rail, hub, party menu, and tabbed pickers.
+
+| Piece | Role |
+|-------|------|
+| `InputHintPresenter` | `MonoBehaviour` on `InputHint` child; `UIDocument` + `InputHint.uxml` / `InputHint.uss`; **`sortingOrder` 300** |
+| `InputHints` | `Publish(gameState, text)` / `Clear(gameState)` — static facade to `GameState.InputHint` |
+| `TabbedPickerRailHints` | Shared bind-copy strings for hub, combat, and party pickers |
+
+**Publishers:** `CombatHudView.RefreshInputHint`, `HubHudView.RefreshInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (equipment appends focused slot suffix via `PartyEquipmentToolkitView.MenuHintSlotSuffix`, e.g. `· Weapon`).
+
+**Removed UXML hints:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, `party-equipment-detail` bind footer.
+
+### `TabbedPickerRailHints` copy
+
+| Constant / helper | Copy |
+|-------------------|------|
+| `HubRoot` | W/S Menu · Z Confirm · X Cancel |
+| `HubService` | W/S Action · Z Confirm · X Back |
+| `CombatIdle` | L Log · Z Confirm · X Cancel · Esc Pause |
+| `CombatCommand` | L Log · W/S Command · Z Confirm · X Cancel · Esc Pause |
+| `CombatTarget` | L Log · W/S Target · Z Confirm · X Cancel |
+| `LogModal` | L or X Close |
+| `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
+| `ForItemPickerRows(multiTab, backVerb)` | Q/E Tab · W/S Row · Z Confirm · X {backVerb} — or W/S Row · … when single tab |
+
+Party equipment (slots engaged): `Q/E Member · W/S Slots · Z Pick · X Back` + optional ` · {slot}` suffix.
+
+---
+
 ## Tabbed picker shell — shared modal chrome
 
-**Job:** Title, optional tabs, windowed list region, detail line, optional hint — **not** row content.
+**Job:** Title, optional tabs, **side-by-side** list + detail (`tabbed-picker__body` row), windowed list region — **not** row content. Bind copy lives on **global** `InputHintPresenter`, not modal footers.
 
 ```mermaid
 flowchart LR
   subgraph shell [TabbedPicker.uss BEM block tabbed-picker]
     T[tabbed-picker__title]
     TB[tabbed-picker__tabs → PickerTabStripView]
-    RW[tabbed-picker__rows → windowed-list]
-    D[tabbed-picker__detail]
-    H[tabbed-picker__hint optional]
+    subgraph body [tabbed-picker__body row]
+      RW[tabbed-picker__rows → windowed-list]
+      D[tabbed-picker__detail]
+    end
   end
 
-  T --- TB --- RW --- D --- H
+  T --- TB --- body
 ```
 
 | Asset | Role |
@@ -220,6 +252,8 @@ flowchart LR
 | Party menu | `party-menu` — opaque full-screen | `party-menu__dialog` — shares panel metrics with `tabbed-picker__panel` |
 
 Combat HUD offsets the picker overlay so the command rail bookmark stays visible: `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`).
+
+**Panel layout:** `tabbed-picker__panel` and `party-menu__dialog` **shrink-wrap** content (`flex-grow: 0` — no fixed viewport-% height). **`tabbed-picker__body`** — horizontal row: windowed list (`flex-grow: 1`) + fixed-width detail column (`168px`). Fixed body height (`288px`) fits eight windowed rows + scroll chrome.
 
 **UXML patterns:**
 
@@ -282,12 +316,12 @@ flowchart TB
 
 ### Layout profiles (`ItemListPickerLayout`)
 
-Same C# view, different UXML **name hooks** and hidden class:
+Same C# view, different UXML **name hooks** and hidden class. Bind copy: global `InputHintPresenter` (`HubHudView`, `CombatHudView`, `PartyMenuOverlayView`) — not per-picker footer labels.
 
-| Profile | `HiddenClass` | Hint label | Used by |
-|---------|---------------|------------|---------|
-| `ShopOverlay` (default) | `tabbed-picker--hidden` | `item-list-picker-hint` | `ItemListPicker.uxml` |
-| `PartyInventoryPane` | `party-inventory--hidden` | none (shell hint on rail) | `PartyInventory.uxml` |
+| Profile | `HiddenClass` | Used by |
+|---------|---------------|---------|
+| `ShopOverlay` (default) | `tabbed-picker--hidden` | `ItemListPicker.uxml` |
+| `PartyInventoryPane` | `party-inventory--hidden` | `PartyInventory.uxml` |
 
 Required element names (party profile uses the same ids):
 
@@ -506,6 +540,11 @@ Manual: Dev bootstrap **F1** hub shop, **Tab** party inventory, **F3** combat Sk
 
 | Path | Purpose |
 |------|---------|
+| `Assets/UI/Screens/Shared/InputHint.uxml` | Global bind-hint overlay |
+| `Assets/UI/Screens/Shared/InputHint.uss` | Bottom-right chip styles |
+| `Assets/Scripts/Runtime/UI/InputHintPresenter.cs` | Overlay presenter (`sortingOrder` 300) |
+| `Assets/Scripts/UI/Views/InputHints.cs` | `Publish` / `Clear` facade |
+| `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs` | Shared bind-copy strings |
 | `Assets/UI/Screens/Shared/RailMenu.uss` | Chip + button rail styles |
 | `Assets/UI/Screens/Shared/CommandPanel.uss` | Vertical rail panel |
 | `Assets/UI/Screens/Shared/TabbedPicker.uss` | Modal shell |

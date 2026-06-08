@@ -216,7 +216,8 @@ command-rail | center column (enemy → arena-spacer → synchro → party → l
 - **Left rail** — `combat-hud__command-rail` → `command-panel` (vertical column, centered in rail). Button order: Attack → … → Flee → **Protocol** → **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
 - **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** — no MP on enemies).
 - **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back` (party slots show HP + MP).
-- **Log** — `combat-log-preview-row` (round + one line) + `combat-log-modal` (`hud-overlay`; X dismisses before command Back).
+- **Log** — `combat-log-preview-row` (round + one line; no Log button); modal via **`L`** or preview click; title + scroll only; close via **`L`**, **`X`** / Back (`TryBack` — log before pickers), or backdrop click (not scroll).
+- **Input hints** — `InputHintPresenter` (`Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` 300); `InputHints.Publish` / `Clear` from combat, hub, party menu. Copy: `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints)).
 - **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
 
 `CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindPartyFormation` for party (+ aux). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).

@@ -180,7 +180,7 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Toggle combat log** | `L` | Expand/collapse |
+| **Toggle combat log** | `L` or click preview row | Opens/closes `combat-log-modal`; **`X`** / Back closes modal before pickers (`CombatPlayerCommandGate.TryBack` order). Global hint: **L or X Close** when open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)) |
 | **Toggle map** | `M` | Read-only floor map |
 | **Pause** | `Esc` | When pause UI ships — all phases ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) |
 
@@ -195,6 +195,16 @@ During **`CinematicQTE`** skills only ([combat presentation](combat-presentation
 | **Skip (alt)** | Hold `Space` 0.5s | Optional duplicate bind for skip |
 
 Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good tier), **Skip all cinematics** — accessibility.
+
+---
+
+## Global input hints
+
+Bottom-right overlay chip shared across hub, combat, and party menu (`InputHintPresenter`, `sortingOrder` 300). Hosts publish via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
+
+**Removed per-panel hints:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, party equipment detail bind footer.
+
+Copy constants: `TabbedPickerRailHints` — full table in [shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints).
 
 ---
 
