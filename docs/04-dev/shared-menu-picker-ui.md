@@ -119,6 +119,28 @@ flowchart TB
 
 **Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need the combined selectors (e.g. `.rail-menu__item.unity-button.menu-item--focused`, `.rail-menu__item.unity-button.rail-menu__item--selected`).
 
+### Vertical rail bookmark (focus poke)
+
+Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** command rails use a fixed-width bookmark slide — not width animation.
+
+| Token | Value | USS |
+|-------|-------|-----|
+| Rail column | `240px` | `.command-rail` |
+| Item chip | `268px` | `.command-panel__btn` (poke = **28px**) |
+| Unfocused | `translate: -28px 0` | Left edge off-screen; right edge flush with rail |
+| Focused / `--selected` | `translate: 0` | Left at rail; right pokes into stage |
+| Content inset | `padding-left: 28px` | Matches tuck — wrapped labels stay inside visible rail |
+
+```
+[ off-screen 28px ][ rail 240px ][ stage … ]
+     unfocused ←──────────────┤
+              focused ──────────────────┤→ poke
+```
+
+- **No `overflow: hidden`** on the rail — left tuck is clipped by the screen edge.
+- **Combat pickers:** `.combat-hud > .tabbed-picker { left: 240px }` so the modal does not cover the rail bookmark.
+- **Labels:** `RailMenuPresenter.ConfigureButton` migrates `Button.text` → child `rail-menu__item-label` so long names wrap with the chip (no fixed-width label hack).
+
 ### Consumers (vertical)
 
 | Screen | Owner | UXML hook |
@@ -158,7 +180,7 @@ flowchart LR
 
 | Asset | Role |
 |-------|------|
-| `TabbedPicker.uss` | Panel layout, dim overlay (`tabbed-picker`), imports `RailMenu.uss` |
+| `TabbedPicker.uss` | Panel layout, transparent full-screen host (`tabbed-picker`), imports `RailMenu.uss` |
 | `WindowedList.uss` | `windowed-list`, `windowed-list__slots`, scroll bars |
 | `TabbedPickerShellClasses` | BEM constants (`Hidden`, `TabsHidden`, …) |
 
