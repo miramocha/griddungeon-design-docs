@@ -226,8 +226,8 @@ Party menu section **Inventory** uses **horizontal category tabs**, same interac
 | Layer | Type |
 |-------|------|
 | Core | `InventoryBagCatalog` → `InventoryBagPresentationModel` with `Tabs[]` / slot rows |
-| Runtime | `IInventoryBagView`, coordinator |
-| UI | UITK — BEM `party-inventory`, `party-inventory__tab`, `party-inventory__row` (column layout in party menu pane; no standalone modal chrome) |
+| Runtime | `IInventoryBagView`, `InventoryBagCoordinator` |
+| UI | `PartyInventoryBagView` → shared **`ItemListPickerView`** (same row/tab stack as hub shop); embedded in party menu pane — [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) |
 
 Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
 

@@ -12,7 +12,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Systems** — rules engines (movement, mapping, combat, party, hub)
 - **Content** — strata, floors, monsters, FOE placement
 - **Tech** — Unity 6 / URP implementation constraints
-- **Dev / integrator** — [04-dev/](docs/04-dev/README.md) (e.g. [UI event contract](docs/04-dev/ui-event-contract.md), [custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md), [custom party UI](docs/04-dev/custom-party-ui.md))
+- **Dev / integrator** — [04-dev/](docs/04-dev/README.md) (e.g. [UI event contract](docs/04-dev/ui-event-contract.md), [shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md), [custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md), [custom party UI](docs/04-dev/custom-party-ui.md))
 - **Decisions** — ADRs when we lock a design choice
 - **Refs** — visual / UX scratchpads (screenshots, links; not spec authority)
 - **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
@@ -40,6 +40,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Exploration UI](docs/02-systems/exploration-ui.md) | Accepted | UI Toolkit HUD wiring: `ExplorationHudView`, `MapView`, pause, input |
 | [04 — Dev: UI event contract](docs/04-dev/ui-event-contract.md) | Active | Integrator reference: Runtime events + command APIs for custom HUD |
 | [04 — Dev: Custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md) | Active | Replace combat skill modal (`ISkillUsePickerView`, host wiring, tests) |
+| [04 — Dev: Shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md) | Active | Rail menu, item list picker, skill picker — shared UITK components and diagrams |
 | [04 — Dev: Custom party UI](docs/04-dev/custom-party-ui.md) | Active | Replace exploration strip / combat party roster (`CombatRosterView`, events) |
 | [Refs — Map UI](docs/refs/map-ui.md) | Scratchpad | Other games’ map UI screenshots (inspiration) |
 | [02 — Hub & services](docs/02-systems/hub-and-services.md) | Draft | Explorers Guild, Navigator Office, shop, hospital, save |
