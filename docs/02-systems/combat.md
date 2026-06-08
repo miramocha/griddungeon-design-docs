@@ -192,6 +192,7 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 
 - **Reactive feedback** — HUD animates on combat events (not static swaps only); see [§ UI motion & feedback](#ui-motion--feedback), [tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity), and [UI event contract](../04-dev/ui-event-contract.md#combat-phase) (integrator event list)
 - **Skill** command — tabbed skill-use modal ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)); then targeting when required ([#60](https://github.com/miramocha/griddungeon-game/issues/60))
+- **Item** command — consumable list modal (shared `ItemListPickerView` + `WindowedListPaneView`, **Immediate** row focus; no category tabs) — [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md#combat-item-picker--host-integration)
 - **Party / enemy plates** — formation roster slots ([custom party UI](../04-dev/custom-party-ui.md)); acting highlight on **party roster** during core command turns (not AGI strip)
 - **Navigator** portrait + aura badges — [navigator](navigator.md)
 - **Synchro Charge** (team, 0–100%) — see [synchro-protocol](synchro-protocol.md)

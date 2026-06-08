@@ -256,7 +256,7 @@ Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](h
 | **Combat `Item` command** | **Consumable row list** only — combat-usable items from bag; **no category tab strip** ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) sub-menu) |
 | **Field** | Use from party menu **Consumables** tab, or filtered field-usable rows (`return_thread`, heals) |
 
-Combat picker may reuse focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)); catalog filters by `ItemEffectType` + `useContexts`, not `InventoryBagCatalog` tabs.
+Combat picker uses the shared tabbed shell with **Immediate** row focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md), [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md)); catalog filters by `ItemEffectType` + `useContexts`, not `InventoryBagCatalog` tabs.
 
 ---
 

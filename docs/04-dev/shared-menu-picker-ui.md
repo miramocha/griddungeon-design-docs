@@ -4,7 +4,9 @@ How **rail menus**, **item list pickers**, and **skill use pickers** share UITK 
 
 **Related:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md) (`MenuFocusNavigator`, `menu-item--focused`), [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md), [ADR 036 — Party inventory model](../../decisions/036-party-inventory-model.md), [custom skill picker UI](custom-skill-picker-ui.md), [UI event contract](ui-event-contract.md).
 
-**Implementation root:** `Assets/Scripts/UI/Views/` · `Assets/UI/Screens/Shared/` · feature UXML under `Assets/UI/Screens/{Combat,Hub}/`.
+**Shipped ([#185](https://github.com/miramocha/griddungeon-game/issues/185)):** `WindowedListPaneView` (8-row windowing + `IListFocusNavigator`), unified `ItemListPickerView` / `RailMenuPresenter` across hub shop, party bag, and combat item picker; tabbed overlays use a **transparent** full-screen host (no modal dim).
+
+**Implementation root:** `Assets/Scripts/UI/Views/` · `Assets/UI/Navigation/` · `Assets/UI/Screens/Shared/` · feature UXML under `Assets/UI/Screens/{Combat,Hub}/`.
 
 ---
 
@@ -78,6 +80,31 @@ flowchart TB
   ILP --> CITEM
   SUP --> CSKILL
 ```
+
+---
+
+## Focus navigation contract (`IListFocusNavigator`)
+
+**Job:** One keyboard contract for **linear row lists** — command bar slots, picker rows, windowed panes, equipment slots.
+
+| Type | Implements | Notes |
+|------|------------|-------|
+| `MenuFocusNavigator` | `IListFocusNavigator` | Flat list; toggles `menu-item--focused` on bound targets ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) |
+| `WindowedListPaneView` | `IListFocusNavigator` | Owns inner `MenuFocusNavigator` on the **visible slice**; `FocusIndex` is **global** across the full list |
+| `ItemListPickerView.RowNavigator` | → `WindowedListPaneView` | Hosts route WASD / confirm / cancel here when the pane is engaged |
+
+**API surface:** `SetFocus`, `MoveNext` / `MovePrevious`, `Confirm`, `Cancel`, `ClearFocus`, `EngageFocus(preferredIndex)` — plus `HasFocus`, `FocusIndex`, and `Confirmed` / `Cancelled` / `FocusChanged` events.
+
+**Engage vs immediate row focus** (`ItemListPickerInputMode`):
+
+| Mode | Row focus when list opens | Typical hosts |
+|------|---------------------------|---------------|
+| **`Immediate`** | `WindowedListPaneView.SetItems(…, acquireFocus: true)` | Combat **Item** picker (`ItemListPickerView` default) |
+| **`EngageOnConfirm`** | Rows render; focus stays on shell/rail until **Z** (`ConfirmOrEngage` → `EngagePane` / `EngageFocus`) | Hub shop (`HubShopPickerPresenter`), party bag (`PartyInventoryBagView`) |
+
+`EngageOnConfirm` also registers row **click** → `EngagePaneAt(index)` so mouse can engage without keyboard.
+
+**Disengage:** `ItemListPickerView.TryBackOut()` → `DisengagePane()` → `ClearFocus` on the row pane, clears detail text, raises `EngagementChanged`. Hosts peel UI layers on **X** / Back (see [Cancel / back layering](#cancel--back-layering-engageonconfirm-hosts) below).
 
 ---
 
@@ -180,14 +207,24 @@ flowchart LR
 
 | Asset | Role |
 |-------|------|
-| `TabbedPicker.uss` | Panel layout, transparent full-screen host (`tabbed-picker`), imports `RailMenu.uss` |
+| `TabbedPicker.uss` | Panel layout; **transparent** full-screen host (`tabbed-picker { background-color: rgba(0,0,0,0) }` — **no modal dim**); imports `RailMenu.uss` |
 | `WindowedList.uss` | `windowed-list`, `windowed-list__slots`, scroll bars |
 | `TabbedPickerShellClasses` | BEM constants (`Hidden`, `TabsHidden`, …) |
+| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss` + `TabbedPicker.uss` for embedded bag/equipment panes |
+
+**Overlay contrast:**
+
+| Host | Root chrome | List panel |
+|------|-------------|------------|
+| Hub shop / combat pickers | `tabbed-picker` — transparent; stage/rail stay visible | `tabbed-picker__panel` — dim panel (`rgba(30, 34, 40, 0.97)`) |
+| Party menu | `party-menu` — opaque full-screen | `party-menu__dialog` — shares panel metrics with `tabbed-picker__panel` |
+
+Combat HUD offsets the picker overlay so the command rail bookmark stays visible: `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`).
 
 **UXML patterns:**
 
 - **Full-screen overlay:** `tabbed-picker` root + `tabbed-picker__panel` — hub shop (`ItemListPicker.uxml`), combat skill/item pickers.
-- **Embedded pane:** same inner structure without overlay — party bag (`PartyInventory.uxml` inside `party-menu__dialog`).
+- **Embedded pane:** same inner structure without overlay root — party bag (`PartyInventory.uxml` inside `party-menu__dialog`).
 
 ---
 
@@ -260,12 +297,75 @@ Required element names (party profile uses the same ids):
 
 | Mode | When | Row focus |
 |------|------|-----------|
-| **`Immediate`** | Hub shop, combat Item | Acquired when picker opens |
-| **`EngageOnConfirm`** | Party bag pane | Z engages first row; shell owns first Z to open modal ([ADR 036](../../decisions/036-party-inventory-model.md)) |
+| **`Immediate`** | Combat **Item** picker | Acquired when `Show` rebuilds rows (`acquireFocus: true`) |
+| **`EngageOnConfirm`** | Hub shop buy/sell, party bag pane | Rows visible; **Z** (`ConfirmOrEngage`) calls `EngagePane` / `EngageFocus`; shell or service rail owns focus until then |
 
-Party adapter: **`PartyInventoryBagView`** — implements `IInventoryBagView` + `IInventoryBagKeyboardView`, delegates to `ItemListPickerView` with `EngageOnConfirm`. Coordinator (`InventoryBagCoordinator`) unchanged; still passes `InventoryBagViewPresentationModel`.
+**Hub shop:** `HubShopPickerPresenter` wires `EngageOnConfirm` and calls `ConfirmOrEngage()` when entering Buy/Sell so rows engage on open. While the picker is open but **not** pane-engaged, hub **service-rail** W/S is blocked; **Buy/Sell** chips stay **`--selected`** via `SyncShopActionSelectedIndex` (rail selection while picker open). When rows **are** engaged, `HubHudView.ActiveNavigator()` routes to `PickerRowNavigator` and clears service-rail focus items (selection chips still reflect Buy vs Sell).
 
-Combat adapter: **`CombatItemListPickerAdapter`** — maps `RowSelected` → `skillId` / bag slot per `ItemListRowModel`.
+**Party bag:** **`PartyInventoryBagView`** — implements `IInventoryBagView` + `IInventoryBagKeyboardView`, delegates to `ItemListPickerView` with `EngageOnConfirm`. First **Z** on Inventory may **reveal** the pane (`PartyMenuOverlayView`); second **Z** engages rows. Coordinator (`InventoryBagCoordinator`) unchanged.
+
+### Cancel / back layering (`EngageOnConfirm` hosts)
+
+Intended **two-step** peel — disengage row focus before closing the pane or exiting the screen:
+
+```mermaid
+flowchart TD
+  subgraph party [Party menu — Inventory pane]
+    P0[Section rail focus]
+    P1[Pane revealed — rows idle]
+    P2[Pane engaged — row focus]
+    P0 -->|Z reveal| P1
+    P1 -->|Z ConfirmOrEngage| P2
+    P2 -->|X TryBackOut + HideActivePane| P0
+    P1 -->|X HideActivePane| P0
+    P0 -->|X Close| closed[Overlay closed]
+  end
+
+  subgraph hub [Hub shop — Buy/Sell]
+    H0[Service rail — Buy/Sell/Back]
+    H1[Picker open — rows idle]
+    H2[Pane engaged — row focus]
+    H0 -->|enter Buy/Sell| H1
+    H1 -->|Z ConfirmOrEngage| H2
+    H1 -->|auto on SetMode| H2
+    H2 -->|X TryBackOut then SetShopMode Hub| H0
+    H1 -->|X SetShopMode Hub| H0
+  end
+```
+
+| Host | X / Back when rows **engaged** | X / Back when pane open, rows **idle** | X when pane hidden |
+|------|-------------------------------|----------------------------------------|-------------------|
+| **Party bag** | `TryBackOut` + `HideActivePane` → section rail | `HideActivePane` → section rail | Close entire party overlay |
+| **Hub shop** | `TryBackOut` + `SetShopMode(Hub)` → exit Buy/Sell | `SetShopMode(Hub)` → exit Buy/Sell | Close service panel (non-shop) |
+
+Combat **Item** uses **`Immediate`** — **X** / Back closes the whole picker via `CombatPlayerCommandGate.TryBack` → `ICombatItemPickerHost.Cancel()` (no disengage step).
+
+### Combat item picker — host integration
+
+Combat reuses `ItemListPicker.uxml` + **`Immediate`** `ItemListPickerView` (default constructor).
+
+```mermaid
+flowchart LR
+  CPV[CommandPanelView Item btn]
+  HOST[CombatItemPickerHost Runtime]
+  ADP[CombatItemListPickerAdapter]
+  VIEW[ItemListPickerView Immediate]
+  CC[CombatController SubmitPlayerAction]
+
+  CPV -->|OpenForCommandActor| HOST
+  HOST -->|Build rows CombatItemListCatalog| ADP
+  ADP --> VIEW
+  VIEW -->|RowSelected itemId| HOST
+  HOST -->|Item command| CC
+  CIH[CombatInputHandler] -->|WASD Z X Q E| HOST
+```
+
+| Piece | Role |
+|-------|------|
+| `CombatItemListPickerAdapter` | UITK view port — `Show`/`Hide`, row keyboard via `RowNavigator`; maps `RowSelected` → `itemId` |
+| `CombatItemPickerHost` | Runtime orchestration — bag resolve, `CombatItemListCatalog`, `SubmitPlayerAction`, `OpenStateChanged` |
+| `CombatHudView` | Clones `ItemListPicker.uxml`, wires adapter + host; exposes `ICombatItemPickerInput` to `CombatInputHandler` / `CommandPanelView` |
+| `CombatItemListPresentationBuilder` | `CombatItemListRow[]` → `ItemListPickerPresentationModel` (single tab, tabs hidden in UI) |
 
 **Row styles:** Always import `ItemListRow.uss` on the host UXML (party pane historically missed this and fell back to dark default label text).
 
@@ -303,18 +403,41 @@ flowchart LR
 
 ---
 
-## Windowed list pane
+## Windowed list pane (`WindowedListPaneView`)
 
-**Job:** Show at most **N** rows (default **8**) in a fixed-height region; up/down bars indicate off-window items; global focus index wraps.
+**Job:** Fixed-height list region with **eight slot elements always allocated** (`DefaultVisibleRowCount = 8`). When `ItemCount > 8`, only a **window** of rows is mounted in slots; up/down scroll bars indicate off-window items; **global** `FocusIndex` is stable while the window slides.
 
 Used by: `ItemListPickerView`, `SkillUsePickerToolkitView`, party equipment slot list, equipment sub-picker.
+
+### Windowing model
+
+| Concern | Behavior |
+|---------|----------|
+| Slot pool | Always **8** `windowed-list__slot` children under `windowed-list__slots` (empty slots stay in DOM) |
+| Window start | `WindowStart` — first global index shown in slot 0 |
+| Windowed mode | Root gets `windowed-list--windowed` when `ItemCount > visibleRowCount` |
+| Focus slide | `MoveNext` / `MovePrevious` on global list; `EnsureWindowContainsFocus` repositions window before `SyncDom` |
+| Short lists | `ItemCount ≤ 8` — all rows visible; scroll bars **hidden** (`windowed-list__scroll--hidden`), not collapsed |
+| Row DOM | Row `VisualElement`s are **re-parented** into slot hosts on each sync (detach on clear) |
+
+### Scroll bars
+
+| Class | Meaning |
+|-------|---------|
+| `windowed-list__scroll--up` / `--down` | Bar chrome (always reserves space when not collapsed) |
+| `windowed-list__scroll--hidden` | No more items above/below window — bar non-interactive |
+| Click | `ScrollUp` / `ScrollDown` — shifts window by one row |
+
+### Focus (`IListFocusNavigator`)
+
+Inner `MenuFocusNavigator` runs on the **visible slice** only. `WindowedListPaneView` implements `IListFocusNavigator` and forwards `Confirm` / `Cancel` / `EngageFocus` / `ClearFocus`. `SetItems(…, acquireFocus: false)` supports `EngageOnConfirm` idle rows.
 
 | Piece | Class / type |
 |-------|----------------|
 | Root | `windowed-list` |
-| Slots column | `windowed-list__slots` → child `windowed-list__slot` per visible row |
+| Slots column | `windowed-list__slots` → `windowed-list__slot` × 8 |
 | Scroll hints | `windowed-list__scroll--up` / `--down` |
-| Focus | `MenuFocusNavigator` on row elements; `menu-item--focused` |
+| Focus ring | `menu-item--focused` on row elements via inner navigator |
 
 Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1`) so borders are not clipped by scroll/slot overflow.
 
@@ -367,8 +490,10 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 
 | Fixture | Path |
 |---------|------|
+| `WindowedListPaneViewTests` | `Tests/UI/` — 8-slot pool, windowing, scroll bar visibility |
 | `ItemListPickerViewTests` | `Tests/UI/` — shop-style tabs + row selection |
 | `PartyInventoryBagViewTests` | `Tests/UI/` — party layout + engage-on-confirm |
+| `CombatItemListPickerAdapterTests` | `Tests/UI/` — combat adapter + presentation builder |
 | `SkillUsePickerToolkitViewTests` | `Tests/UI/` — skill tabs + row confirm |
 | `MenuFocusNavigatorTests` | `Tests/UI/` — focus wrap/skip |
 | `CommandPanelViewTests` | `Tests/Combat/` — command rail focus |
@@ -391,8 +516,15 @@ Manual: Dev bootstrap **F1** hub shop, **Tab** party inventory, **F3** combat Sk
 | `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
 | `Assets/Scripts/UI/Views/RailMenuPresenter.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |
-| `Assets/Scripts/UI/Views/WindowedListPaneView.cs` | Windowed list + focus |
+| `Assets/Scripts/UI/Views/WindowedListPaneView.cs` | Windowed list + `IListFocusNavigator` (#185) |
+| `Assets/Scripts/UI/Views/WindowedListPaneClasses.cs` | BEM constants for windowed list |
 | `Assets/Scripts/UI/Views/ItemListPickerView.cs` | Unified item picker |
+| `Assets/Scripts/UI/Views/HubShopPickerPresenter.cs` | Hub shop modal + `EngageOnConfirm` wiring |
 | `Assets/Scripts/UI/Views/PartyInventoryBagView.cs` | Party bag adapter |
+| `Assets/Scripts/UI/Views/CombatItemListPickerAdapter.cs` | Combat UITK adapter |
+| `Assets/Scripts/Runtime/Combat/CombatItemPickerHost.cs` | Combat Item command orchestration |
 | `Assets/Scripts/UI/Views/SkillUsePickerToolkitView.cs` | Skill picker |
+| `Assets/Scripts/UI/Navigation/IListFocusNavigator.cs` | Shared list focus contract |
 | `Assets/Scripts/UI/Navigation/MenuFocusNavigator.cs` | ADR 026 focus index |
+| `Assets/UI/Screens/Shared/PartyMenu.uss` | Opaque party shell + rail bookmark |
+| `Assets/UI/Screens/Combat/CombatHud.uss` | Combat picker `left: 240px` offset |
