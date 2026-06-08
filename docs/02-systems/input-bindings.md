@@ -200,9 +200,11 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Global input hints
 
-Bottom-right overlay chip shared across hub, combat, and party menu (`InputHintPresenter`, `sortingOrder` 300). Hosts publish via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
+Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — key/button names and actions (`Z Confirm`, `M fullscreen`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
 
-**Removed per-panel hints:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, party equipment detail bind footer.
+**Not on this strip:** map legend, party cell/facing, status numbers, lore, or save warnings (those stay on HUD labels or modal body / `hud-overlay__hint`).
+
+**Removed per-panel bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, party equipment detail bind footer, `map-view-hint`, `battle-reward-hint`.
 
 Copy constants: `TabbedPickerRailHints` — full table in [shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints).
 

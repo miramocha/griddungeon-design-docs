@@ -142,6 +142,10 @@ public class CombatHudView : MonoBehaviour
 }
 ```
 
+## Global input hints
+
+**Input bind copy only** on `InputHintPresenter` (bottom-right strip) — not map legend, coords, or warnings. Publish via `InputHints`; constants in `TabbedPickerRailHints` (segment order: Z/X → W/S & Q/E → other keys). No duplicate bind footers on panels or pickers. See [`unity-global-input-hints.mdc`](unity-global-input-hints.mdc).
+
 ## Project layout (recommended)
 
 ```

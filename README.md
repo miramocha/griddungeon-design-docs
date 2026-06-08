@@ -94,6 +94,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 027 — Combat cinematic Timeline events](decisions/027-combat-cinematic-timeline-events.md) | Accepted | `PlayableDirector.stopped` + QTE markers; no `at_sec` in skill data |
 | [ADR 034 — Skill point allocation outside combat](decisions/034-skill-point-allocation-outside-combat.md) | Accepted | Class trees in hub or labyrinth when not in combat / story / cutscene |
 | [ADR 035 — Skill use picker](decisions/035-skill-use-picker.md) | Accepted | Modal picker; default tab **All**; type tabs from `SkillType`; swappable `ISkillUsePickerView` |
+| [ADR 037 — Layered UITK panels](decisions/037-layered-uitk-panels.md) | Proposed | Split phase HUDs into smaller `UIDocument` panels + sort stack for HUD depth (draft) |
 
 ## Resolved
 

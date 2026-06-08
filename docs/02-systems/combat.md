@@ -56,7 +56,7 @@ During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) 
 
 **Input:** Arrows or **`W`/`A`/`S`/`D`** move focus on command bar (WASD mirrors arrows in combat); **`Z`** confirms command; **`X`** / **Back button** = Back (LIFO or cancel targeting). **`Esc`** = pause when pause UI ships (no-op until then). **`R`** dropped ([input bindings](input-bindings.md), [ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 
-**UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. **Global input hint** (bottom-right `InputHintPresenter`): context copy from `TabbedPickerRailHints` — e.g. **L Log · W/S Command · Z Confirm · X Cancel · Esc Pause** during core planning; **L or X Close** while the log modal is open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). Per-panel footer hints removed. Roster **queued** styling clears when a command is popped.
+**UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. **Global input hint** (bottom-right `InputHintPresenter`): context copy from `TabbedPickerRailHints` — e.g. **Z Confirm · X Cancel · W/S Command · L Log · Esc Pause** during core planning; **X Close · L Close** while the log modal is open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). Per-panel footer hints removed. Roster **queued** styling clears when a command is popped.
 
 ### Command planning — targeting
 

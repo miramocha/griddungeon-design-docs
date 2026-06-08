@@ -1,0 +1,65 @@
+---
+description: Global InputHint strip — input bind copy only; no panel footer duplicates
+globs: "**/*.{uxml,uss,cs}"
+alwaysApply: true
+---
+
+# Global input hints
+
+Grid Dungeon uses one **bottom-right** overlay (`InputHintPresenter`, `Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` **300**) for **input bind copy** — what the player can press **right now**.
+
+Design reference: [shared menu & picker UI § Global input hints](../../docs/04-dev/shared-menu-picker-ui.md#global-input-hints), [input bindings § Global input hints](../../docs/02-systems/input-bindings.md#global-input-hints).
+
+## Global strip — input binds only
+
+**Publish only** keyboard/mouse **verbs**: key or button name + action (`Z Confirm`, `W/S Row`, `L Log`, `M fullscreen`, `Esc pause`).
+
+## Segment order (locked)
+
+Every bind segment in `TabbedPickerRailHints` (game repo: `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs`) uses this order:
+
+1. **Z and X** — confirm/cancel first (`Z Confirm · X Cancel`)
+2. **W/S and Q/E** — navigation axes next; **W/S before Q/E** when both apply (`W/S Command · Q/E Tab`)
+3. **Other keys** — L, Esc, M, Click, … last (`L Log · Esc Pause`)
+
+Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint strings in views — add a constant or helper on `TabbedPickerRailHints`.
+
+| OK on global strip | Not on global strip |
+|--------------------|---------------------|
+| `Z Confirm · X Cancel · W/S Command · L Log` | Party cell, facing arrow, HP/MP, floor name |
+| `Z Confirm · X Back · Q/E Tab · W/S Row` | Tutorial lore, quest text, warnings |
+| `Z Pick · X Back · Q/E Member · W/S Slots` | `north up`, map legend, focused slot names (`· Weapon`), confirm-target labels |
+
+**Do not** put bind copy on panel footers, picker chrome, command rail, map title row, or victory overlays — use `InputHints.Publish(gameState, text)` / `Clear` instead.
+
+**Constants:** `TabbedPickerRailHints` (+ screen-specific `DismissHint` where Runtime cannot reference UI). One authoritative string per context; no duplicated UXML `Label` hints for the same binds.
+
+## Publishers (extend this list, do not fork a second strip)
+
+| Phase / overlay | Owner |
+|-----------------|--------|
+| Hub | `HubHudView.RefreshInputHint` / `RestoreInputHint` |
+| Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
+| Party menu | `PartyMenuOverlayView.RefreshMenuHint` |
+| Exploration minimap | `MapView.RefreshGlobalInputHint` |
+| Exploration pause (main panel) | `ExplorationPauseView` (`Esc — resume`) |
+| Story modal | `StoryEventView` (`TabbedPickerRailHints.ModalDismiss`) |
+| Victory rewards | `BattleRewardScreenView` on show / clear on dismiss |
+| Floor transition | `FloorTransitionPresenter` clears on start; `MapView` / `HubHudView` republish on `PresentationReleased` |
+| Story end / pause close | `InputRouter` restores phase hint via `RestoreGlobalInputHintForPhase` |
+
+Clear on overlay close, phase exit, or when a higher-priority overlay owns binds. Restore the underlying screen hint after dismiss (hub `RestoreInputHint`, exploration `MapView.RefreshGlobalInputHint`, combat `CombatHudView.RestoreInputHint`, etc.).
+
+## Modal panel hints (`hud-overlay__hint`)
+
+**Exploration pause**, quit confirm, and similar **full-screen overlays** may keep **non-bind** copy on the modal (`Progress since your last inn save…`) — that is **not** global input-hint content.
+
+When a modal’s **only** footer text is bind copy (`Esc — resume`), prefer **global** `InputHints` while the modal is open instead of a duplicate `hud-overlay__hint`.
+
+## Implementation checklist
+
+1. New screen with keyboard/mouse binds → add/extend `TabbedPickerRailHints` (or documented constant), publish from one view method, clear on close.
+2. **Segment order** — new copy follows Z/X → W/S & Q/E → other keys; mirror the table in [shared-menu-picker-ui.md § TabbedPickerRailHints copy](../../docs/04-dev/shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
+3. Removing a legacy footer hint → delete UXML `Label` + USS; wire publisher + input-handler block while overlay open.
+4. PR review: if `InputHintPresenter` text is not a bind line, move status/tutorial to HUD labels or modal body — not the global strip.
+5. PR review: reject hint strings that reorder segments (e.g. `L Log` before `Z Confirm`) or duplicate bind footers on panels.

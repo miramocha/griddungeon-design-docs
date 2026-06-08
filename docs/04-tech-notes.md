@@ -204,6 +204,7 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 - `MapView` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
 - **Exploration log** — not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
+- **Layered panels (draft):** split monolith `ExplorationHud` / `CombatHud` into smaller `UIDocument` roots + `sortingOrder` stack — [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).
 
 ## Combat HUD (UI Toolkit)
 
@@ -217,7 +218,7 @@ command-rail | center column (enemy → arena-spacer → synchro → party → l
 - **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** — no MP on enemies).
 - **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back` (party slots show HP + MP).
 - **Log** — `combat-log-preview-row` (round + one line; no Log button); modal via **`L`** or preview click; title + scroll only; close via **`L`**, **`X`** / Back (`TryBack` — log before pickers), or backdrop click (not scroll).
-- **Input hints** — `InputHintPresenter` (`Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` 300); `InputHints.Publish` / `Clear` from combat, hub, party menu. Copy: `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints)).
+- **Input hints** — `InputHintPresenter` (`Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` 300); **input binds only** on the global strip. `InputHints.Publish` / `Clear` from hub, combat, exploration map, party menu, victory overlay. Copy: `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
 - **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
 
 `CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindPartyFormation` for party (+ aux). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
@@ -304,7 +305,8 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping — [mapping § Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
-- [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions — [navigator § Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence)
+- [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions — [navigator § Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence); optional Tier 2 under [ADR 037](../decisions/037-layered-uitk-panels.md)
+- [ ] **Layered UITK panels:** exploration + combat HUD split into panel components — [ADR 037](../decisions/037-layered-uitk-panels.md) (draft epic)
 - [ ] Default `stepsPerMove` per stratum (tune 2–5 in data)
 - [ ] **Floor level painter** → `StratumFloor` export — [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; MVP1 floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)

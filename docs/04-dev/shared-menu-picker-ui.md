@@ -190,32 +190,54 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 ## Global input hints
 
-**Status:** Shipped — replaces per-panel bind footers on command rail, hub, party menu, and tabbed pickers.
+**Status:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
+
+### Policy — input binds only
+
+The global strip answers: *what can I press right now?* It does **not** carry map legend (`north up`), party coordinates, facing, HP, quest text, or warnings.
+
+| Belongs on `InputHintPresenter` | Keep elsewhere (HUD label, modal body, `hud-overlay__hint`) |
+|--------------------------------|---------------------------------------------------------------|
+| `Z Confirm · X Cancel` | Inn-save quit warning on pause confirm panel |
+| `M fullscreen · Esc pause` | Floor title on map chrome |
+| `Z Pick · X Back · Q/E Member · W/S Slots` | Tutorial story lines; focused slot names (`· Weapon`) — use pane focus highlight |
+
+**Do not** duplicate bind lines on `hud-overlay__hint`, picker footers, or map chrome — publish once via `InputHints`.
 
 | Piece | Role |
 |-------|------|
 | `InputHintPresenter` | `MonoBehaviour` on `InputHint` child; `UIDocument` + `InputHint.uxml` / `InputHint.uss`; **`sortingOrder` 300** |
 | `InputHints` | `Publish(gameState, text)` / `Clear(gameState)` — static facade to `GameState.InputHint` |
-| `TabbedPickerRailHints` | Shared bind-copy strings for hub, combat, and party pickers |
+| `TabbedPickerRailHints` | Shared bind-copy strings for hub, combat, exploration, and party pickers |
 
-**Publishers:** `CombatHudView.RefreshInputHint`, `HubHudView.RefreshInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (equipment appends focused slot suffix via `PartyEquipmentToolkitView.MenuHintSlotSuffix`, e.g. `· Weapon`).
+**Publishers:** `HubHudView.RefreshInputHint` / `RestoreInputHint`, `CombatHudView.RefreshInputHint` / `RestoreInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (shell vs engage vs row/slot picker states), `MapView.RefreshGlobalInputHint`, `ExplorationPauseView`, `StoryEventView`, `BattleRewardScreenView` (victory dismiss), `FloorTransitionPresenter` (clear on transition start; `MapView` / `HubHudView` republish on `PresentationReleased`), `InputRouter` (exploration hint on pause close; restore phase hint on story end).
 
-**Removed UXML hints:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, `party-equipment-detail` bind footer.
+**Removed UXML bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, `party-equipment-detail` bind footer, `map-view-hint`, `battle-reward-hint`, `exploration-pause-hint`, `story-event-hint`.
 
 ### `TabbedPickerRailHints` copy
 
+**Segment order (locked):** Z/X → W/S and Q/E → other keys (L, Esc, M, Click, …).
+
 | Constant / helper | Copy |
 |-------------------|------|
-| `HubRoot` | W/S Menu · Z Confirm · X Cancel |
-| `HubService` | W/S Action · Z Confirm · X Back |
-| `CombatIdle` | L Log · Z Confirm · X Cancel · Esc Pause |
-| `CombatCommand` | L Log · W/S Command · Z Confirm · X Cancel · Esc Pause |
-| `CombatTarget` | L Log · W/S Target · Z Confirm · X Cancel |
-| `LogModal` | L or X Close |
+| `HubRoot` | Z Confirm · X Cancel · W/S Menu |
+| `HubService` | Z Confirm · X Back · W/S Action |
+| `CombatIdle` | Z Confirm · X Cancel · L Log · Esc Pause |
+| `CombatCommand` | Z Confirm · X Cancel · W/S Command · L Log · Esc Pause |
+| `CombatTarget` | Z Confirm · X Cancel · W/S Target · L Log |
+| `LogModal` | X Close · L Close |
+| `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
+| `ExplorationPause` | Esc — resume |
+| `ExplorationMapPanel` | M fullscreen · Esc pause |
+| `ExplorationMapFullscreen` | M or Esc — exit fullscreen |
+| `PartyMenuShell` | Z Open · X Close · W/S Section |
+| `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
+| `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |
+| `PartyEquipmentSlots` | Z Pick · X Back · Q/E Member · W/S Slots |
 | `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
-| `ForItemPickerRows(multiTab, backVerb)` | Q/E Tab · W/S Row · Z Confirm · X {backVerb} — or W/S Row · … when single tab |
+| `ForItemPickerRows(multiTab, backVerb)` | Z Confirm · X {backVerb} · Q/E Tab · W/S Row — or Z Confirm · X {backVerb} · W/S Row when single tab |
 
-Party equipment (slots engaged): `Q/E Member · W/S Slots · Z Pick · X Back` + optional ` · {slot}` suffix.
+Party equipment (slots engaged): `Z Pick · X Back · Q/E Member · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip.
 
 ---
 
