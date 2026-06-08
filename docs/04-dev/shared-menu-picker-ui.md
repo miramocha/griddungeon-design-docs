@@ -336,7 +336,7 @@ flowchart TD
 | Host | X / Back when rows **engaged** | X / Back when pane open, rows **idle** | X when pane hidden |
 |------|-------------------------------|----------------------------------------|-------------------|
 | **Party bag** | `TryBackOut` + `HideActivePane` → section rail | `HideActivePane` → section rail | Close entire party overlay |
-| **Hub shop** | `TryBackOut` + `SetShopMode(Hub)` → exit Buy/Sell | `SetShopMode(Hub)` → exit Buy/Sell | Close service panel (non-shop) |
+| **Hub shop** | `TryBackOut` + `SetShopMode(Hub)` in one **X** → exit Buy/Sell | `SetShopMode(Hub)` → exit Buy/Sell | Close service panel (non-shop) |
 
 Combat **Item** uses **`Immediate`** — **X** / Back closes the whole picker via `CombatPlayerCommandGate.TryBack` → `ICombatItemPickerHost.Cancel()` (no disengage step).
 
