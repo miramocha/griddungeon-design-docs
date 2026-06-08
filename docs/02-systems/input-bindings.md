@@ -200,7 +200,7 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Global input hints
 
-Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — key/button names and actions (`Z Confirm`, `M fullscreen`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
+Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — key/button names and actions (`Z Confirm`, `M Fullscreen`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
 
 **Not on this strip:** map legend, party cell/facing, status numbers, lore, or save warnings (those stay on HUD labels or modal body / `hud-overlay__hint`).
 

@@ -199,7 +199,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | Belongs on `InputHintPresenter` | Keep elsewhere (HUD label, modal body, `hud-overlay__hint`) |
 |--------------------------------|---------------------------------------------------------------|
 | `Z Confirm · X Cancel` | Inn-save quit warning on pause confirm panel |
-| `M fullscreen · Esc pause` | Floor title on map chrome |
+| `M Fullscreen · Esc Pause` | Floor title on map chrome |
 | `Z Pick · X Back · Q/E Member · W/S Slots` | Tutorial story lines; focused slot names (`· Weapon`) — use pane focus highlight |
 
 **Do not** duplicate bind lines on `hud-overlay__hint`, picker footers, or map chrome — publish once via `InputHints`.
@@ -227,9 +227,9 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `CombatTarget` | Z Confirm · X Cancel · W/S Target · L Log |
 | `LogModal` | X Close · L Close |
 | `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
-| `ExplorationPause` | Esc — resume |
-| `ExplorationMapPanel` | M fullscreen · Esc pause |
-| `ExplorationMapFullscreen` | M or Esc — exit fullscreen |
+| `ExplorationPause` | Esc Resume |
+| `ExplorationMapPanel` | M Fullscreen · Esc Pause |
+| `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
 | `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |

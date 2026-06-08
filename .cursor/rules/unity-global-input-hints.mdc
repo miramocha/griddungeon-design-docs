@@ -12,7 +12,7 @@ Design reference: [shared menu & picker UI § Global input hints](../../docs/04-
 
 ## Global strip — input binds only
 
-**Publish only** keyboard/mouse **verbs**: key or button name + action (`Z Confirm`, `W/S Row`, `L Log`, `M fullscreen`, `Esc pause`).
+**Publish only** keyboard/mouse **verbs**: key or button name + action (`Z Confirm`, `W/S Row`, `L Log`, `M Fullscreen`, `Esc Pause`).
 
 ## Segment order (locked)
 
@@ -42,7 +42,7 @@ Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint st
 | Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
 | Party menu | `PartyMenuOverlayView.RefreshMenuHint` |
 | Exploration minimap | `MapView.RefreshGlobalInputHint` |
-| Exploration pause (main panel) | `ExplorationPauseView` (`Esc — resume`) |
+| Exploration pause (main panel) | `ExplorationPauseView` (`Esc Resume`) |
 | Story modal | `StoryEventView` (`TabbedPickerRailHints.ModalDismiss`) |
 | Victory rewards | `BattleRewardScreenView` on show / clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; `MapView` / `HubHudView` republish on `PresentationReleased` |
@@ -54,7 +54,7 @@ Clear on overlay close, phase exit, or when a higher-priority overlay owns binds
 
 **Exploration pause**, quit confirm, and similar **full-screen overlays** may keep **non-bind** copy on the modal (`Progress since your last inn save…`) — that is **not** global input-hint content.
 
-When a modal’s **only** footer text is bind copy (`Esc — resume`), prefer **global** `InputHints` while the modal is open instead of a duplicate `hud-overlay__hint`.
+When a modal’s **only** footer text is bind copy (`Esc Resume`), prefer **global** `InputHints` while the modal is open instead of a duplicate `hud-overlay__hint`.
 
 ## Implementation checklist
 
