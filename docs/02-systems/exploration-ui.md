@@ -106,7 +106,7 @@ On `OnDisable`, `MapView.ReleaseFromHud()` runs before the document is torn down
 |---------------|----------|--------|
 | `exploration-hud` | `ExplorationHudView` | Root container |
 | `map-view-mount` | `MapView.BindToHud` | **Empty mount** — map UI built in C# |
-| `party-formation-floater-host` | `ExplorationPartyStripView` | Bottom party floater (2×4); slides off-screen when hidden; `ExplorationHudReactivePresenter` syncs on step/cell/phase |
+| *(none in shell UXML)* | `PartyFormationFloaterPresenter` | Shared bottom party floater (2×4); `ExplorationHudView` + `PartyFormationFloater` facade; `ExplorationHudReactivePresenter` syncs via `PartyFormationExplorationSync` |
 **Hybrid layout:** the **map grid** is **programmatic** (`MapView.BuildMapTree` adds `map-view`, title, hint, `map-view-grid` under the mount). Pause / quit UI is in shared **`PartyMenu.uxml`** (`party-menu-section-quit`, `party-menu-pane-quit`).
 
 ---
@@ -265,7 +265,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 4. **Input:** Keep `ExplorationInputHandler` / `MapInputHandler` contracts, or extend `InputRouter.EnableMapsForPhase` for new maps.
 5. **Do not** move floor load, reveal rules, or combat entry into UI — keep `ExplorationPhaseController` + `GameState` as authority ([architecture principles](../../.cursor/rules/architecture-design-principles.mdc)).
 
-**Party strip:** `party-formation-floater-host` in UXML — wired via `ExplorationPartyStripView` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); event sources in [UI event contract](../04-dev/ui-event-contract.md#exploration-phase). Integrator guide: [custom party UI](../04-dev/custom-party-ui.md#exploration-party-strip).
+**Party strip:** scene `PartyFormationFloaterPresenter` — `PartyFormationFloater` facade from `ExplorationHudView` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); event sources in [UI event contract](../04-dev/ui-event-contract.md#exploration-phase). Integrator guide: [custom party UI](../04-dev/custom-party-ui.md#exploration-party-strip).
 
 For a **clean replacement** (not a fork of `MapView`), see [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) below.
 

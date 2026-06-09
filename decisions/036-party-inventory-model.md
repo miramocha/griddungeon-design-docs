@@ -58,8 +58,9 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 |------------|------------------------|------|
 | `inventory` | **Inventory** | Shared party bag (§6) |
 | `equipment` | **Equipment** | Active party worn gear (§7) |
+| `formation` | **Formation** | Core front/back swap via shared `PartyFormationGridView` ([custom party UI](../docs/04-dev/custom-party-ui.md)) |
 
-**Deferred (not v1 rows):** Skills ([ADR 034](034-skill-point-allocation-outside-combat.md)), Formation — separate tickets; do not show disabled placeholder rows unless a follow-up UX ticket adds them.
+**Deferred (not v1 rows):** Skills ([ADR 034](034-skill-point-allocation-outside-combat.md)) — separate ticket; do not show disabled placeholder rows unless a follow-up UX ticket adds them.
 
 **Rejected for v1:** `Tab` opens bag only with no shell; horizontal top tabs at shell level (Q/E overload with bag categories and member cycle); equip/unequip on hub **Guild** service panel ([hub-and-services](../docs/02-systems/hub-and-services.md)).
 

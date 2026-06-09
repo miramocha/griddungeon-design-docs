@@ -235,6 +235,8 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
 | `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |
 | `PartyEquipmentSlots` | Z Pick · X Back · Q/E Member · W/S Slots |
+| `PartyFormationSwap` | Z Pick · X Cancel · Q/E Column · W/S Row — default when Formation pane is open (auto-engage on reveal) |
+| `PartyFormationEngage` | Z Engage · X Back · Q/E Column · W/S Row — after **X** backs out of swap mode while pane stays open |
 | `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
 | `ForItemPickerRows(multiTab, backVerb)` | Z Confirm · X {backVerb} · Q/E Tab · W/S Row — or Z Confirm · X {backVerb} · W/S Row when single tab |
 
