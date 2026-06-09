@@ -13,7 +13,7 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 | Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
 | Map panel | `Assets/Scripts/UI/Views/MapView.cs` |
 | Map marker overlays | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapHubEntranceMarkerRules`, `MapGatherMarkerRules`, `MapGridMarkerAnimator` |
-| Pause overlay | `Assets/Scripts/UI/Views/ExplorationPauseView.cs` |
+| Party / pause menu | `Assets/Scripts/UI/Views/PartyMenuOverlayView.cs` (shared `PartyMenu.uxml`; Quit on hub + exploration) |
 | Grid paint helpers | `Assets/Scripts/UI/MapGridPainter.cs`, `MapGridStyleClasses.cs` |
 | Map overlay art catalog | `Assets/Scripts/UI/MapCellArtCatalog.cs`, `Assets/UI/Map/MapCellArtCatalog.asset`, `MapCellArtPsdSpriteSync` (Editor) |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs`, `ExplorationInputHandler.cs`, `MapInputHandler.cs` |
@@ -23,7 +23,7 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 
 ## Design note: partial map presenters (shipped)
 
-Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration is **split**: cell grid is imperative (`MapView` + `MapGridPainter`); **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); **party strip** + `ExplorationPresentationGate` + `ExplorationHudReactivePresenter` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); pause stays imperative (`ExplorationPauseView`). **Runtime event index:** [UI event contract](../04-dev/ui-event-contract.md). A custom HUD can reuse the same hooks without changing phase authority.
+Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration is **split**: cell grid is imperative (`MapView` + `MapGridPainter`); **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); **party strip** + `ExplorationPresentationGate` + `ExplorationHudReactivePresenter` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); **pause** shares the hub **party menu** shell (`PartyMenuOverlayView` — Inventory / Equipment / Quit on exploration). **Runtime event index:** [UI event contract](../04-dev/ui-event-contract.md). A custom HUD can reuse the same hooks without changing phase authority.
 
 **Future map refactor (optional):** [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) — same runtime hooks, shared `MapGridPainter`; not required for a custom skin.
 
@@ -46,7 +46,10 @@ flowchart TB
         DOC[UIDocument + PanelSettings]
         EHV[ExplorationHudView]
         MV[MapView]
-        EPV[ExplorationPauseView]
+    end
+
+    subgraph PartyMenuGO["GameObject: PartyMenuOverlay"]
+        PMO[PartyMenuOverlayView]
     end
 
     subgraph World["GameObject: DungeonView"]
@@ -59,20 +62,20 @@ flowchart TB
     IR --> GS
     EHV --> DOC
     EHV --> MV
-    EHV --> EPV
     MV --> GS
     MV --> EX
     MV --> MS
-    EPV --> GS
+    PMO --> GS
     IR --> EHV
+    IR --> PMO
 ```
 
 | Component | Serialized / wired to |
 |-----------|------------------------|
-| `ExplorationHudView` | `VisualTreeAsset` → `ExplorationHud.uxml`, `GameState`, `MapView`, `ExplorationPauseView` |
-| `MapView` | `GameState`, `DungeonExplorer`, `MapSystem`, `MapView.uss` |
-| `ExplorationPauseView` | `GameState` |
-| `InputRouter` | `GridDungeon.inputactions`, `DungeonExplorer`, `CombatController`, `ExplorationHudView` |
+| `ExplorationHudView` | `VisualTreeAsset` → `ExplorationHud.uxml`, `GameState`, `MapView` |
+| `MapView` | `GameState`, `DungeonExplorer`, `MapSystem`, `PartyMenuOverlayView`, `MapView.uss` |
+| `PartyMenuOverlayView` | `PartyMenu.uxml`, bag/equipment panes, `GameState`, exploration/hub HUD refs |
+| `InputRouter` | `GridDungeon.inputactions`, `DungeonExplorer`, `CombatController`, `ExplorationHudView`, `PartyMenuOverlayView` |
 
 Regenerate scene refs: **GridDungeon → Scenes → Create Dev Bootstrap** (game repo).
 
@@ -88,18 +91,14 @@ sequenceDiagram
     participant DOC as UIDocument.rootVisualElement
     participant UXML as ExplorationHud.uxml
     participant MV as MapView
-    participant EPV as ExplorationPauseView
-
     EHV->>DOC: Clear()
     EHV->>UXML: CloneTree(host)
     EHV->>DOC: Q("exploration-hud")
     EHV->>DOC: Q("map-view-mount")
-    EHV->>DOC: Q("exploration-pause")
     EHV->>MV: BindToHud(mapMount, document, sortOrder)
-    EHV->>EPV: BindToHud(pauseRoot, gameState)
 ```
 
-On `OnDisable`, `MapView.ReleaseFromHud()` and `ExplorationPauseView.ReleaseFromHud()` run before the document is torn down.
+On `OnDisable`, `MapView.ReleaseFromHud()` runs before the document is torn down. Pause / party menu lives on sibling **`PartyMenuOverlay`** (`UIDocument` sort **250**).
 
 ### UXML element map
 
@@ -108,10 +107,7 @@ On `OnDisable`, `MapView.ReleaseFromHud()` and `ExplorationPauseView.ReleaseFrom
 | `exploration-hud` | `ExplorationHudView` | Root container |
 | `map-view-mount` | `MapView.BindToHud` | **Empty mount** — map UI built in C# |
 | `party-strip` | `ExplorationPartyStripView` | Core HP/MP strip; `ExplorationHudReactivePresenter` syncs on step/cell/phase |
-| `exploration-pause` | `ExplorationPauseView` | Pause + quit confirm panels |
-| `exploration-pause-*` buttons | `ExplorationPauseView` | `Q<Button>` + `clicked` handlers |
-
-**Hybrid layout:** pause chrome is **authored in UXML**; the **map grid** is **programmatic** (`MapView.BuildMapTree` adds `map-view`, title, hint, `map-view-grid` under the mount).
+**Hybrid layout:** the **map grid** is **programmatic** (`MapView.BuildMapTree` adds `map-view`, title, hint, `map-view-grid` under the mount). Pause / quit UI is in shared **`PartyMenu.uxml`** (`party-menu-section-quit`, `party-menu-pane-quit`).
 
 ---
 
@@ -119,10 +115,6 @@ On `OnDisable`, `MapView.ReleaseFromHud()` and `ExplorationPauseView.ReleaseFrom
 
 ```mermaid
 flowchart LR
-    subgraph UXML_Static["From UXML"]
-        PAUSE[exploration-pause]
-    end
-
     subgraph UXML_Dynamic["Built under map-view-mount"]
         MAP[map-view tree]
     end
@@ -133,11 +125,10 @@ flowchart LR
         MS[MapSystem.RevealChanged]
     end
 
-    EPV[ExplorationPauseView]
+    PMO[PartyMenuOverlayView]
     MV[MapView]
 
-    PAUSE --> EPV
-    EPV --> GS
+    PMO --> GS
 
     MV --> MAP
     MV --> GS
@@ -175,33 +166,23 @@ Built under `map-view-grid-host` (siblings above `map-view-grid`):
 
 Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the side layout; `M` / `Esc` behavior is in [input bindings](input-bindings.md) and `MapInputHandler`.
 
-### Party menu
+### Party / pause menu (`PartyMenuOverlayView`)
 
-**`Tab`** opens the **party menu** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) — vertical sections (**W/S**; pane swaps on focus):
+**`Tab`** or **`Esc`** (when map not fullscreen) opens the same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) — vertical section rail (**W/S**; **Z** reveals pane):
 
-| Section (v1) | Contents |
-|--------------|----------|
-| **Inventory** | Category-tabbed bag (All / Consumables / Equipment) — [#154](https://github.com/miramocha/griddungeon-game/issues/154) bag UI hosted in shell [#166](https://github.com/miramocha/griddungeon-game/issues/166) |
-| **Equipment** | Member tabs + stat preview + five worn slots; slot-first bag sub-picker — [#167](https://github.com/miramocha/griddungeon-game/issues/167) |
+| Section | Hub | Exploration |
+|---------|-----|-------------|
+| **Inventory** | Category-tabbed bag | Same |
+| **Equipment** | Member tabs + worn slots + picker | Same |
+| **Quit to title** | Confirm pane → `GameState.RequestQuitToTitle()` (no inn save) | Same |
 
-Closing the party menu after equipment changes refreshes the exploration **party strip** (HP/MP) without requiring a dungeon step.
+Closing the menu after equipment changes refreshes the exploration **party strip** (HP/MP) without requiring a dungeon step.
 
-**Deferred:** Formation, Skills (same trees as hub Guild — ADR 034). **Not** on hub Guild panel: equip/unequip (party menu only).
+**Deferred:** Formation, **Skills** (same trees as hub Guild — ADR 034), **Tutorial codex** ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
-Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [input bindings § Party menu](input-bindings.md#party-menu-tab). Distinct from **`Esc`** pause overlay below.
+Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [input bindings](input-bindings.md).
 
-### ExplorationPauseView
-
-**Skills (spec):** when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)), pause or `Tab` party menu opens the same class skill tree as hub Guild (and **Inventory** per ADR 036).
-
-| Action | Behavior |
-|--------|----------|
-| Open (`Esc` when map not fullscreen) | `MapInputHandler` → `Open()`; toggles `hud-overlay--hidden` on `exploration-pause` |
-| Resume | Close overlay |
-| Quit | Confirm panel → `GameState.RequestQuitToTitle()` (no inn save; [ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
-| Phase leave | `PhaseChanged` → force close |
-
-`VisibilityChanged` is raised when open state changes so `InputRouter` can unbind exploration movement while paused.
+When the menu is open, `InputRouter` unbinds exploration movement. Quit confirm copy stays on the pane body (not the global hint strip).
 
 ---
 
@@ -221,20 +202,21 @@ flowchart TB
 
     EIH --> EX[DungeonExplorer]
     MIH --> MV[MapView]
-    MIH --> EPV[ExplorationPauseView]
+    MIH --> PMO[PartyMenuOverlayView]
 
-    EPV -->|VisibilityChanged| IR
-    IR -->|pause open| EIH
+    PMO -->|OpenStateChanged| IR
+    IR -->|menu open| EIH
 ```
 
 | Input (Exploration) | Handler | Target |
 |---------------------|---------|--------|
 | W/S/A/D, Q/E, Interact | `ExplorationInputHandler` | `DungeonExplorer` step / turn / interact |
 | `M` | `MapInputHandler` | `MapView.ToggleFullscreenFromInput()` |
-| `Esc` | `MapInputHandler` | Exit map fullscreen, or open/close pause |
+| `Esc` | `MapInputHandler` | Exit map fullscreen, or toggle party/pause menu |
+| `Tab` | `PartyMenuInputHandler` | Toggle same menu |
 | `Esc` (map focused, backup) | `MapView` key callback | Exit fullscreen if UI Toolkit has focus |
 
-When pause is open, exploration movement actions are **unbound** so the party cannot walk under the overlay.
+When the menu is open, exploration movement actions are **unbound** so the party cannot walk under the overlay.
 
 ---
 
@@ -245,7 +227,7 @@ When pause is open, exploration movement actions are **unbound** so the party ca
 | Layer | Type | Phase behavior |
 |-------|------|----------------|
 | `DungeonView` / `FloorArtPresenter` | World / FPV (`SetVisible`; authored art load [#102](https://github.com/miramocha/griddungeon-game/issues/102)) | `ExplorationPhaseController` shows; `CombatPhaseController` hides |
-| `ExplorationHud` + `MapView` | UI Toolkit | Map/pause gated on `GamePhase.Exploration` inside views |
+| `ExplorationHud` + `MapView` | UI Toolkit | Map gated on `GamePhase.Exploration`; party/pause menu on overlay `UIDocument` |
 | `DungeonExplorer` + `MapSystem` | Simulation | `ExplorationPhaseController` wires on enter, unwires on exit |
 
 The **`ExplorationHud` GameObject is not disabled** on Hub or Combat. Visibility is **per-widget** (`MapView` display / pause overlay classes), not by destroying `ExplorationHudView`.
@@ -278,7 +260,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 
 1. **Shell:** Replace or extend `ExplorationHud.uxml` / `ExplorationHudView` (keep `UIDocument` + mount pattern, or split documents if needed).
 2. **Map:** Either reuse `MapView` + `MapGridPainter`, or subscribe per [UI event contract § Exploration](../04-dev/ui-event-contract.md#exploration-phase) (see also [§ MapView](#mapview-push-updates) for per-presenter effects).
-3. **Pause:** Reuse `ExplorationPauseView` names or update `MapInputHandler` + `InputRouter` pause wiring.
+3. **Pause:** Extend `PartyMenu.uxml` sections or `PartyMenuOverlayView`; keep `MapInputHandler` + `InputRouter` party-menu wiring.
 4. **Input:** Keep `ExplorationInputHandler` / `MapInputHandler` contracts, or extend `InputRouter.EnableMapsForPhase` for new maps.
 5. **Do not** move floor load, reveal rules, or combat entry into UI — keep `ExplorationPhaseController` + `GameState` as authority ([architecture principles](../../.cursor/rules/architecture-design-principles.mdc)).
 

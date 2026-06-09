@@ -27,8 +27,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
 | **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
-| **Party / menu** | `Tab` | Party menu: **Inventory** + **Equipment** (v1); **skill trees** / formation deferred ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)) |
-| **Pause** | `Esc` | Pause menu: **Resume**, **Skills** (same gate as party menu), **Tutorial codex** (unlocked guided entries — [guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)), **Quit to title** (confirm; **does not save** — inn/hub only). **No** return to hub from pause — use in-dungeon exits ([game phase](game-phase.md#return-to-hub-exploration-only)) |
+| **Party / pause menu** | `Tab` or `Esc` | Same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)): **Inventory**, **Equipment**, **Quit to title** (hub + exploration; confirm pane → `RequestQuitToTitle`, no inn save). **Skills** / **Tutorial codex** deferred ([guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)). `Esc` on exploration when map fullscreen exits fullscreen first. |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 

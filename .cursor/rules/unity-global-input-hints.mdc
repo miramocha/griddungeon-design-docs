@@ -42,7 +42,7 @@ Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint st
 | Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
 | Party menu | `PartyMenuOverlayView.RefreshMenuHint` |
 | Exploration minimap | `MapView.RefreshGlobalInputHint` |
-| Exploration pause (main panel) | `ExplorationPauseView` (`Esc Resume`) |
+| Exploration pause / party menu | `PartyMenuOverlayView.RefreshMenuHint` (`ExplorationPauseMenuShell` on exploration shell) |
 | Story modal | `StoryEventView` (`TabbedPickerRailHints.ModalDismiss`) |
 | Victory rewards | `BattleRewardScreenView` on show / clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; `MapView` / `HubHudView` republish on `PresentationReleased` |

@@ -210,7 +210,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `InputHints` | `Publish(gameState, text)` / `Clear(gameState)` — static facade to `GameState.InputHint` |
 | `TabbedPickerRailHints` | Shared bind-copy strings for hub, combat, exploration, and party pickers |
 
-**Publishers:** `HubHudView.RefreshInputHint` / `RestoreInputHint`, `CombatHudView.RefreshInputHint` / `RestoreInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (shell vs engage vs row/slot picker states), `MapView.RefreshGlobalInputHint`, `ExplorationPauseView`, `StoryEventView`, `BattleRewardScreenView` (victory dismiss), `FloorTransitionPresenter` (clear on transition start; `MapView` / `HubHudView` republish on `PresentationReleased`), `InputRouter` (exploration hint on pause close; restore phase hint on story end).
+**Publishers:** `HubHudView.RefreshInputHint` / `RestoreInputHint`, `CombatHudView.RefreshInputHint` / `RestoreInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (hub shell, exploration pause shell, engage, row/slot picker states; quit confirm clears strip), `MapView.RefreshGlobalInputHint`, `StoryEventView`, `BattleRewardScreenView` (victory dismiss), `FloorTransitionPresenter` (clear on transition start; `MapView` / `HubHudView` republish on `PresentationReleased`), `InputRouter` (restore phase hint on story end).
 
 **Removed UXML bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, `party-equipment-detail` bind footer, `map-view-hint`, `battle-reward-hint`, `exploration-pause-hint`, `story-event-hint`.
 
@@ -227,7 +227,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `CombatTarget` | Z Confirm · X Cancel · W/S Target · L Log |
 | `LogModal` | X Close · L Close |
 | `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
-| `ExplorationPause` | Esc Resume |
+| `ExplorationPauseMenuShell` | Z Open · X Close · W/S Section · Esc Close |
 | `ExplorationMapPanel` | M Fullscreen · Esc Pause |
 | `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
