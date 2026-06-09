@@ -1,7 +1,7 @@
 ---
-description: Unity 6 C# language subset — avoid unsupported or polyfill-only syntax
+description: Unity 6 C# language subset — no init/record; avoid unsupported syntax
 globs: "**/*.cs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Unity 6 C# language subset
@@ -10,11 +10,29 @@ Unity **6000.x** compiles with **C# 9.0** (Roslyn), not the latest .NET SDK. The
 
 **Authority:** [C# compiler and language version (Unity 6)](https://docs.unity3d.com/6000.4/Documentation/Manual/csharp-compiler.html)
 
+## Never use `init` accessors
+
+**Do not** generate `{ get; init; }` in `Assets/Scripts` or `Assets/Tests`. Unity fails compile with:
+
+`CS0518: Predefined type 'System.Runtime.CompilerServices.IsExternalInit' is not defined or imported`
+
+Use `{ get; set; }`, a constructor, or a static factory instead — even for “immutable” DTOs and object-initializer presets.
+
+```csharp
+// ❌ BAD — breaks Unity compile
+public bool ShowCombatAction { get; init; }
+
+// ✅ GOOD — matches shipped patterns (e.g. ItemListPickerLayout)
+public bool ShowCombatAction { get; set; }
+```
+
+Do **not** add `IsExternalInit` polyfills to work around this unless the team explicitly approves (default: avoid).
+
 ## Do not use (unsupported or breaks asmdefs)
 
 | Feature | Why | Use instead |
 |---------|-----|-------------|
-| `init` accessors | CS0518 / listed unsupported | `set`, constructor, or factory |
+| `init` accessors | CS0518 — see above | `set`, constructor, or factory |
 | `record` / `record struct` | Needs `IsExternalInit`; poor fit for Unity serialization | `sealed class` / `struct` DTOs |
 | `required` members | Newer C# / runtime gaps | Constructor validation, `[SerializeField]` + defaults |
 | File-scoped namespaces | Not in Unity’s supported subset | Block `namespace { }` |
