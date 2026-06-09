@@ -106,7 +106,7 @@ On `OnDisable`, `MapView.ReleaseFromHud()` runs before the document is torn down
 |---------------|----------|--------|
 | `exploration-hud` | `ExplorationHudView` | Root container |
 | `map-view-mount` | `MapView.BindToHud` | **Empty mount** — map UI built in C# |
-| `party-strip` | `ExplorationPartyStripView` | Core HP/MP strip; `ExplorationHudReactivePresenter` syncs on step/cell/phase |
+| `party-formation-floater-host` | `ExplorationPartyStripView` | Bottom party floater (2×4); slides off-screen when hidden; `ExplorationHudReactivePresenter` syncs on step/cell/phase |
 **Hybrid layout:** the **map grid** is **programmatic** (`MapView.BuildMapTree` adds `map-view`, title, hint, `map-view-grid` under the mount). Pause / quit UI is in shared **`PartyMenu.uxml`** (`party-menu-section-quit`, `party-menu-pane-quit`).
 
 ---
@@ -174,11 +174,12 @@ Fullscreen map raises `UIDocument.sortingOrder` so the panel draws above the sid
 |---------|-----|-------------|
 | **Inventory** | Category-tabbed bag | Same |
 | **Equipment** | Member tabs + worn slots + picker | Same |
+| **Formation** | Bottom floater 2×4 swap (`PartyFormationFloaterView`) | Same |
 | **Quit to title** | Confirm pane → `GameState.RequestQuitToTitle()` (no inn save) | Same |
 
 Closing the menu after equipment changes refreshes the exploration **party strip** (HP/MP) without requiring a dungeon step.
 
-**Deferred:** Formation, **Skills** (same trees as hub Guild — ADR 034), **Tutorial codex** ([ADR 029](../../decisions/029-guided-tutorial.md)).
+**Formation:** core slot swap via shared `PartyFormationFloaterView` — bottom 2×4 grid floater (exploration strip + formation menu; slides off-screen when irrelevant). Bind copy on global `InputHints`. **Deferred:** **Skills** (ADR 034), **Tutorial codex** ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
 Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [input bindings](input-bindings.md).
 
@@ -264,7 +265,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 4. **Input:** Keep `ExplorationInputHandler` / `MapInputHandler` contracts, or extend `InputRouter.EnableMapsForPhase` for new maps.
 5. **Do not** move floor load, reveal rules, or combat entry into UI — keep `ExplorationPhaseController` + `GameState` as authority ([architecture principles](../../.cursor/rules/architecture-design-principles.mdc)).
 
-**Party strip:** `party-strip` in UXML — wired via `ExplorationPartyStripView` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); event sources in [UI event contract](../04-dev/ui-event-contract.md#exploration-phase). Integrator guide: [custom party UI](../04-dev/custom-party-ui.md#exploration-party-strip).
+**Party strip:** `party-formation-floater-host` in UXML — wired via `ExplorationPartyStripView` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); event sources in [UI event contract](../04-dev/ui-event-contract.md#exploration-phase). Integrator guide: [custom party UI](../04-dev/custom-party-ui.md#exploration-party-strip).
 
 For a **clean replacement** (not a fork of `MapView`), see [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) below.
 

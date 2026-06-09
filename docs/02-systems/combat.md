@@ -236,9 +236,8 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Zone | UITK element | Layout |
 |------|--------------|--------|
 | **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → **Protocol** → **Back**); Protocol shown only when `CanUseProtocol` |
-| **Top center** | `enemy-roster` | Front / Back labeled rows (unchanged formation rules) |
-| **Bottom center** | `synchro-bar` then `party-roster` | Synchro meter **directly above** party formation |
-| **Under party** | `combat-log-preview-row` | Round label + latest log line — [§ Combat log](#combat-log-preview--modal) |
+| **Top center** | `combat-log-preview-row` then `enemy-roster` | Log preview (round + latest line) above enemy formation — [§ Combat log](#combat-log-preview--modal) |
+| **Bottom center** | `synchro-bar` in center column; `party-formation-floater-host` overlay | Synchro in layout flow; party grid floats at bottom (`PartyFormationFloaterView`) |
 | **Right rail** | `turn-order-strip` | **Vertical** flat AGI queue — [§ Turn order strip](#turn-order-strip-agi-queue-ui) |
 | **Center** | `combat-hud__arena-spacer` | Transparent flex-grow; no opaque full-width HUD panel |
 
@@ -252,7 +251,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 | Surface | Behavior |
 |---------|----------|
-| **Preview row** | Under party roster; **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. **No** separate Log button. |
+| **Preview row** | Top of center column (above enemy roster); **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. **No** separate Log button. |
 | **Open** | Click preview row or **`L`** (`ToggleLog`, Combat action map) → `combat-log-modal` (`hud-overlay` panel). Opening log **cancels** any open skill/item picker. |
 | **Modal body** | Title + scrollable full fight history (`combat-log` ScrollView) only — **no** Close button, **no** footer hint |
 | **Close** | **`L`** toggle; **`X`** / Back (`CombatPlayerCommandGate.TryBack` — log dismissed **before** pickers); LMB on modal backdrop, not scroll area (interim UX — may revisit). Read-only — does not pause combat. |

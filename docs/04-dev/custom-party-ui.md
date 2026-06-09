@@ -2,7 +2,7 @@
 
 How to replace or extend **party-facing HUD plates** — exploration strip, combat party roster, and (optionally) the map party glyph — without moving roster rules, combat planning, or phase authority into UI.
 
-Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no single swap port** (`ISkillUsePickerView`). MVP1 ships imperative presenters built on a shared **`CombatRosterView`** slot builder. You fork or replace those views while keeping the same **data sources** and **events** documented in [UI event contract](ui-event-contract.md).
+Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no single swap port** (`ISkillUsePickerView`). MVP1 ships imperative presenters built on a shared **`PartyFormationGridView`** (8 fixed cells, `PartyFormationSlotBinder` plates). **`CombatRosterView`** is **enemy-only**. You fork or replace those views while keeping the same **data sources** and **events** documented in [UI event contract](ui-event-contract.md).
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — reference types under `Assets/Scripts/UI/Views/`.
 
@@ -12,8 +12,9 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 
 | Surface | When visible | Data authority | Shipped owner |
 |---------|--------------|----------------|---------------|
-| **Exploration party strip** | `GamePhase.Exploration` | `PartyRuntime.CoreSlots` | `ExplorationPartyStripView` → `CombatRosterView` (single row) |
-| **Combat party roster** | `GamePhase.Combat` | `CombatController.State.CoreSlots` (`BattleState` copy) | `CombatHudView` + `CombatRosterView` (front/back rows) |
+| **Exploration party strip** | `GamePhase.Exploration` | `PartyRuntime.CoreSlots` | `ExplorationPartyStripView` → `PartyFormationFloaterView` (bottom floater; slides off-screen when hidden) |
+| **Combat party roster** | `GamePhase.Combat` | `CombatController.State.CoreSlots` (`BattleState` copy) | `CombatHudView` + `PartyFormationFloaterView` → `PartyFormationGridView` |
+| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyFormationToolkitView` → bottom `PartyFormationFloaterView` (swap; not in centered dialog) |
 | **Map party marker** | Exploration map open | `DungeonExplorer` cell + facing | `MapPartyMarkerPresenter` |
 
 **Out of scope for this doc:** Hub guild roster / party-ready gate (`s1_party_ready`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
@@ -27,7 +28,7 @@ flowchart LR
     DE[(DungeonExplorer)]
     PR --> strip[ExplorationPartyStripView]
     DE --> map[MapPartyMarkerPresenter]
-    strip --> CRVs[CombatRosterView]
+    strip --> PFGs[PartyFormationGridView]
   end
 
   subgraph combat [Combat]
@@ -35,7 +36,7 @@ flowchart LR
     CC[CombatController events]
     BS --> hud[CombatHudView]
     CC --> hud
-    hud --> CRVc[CombatRosterView]
+    hud --> PFGc[PartyFormationGridView]
   end
 
   combat -->|BattleEnded sync| exploration
@@ -76,48 +77,63 @@ flowchart TB
   subgraph ui_layer [GridDungeon.UI — subscribe + render]
     EPS[ExplorationPartyStripView]
     CHV[CombatHudView]
+    PFV[PartyFormationToolkitView]
     MPM[MapPartyMarkerPresenter]
-    CRV["CombatRosterView<br/>slots + BEM classes"]
+    PFG["PartyFormationGridView<br/>party plates + BEM"]
+    CRV["CombatRosterView<br/>enemy only"]
   end
 
   PR -->|pull CoreSlots| EPS
+  PR -->|swap CoreSlots| PFV
   CC -->|State + events| CHV
   DE -->|cell, facing| MPM
-  EPS --> CRV
+  EPS --> PFG
+  CHV --> PFG
+  PFV --> PFG
   CHV --> CRV
   CHV -->|commands| CC
 ```
 
 | Layer | Owns | Must not own |
 |-------|------|----------------|
-| **Core / Runtime** | `Combatant` stats, formation indices, `ValidTargetCalculator`, queue/back, battle copy | UITK layout, focus chrome |
-| **`CombatRosterView`** | Build slot `VisualElement`s, HP/MP labels, highlight modifiers | When to transition phase or submit actions |
-| **Phase views** | Subscribe to events; call `Bind*` / `Set*Highlight` | Duplicate damage math or AGI order |
+| **Core / Runtime** | `Combatant` stats, formation indices (`PartyFormationLayout`), `ValidTargetCalculator`, queue/back, battle copy | UITK layout, focus chrome |
+| **`PartyFormationGridView`** | 8 fixed party cells, plate bind, highlight modifiers | When to transition phase or submit actions |
+| **`CombatRosterView`** | Enemy slot build (dynamic, no empty placeholders) | Party formation |
+| **Phase views** | Subscribe to events; call `BindParty` / `Set*Highlight` | Duplicate damage math or AGI order |
 
 **Do not** add `GridDungeon.UI` references to `GridDungeon.Runtime`. Custom party UI lives in UI (or your asmdef referencing Runtime); wire from `ExplorationHudView` / `CombatHudView` bootstrap or your own `UIDocument`.
 
 ---
 
-## Shared building block: `CombatRosterView`
+## Shared building blocks
 
-Path: `Assets/Scripts/UI/Views/CombatRosterView.cs`  
-Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — reused on exploration strip)
+**Grid:** `PartyFormationGridView` — `Assets/Scripts/UI/Views/PartyFormationGridView.cs`  
+Plate builder: `PartyFormationSlotBinder.cs`  
+Styles: `PartyFormationSlot.uss`, `PartyFormationGrid.uss`  
+UXML: `PartyFormationGrid.uxml` — **two row containers** (front slots 0–3, back slots 4–7); no flex-wrap.
 
-### Constructors
+**Floater shell:** `PartyFormationFloaterView` + `PartyFormationDockBinder`  
+UXML/USS: `PartyFormationFloater.uxml`, `PartyFormationFloater.uss`  
+Host: `party-formation-floater-host` — full-bleed absolute overlay (like `InputHint`); grid slides inside via `PartyFormationFloaterView`. Formation bind copy uses global `InputHints`, not inline labels on the floater.
 
-| Constructor | Use |
-|-------------|-----|
-| `CombatRosterView(VisualElement slotsContainer)` | Single-row strip (`party-strip-slots`) |
-| `CombatRosterView(VisualElement front, VisualElement back)` | Combat party or enemy formation |
+### Floater visibility
+
+| Modifier / API | Use |
+|----------------|-----|
+| `party-formation-floater--collapsed` | Floater translated off bottom edge (always rendered; not `display:none`) |
+| `PartyFormationFloaterView.SetRevealed(bool)` | Exploration strip + formation menu slide; combat HUD stays revealed |
 
 ### Bind / refresh
 
 | Method | When |
 |--------|------|
-| `BindCoreRow(Combatant?[] slots)` | Exploration strip or flat party list |
-| `BindCoreFormation(Combatant?[] slots)` | Combat party front/back (`BattleFormation.MaxEnemyFront` split) |
-| `BindEnemyFormation(Combatant[] slots)` | Enemy panel only (combat) |
+| `BindParty(Combatant?[] core, Combatant?[] aux, PartyFormationBindOptions)` | All party surfaces — empty slots stay visible |
 | `RefreshCombatantStats(Combatant c)` | In-place HP/MP/dead class after bind |
+
+Enemy roster remains `CombatRosterView` (`BindEnemyFormation` only).
+
+Path: `Assets/Scripts/UI/Views/CombatRosterView.cs`  
+Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — enemy only)
 
 ### Interaction & combat chrome
 
@@ -131,8 +147,11 @@ Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — reused
 | `SetTargetHighlights(validIds, selecting)` | `--targetable` / `--invalid-target` during target pick |
 | `SetStaleTargetHighlights(staleIds)` | `--stale-target` + tooltip *Target down — will retarget* ([#65](https://github.com/miramocha/griddungeon-game/issues/65)) |
 | `TryGetSlotElement(string id, out VisualElement?)` | VFX / pulse without rebuilding DOM |
+| `SetFormationEditMode(bool)`, `SetSelectedSlot(int?)`, `SetFocusedSlot(int?)` | Formation menu swap chrome |
 
-Slots are created in code (`BuildSlot`) with BEM classes `combat-roster__slot`, `combat-roster__slot-name`, `combat-roster__slot-hp`, optional `combat-roster__slot-mp` (**party cores / aux only** — omitted for `CombatantKind.Enemy`), optional `combat-roster-slot-action` (`name` for queries).
+Party plates use BEM `party-formation-slot` (+ `__header`, `__stat`, `__footer`, …) from `PartyFormationSlot.uss`. Empty cells keep the shell with `--empty` (never `display:none`). Index map: `PartyFormationLayout` (Core).
+
+Enemy slots remain `combat-roster__slot*` in `CombatHud.uss` — built by `CombatRosterView.BuildSlot` (no MP on enemies).
 
 **Planning highlight rule:** During a **core command turn**, gold **acting** highlight belongs on the **party roster** slot for that core, **not** on the AGI turn-order strip ([combat § Turn order strip](../02-systems/combat.md#turn-order-strip-agi-queue-ui)). Strip highlight is for auto/AI/enemy turns.
 
@@ -146,16 +165,16 @@ Slots are created in code (`BuildSlot`) with BEM classes `combat-roster__slot`, 
 
 | `name` | Role |
 |--------|------|
-| `party-strip` | Root; toggle `exploration-hud__party-strip--hidden` |
-| `party-strip-slots` | Container passed to `CombatRosterView` |
+| `party-formation-floater-host` | Absolute bottom overlay; clones `PartyFormationFloater.uxml` at runtime |
+| `party-formation-mount` | Inside floater — grid installed via `PartyFormationDockBinder` |
 
-Exploration-specific USS: `ExplorationHud.uss` (strip layout, status line). Status summaries use extra labels with class `exploration-party-strip__status` (see shipped `ExplorationPartyStripView`).
+`SetRevealed` slides floater; map fullscreen collapses strip. Status summaries: `party-formation-slot__status` on `ExplorationPartyStripView`.
 
 ### Shipped wiring
 
-1. `ExplorationHudView` queries `party-strip`, constructs `ExplorationPartyStripView`.
+1. `ExplorationHudView` queries `party-formation-floater-host`, constructs `ExplorationPartyStripView`.
 2. `ExplorationHudReactivePresenter` calls `SyncParty` on `DungeonExplorer.OnPartyStep`, `OnPartyEnteredCell`, and after map reveal beats (gate only).
-3. `ExplorationHudView.OnPhaseChanged` → `SetVisible(exploration)`; **Combat → Exploration** uses `forceRebuild: true` and optional HP pulse.
+3. `ExplorationHudView.OnPhaseChanged` → `SetRevealed(exploration)`; **Combat → Exploration** uses `forceRebuild: true` and optional HP pulse.
 
 ### Events to subscribe (no `PartyRuntime` events)
 
@@ -188,9 +207,9 @@ void OnEnable(GameState gs, DungeonExplorer ex, PartyRuntime party)
 
 | Approach | Notes |
 |----------|-------|
-| **Reskin** | Keep `ExplorationPartyStripView`; change USS / slot template in `CombatRosterView.BuildSlot` fork |
+| **Reskin** | Keep `ExplorationPartyStripView`; change `PartyFormationSlot.uss` or fork `PartyFormationSlotBinder` |
 | **New layout, same data** | New view class; still read `PartyRuntime`; optional reuse of `ExplorationPartyStripFormatter.FormatStatusSummary` for status text |
-| **Drop strip** | Hide `party-strip`; ensure map or other UI still exposes party state if needed for your mode |
+| **Drop strip** | `SetRevealed(false)` or omit floater host; ensure map or other UI still exposes party state if needed for your mode |
 
 Reference: `ExplorationPartyStripView.cs`, `ExplorationPartyStripFormatter.cs`.
 
@@ -204,16 +223,16 @@ Reference: `ExplorationPartyStripView.cs`, `ExplorationPartyStripFormatter.cs`.
 
 | `name` | Role |
 |--------|------|
-| `party-roster-front` | Front row slot container |
-| `party-roster-back` | Back row slot container |
+| `party-formation-floater-host` | Absolute bottom overlay in `combat-hud__center`; `PartyFormationFloaterView` at runtime |
+| `enemy-roster-front` / `enemy-roster-back` | Enemy row containers (`CombatRosterView`) |
 
-Enemy panel (`enemy-roster-front` / `enemy-roster-back`) uses the same `CombatRosterView` API but is a separate instance — replace party only by wiring your view in `CombatHudView` instead of `m_partyRoster`.
+Replace party only by wiring your view in `CombatHudView` instead of `m_partyRoster` (`PartyFormationGridView`). Enemy roster stays `m_enemyRoster`.
 
 ### Shipped wiring (`CombatHudView`)
 
-- Builds `m_partyRoster` + `m_enemyRoster`; `SetSlotClickHandler(OnRosterSlotClicked)` for planning/targeting.
+- Builds `PartyFormationFloaterView` → `m_partyRoster` + `m_enemyRoster`; `SetSlotClickHandler(OnRosterSlotClicked)` for planning/targeting.
 - Subscribes to `CombatController`: `OnQueueRebuilt`, `OnTurnStart`, `OnCommandTargetChanged`, `OnPartyCommandsChanged`, `OnTargetingChanged`, `OnActionResolved`, `BattleEnded`, etc.
-- `TargetSelectionView` takes **both** rosters for keyboard target focus ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace roster DOM, either keep `CombatRosterView` instances for `TargetSelectionView` or reimplement focus against your slots.
+- `TargetSelectionView` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and `CombatRosterView` for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace party DOM, implement the same highlight/focus surface or fork `TargetSelectionView`.
 
 ### Combat events (party roster)
 
@@ -239,8 +258,8 @@ Full table: [UI event contract — Combat](ui-event-contract.md#combat-phase).
 
 | Approach | Notes |
 |----------|-------|
-| **Reskin slots** | Fork `CombatRosterView.BuildSlot` or override USS modifiers |
-| **Custom party panel only** | Replace `m_partyRoster` wiring; keep `m_enemyRoster` + `TargetSelectionView` unchanged |
+| **Reskin slots** | Change `PartyFormationSlot.uss` or fork `PartyFormationSlotBinder` |
+| **Custom party panel only** | Replace `m_partyRoster` (`PartyFormationGridView`); keep `m_enemyRoster` + `TargetSelectionView` unchanged |
 | **Full combat HUD fork** | Duplicate `CombatHudView` event subscriptions; must preserve acting-on-roster vs strip rule and stale-target styling for MVP1 parity |
 
 Motion (HP lerp, hit flash, synchro bar): `CombatHudReactivePresenter` — optional to reuse or replace; does not change combat rules.
@@ -262,7 +281,7 @@ Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [explor
 
 ## Step-by-step: new exploration strip (UITK)
 
-1. Add or fork `ExplorationHud.uxml` — keep `name="party-strip"` and `party-strip-slots` if you still use `CombatRosterView`, or assign new `name` hooks and query them in your view.
+1. Add or fork `ExplorationHud.uxml` — keep `name="party-formation-floater-host"`, or assign new `name` hooks and query them in your view.
 2. Implement `MyPartyStripView` with `SyncParty(PartyRuntime, bool forceRebuild)` mirroring shipped diff logic (member ids) to avoid rebuilding every step.
 3. Wire in `ExplorationHudView` (or your HUD `MonoBehaviour`) + subscribe phase/explorer events above.
 4. On disable: unsubscribe all; clear tweens if you use DOTween gates like `ExplorationHudReactivePresenter`.
@@ -275,11 +294,11 @@ Manual: **F2** exploration with **F6** full guild party — strip shows six core
 
 ## Step-by-step: new combat party roster (UITK)
 
-1. Fork `CombatHud.uxml` party section or inject containers at runtime under `combat-hud`.
-2. Instantiate `CombatRosterView(partyFront, partyBack)` **or** your own slot builder that implements the same highlight methods `CombatHudView` expects.
+1. Fork `CombatHud.uxml` floater host (`party-formation-floater-host`) or inject `PartyFormationFloater.uxml` at runtime.
+2. Instantiate `PartyFormationGridView(mount, layoutAsset)` **or** your own slot builder implementing `IRosterStatSlots` + combat highlight methods `CombatHudView` expects.
 3. In `CombatHudView`-equivalent bootstrap:
    - Pass `CombatController` into subscriptions.
-   - On planning: `BindCoreRow(state.CoreSlots)` or formation bind; call highlight setters when events fire.
+   - On planning: `BindParty(state.CoreSlots, aux, PartyFormationBindOptions.Combat)`; call highlight setters when events fire.
    - Wire `TargetSelectionView(partyRoster, enemyRoster, combat)` if keyboard targeting stays enabled.
 4. Keep `CommandPanelView` + skill picker host unchanged — party roster is independent of ADR 035 modal.
 
@@ -291,11 +310,16 @@ Manual: **F3** dev combat — acting highlight on **party roster** for core turn
 
 | Fixture | Path |
 |---------|------|
+| `PartyFormationLayoutTests` | Grid index ↔ core/aux mapping |
+| `PartyFormationGridViewTests` | Empty cells, bind, combat highlights |
+| `ExplorationPartyStripViewTests` | Column layout, 8 cells |
+| `CombatRosterViewTests` | Enemy bind only |
+| `PartyFormationCoordinatorTests` | Core swap / move semantics |
 | `ExplorationPartyStripFormatterTests` | Status summary strings |
-| `TargetSelectionViewTests` | Roster focus + `CombatController` targeting (uses real `CombatRosterView` + UXML fragment) |
+| `TargetSelectionViewTests` | Roster focus + `CombatController` targeting |
 | `MapPartyMarkerPresenterTests` | Map glyph position |
 
-There is no dedicated `CombatRosterViewTests` — roster behavior is covered indirectly via combat UI tests. Prefer testing **highlight state** and **bind** through your view’s public methods or Edit Mode UI harnesses.
+Prefer testing **highlight state** and **bind** through `PartyFormationGridView` public methods or Edit Mode UI harnesses.
 
 Do not run Unity CLI batch tests while the Editor has the project open ([unity-no-cli-tests-while-editor-open](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-no-cli-tests-while-editor-open.mdc)).
 
