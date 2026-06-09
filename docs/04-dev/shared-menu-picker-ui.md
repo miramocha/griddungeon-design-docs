@@ -231,6 +231,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `ExplorationMapPanel` | M Fullscreen · Esc Pause |
 | `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
+| `PartyQuitConfirm` | Z Confirm · X Back · W/S Row |
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
 | `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |
 | `PartyEquipmentSlots` | Z Pick · X Back · Q/E Member · W/S Slots |
