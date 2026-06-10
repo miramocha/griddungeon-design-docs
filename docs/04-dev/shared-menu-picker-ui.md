@@ -314,14 +314,15 @@ flowchart LR
 | `TabbedPicker.uss` | Panel layout; **transparent** full-screen host (`tabbed-picker { background-color: rgba(0,0,0,0) }` — **no modal dim**); imports `RailMenu.uss` |
 | `WindowedList.uss` | `windowed-list`, `windowed-list__slots`, scroll bars |
 | `TabbedPickerShellClasses` | BEM constants (`Hidden`, `TabsHidden`, …) |
-| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss` + `TabbedPicker.uss` for embedded bag/equipment panes |
+| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss`. **`party-menu__dialog`** hosts quit confirm only — bag and character detail modals live on centralized services ([centralized UI services](centralized-ui-services.md)) |
 
 **Overlay contrast:**
 
 | Host | Root chrome | List panel |
 |------|-------------|------------|
 | Hub shop / combat pickers | `tabbed-picker` — transparent; stage/rail stay visible | `tabbed-picker__panel` — dim panel (`rgba(30, 34, 40, 0.97)`) |
-| Party menu | `party-menu` — opaque full-screen | `party-menu__dialog` — shares panel metrics with `tabbed-picker__panel` |
+| Party menu shell | `party-menu` — opaque full-screen | `party-menu__dialog` — quit confirm only |
+| Party bag (menu Inventory) | `ItemListInventory` modal — transparent (sort **251**) | `tabbed-picker__panel` |
 
 **Rail inset (240px):** centralized item modals use `tabbed-picker--rail-offset` on [`ItemListInventoryOverlay.uss`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uss) (see [centralized UI services](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory)). Legacy embedded clones used `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`) — remove when phase HUDs migrate off local picker trees.
 
