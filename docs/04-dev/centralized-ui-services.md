@@ -90,6 +90,8 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **0** | `ExplorationHud` (side map) | `ExplorationHudView` |
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
+| **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
+| **26** | Global command-rail copy (title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **100** | Map fullscreen (reuses exploration doc) | `MapView` via `BindToHud` |
 | **150** | Story modal | `StoryEventView` on `StoryHud` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
@@ -102,6 +104,21 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 ---
 
 ## Shipped services
+
+### Command-rail info — `CommandRailInfoPresenter` + `CommandRailInfo`
+
+**Job:** Top-left **non-button copy** for the shared command rail — hub title/credits, hub service headings/lines, combat targeting/planning prompts. Bookmark buttons stay on `CommandRailPresenter` (`sortingOrder` 25).
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/CommandRailInfoPresenter.cs` | `sortingOrder` **26**; `pickingMode = Ignore`; flush top-left (no outer margin) |
+| Facade | `Assets/Scripts/UI/Views/CommandRailInfo.cs` | `SetHubHeader`, `SetServiceCopy`, `SetCombatPrompt`, `SyncVisibility`, `Clear` |
+| UXML / USS | `Assets/UI/Screens/Shared/CommandRailInfo.uxml`, `CommandRailInfo.uss` | `name="rail-info"` |
+| Bootstrap | `DevSceneComposition.WireCommandRailInfo` | Child of `GameState`; ref on `m_commandRailInfo` |
+
+**Publishers:** `HubHudView.RefreshCredits`, `HubHudServicePanelView.Populate`, `CommandPanelView.RefreshCommandBar`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+
+---
 
 ### Global input hints — `InputHintPresenter` + `InputHints`
 
@@ -217,6 +234,7 @@ Treat them as **overlays** with their own `*View` lifecycle, not as generic “s
 ```
 GameState
 ├── InputHint          (InputHintPresenter)
+├── CommandRailInfo    (CommandRailInfoPresenter)
 ├── ScreenFade         (ScreenFadePresenter)
 ├── PartyFormationFloater (PartyFormationFloaterPresenter)
 ├── ExplorationHud

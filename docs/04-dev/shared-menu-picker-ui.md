@@ -174,7 +174,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 |--------|-------|-----------|
 | Combat command bar | `CommandPanelView` | `CommandRail.PanelHost` — buttons built in code |
 | Hub root menu | `HubHudView` / `HubRootMenuFocus` | `CommandRail.PanelHost` via `CommandRailPanelBuilder` |
-| Hub service back/actions | `HubHudServicePanelView` | same `PanelHost`; hub chrome via `CommandRailChromeView` |
+| Hub service back/actions | `HubHudServicePanelView` | `CommandRail.PanelHost` (buttons); service copy via `CommandRailInfo` |
 | Party section rail | `PartyMenuOverlayView` → `PartyMenuShellToolkitView` | `CommandRail.PanelHost` on Tab open |
 
 ### Consumers (horizontal)
@@ -184,7 +184,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | Tab strips (all pickers) | `PickerTabStripView` | Thin wrapper over `CreateHorizontal` |
 | Party equipment member tabs | `PartyEquipmentToolkitView` | `RailMenuPresenter.CreateHorizontal` on `party-equipment-members` |
 
-**Global command rail:** One shipped shell — `CommandRail.uxml` (`command-rail__chrome` + `command-rail-panel`). Phase owners populate `CommandRail.PanelHost` through `CommandRailPanelBuilder`; optional header copy via `CommandRailChromeView`. Canonical empty template for new rails: `RailMenuVertical.uxml`.
+**Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). Phase owners populate `CommandRail.PanelHost` through `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`. **Non-button copy** (hub title/credits, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
 
 **Extend:** New vertical rail → populate `PanelHost` with `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`, bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
 
