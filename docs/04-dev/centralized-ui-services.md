@@ -28,6 +28,7 @@ flowchart TB
 
   subgraph shared [Centralized services]
     PF[PartyFormationFloater sort 10 / 260]
+    WH[WalletHudPresenter sort 27]
     PM[PartyMenuOverlay sort 250]
     IH[InputHintPresenter sort 300]
     SF[ScreenFadePresenter sort 10000]
@@ -35,6 +36,8 @@ flowchart TB
 
   EH --> PF
   CH --> PF
+  HH --> WH
+  PM --> WH
   PM --> IH
   CH --> IH
   EH --> IH
@@ -91,7 +94,8 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
-| **26** | Global command-rail copy (title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
+| **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
+| **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **100** | Map fullscreen (reuses exploration doc) | `MapView` via `BindToHud` |
 | **150** | Story modal | `StoryEventView` on `StoryHud` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
@@ -107,16 +111,43 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 
 ### Command-rail info — `CommandRailInfoPresenter` + `CommandRailInfo`
 
-**Job:** Top-left **non-button copy** for the shared command rail — hub title/credits, hub service headings/lines, combat targeting/planning prompts. Bookmark buttons stay on `CommandRailPresenter` (`sortingOrder` 25).
+**Job:** Top-left **non-button copy** for the shared command rail — phase **header title** (`rail-info-header`), service headings/lines, combat targeting/planning prompts. Bookmark buttons stay on `CommandRailPresenter` (`sortingOrder` 25). **Credits** live on `WalletHudPresenter` (top-right).
 
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/Runtime/UI/CommandRailInfoPresenter.cs` | `sortingOrder` **26**; `pickingMode = Ignore`; flush top-left (no outer margin) |
-| Facade | `Assets/Scripts/UI/Views/CommandRailInfo.cs` | `SetHubHeader`, `SetServiceCopy`, `SetCombatPrompt`, `SyncVisibility`, `Clear` |
-| UXML / USS | `Assets/UI/Screens/Shared/CommandRailInfo.uxml`, `CommandRailInfo.uss` | `name="rail-info"` |
+| Facade | `Assets/Scripts/UI/Views/CommandRailInfo.cs` | `SetHeaderTitle`, `SetServiceCopy`, `SetCombatPrompt`, `SyncVisibility`, `Clear` |
+| UXML / USS | `Assets/UI/Screens/Shared/CommandRailInfo.uxml`, `CommandRailInfo.uss` | `name="rail-info"`; header block `rail-info-header` (phase-agnostic) |
 | Bootstrap | `DevSceneComposition.WireCommandRailInfo` | Child of `GameState`; ref on `m_commandRailInfo` |
 
-**Publishers:** `HubHudView.RefreshCredits`, `HubHudServicePanelView.Populate`, `CommandPanelView.RefreshCommandBar`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+**Publishers:** `HubHudView.RefreshCredits` (header title only), `HubHudServicePanelView.Populate`, `CommandPanelView.RefreshCommandBar`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+
+---
+
+### Wallet HUD — `WalletHudPresenter` + `WalletHud`
+
+**Job:** Top-right **Credits balance** — visible during hub Shop, party inventory pane, and brief transient pulses when balance changes elsewhere (hospital spend, dev grant, future battle loot).
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/WalletHudPresenter.cs` | `sortingOrder` **27**; `pickingMode = Ignore`; balance lerp + slide in/out |
+| Facade | `Assets/Scripts/UI/Views/WalletHud.cs` | `SetReason`, `SyncFromSave`, `NotifyBalanceChanged` |
+| UXML / USS | `Assets/UI/Screens/Shared/WalletHud.uxml`, `WalletHud.uss` | `name="wallet-hud"`, `name="wallet-hud-amount"` |
+| Bootstrap | `DevSceneComposition.WireWalletHud` | Child of `GameState`; ref on `m_walletHud` |
+
+**Publishers:**
+
+| Context | Owner |
+|---------|--------|
+| Hub Shop open/close | `HubHudView.OpenServicePanel` / `CloseServicePanel*` |
+| Party inventory pane | `PartyMenuOverlayView.SyncWalletHudInventoryReason` |
+| Balance delta (transient if hidden) | `HubHudView.RunServiceAction`, `DevPlayModeActions.DevGrantCredits` |
+
+```csharp
+WalletHud.SetReason(m_gameState, WalletHudReason.Shop, active: true);
+WalletHud.SyncFromSave(m_gameState, animate: false);
+WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Shop/Inventory reason
+```
 
 ---
 
@@ -235,6 +266,7 @@ Treat them as **overlays** with their own `*View` lifecycle, not as generic “s
 GameState
 ├── InputHint          (InputHintPresenter)
 ├── CommandRailInfo    (CommandRailInfoPresenter)
+├── WalletHud          (WalletHudPresenter)
 ├── ScreenFade         (ScreenFadePresenter)
 ├── PartyFormationFloater (PartyFormationFloaterPresenter)
 ├── ExplorationHud
