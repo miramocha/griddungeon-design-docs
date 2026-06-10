@@ -18,7 +18,7 @@ Grid Dungeon does **not** use one mega-widget for every menu. MVP1 has three **f
 |--------|---------------|-------------|-------------|
 | **Rail menu** | `RailMenuPresenter` → `RailMenuView` or `MenuFocusNavigator` | Vertical **or** horizontal | Command bar, hub services, party section rail, **category tab chips** |
 | **Item list picker** | `ItemListPickerView` (+ thin adapters) | Horizontal tabs + windowed rows | Hub shop buy/sell, party bag, combat **Item** command |
-| **Skill use picker** | `SkillUsePickerToolkitView` | Horizontal tabs + windowed rows | Combat **Skill** command (ADR 035) |
+| **Skill use picker** | `SkillUsePickerPresenter` + `CombatSkillListPickerAdapter` | Horizontal tabs + windowed rows | Combat **Skill** command (ADR 035) |
 
 All keyboard lists share **`MenuFocusNavigator`** ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) and, for long lists, **`WindowedListPaneView`** (8 visible rows + scroll bars).
 
@@ -55,30 +55,42 @@ flowchart TB
     ILP --> ILRB
   end
 
-  subgraph skillPicker [Skill use picker]
-    SUP[SkillUsePickerToolkitView]
-    SUP --> PTS
-    SUP --> WLP
-    SUP --> skillRows[skill-picker__row built in view]
+  subgraph skillPicker [Skill use picker service]
+    SUO[SkillUsePickerOverlay]
+    SPP[SkillUsePickerPresenter]
+    CSAD[CombatSkillListPickerAdapter]
+    SUO --> SPP
+    SPP --> CSAD
+    CSAD --> PTS
+    CSAD --> WLP
   end
 
-  subgraph consumers [Screens]
+  subgraph inventorySvc [Item list inventory service]
+    ILI[ItemListInventory]
+    IIP[ItemListInventoryPresenter]
+    ILI --> IIP
+    IIP --> ILP
+    IIP --> BAG[PartyInventoryBagView]
+    IIP --> CITEM[CombatItemListPickerAdapter]
+  end
+
+  subgraph consumers [Phase views orchestrate]
     CMD[CommandPanelView combat rail]
-    HUB[HubHudView root + service rails]
+    HUB[HubHudView]
+    CHV[CombatHudView]
+    PMO[PartyMenuOverlayView]
     PARTY[PartyMenuShellToolkitView section rail]
-    SHOP[HubShopPickerPresenter]
-    BAG[PartyInventoryBagView]
-    CITEM[CombatItemListPickerAdapter]
     CSKILL[CombatSkillPickerHost]
   end
 
   RMP --> CMD
   RMP --> HUB
   RMP --> PARTY
-  ILP --> SHOP
-  ILP --> BAG
-  ILP --> CITEM
-  SUP --> CSKILL
+  HUB --> ILI
+  CHV --> SUO
+  CHV --> ILI
+  PMO --> ILI
+  CSAD --> CSKILL
 ```
 
 ---
@@ -100,7 +112,7 @@ flowchart TB
 | Mode | Row focus when list opens | Typical hosts |
 |------|---------------------------|---------------|
 | **`Immediate`** | `WindowedListPaneView.SetItems(…, acquireFocus: true)` | Combat **Item** picker (`ItemListPickerView` default) |
-| **`EngageOnConfirm`** | Rows render; focus stays on shell/rail until **Z** (`ConfirmOrEngage` → `EngagePane` / `EngageFocus`) | Hub shop (`HubShopPickerPresenter`), party bag (`PartyInventoryBagView`) |
+| **`EngageOnConfirm`** | Rows render; focus stays on shell/rail until **Z** (`ConfirmOrEngage` → `EngagePane` / `EngageFocus`) | Hub shop + party bag via `ItemListInventory` (`PartyInventoryBagView` adapter) |
 
 `EngageOnConfirm` also registers row **click** → `EngagePaneAt(index)` so mouse can engage without keyboard.
 
@@ -280,14 +292,32 @@ flowchart LR
 | Hub shop / combat pickers | `tabbed-picker` — transparent; stage/rail stay visible | `tabbed-picker__panel` — dim panel (`rgba(30, 34, 40, 0.97)`) |
 | Party menu | `party-menu` — opaque full-screen | `party-menu__dialog` — shares panel metrics with `tabbed-picker__panel` |
 
-Combat HUD offsets the picker overlay so the command rail bookmark stays visible: `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`).
+**Rail inset (240px):** centralized item modals use `tabbed-picker--rail-offset` on [`ItemListInventoryOverlay.uss`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uss) (see [centralized UI services](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory)). Legacy embedded clones used `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`) — remove when phase HUDs migrate off local picker trees.
 
 **Panel layout:** `tabbed-picker__panel` and `party-menu__dialog` **shrink-wrap** content (`flex-grow: 0` — no fixed viewport-% height). **`tabbed-picker__body`** — horizontal row: windowed list (`flex-grow: 1`) + fixed-width detail column (`168px`). Fixed body height (`288px`) fits eight windowed rows + scroll chrome.
 
 **UXML patterns:**
 
-- **Full-screen overlay:** `tabbed-picker` root + `tabbed-picker__panel` — hub shop (`ItemListPicker.uxml`), combat skill/item pickers.
-- **Embedded pane:** same inner structure without overlay root — party bag (`PartyInventory.uxml` inside `party-menu__dialog`).
+- **Full-screen overlay (shipped):** `tabbed-picker` root + `tabbed-picker__panel` — hub shop, combat item, **party bag** via `ItemListInventory` service; combat skill via `SkillUsePickerPresenter`.
+- **Legacy embedded pane (migrate away):** `PartyInventory.uxml` cloned into `party-menu__dialog` — not the target architecture.
+
+---
+
+## Item list inventory service
+
+**Job:** One [`ItemListInventoryPresenter`](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) + `ItemListInventory` facade — three contexts, one `ItemListPickerView` host, **standalone** `UIDocument` (never embedded in hub / combat / party menu UXML).
+
+| Context | `sortingOrder` | Facade | Input mode |
+|---------|----------------|--------|------------|
+| Hub shop buy/sell | 200 | `SetHubShopMode` / `HideHubShop` | `EngageOnConfirm` |
+| Combat item | 200 | `CombatItemInput` | `Immediate` |
+| Party bag | 251 | `OpenBag` / `CloseBag` / `RefreshBag` | `EngageOnConfirm` |
+
+**Chrome:** full-screen transparent overlay + centered panel + `tabbed-picker--rail-offset` (`left: 240px`). Party menu `party-menu-pane-inventory` stays empty shell chrome while the bag modal draws above the menu (251 > 250).
+
+**Do not ship:** `CloneTree(PartyInventory.uxml)` in party menu, `DockBag` / `worldBound` geometry sync, or hub/combat `CloneTree(ItemListPicker.uxml)` on phase HUD roots.
+
+Agent rule: [`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-services.mdc).
 
 ---
 
@@ -318,20 +348,22 @@ flowchart TB
     ILPV --> MODE
   end
 
-  subgraph adapters [Thin adapters]
-    HSP[HubShopPickerPresenter]
+  subgraph adapters [Thin adapters inside ItemListInventoryPresenter]
     PIB[PartyInventoryBagView implements IInventoryBagView]
     CIA[CombatItemListPickerAdapter implements ICombatItemPickerView]
+    HUBCTX[Hub shop context wiring]
   end
 
   HUB --> ILPM
   BAG --> MAP --> ILPM
   COM --> ILPM
   ILPM --> ILPV
-  ILPV --> HSP
+  ILPV --> HUBCTX
   ILPV --> PIB
   ILPV --> CIA
 ```
+
+**Host:** all three consumers call `ItemListInventory` facade — not local `HubShopPickerPresenter` or embedded `PartyInventory.uxml` clones.
 
 ### `ItemListPickerView` responsibilities
 
@@ -361,11 +393,11 @@ Required element names (party profile uses the same ids):
 | Mode | When | Row focus |
 |------|------|-----------|
 | **`Immediate`** | Combat **Item** picker | Acquired when `Show` rebuilds rows (`acquireFocus: true`) |
-| **`EngageOnConfirm`** | Hub shop buy/sell, party bag pane | Rows visible; **Z** (`ConfirmOrEngage`) calls `EngagePane` / `EngageFocus`; shell or service rail owns focus until then |
+| **`EngageOnConfirm`** | Hub shop buy/sell, party bag modal | Rows visible; **Z** (`ConfirmOrEngage`) calls `EngagePane` / `EngageFocus`; shell or service rail owns focus until then |
 
-**Hub shop:** `HubShopPickerPresenter` wires `EngageOnConfirm` and calls `ConfirmOrEngage()` when entering Buy/Sell so rows engage on open. While the picker is open but **not** pane-engaged, hub **service-rail** W/S is blocked; **Buy/Sell** chips stay **`--selected`** via `SyncShopActionSelectedIndex` (rail selection while picker open). When rows **are** engaged, `HubHudView.ActiveNavigator()` routes to `PickerRowNavigator` and clears service-rail focus items (selection chips still reflect Buy vs Sell).
+**Hub shop:** `ItemListInventoryPresenter` hub context wires `EngageOnConfirm` and calls `ConfirmOrEngage()` when entering Buy/Sell so rows engage on open. While the picker is open but **not** pane-engaged, hub **service-rail** W/S is blocked; **Buy/Sell** chips stay **`--selected`** via `SyncShopActionSelectedIndex` (rail selection while picker open). When rows **are** engaged, `HubHudView.ActiveNavigator()` routes to `PickerRowNavigator` and clears service-rail focus items (selection chips still reflect Buy vs Sell).
 
-**Party bag:** **`PartyInventoryBagView`** — implements `IInventoryBagView` + `IInventoryBagKeyboardView`, delegates to `ItemListPickerView` with `EngageOnConfirm`. First **Z** on Inventory may **reveal** the pane (`PartyMenuOverlayView`); second **Z** engages rows. Coordinator (`InventoryBagCoordinator`) unchanged.
+**Party bag:** **`PartyInventoryBagView`** inside `ItemListInventoryPresenter` — implements `IInventoryBagView` + `IInventoryBagKeyboardView`, delegates to shared `ItemListPickerView` with `EngageOnConfirm`. First **Z** on Inventory may **reveal** the section (`PartyMenuOverlayView` → `OpenBag`); second **Z** engages rows. Bag UI is the service modal (sort 251), not an embedded pane in `PartyMenu.uxml`.
 
 ### Cancel / back layering (`EngageOnConfirm` hosts)
 
@@ -512,11 +544,11 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 |---------|-----------------|-----------|-----------|----------------------|--------------|
 | Combat command bar | `CommandPanelView` | — | — | — | `CombatInputHandler` |
 | Hub root / services | `HubHudView` | — | — | — | `HubInputHandler` |
-| Hub shop buy/sell | — | `PickerTabStripView` | `ItemListPickerView` | `HubShopStockCatalogBuilder` | `HubShopPickerPresenter` |
+| Hub shop buy/sell | — | `PickerTabStripView` | `ItemListPickerView` via `ItemListInventory` | `HubShopStockCatalogBuilder` | `ItemListInventory` facade + `HubHudView` |
 | Party menu section | `PartyMenuShellToolkitView` | — | — | — | `PartyMenuInputHandler` |
-| Party inventory | — | ✓ | `ItemListPickerView` via `PartyInventoryBagView` | `InventoryBagDisplayBuilder` → mapper | `IInventoryBagKeyboardView` |
+| Party inventory | — | ✓ | `ItemListPickerView` via `ItemListInventory` → `PartyInventoryBagView` | `InventoryBagDisplayBuilder` → mapper | `ItemListInventory.BagKeyboardView` |
 | Party equipment members | — | `RailMenuPresenter` | slots + picker | `PartyEquipmentCatalog` | `IPartyEquipmentKeyboardView` |
-| Combat Item | — | ✓ (single tab) | `ItemListPickerView` via adapter | `CombatItemListPresentationBuilder` | `ICombatItemPickerHost` |
+| Combat Item | — | ✓ (single tab) | `ItemListPickerView` via `ItemListInventory` → adapter | `CombatItemListPresentationBuilder` | `ItemListInventory.CombatItemInput` |
 | Combat Skill | — | ✓ | `SkillUsePickerToolkitView` | `SkillPickerCatalog` (Core) | `ICombatSkillPickerHost` |
 
 ---
@@ -525,8 +557,12 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 
 ### New category-tabbed **item** modal
 
+**Cross-phase or multi-HUD (hub / combat / party):** extend [`ItemListInventory`](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) — do **not** add a fourth embedded `CloneTree` on a phase HUD.
+
+**Single-screen-only (rare):**
+
 1. Build `ItemListPickerPresentationModel` (or use `ItemListPickerPresentationBuilder.FromCategoryTabs`).
-2. Clone `ItemListPicker.uxml` or embed the inner panel in your screen.
+2. Prefer a new centralized service `UIDocument` if a second screen will need the same chrome within MVP1.
 3. `new ItemListPickerView(root)` (or custom `ItemListPickerLayout` if element names differ).
 4. Wire keyboard: Q/E → `SelectNextTab` / `SelectPreviousTab`; WASD → `RowNavigator` or `MoveRowFocus*`; Z/X → confirm/cancel on `RowNavigator`.
 5. Import styles: `TabbedPicker.uss`, `WindowedList.uss`, `ItemListRow.uss`.
@@ -546,6 +582,7 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 - Put catalog/filter logic in `GridDungeon.UI` views (asmdef boundary).
 - Add uGUI overlays for these menus without explicit approval ([UITK rule](../../.cursor/rules/unity-ui-toolkit.mdc)).
 - Duplicate `rail-menu__item` styles — extend `RailMenu.uss` or use BEM modifiers.
+- Embed or geometry-dock item pickers in phase UXML when [`ItemListInventory`](centralized-ui-services.md) covers the context ([`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-services.mdc)).
 
 ---
 
@@ -579,15 +616,18 @@ Manual: Dev bootstrap **F1** hub shop, **Tab** party inventory, **F3** combat Sk
 | `Assets/UI/Screens/Shared/TabbedPicker.uss` | Modal shell |
 | `Assets/UI/Screens/Shared/WindowedList.uss` | Windowed list chrome |
 | `Assets/UI/Screens/Shared/ItemListRow.uss` | Item row BEM |
-| `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Shop overlay template |
-| `Assets/UI/Screens/Shared/PartyInventory.uxml` | Party bag pane template |
+| `Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml` | Centralized item-list service (hub / combat / party bag modals) |
+| `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine + single `ItemListPickerView` host |
+| `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
+| `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
+| `Assets/UI/Screens/Shared/PartyInventory.uxml` | Legacy pane template — tests only after migration |
 | `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
 | `Assets/Scripts/UI/Views/RailMenuPresenter.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |
 | `Assets/Scripts/UI/Views/WindowedListPaneView.cs` | Windowed list + `IListFocusNavigator` (#185) |
 | `Assets/Scripts/UI/Views/WindowedListPaneClasses.cs` | BEM constants for windowed list |
 | `Assets/Scripts/UI/Views/ItemListPickerView.cs` | Unified item picker |
-| `Assets/Scripts/UI/Views/HubShopPickerPresenter.cs` | Hub shop modal + `EngageOnConfirm` wiring |
+| `Assets/Scripts/UI/Views/HubShopPickerPresenter.cs` | **Legacy** — remove after `ItemListInventory` hub migration |
 | `Assets/Scripts/UI/Views/PartyInventoryBagView.cs` | Party bag adapter |
 | `Assets/Scripts/UI/Views/CombatItemListPickerAdapter.cs` | Combat UITK adapter |
 | `Assets/Scripts/Runtime/Combat/CombatItemPickerHost.cs` | Combat Item command orchestration |
