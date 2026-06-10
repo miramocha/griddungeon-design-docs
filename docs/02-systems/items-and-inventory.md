@@ -237,13 +237,13 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 
 ## Equipment pane (MVP1)
 
-**Scope:** active party cores only (filled core slots). **Member tabs** (horizontal strip, same visual language as Inventory category tabs) show who is selected; **Q/E** or LMB cycle/select member. **W/S** = worn slot focus after **Z** engage. **Z** on slot → filtered bag sub-picker → equip via `InventoryRules.TryEquip`. Filled slots: sub-picker includes **Remove** (`TryUnequip`) and **Replace**. Stat preview shows effective stats (and picker deltas before confirm).
+**Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Center panel is shared **`CharacterDetailView`** (`PartyEquipDisplay`): stats + five worn rows. **Q/E** / **W/S** move floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot is currently a **no-op** (inline bag picker removed; separate picker window + `PartyEquipmentApply` path is follow-up). Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
 
 | Layer | Type |
 |-------|------|
 | Core | `PartyEquipmentCatalog`, `PartyEquipmentStatPreview`, bag-row filter for slot + class |
 | Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations`, `PartyEquipmentApply` |
-| UI | BEM `party-equipment`, `party-equipment__tab`, `party-equipment__slot` (embedded in party menu pane — no standalone modal chrome) |
+| UI | `CharacterDetail.uxml` / `CharacterDetailView` in `party-menu-pane-character-detail`; floater member bridge `PartyEquipmentFloaterToolkitView` |
 
 Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](https://github.com/miramocha/griddungeon-game/issues/155)).
 
@@ -315,8 +315,8 @@ Coordinate equipment SOs with [#12](https://github.com/miramocha/griddungeon-gam
 ### Manual (Play Mode)
 
 - **Scene:** `DevBootstrap.unity` — **F1** hub / **F2** exploration / **F3** combat
-- **Steps:** Buy `patch_kit` + `guild_shortsword` at shop → **Tab** → **Inventory** → Consumables tab → **Tab** → **Equipment** → member → Weapon slot → **Z** → pick sword → **F3** fight with higher STR
-- **Expected:** Shell sections switch on W/S; bag `Q`/`E` only on Inventory pane; `Q`/`E` do not turn party on F2 while menu open; equip works on F1 and F2; Guild has no equip buttons
+- **Steps:** Buy `patch_kit` + `guild_shortsword` at shop → **Tab** → **Inventory** → equip sword from bag row → **Tab** → **Equipment** → floater member focus → **Z** engage slots → **W/S** worn rows → **Z** on slot (no picker) → **Tab** → **Formation** → read-only detail on floater focus
+- **Expected:** Shell sections switch on W/S; bag `Q`/`E` only on Inventory pane; equipment floater drives member (no inline tabs); slot **Z** does not open bag list; formation shows `CharacterDetail` mirror; equip via Inventory still works on F1/F2
 
 ### Regressions
 

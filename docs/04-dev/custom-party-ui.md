@@ -14,7 +14,8 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 |---------|--------------|----------------|---------------|
 | **Exploration party strip** | `GamePhase.Exploration` | `PartyRuntime.CoreSlots` | `ExplorationHudView` → `PartyFormationFloater` facade → shared `PartyFormationGridView` |
 | **Combat party roster** | `GamePhase.Combat` | `CombatController.State.CoreSlots` (`BattleState` copy) | `CombatHudView` → `PartyFormationFloater.Grid` (combat-center inset) |
-| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → `PartyFormationToolkitView` on shared grid (sort **260**; not in centered dialog) |
+| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → `CharacterDetailView` (center dialog) + `PartyFormationToolkitView` on shared floater (sort **260**) |
+| **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → shared `CharacterDetailView` + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
 | **Map party marker** | Exploration map open | `DungeonExplorer` cell + facing | `MapPartyMarkerPresenter` |
 
 **Out of scope for this doc:** Hub guild roster / party-ready gate (`s1_party_ready`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
@@ -219,18 +220,35 @@ Reference: `PartyFormationFloaterPresenter.cs`, `PartyFormationExplorationSync.c
 
 ## Formation menu (party pause)
 
-Hub / exploration pause → **Formation** section uses the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**), not the centered modal dialog.
+Hub / exploration pause → **Formation** section shows centered **`CharacterDetailView`** (`PartyFormationInspect` — read-only worn gear) **and** the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**).
 
 | Step | Behaviour |
 |------|-----------|
-| **Z** on Formation (pane reveal) | Floater slides in **and** swap mode engages — front slot **0** gets `party-formation-grid__cell--focused` immediately (same as bag/equipment auto-engage). |
-| **W/S** / **Q/E** | Move focus across the 2×4 grid (row / column). |
+| **Z** on Formation (pane reveal) | Center dialog + floater slide in; **Z** again engages swap mode — front slot **0** gets `party-formation-grid__cell--focused`. |
+| **W/S** / **Q/E** (engaged) | Move focus across the 2×4 grid (row / column); read-only detail mirrors focused **core** (`CharacterDetailView`). |
 | **Z** (engaged) | Pick core slot or confirm swap (`PartyFormationCoordinator`). |
 | **X** | Cancel pending swap, or disengage swap mode; **X** again hides pane. |
 
 Global bind copy: `TabbedPickerRailHints.PartyFormationSwap` while engaged; `PartyFormationEngage` only after **X** backs out of swap mode but the pane stays open. See [shared menu & picker UI — `TabbedPickerRailHints` copy](shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
 
-Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid`.
+Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + shared `CharacterDetailView` in `party-menu-pane-character-detail`.
+
+---
+
+## Equipment menu (party pause)
+
+**Formation** and **Equipment** share one `CharacterDetail` clone in `party-menu-pane-character-detail` (never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
+
+| Step | Behaviour |
+|------|-----------|
+| **Z** on Equipment (pane reveal) | Center `CharacterDetail` + floater dock (sort **260**). |
+| **Q/E** / **W/S** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
+| **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. |
+| **W/S** (slots engaged) | Move worn-slot focus. |
+| **Z** (slot engaged) | **No picker** — equip deferred. |
+| **X** | Disengage slots, then hide pane. |
+
+Member tabs removed — floater replaces `party-equipment-members`. Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
 
 ---
 

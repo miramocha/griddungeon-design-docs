@@ -182,7 +182,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | Screen | Owner | Notes |
 |--------|-------|-------|
 | Tab strips (all pickers) | `PickerTabStripView` | Thin wrapper over `CreateHorizontal` |
-| Party equipment member tabs | `PartyEquipmentToolkitView` | `RailMenuPresenter.CreateHorizontal` on `party-equipment-members` |
+| Party equipment member select | `PartyEquipmentFloaterToolkitView` | Floater 2×4 grid focus → `PartyEquipmentCoordinator.SetActiveMemberListIndex` (no inline tabs) |
 
 **Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). Phase owners populate `CommandRail.PanelHost` through `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`. **Non-button copy** (hub title/credits, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
 
