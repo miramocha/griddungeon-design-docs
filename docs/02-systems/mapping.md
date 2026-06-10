@@ -47,8 +47,8 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 
 | Element | Revealed when |
 |---------|----------------|
-| **Floor** | Party **enters** cell → chart every cell in **radius-2 circle** around party (Euclidean; includes adjacent walls) |
-| **Walls** | **Bump** blocked side → stamp that wall; **enter cell** → solid perimeter edges for each newly charted cell in the radius-2 circle ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **Floor** | Party **enters** cell or **turns in place** → chart cells in a **depth-1 facing cone** ahead of party; each lateral column walks forward until a non-walkable cell (blocker revealed + stamped) |
+| **Walls** | **Bump** blocked side → stamp that wall; **enter cell / turn** → solid perimeter edges for each newly charted cone cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
 | **Chest** | Party **Interact** on adjacent walkable cell **facing** impassable chest tile — loot once; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |

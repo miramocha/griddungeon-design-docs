@@ -5,7 +5,7 @@
 
 ## Decisions (MVP1)
 
-1. **Wall reveal:** On **bump**, stamp wall on the blocked edge. On **enter cell**, reveal **floor** + solid wall edges for every cell in a **radius-2 Euclidean circle** around the party (~13 cells, clipped to floor bounds). Features (stairs, gather) stamp only on the party cell. No full-room auto-fill without walking.
+1. **Wall reveal:** On **bump**, stamp wall on the blocked edge. On **enter cell** or **in-place turn**, reveal **floor** + solid wall edges for cells in a **depth-1 facing cone** ahead of the party: at forward step `f`, lateral offsets `|L| ≤ f`; each column walks forward from `f = |L|` until a non-walkable cell (blocker included, then stop). Features (stairs, gather) stamp only on the party cell. No full-room auto-fill without walking.
 2. **Map UI:** Side panel always available in exploration; **fullscreen** map (`M`) — **movement keys pass through** (party can still step while map open); pan/zoom mouse on map panel; `M` or `Esc` closes.
 3. **Gather nodes (MVP1):** **One-click instant loot** from node (no minigame). Marks node depleted for dive; full gather **minigame** in **MVP2**. Node icon on map when visited.
 4. **Hub-return persistence** ([ADR 008](008-campaign-defaults.md) extended):

@@ -1,5 +1,5 @@
 ---
-description: UI Toolkit first — UXML/USS conventions; ask the user before any new uGUI (Canvas/Image)
+description: UI Toolkit first — no business logic in UXML; reusable Shared components; ask before new uGUI
 globs: "**/*.{uxml,uss}"
 alwaysApply: true
 ---
@@ -47,6 +47,53 @@ If a task would use any of the following, **stop and ask the user** before codin
 | **C#** | Behaviour, data binding, events — `MonoBehaviour` / presenter beside `UIDocument` |
 
 Do not embed game logic in UXML. Do not hardcode colours in UXML when a USS class exists.
+
+## No business logic in UXML
+
+**UXML is markup, not authority.** Phase rules, roster state, shop prices, combat eligibility, and input-bind copy live in **C#** (presenters, coordinators, Core). UXML/USS only declare **where** nodes exist and **how** they look.
+
+| Belongs in C# | Not in UXML |
+|---------------|-------------|
+| Show/hide by phase, tab, or overlay | Duplicate trees per phase (`hub-rail.uxml` + `combat-rail.uxml` for same shell) |
+| Dynamic labels (HP, floor name, credits, row text) | Hardcoded player-facing copy that changes with game state |
+| Which buttons exist and what they do | Static `Button` lists that only one screen ever uses — build into a shared host in code |
+| Input bind strings | `Label` footers with `Z Confirm · X Cancel` (use `InputHints` + `TabbedPickerRailHints`) |
+| Enable/disable, selected row, fullscreen | Inline `style="display: none"` toggles without a BEM `--hidden` class |
+
+**Branching:** one **shell** UXML per reusable block; C# picks visible branch via **BEM modifier** (`EnableInClassList`) or populates an empty host (`PanelHost`, row list, tab strip). Do not fork UXML for every state — fork only when **layout structure** genuinely differs (e.g. `ItemListPickerLayout` profiles with different `name` hooks + `HiddenClass`).
+
+```xml
+<!-- ❌ BAD — game-state copy and bind footer baked into markup -->
+<ui:Label text="Floor 3 — buy stim_draft for 50c" />
+<ui:Label text="Z Confirm · X Cancel" />
+
+<!-- ✅ GOOD — stable hooks; presenter sets text / visibility -->
+<ui:Label name="hub-credits" class="hub-hud__credits" text="—" />
+<ui:VisualElement name="command-rail-panel" class="command-rail__panel" />
+```
+
+## Reusable shared components
+
+New UI should **compose** existing shared blocks under `Assets/UI/Screens/Shared/` — not re-embed the same tree inside a phase HUD.
+
+| Shared component | UXML / presenter | Reuse rule |
+|------------------|------------------|------------|
+| **Party menu overlay** | `PartyMenu.uxml`, `PartyMenuOverlayView` | Hub **Tab** and exploration **Esc** — same shell; phase hosts only open/close and publish hints |
+| **Command rail** | `CommandRail.uxml`, `CommandRailPresenter` | One shell; hub / combat / party section rails populate `PanelHost` in code (`CommandRailPanelBuilder`, `RailMenuPresenter`) |
+| **Command rail info** | `CommandRailInfo.uxml`, `CommandRailInfoPresenter` | Non-button copy (titles, service lines) — not duplicated per phase UXML |
+| **Global input hints** | `InputHint.uxml`, `InputHintPresenter` | One strip, `sortingOrder` 300 — phase views publish via `InputHints`; see `unity-global-input-hints.mdc` |
+| **Tabbed item picker** | `ItemListPicker.uxml`, `ItemListPickerView` | Shop, party bag, combat item pick — same view; layout profile + C# adapter |
+| **Rail menu template** | `RailMenuVertical.uxml` | Empty host for new vertical rails — do not copy-paste rail markup |
+
+**Before adding a new UXML file**, ask:
+
+1. Does a shared component already cover this? → extend profile, modifier, or presenter instead.
+2. Will a second screen need the same chrome within MVP1? → put it in `Shared/` with its own `UIDocument` + presenter ([centralized UI services](../../docs/04-dev/centralized-ui-services.md)).
+3. Is the difference only data or visibility? → C# + USS class toggle on one tree.
+
+**Phase HUDs** (`HubHud`, `CombatHud`, `ExplorationHud`) orchestrate: bind events, call shared facades, toggle modifiers. They do **not** own cross-phase overlays inline in their UXML.
+
+Design reference: [shared menu & picker UI](../../docs/04-dev/shared-menu-picker-ui.md), [centralized UI services](../../docs/04-dev/centralized-ui-services.md).
 
 ## BEM naming (UXML + USS classes)
 
