@@ -7,7 +7,7 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | [UI event contract](ui-event-contract.md) | Runtime `public event` + command APIs for custom UI; **edit when game repo APIs change** |
 | [Custom skill picker UI](custom-skill-picker-ui.md) | Replace combat skill modal (`ISkillUsePickerView`, host wiring, UITK hooks, tests) |
 | [Shared menu & picker UI](shared-menu-picker-ui.md) | Rail menu, `ItemListPickerView`, skill picker — shared UITK components, diagrams, extension guide |
-| [Centralized UI services](centralized-ui-services.md) | Cross-phase overlays — `InputHintPresenter`, `PartyFormationFloater`, sort stack, bootstrap, add-new checklist |
+| [Centralized UI services](centralized-ui-services.md) | Cross-phase overlays — `InputHintPresenter`, `CommandRail` + `CommandPanelModalSupport`, `PartyFormationFloater`, sort stack, bootstrap, add-new checklist |
 | [Custom party UI](custom-party-ui.md) | Replace exploration strip / combat party roster / map marker (`CombatRosterView`, events, UITK hooks) |
 | [Authoring floor transition beats](authoring-floor-transition-beats.md) | `stairs_default` vignette prefab, catalog, Cinemachine, Unity menu workflow |
 | [Layered UITK panels](layered-uitk-panels.md) | Split HUD into panel `UIDocument` components — [ADR 037](../../decisions/037-layered-uitk-panels.md) (draft) |

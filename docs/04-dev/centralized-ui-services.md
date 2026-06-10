@@ -61,7 +61,7 @@ A centralized service **owns one scene `GameObject` + `UIDocument` + root UXML**
 | `ItemListInventory.OpenBag` while party menu section = Inventory | `PartyInventory.uxml` cloned into `party-menu-pane-inventory` |
 | Hub shop modal at sort **200** via `ItemListInventory.SetHubShopMode` | `ItemListPicker.uxml` cloned on `HubHud` root |
 | Combat item via `ItemListInventory.CombatItemInput` | Local `CombatItemPickerHost` + picker clone on `CombatHud` |
-| `PartyFormationFloater.ApplyFormationDockState` — **context** + sort on the **same** floater document | Reparenting floater grid nodes into `PartyMenu.uxml` |
+| `PartyFormationFloater.ApplyFormationDockState` / `ApplyPartyMenuFloaterDock` — **context** + sort on the **same** floater document | Reparenting floater grid nodes into `PartyMenu.uxml` |
 
 Agent rule: [`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-services.mdc).
 
@@ -114,6 +114,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
+| **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `SetPartyMenuRailVisible` |
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
@@ -142,7 +143,54 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | UXML / USS | `Assets/UI/Screens/Shared/CommandRailInfo.uxml`, `CommandRailInfo.uss` | `name="rail-info"`; header block `rail-info-header` (phase-agnostic) |
 | Bootstrap | `DevSceneComposition.WireCommandRailInfo` | Child of `GameState`; ref on `m_commandRailInfo` |
 
-**Publishers:** `HubHudView.RefreshCredits` (header title only), `HubHudServicePanelView.Populate`, `CommandPanelView.RefreshCommandBar`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+**Publishers:** `HubHudView.RefreshCredits` (header title only), `HubHudServicePanelView.Populate`, `CommandPanelView.ShowForCombatant`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+
+---
+
+### Global command rail — `CommandRailPresenter` + `CommandPanelModalSupport`
+
+**Job:** One **vertical bookmark rail** (`CommandRail.uxml` → `command-rail-panel` / `CommandRail.PanelHost`) shared by hub root menu, hub service actions, combat command bar, and party menu section rail. Phase owners **populate** the panel in code (`CommandRailPanelBuilder` + `RailMenuPresenter`); they do not each own a duplicate rail document.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/CommandRailPresenter.cs` | `sortingOrder` **25** (phase) / **255** (party menu); context: `Hub` / `Combat` / `PartyMenu` / `Hidden` |
+| Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | `PanelHost`, `Body`, `SetPartyMenuRailVisible`, `SyncPhaseOwnership` |
+| Modal chrome helper | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared **sibling-chip disable** + panel BEM cleanup on the **same** `PanelHost` |
+| UXML / USS | `Assets/UI/Screens/Shared/CommandRail.uxml`, `CommandPanel.uss`, `RailMenu.uss` | `command-panel--disabled`, `command-panel--modal-open`, `command-panel--protocol-only` |
+
+**Who populates `PanelHost`**
+
+| Phase / overlay | Owner | When |
+|-----------------|-------|------|
+| Hub root | `HubRootMenuPanel.Populate` | Hub bind + `RestoreCommandRailPanel` after party menu |
+| Hub service (Buy/Sell/Back) | `HubHudServicePanelView` | Shop / guild / inn panels |
+| Combat commands | `CommandPanelView.EnsureBuilt` | Combat phase |
+| Party menu sections | `PartyMenuOverlayView.PopulateSectionRail` | Tab / Esc overlay open |
+
+**Modal rail sibling disable**
+
+While a **modal child** owns input (picker open, target select, combat log, party pane engaged), non-owner rail chips are `SetEnabled(false)` so W/S does not move focus on siblings. The **active owner** chip keeps `rail-menu__item--selected` and full opacity (`CommandPanel.uss` + `RailMenu.uss` `:disabled` hover suppression).
+
+| Consumer | Modal-open signal | Active owner |
+|----------|-------------------|--------------|
+| `CommandPanelView` | Skill/item picker, target select, log modal | Command slot that opened the modal (`PendingTargetCommand` for targeting) |
+| `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service button (`ItemListInventory.HubMode`) |
+| `PartyMenuOverlayView` | Section pane **engaged** (not merely revealed) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+
+Helpers: `CommandPanelModalSupport.SetModalOpen`, `SetEnabledForModal` / `ResolveEnabled`.
+
+**Panel chrome reset (shared host)**
+
+Combat teardown must not leave `command-panel--disabled` on the shared host — hub/party buttons inherit the modifier and look dim. **`CommandPanelModalSupport.ResetPanelChrome`** clears `command-panel--modal-open`, `command-panel--disabled`, and `command-panel--protocol-only`.
+
+| When | Who calls `ResetPanelChrome` |
+|------|------------------------------|
+| Battle end / null combat actor | `CommandPanelView.ShowForCombatant(null, …)` early return |
+| Leave combat context | `CommandRailPresenter.ResolveAndApplyContext` |
+| Hub root repopulate | `HubRootMenuPanel.Populate` |
+| Party section rail build | `PartyMenuOverlayView.PopulateSectionRail` |
+
+Picker / modal integration detail: [shared menu & picker UI § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
 
 ---
 
@@ -219,7 +267,7 @@ m_combatHud.RestoreInputHint();
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/PartyFormationFloaterPresenter.cs` | Context machine: `Exploration` / `Combat` / `FormationEdit` / `Hidden` |
 | View helper | `Assets/Scripts/UI/Views/PartyFormationFloaterView.cs` | Collapse / `RevealWithDip` animation |
-| Facade | `Assets/Scripts/UI/Views/PartyFormationFloater.cs` | `Grid`, `ExplorationSync`, `ApplyFormationDockState`, `SetCombatSlotClickHandler` |
+| Facade | `Assets/Scripts/UI/Views/PartyFormationFloater.cs` | `Grid`, `ExplorationSync`, `ApplyFormationDockState`, `ApplyPartyMenuFloaterDock`, `SetCombatSlotClickHandler` |
 | Grid | `PartyFormationGridView` + `PartyFormationGrid.uxml` | 8 fixed slots; BEM `party-formation-slot` |
 | UXML / USS | `PartyFormationFloater.uxml`, `PartyFormationFloater.uss` | Mount: `party-formation-mount` |
 | Bootstrap | `DevSceneComposition.WirePartyFormationFloater` | Sibling `PartyFormationFloater` GO, not under `ExplorationHud` |
@@ -230,8 +278,9 @@ m_combatHud.RestoreInputHint();
 |---------|----------------|------------------------|
 | Exploration strip | 10 | `ExplorationHudView` → `PartyFormationFloater.SetRevealed`; map fullscreen collapses strip |
 | Combat roster | 10 | `CombatHudView` binds highlights / slot clicks via `PartyFormationFloater.Grid` |
-| Formation edit | 260 | `PartyMenuOverlayView` → `ApplyFormationDockState(formationEditActive: true, revealed: true)` |
-| Hidden | — | Phase not exploration/combat and no formation dock |
+| Formation edit | 260 | `PartyMenuOverlayView` → `ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)` |
+| Party menu equipment | 260 | `PartyMenuOverlayView` → `ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)` — member focus on floater; clear on section exit (`PartyEquipmentFloaterToolkitView.ClearMemberFocus`) |
+| Hidden | — | Phase not exploration/combat and no party-menu dock |
 
 Phase changes flow through `PartyFormationFloater.SyncPhaseOwnership(GamePhase)` (subscribed inside presenter). **Formation bind copy** uses global `InputHints`, not labels on the floater.
 
@@ -245,7 +294,10 @@ var grid = PartyFormationFloater.Grid;
 grid?.SetActingHighlight(actor);
 
 // Party menu formation pane
-PartyFormationFloater.ApplyFormationDockState(formationEditActive: true, revealed: true);
+PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true);
+
+// Party menu equipment pane (floater only — no formation swap chrome)
+PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false);
 ```
 
 Integrator detail (replace grid, events, combat chrome): [custom party UI](custom-party-ui.md).
@@ -401,6 +453,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 | Topic | Authoritative doc |
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
+| Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |
 | Runtime events for custom HUD | [UI event contract](ui-event-contract.md) |

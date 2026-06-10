@@ -200,6 +200,37 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 **Extend:** New vertical rail → populate `PanelHost` with `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`, bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
 
+### Modal rail sibling disable (`CommandPanelModalSupport`)
+
+**Job:** `CommandRail.PanelHost` is **one shared DOM** across hub, combat, and party menu. When a modal child owns input, non-owner chips on that rail are `SetEnabled(false)` so W/S does not steal focus from the active picker or engaged pane. The **owner** chip keeps `rail-menu__item--selected` and full opacity (`CommandPanel.uss` + `RailMenu.uss` suppress `:disabled` hover on siblings).
+
+| Helper | Role |
+|--------|------|
+| `SetModalOpen(host, open)` | Toggles `command-panel--modal-open` on the host |
+| `SetEnabledForModal(button, baseEnabled, modalOpen, isActiveOwner)` | Per-chip enable while modal open |
+| `ResetPanelChrome(host)` | Clears `command-panel--modal-open`, `command-panel--disabled`, `command-panel--protocol-only` — **required** when combat ends or a non-combat owner repopulates the host |
+
+| Consumer | Modal-open when | Active owner |
+|----------|-----------------|--------------|
+| `CommandPanelView` | Skill/item picker, target select, combat log | Command slot that opened the modal (`CombatController.PendingTargetCommand` for targeting) |
+| `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service chip (`ItemListInventory.HubMode` + `HubShopServiceFocus`) |
+| `PartyMenuOverlayView` | Section pane **engaged** (not merely revealed) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+
+**Party section modal** — siblings disable only when:
+
+| Section | Engaged signal |
+|---------|----------------|
+| Inventory | Bag picker open (`inventoryBagOpen`) |
+| Equipment | Worn slots engaged on `CharacterDetail` (`equipmentSlotsEngaged`) — floater member focus alone does **not** modal the section rail |
+| Formation | Swap mode engaged (`formationPaneEngaged`) |
+| Quit | Quit pane has menu focus (`quitPaneFocused`) |
+
+`HideActivePane` / section change → `ResetPaneEngagement()` (clears equipment floater `party-formation-grid__cell--focused`) → `SyncSectionRailFocus()`.
+
+**Hub shop row navigation:** `HubShopServiceFocus.ShouldBlockServiceRailNavigation(pickerOpen, paneEngaged)` — service-rail W/S blocked only when the picker is open **and** rows are **not** engaged. When engaged, `HubHudView.ActiveNavigator()` routes W/S to `ItemListInventory.HubRowNavigator`.
+
+Service overview: [centralized UI services § Global command rail](centralized-ui-services.md#global-command-rail--commandrailpresenter--commandpanelmodalsupport).
+
 ---
 
 ## Global input hints
@@ -395,7 +426,7 @@ Required element names (party profile uses the same ids):
 | **`Immediate`** | Combat **Item** picker | Acquired when `Show` rebuilds rows (`acquireFocus: true`) |
 | **`EngageOnConfirm`** | Hub shop buy/sell, party bag modal | Rows visible; **Z** (`ConfirmOrEngage`) calls `EngagePane` / `EngageFocus`; shell or service rail owns focus until then |
 
-**Hub shop:** `ItemListInventoryPresenter` hub context wires `EngageOnConfirm` and calls `ConfirmOrEngage()` when entering Buy/Sell so rows engage on open. While the picker is open but **not** pane-engaged, hub **service-rail** W/S is blocked; **Buy/Sell** chips stay **`--selected`** via `SyncShopActionSelectedIndex` (rail selection while picker open). When rows **are** engaged, `HubHudView.ActiveNavigator()` routes to `PickerRowNavigator` and clears service-rail focus items (selection chips still reflect Buy vs Sell).
+**Hub shop:** `ItemListInventoryPresenter` hub context wires `EngageOnConfirm` and calls `EnsureInitialRowFocus` when entering Buy/Sell so rows **auto-engage** on open. While the picker is open but **not** pane-engaged, hub **service-rail** W/S is blocked (`HubShopServiceFocus.ShouldBlockServiceRailNavigation`); **Buy/Sell** chips stay **`--selected`** via `SyncShopActionSelectedIndex`. When rows **are** engaged, `HubHudView.ActiveNavigator()` routes W/S to `ItemListInventory.HubRowNavigator` (selection chips still reflect Buy vs Sell).
 
 **Party bag:** **`PartyInventoryBagView`** inside `ItemListInventoryPresenter` — implements `IInventoryBagView` + `IInventoryBagKeyboardView`, delegates to shared `ItemListPickerView` with `EngageOnConfirm`. First **Z** on Inventory may **reveal** the section (`PartyMenuOverlayView` → `OpenBag`); second **Z** engages rows. Bag UI is the service modal (sort 251), not an embedded pane in `PartyMenu.uxml`.
 
@@ -459,7 +490,8 @@ flowchart LR
 |-------|------|
 | `CombatItemListPickerAdapter` | UITK view port — `Show`/`Hide`, row keyboard via `RowNavigator`; maps `RowSelected` → `itemId` |
 | `CombatItemPickerHost` | Runtime orchestration — bag resolve, `CombatItemListCatalog`, `SubmitPlayerAction`, `OpenStateChanged` |
-| `CombatHudView` | Clones `ItemListPicker.uxml`, wires adapter + host; exposes `ICombatItemPickerInput` to `CombatInputHandler` / `CommandPanelView` |
+| `ItemListInventory` + `CombatItemPickerHost` | Centralized service document (`sortingOrder` 200); `CombatHudView` uses `ItemListInventory.CombatItemInput` — no `CloneTree` on combat HUD |
+| `CombatHudView` | Wires `CombatItemPickerHost` + adapter; exposes `ICombatItemPickerInput` to `CombatInputHandler` / `CommandPanelView` |
 | `CombatItemListPresentationBuilder` | `CombatItemListRow[]` → `ItemListPickerPresentationModel` (single tab, tabs hidden in UI) |
 
 **Row styles:** Always import `ItemListRow.uss` on the host UXML (party pane historically missed this and fell back to dark default label text).
@@ -596,9 +628,12 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | `CombatItemListPickerAdapterTests` | `Tests/UI/` — combat adapter + presentation builder |
 | `SkillUsePickerToolkitViewTests` | `Tests/UI/` — skill tabs + row confirm |
 | `MenuFocusNavigatorTests` | `Tests/UI/` — focus wrap/skip |
-| `CommandPanelViewTests` | `Tests/Combat/` — command rail focus |
+| `CommandPanelViewTests` | `Tests/Combat/` — command rail focus, modal sibling disable, `ResetPanelChrome` on null actor |
+| `PartyMenuSectionRailFocusRulesTests` | `Tests/UI/` — section rail modal only when pane engaged |
+| `HubShopServiceFocusTests` | `Tests/UI/` — buy/sell rail index + service-rail W/S block when picker unengaged |
+| `PartyEquipmentFloaterToolkitViewTests` | `Tests/UI/` — `ClearMemberFocus` removes `party-formation-grid__cell--focused` |
 
-Manual: Dev bootstrap **F1** hub shop, **Tab** party inventory, **F3** combat Skill / Item pickers.
+Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party inventory / equipment / formation section rails, **F3** combat Skill / Item pickers; hub after combat end (command rail not dim).
 
 ---
 
@@ -612,7 +647,10 @@ Manual: Dev bootstrap **F1** hub shop, **Tab** party inventory, **F3** combat Sk
 | `Assets/Scripts/UI/Views/InputHints.cs` | `Publish` / `Clear` facade |
 | `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs` | Shared bind-copy strings |
 | `Assets/UI/Screens/Shared/RailMenu.uss` | Chip + button rail styles |
-| `Assets/UI/Screens/Shared/CommandPanel.uss` | Vertical rail panel |
+| `Assets/UI/Screens/Shared/CommandPanel.uss` | Vertical rail panel + modal/disable modifiers |
+| `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared rail sibling disable + `ResetPanelChrome` |
+| `Assets/Scripts/UI/Views/PartyMenuSectionRailFocusRules.cs` | Party section modal-open rules |
+| `Assets/Scripts/UI/Navigation/HubShopServiceFocus.cs` | Hub shop buy/sell rail index + service-rail nav gate |
 | `Assets/UI/Screens/Shared/TabbedPicker.uss` | Modal shell |
 | `Assets/UI/Screens/Shared/WindowedList.uss` | Windowed list chrome |
 | `Assets/UI/Screens/Shared/ItemListRow.uss` | Item row BEM |

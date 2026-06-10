@@ -231,7 +231,9 @@ Hub / exploration pause → **Formation** section shows centered **`CharacterDet
 
 Global bind copy: `TabbedPickerRailHints.PartyFormationSwap` while engaged; `PartyFormationEngage` only after **X** backs out of swap mode but the pane stays open. See [shared menu & picker UI — `TabbedPickerRailHints` copy](shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
 
-Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + shared `CharacterDetailView` in `party-menu-pane-character-detail`.
+Section rail siblings disable only while swap mode is **engaged** (`PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport`). Leaving the pane (`HideActivePane`) or switching sections calls `ResetPaneEngagement()` → `SyncSectionRailFocus()`.
+
+Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + shared `CharacterDetailView` in `party-menu-pane-character-detail`. Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)`.
 
 ---
 
@@ -248,7 +250,11 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 | **Z** (slot engaged) | **No picker** — equip deferred. |
 | **X** | Disengage slots, then hide pane. |
 
-Member tabs removed — floater replaces `party-equipment-members`. Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
+Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
+
+Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail modal applies only when **worn slots** are engaged on `CharacterDetail`, not during floater-only member focus — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+
+Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
 
 ---
 
