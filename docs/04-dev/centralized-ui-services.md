@@ -121,7 +121,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **100** | Map fullscreen (reuses exploration doc) | `MapView` via `BindToHud` |
 | **150** | Story modal | `StoryEventView` on `StoryHud` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
-| **251** | Party bag modal (same chrome as hub/combat; rail offset) | `ItemListInventoryPresenter` (`PartyBag`) |
+| **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
 | **300** | Global input hint strip | `InputHintPresenter` |
 | **10000** | Full-screen fade | `ScreenFadePresenter` |
@@ -365,6 +365,33 @@ Picker integration detail: [shared menu & picker UI § Item list inventory servi
 
 ---
 
+### Character detail — `CharacterDetailPresenter` + `CharacterDetail`
+
+**Job:** One **single-combatant inspect panel** (stats + optional worn equipment rows) for party menu **Formation** and **Equipment** sections. Separate `UIDocument` at sort **251** — same full-bleed + `tabbed-picker--rail-offset` modal chrome as party bag ([`ItemListInventoryOverlay.uxml`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml)). Not embedded in `PartyMenu.uxml`.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Context: `Hidden` / `PartyMenuFormation` / `PartyMenuEquipment`; `sortingOrder` **251** when visible |
+| View | `Assets/Scripts/UI/Views/CharacterDetailView.cs` | Toolkit bind API; slot engage via `MenuFocusNavigator` |
+| Facade | `Assets/Scripts/UI/Views/CharacterDetail.cs` | `SetPartyMenuContext`, `Bind`, `Refresh`, `View`, `Hide` |
+| UXML / USS | `CharacterDetailOverlay.uxml` (hosts `CharacterDetail.uxml` instance), `CharacterDetail.uss` | Two-layer overlay: outer full bleed + inner rail-offset centered panel |
+| Bootstrap | `DevSceneComposition.WireCharacterDetail` | Child `CharacterDetail` GO under `GameState` |
+
+**Publishers:** `PartyMenuOverlayView.ShowActivePaneContent` — Formation → `PartyFormationInspect`; Equipment → `PartyEquipDisplay`; Inventory / Quit / close → `Hide`. Member bind from `PartyFormationToolkitView` / `PartyEquipmentFloaterToolkitView`.
+
+```csharp
+CharacterDetail.SetPartyMenuContext(
+    CharacterDetailContext.PartyMenuEquipment,
+    CharacterDetailLayout.PartyEquipDisplay
+);
+CharacterDetail.Bind(subject);
+CharacterDetail.Hide();
+```
+
+**Deferred:** equipment bag picker window on slot confirm; combat analyze host (third caller → optional `GameState` ref).
+
+---
+
 ### Screen fade — `ScreenFadePresenter` (no static facade)
 
 **Job:** Full-screen opaque/translucent overlay for floor transitions and other beats.
@@ -406,6 +433,7 @@ GameState
 ├── PartyFormationFloater (PartyFormationFloaterPresenter)
 ├── SkillUsePicker (SkillUsePickerPresenter)
 ├── ItemListInventory (ItemListInventoryPresenter)
+├── CharacterDetail (CharacterDetailPresenter)
 ├── ExplorationHud
 ├── CombatHud
 ├── HubHud

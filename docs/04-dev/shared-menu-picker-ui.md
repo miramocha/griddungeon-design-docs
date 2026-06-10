@@ -579,7 +579,8 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | Hub shop buy/sell | — | `PickerTabStripView` | `ItemListPickerView` via `ItemListInventory` | `HubShopStockCatalogBuilder` | `ItemListInventory` facade + `HubHudView` |
 | Party menu section | `PartyMenuShellToolkitView` | — | — | — | `PartyMenuInputHandler` |
 | Party inventory | — | ✓ | `ItemListPickerView` via `ItemListInventory` → `PartyInventoryBagView` | `InventoryBagDisplayBuilder` → mapper | `ItemListInventory.BagKeyboardView` |
-| Party equipment members | — | `RailMenuPresenter` | slots + picker | `PartyEquipmentCatalog` | `IPartyEquipmentKeyboardView` |
+| Party equipment display | — | — | — | `CharacterDetailView` via `CharacterDetail` facade | `IPartyEquipmentKeyboardView` |
+| Party equipment members (floater) | — | — | — | `PartyFormationFloater` grid focus | `PartyEquipmentFloaterToolkitView` |
 | Combat Item | — | ✓ (single tab) | `ItemListPickerView` via `ItemListInventory` → adapter | `CombatItemListPresentationBuilder` | `ItemListInventory.CombatItemInput` |
 | Combat Skill | — | ✓ | `SkillUsePickerToolkitView` | `SkillPickerCatalog` (Core) | `ICombatSkillPickerHost` |
 
@@ -632,6 +633,8 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | `PartyMenuSectionRailFocusRulesTests` | `Tests/UI/` — section rail modal only when pane engaged |
 | `HubShopServiceFocusTests` | `Tests/UI/` — buy/sell rail index + service-rail W/S block when picker unengaged |
 | `PartyEquipmentFloaterToolkitViewTests` | `Tests/UI/` — `ClearMemberFocus` removes `party-formation-grid__cell--focused` |
+| `CharacterDetailPresenterTests` | `Tests/UI/` — party-menu context, sort 251, rail-offset modal chrome |
+| `CharacterDetailViewTests` | `Tests/UI/` — layouts, slot engage, confirm noop |
 
 Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party inventory / equipment / formation section rails, **F3** combat Skill / Item pickers; hub after combat end (command rail not dim).
 
@@ -655,6 +658,10 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/UI/Screens/Shared/WindowedList.uss` | Windowed list chrome |
 | `Assets/UI/Screens/Shared/ItemListRow.uss` | Item row BEM |
 | `Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml` | Centralized item-list service (hub / combat / party bag modals) |
+| `Assets/UI/Screens/Shared/CharacterDetailOverlay.uxml` | Centralized character detail service (party Formation / Equipment) |
+| `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Character detail context + modal chrome |
+| `Assets/Scripts/UI/Views/CharacterDetail.cs` | Static facade |
+| `Assets/Scripts/UI/Views/CharacterDetailView.cs` | Single-combatant bind + slot focus |
 | `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine + single `ItemListPickerView` host |
 | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
 | `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
