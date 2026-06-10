@@ -111,7 +111,7 @@ Epic: #TBD
 ## Tasks
 
 - [ ] `PartyStripPanel` — extract from `ExplorationHud.uxml`
-- [ ] `PauseOverlay` — extract `ExplorationPauseView` to own doc (sort above map)
+- [ ] `PauseOverlay` — already `PartyMenuOverlayView` (sort 250); optional further split of formation pane only
 - [ ] Document sort stack in dev note
 - [ ] USS depth pass on strip (optional tilt/shadow)
 

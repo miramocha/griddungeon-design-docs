@@ -306,7 +306,7 @@ Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[
 
 **Roster vitals (MVP1):** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
 
-**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses **Front** / **Back** rows (`party-roster-front`, `party-roster-back`) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**MVP1 implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

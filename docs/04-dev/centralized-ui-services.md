@@ -1,0 +1,264 @@
+# Centralized UI services (UITK)
+
+How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD — global input hints, the shared party formation floater, screen fade, and similar `UIDocument` roots. Use this when adding a new cross-phase panel or when deciding whether chrome belongs in `ExplorationHud.uxml` vs its own scene object.
+
+**Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — `Assets/Scripts/Runtime/UI/`, `Assets/Scripts/UI/Views/`, `Assets/UI/Screens/Shared/`.
+
+**Related:** [UI event contract](ui-event-contract.md) (events/commands, not layout), [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints), [custom party UI](custom-party-ui.md) (formation grid API), [layered UITK panels](layered-uitk-panels.md) (future HUD splits), [04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+
+---
+
+## Problem
+
+Phase HUDs (`ExplorationHud`, `CombatHud`, `HubHud`) own most screen chrome. Some UI must:
+
+- Appear in **more than one phase** (party strip in exploration and combat).
+- Sit **above** phase HUD without being torn down on phase exit.
+- Publish **one authoritative copy** (input binds) instead of duplicating footers on every modal.
+
+**Centralized UI services** solve this with **one scene `GameObject` per concern**, its own `UIDocument`, and a fixed place in the `sortingOrder` stack.
+
+```mermaid
+flowchart TB
+  subgraph phase [Phase HUD documents]
+    EH[ExplorationHud sort 0–100]
+    CH[CombatHud sort 20]
+    HH[HubHud sort 20]
+  end
+
+  subgraph shared [Centralized services]
+    PF[PartyFormationFloater sort 10 / 260]
+    PM[PartyMenuOverlay sort 250]
+    IH[InputHintPresenter sort 300]
+    SF[ScreenFadePresenter sort 10000]
+  end
+
+  EH --> PF
+  CH --> PF
+  PM --> IH
+  CH --> IH
+  EH --> IH
+  SF -.->|fade beats| EH
+```
+
+Phase views **orchestrate** (show/hide, publish hint copy, bind data). They do **not** embed these trees in their UXML.
+
+---
+
+## Pattern — Presenter + facade (+ `GameState` ref)
+
+| Piece | Responsibility |
+|-------|----------------|
+| **`*Presenter`** (`MonoBehaviour`, `[RequireComponent(typeof(UIDocument))]`) | Owns `UIDocument`, clones UXML/USS, `sortingOrder`, slide/fade animation, context switching |
+| **Static facade** (optional, `GridDungeon.UI`) | `InputHints`, `PartyFormationFloater` — thin `Publish` / `SetRevealed` API so phase views avoid hunting components |
+| **`GameState` serialized ref** (optional, `GridDungeon.Runtime`) | `GameState.InputHint`, `GameState.ScreenFade` — composition root exposes long-lived presenters to Runtime and UI |
+| **Phase `*View`** | Subscribes to events; calls facade or presenter; **clears** or **restores** on overlay close / phase exit |
+
+```mermaid
+flowchart LR
+  subgraph ui [GridDungeon.UI]
+    HV[HubHudView / CombatHudView / MapView]
+    FH[InputHints / PartyFormationFloater]
+  end
+
+  subgraph runtime [GridDungeon.Runtime]
+    GS[GameState]
+    IP[InputHintPresenter]
+  end
+
+  HV --> FH
+  FH --> GS
+  GS --> IP
+  HV -->|direct| FH
+```
+
+**Rules**
+
+1. **Runtime does not reference UITK views** — presenters live in Runtime (`InputHintPresenter`, `ScreenFadePresenter`) or UI (`PartyFormationFloaterPresenter`); phase logic stays in controllers.
+2. **One publisher per strip** — e.g. only `CombatHudView.RefreshInputHint` owns combat bind copy while combat is idle; overlays call `InputHints.Publish` while open, then `Clear` or restore underlying hint on dismiss.
+3. **USS owns pixels; C# toggles classes** — slide-in/out uses BEM modifiers (`input-hint__text--retracted`, `party-formation-floater--collapsed`), not per-frame `style` writes except layout-derived coordinates.
+4. **Shared `PanelSettings`** — `Assets/UI/Settings/GamePanelSettings.asset` on every `UIDocument` unless a panel needs a deliberate scale override ([04 — Tech notes](../04-tech-notes.md#combat-hud-ui-toolkit)).
+
+---
+
+## `sortingOrder` stack (MVP1)
+
+Lower draws first. Values are **convention** — keep new panels in the gaps or extend upward.
+
+| `sortingOrder` | Document | Owner |
+|----------------|----------|--------|
+| **0** | `ExplorationHud` (side map) | `ExplorationHudView` |
+| **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
+| **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
+| **100** | Map fullscreen (reuses exploration doc) | `MapView` via `BindToHud` |
+| **150** | Story modal | `StoryEventView` on `StoryHud` |
+| **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
+| **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
+| **300** | Global input hint strip | `InputHintPresenter` |
+| **10000** | Full-screen fade | `ScreenFadePresenter` |
+
+**Layered HUD refactor (draft):** [ADR 037](../../decisions/037-layered-uitk-panels.md) splits monolith HUDs into more rows in this table; **global** `InputHintPresenter` stays unchanged.
+
+---
+
+## Shipped services
+
+### Global input hints — `InputHintPresenter` + `InputHints`
+
+**Job:** Bottom-right **input bind copy only** (`Z Confirm · X Cancel · W/S Command`). Not map legend, HP, quest text, or tutorial body copy.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/InputHintPresenter.cs` | `sortingOrder` **300**; `pickingMode = Ignore` |
+| Facade | `Assets/Scripts/UI/Views/InputHints.cs` | `Publish(gameState, text)` / `Clear(gameState)` |
+| Copy constants | `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs` | Segment order: Z/X → W/S & Q/E → other keys |
+| UXML / USS | `Assets/UI/Screens/Shared/InputHint.uxml`, `InputHint.uss` | `name="input-hint"`, `name="input-hint-text"` |
+| Bootstrap | `DevSceneComposition.WireInputHint` | Child of `GameState`; ref on `m_inputHint` |
+
+**Publishers (extend this list — do not add a second strip):**
+
+| Phase / overlay | Owner method |
+|-----------------|--------------|
+| Hub | `HubHudView.RefreshInputHint` / `RestoreInputHint` |
+| Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
+| Exploration map | `MapView.RefreshGlobalInputHint` |
+| Party menu / pause | `PartyMenuOverlayView.RefreshMenuHint` |
+| Story modal | `StoryEventView` → `TabbedPickerRailHints.ModalDismiss` |
+| Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
+| Floor transition | `FloorTransitionPresenter` clears on start; map/hub republish on `PresentationReleased` |
+| Story end / pause close | `InputRouter.RestoreGlobalInputHintForPhase` |
+
+Full bind table: [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints). Agent rule: `unity-global-input-hints.mdc`.
+
+```csharp
+// Typical publish while a modal owns binds
+InputHints.Publish(m_gameState, TabbedPickerRailHints.CombatCommand);
+
+// On dismiss — restore phase hint or clear
+InputHints.Clear(m_gameState);
+m_combatHud.RestoreInputHint();
+```
+
+---
+
+### Party formation floater — `PartyFormationFloaterPresenter` + `PartyFormationFloater`
+
+**Job:** One **party formation grid** shared by exploration strip, combat roster (center column), and formation-edit dock in party menu. Enemy roster stays on `CombatRosterView` inside `CombatHud` ([custom party UI](custom-party-ui.md)).
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/PartyFormationFloaterPresenter.cs` | Context machine: `Exploration` / `Combat` / `FormationEdit` / `Hidden` |
+| View helper | `Assets/Scripts/UI/Views/PartyFormationFloaterView.cs` | Collapse / `RevealWithDip` animation |
+| Facade | `Assets/Scripts/UI/Views/PartyFormationFloater.cs` | `Grid`, `ExplorationSync`, `ApplyFormationDockState`, `SetCombatSlotClickHandler` |
+| Grid | `PartyFormationGridView` + `PartyFormationGrid.uxml` | 8 fixed slots; BEM `party-formation-slot` |
+| UXML / USS | `PartyFormationFloater.uxml`, `PartyFormationFloater.uss` | Mount: `party-formation-mount` |
+| Bootstrap | `DevSceneComposition.WirePartyFormationFloater` | Sibling `PartyFormationFloater` GO, not under `ExplorationHud` |
+
+**Context ownership**
+
+| Context | `sortingOrder` | Who drives visibility |
+|---------|----------------|------------------------|
+| Exploration strip | 10 | `ExplorationHudView` → `PartyFormationFloater.SetRevealed`; map fullscreen collapses strip |
+| Combat roster | 10 | `CombatHudView` binds highlights / slot clicks via `PartyFormationFloater.Grid` |
+| Formation edit | 260 | `PartyMenuOverlayView` → `ApplyFormationDockState(formationEditActive: true, revealed: true)` |
+| Hidden | — | Phase not exploration/combat and no formation dock |
+
+Phase changes flow through `PartyFormationFloater.SyncPhaseOwnership(GamePhase)` (subscribed inside presenter). **Formation bind copy** uses global `InputHints`, not labels on the floater.
+
+```csharp
+// Exploration: show strip after phase enter
+PartyFormationFloater.SetRevealed(true);
+
+// Combat: wire slot clicks for targeting
+PartyFormationFloater.SetCombatSlotClickHandler(OnRosterSlotClicked);
+var grid = PartyFormationFloater.Grid;
+grid?.SetActingHighlight(actor);
+
+// Party menu formation pane
+PartyFormationFloater.ApplyFormationDockState(formationEditActive: true, revealed: true);
+```
+
+Integrator detail (replace grid, events, combat chrome): [custom party UI](custom-party-ui.md).
+
+---
+
+### Screen fade — `ScreenFadePresenter` (no static facade)
+
+**Job:** Full-screen opaque/translucent overlay for floor transitions and other beats.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/ScreenFadePresenter.cs` | `sortingOrder` **10000** |
+| Access | `GameState.ScreenFade` | `FadeOut` / `FadeIn` / `SetOpaque` / `SetTransparent` |
+| Bootstrap | Wired on `GameState` with `FloorTransitionPresenter` | See `DevSceneComposition.WireFloorTransition` |
+
+Callers hold a `GameState` reference; there is no `ScreenFades.Publish` facade — fade is **imperative** and short-lived.
+
+---
+
+### Other scene-wide documents (same family, different API)
+
+These use the **multi-`UIDocument` bootstrap** pattern but are **phase/modal-specific** rather than a static facade:
+
+| Document | Sort | Role |
+|----------|------|------|
+| `PartyMenuOverlay` | 250 | Hub party menu + exploration pause shell |
+| `StoryHud` | 150 | Story event modal |
+| `FloorTransitionPresenter` | (uses fade + vignette) | Stairs transition; clears global hints on start |
+
+Treat them as **overlays** with their own `*View` lifecycle, not as generic “services.” Only add a `PartyFormationFloater`-style facade when **three or more** unrelated callers need the same panel.
+
+---
+
+## Scene graph (Dev Bootstrap)
+
+`GridDungeon → Scenes → Create Dev Bootstrap` creates siblings under `GameState`:
+
+```
+GameState
+├── InputHint          (InputHintPresenter)
+├── ScreenFade         (ScreenFadePresenter)
+├── PartyFormationFloater (PartyFormationFloaterPresenter)
+├── ExplorationHud
+├── CombatHud
+├── HubHud
+├── PartyMenuOverlay
+└── StoryHud
+```
+
+Wiring: `Assets/Scripts/Editor/DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs`. After clone, run **Create Dev Bootstrap** if console reports missing floater or hint refs.
+
+---
+
+## Adding a new centralized service
+
+Use this checklist when a panel must survive phase changes or serve multiple HUDs:
+
+1. **Name the concern** — one reason to change (hints, party strip, fade). Do not merge unrelated chrome.
+2. **New `GameObject` + `UIDocument`** under `GameState` (or documented sibling), UXML in `Assets/UI/Screens/Shared/` if cross-phase.
+3. **Pick `sortingOrder`** from the table above; document the value in the presenter constant.
+4. **Presenter** builds tree in `EnsureOverlay`, caches `Q()` results, ignores hits if non-interactive (`pickingMode = Ignore` for hint strip).
+5. **Facade (optional)** — static `Register`/`Unregister` in `OnEnable`/`OnDisable` if UI views need access without serialized refs.
+6. **`GameState` field (optional)** — when Runtime systems must drive the panel (`ScreenFade`, `InputHint`).
+7. **Wire bootstrap** — `DevSceneComposition.Wire…` + menu item so clones stay consistent.
+8. **Ownership doc** — list which views publish/clear; add row to [Global input hints](shared-menu-picker-ui.md#global-input-hints) publishers table if it touches bind copy.
+9. **Tests** — Edit Mode under `Assets/Tests/UI/` for sort order, visibility, hint publish/clear (see existing `InputHint` / floater fixtures).
+
+**Do not**
+
+- Embed a second copy of the panel inside phase UXML “for convenience.”
+- Duplicate bind footers on modals when `InputHints` already covers the context.
+- Put gameplay rules or `CombatController` logic inside presenters.
+
+---
+
+## Documentation map
+
+| Topic | Authoritative doc |
+|-------|-------------------|
+| **This pattern** (presenter, sort stack, bootstrap) | **Here** |
+| Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
+| Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |
+| Runtime events for custom HUD | [UI event contract](ui-event-contract.md) |
+| Splitting monolith HUD into more documents | [layered UITK panels](layered-uitk-panels.md) |
+| Input bind design (player-facing) | [input bindings § Global input hints](../02-systems/input-bindings.md#global-input-hints) |

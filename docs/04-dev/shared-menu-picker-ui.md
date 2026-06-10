@@ -192,6 +192,8 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 **Status:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
 
+**Architecture:** Part of the [centralized UI services](centralized-ui-services.md) pattern (`InputHintPresenter` + `InputHints` facade, `sortingOrder` 300).
+
 ### Policy — input binds only
 
 The global strip answers: *what can I press right now?* It does **not** carry map legend (`north up`), party coordinates, facing, HP, quest text, or warnings.

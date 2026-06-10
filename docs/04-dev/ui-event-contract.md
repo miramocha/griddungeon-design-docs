@@ -17,6 +17,7 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 | **Runtime `public event` list + commands** | **Here** | Edit when C# API changes |
 | Replace combat skill modal | [custom skill picker UI](custom-skill-picker-ui.md) | `ISkillUsePickerView` + host; events/commands here |
 | Replace exploration strip / combat party roster | [custom party UI](custom-party-ui.md) | Event names + `CombatRosterView` API |
+| Cross-phase overlays (hints, party floater, fade, sort stack) | [centralized UI services](centralized-ui-services.md) | Link only |
 | Exploration HUD wiring, UXML mounts, scene graph | [exploration UI](../02-systems/exploration-ui.md) | Link only |
 | MapView **per-event UI effect** (which presenter repaints what) | [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates) | Cross-link |
 | Combat **motion** (flash, lerp, block?) | [combat § UI motion](../02-systems/combat.md#ui-motion--feedback) | Event names only |
@@ -114,17 +115,21 @@ FOE **contact → combat** is handled in `ExplorationPhaseController` (`RequestC
 
 Read `CoreSlots` / `AuxSlots` / `SynchroBar` directly. Refresh on `DungeonExplorer` step/cell, `PhaseChanged` (especially **Combat → Exploration**), and `ExplorationBindingsWired`.
 
-Shipped reference: `ExplorationPartyStripView` + `ExplorationHudReactivePresenter` in game repo. Step-by-step replacement: [custom party UI](custom-party-ui.md#exploration-party-strip).
+Shipped reference: `PartyFormationFloaterPresenter` + `PartyFormationExplorationSync` + `ExplorationHudReactivePresenter` in game repo. Step-by-step replacement: [custom party UI](custom-party-ui.md#exploration-party-strip).
 
-### `ExplorationPauseView` (UI, optional to reuse)
+### `PartyMenuOverlayView` (UI, hub + exploration pause)
+
+Shared `PartyMenu.uxml` overlay (`sortingOrder` **250**). Hub **`Tab`** and exploration **`Esc`** (map not fullscreen) open the same shell.
 
 | Event | Signature | When raised |
 |-------|-----------|-------------|
-| `VisibilityChanged` | `Action<bool>` | Pause open/close — `InputRouter` unbinds movement |
+| `OpenStateChanged` | `Action` | Menu open/close — `InputRouter` / movement gates |
+| `PaneLayoutChanged` | `Action` | Section or pane reveal changed |
 
-| Method | Use |
-|--------|-----|
-| `Open()` / `Close()` | Toggle overlay (`MapInputHandler` → `Esc`) |
+| Method / property | Use |
+|-------------------|-----|
+| `Open()` / `Close()` | Toggle overlay (`PartyMenuInputHandler`, `MapInputHandler` → `Esc`) |
+| `IsOpen` | Query without subscribing |
 
 ### Exploration — minimal subscribe example
 
@@ -167,7 +172,7 @@ Map panel: also subscribe `gs.Map.RevealChanged`, `gs.Foes.OnFoePatrolMoved` —
 
 **Read during fight:** `State` (`BattleState`), `CurrentPhase`, `IsCommandPlanning`, `IsWaitingForPlayer`, `IsSelectingTarget`, `ValidTargets`, `CommandTarget`, `PlanningPrompt`, `CanUseProtocol`, `RequiresProtocolOnlyCommands`, `IsPresentationLocked`.
 
-Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy). Roster wiring and `CombatRosterView` API: [custom party UI — combat roster](custom-party-ui.md#combat-party-roster).
+Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy). Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`); enemies: `CombatRosterView.BindEnemyFormation` — [custom party UI — combat roster](custom-party-ui.md#combat-party-roster).
 
 **Commands (wire buttons / focus nav):**
 
@@ -245,7 +250,8 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 | Bootstrap | `Assets/Scripts/UI/Game/GameBootstrap.cs` |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs` |
 | Exploration shell | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
-| Party strip (exploration) | `ExplorationPartyStripView.cs` · `CombatRosterView.cs` · [custom party UI](custom-party-ui.md) |
+| Party strip / combat roster | `PartyFormationFloaterPresenter.cs` · `PartyFormationGridView.cs` · `CombatRosterView.cs` (enemies) · [custom party UI](custom-party-ui.md) |
+| Party / pause menu | `PartyMenuOverlayView.cs` · [exploration UI § Party / pause menu](../02-systems/exploration-ui.md#party--pause-menu-partymenuoverlayview) |
 | Map | `Assets/Scripts/UI/Views/MapView.cs` |
 | Map party glyph | `MapPartyMarkerPresenter` (runtime presenter) · [custom party UI § Map](custom-party-ui.md#map-party-marker-optional) |
 | Combat | `Assets/Scripts/UI/Views/CombatHudView.cs` |

@@ -201,6 +201,8 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — key/button names and actions (`Z Confirm`, `M Fullscreen`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
 
+**Integrator:** [centralized UI services](../04-dev/centralized-ui-services.md) — presenter/facade pattern, sort stack, bootstrap.
+
 **Not on this strip:** map legend, party cell/facing, status numbers, lore, or save warnings (those stay on HUD labels or modal body / `hud-overlay__hint`).
 
 **Removed per-panel bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, party equipment detail bind footer, `map-view-hint`, `battle-reward-hint`.

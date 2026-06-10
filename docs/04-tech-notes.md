@@ -198,9 +198,9 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Exploration HUD (UI Toolkit)
 
-Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `ExplorationPauseView`). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
+Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
-- `ExplorationHud.uxml` — `map-view-mount` (map built in C#), `exploration-pause` overlay, `party-strip` (`ExplorationPartyStripView` → `party-strip-slots`). Integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
+- `ExplorationHud.uxml` — `map-view-mount` only (map built in C# under mount). Integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
 - `MapView` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
 - **Exploration log** — not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
@@ -211,17 +211,17 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView` + `Exploration
 **Shipped** — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Spec: [combat § Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`position: absolute; inset: 0`, `flex-direction: row`):
 
 ```
-command-rail | center column (enemy → arena-spacer → synchro → party → log-preview) | turn-order-strip
+command-rail | center column (log-preview → enemy → arena-spacer → synchro) + PartyFormationFloater overlay | turn-order-strip
 ```
 
 - **Left rail** — `combat-hud__command-rail` → `command-panel` (vertical column, centered in rail). Button order: Attack → … → Flee → **Protocol** → **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
 - **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** — no MP on enemies).
-- **Bottom center** — `synchro-bar` above `party-roster` + `party-roster-front` / `party-roster-back` (party slots show HP + MP).
+- **Bottom center** — `synchro-bar` in center column; party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
 - **Log** — `combat-log-preview-row` (round + one line; no Log button); modal via **`L`** or preview click; title + scroll only; close via **`L`**, **`X`** / Back (`TryBack` — log before pickers), or backdrop click (not scroll).
-- **Input hints** — `InputHintPresenter` (`Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` 300); **input binds only** on the global strip. `InputHints.Publish` / `Clear` from hub, combat, exploration map, party menu, victory overlay. Copy: `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
+- **Centralized UI services** — cross-phase `UIDocument` overlays (`InputHintPresenter`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** — bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
 - **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
 
-`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. `BindPartyFormation` for party (+ aux). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
 
 - **Skill use picker** — modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
 - **Shared UITK menus** — `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` — composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).

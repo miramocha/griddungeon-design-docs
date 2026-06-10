@@ -114,7 +114,7 @@ Plate builder: `PartyFormationSlotBinder.cs`
 Styles: `PartyFormationSlot.uss`, `PartyFormationGrid.uss`  
 UXML: `PartyFormationGrid.uxml` — **two row containers** (front slots 0–3, back slots 4–7); no flex-wrap.
 
-**Central floater:** `PartyFormationFloaterPresenter` + `PartyFormationFloater` static facade (same pattern as `InputHintPresenter` / `InputHints`)  
+**Central floater:** `PartyFormationFloaterPresenter` + `PartyFormationFloater` static facade — see [centralized UI services](centralized-ui-services.md#party-formation-floater--partyformationfloaterpresenter--partyformationfloater) (same pattern as `InputHintPresenter` / `InputHints`).  
 UXML/USS: `PartyFormationFloater.uxml`, `PartyFormationFloater.uss` — one scene `UIDocument` (sort **10** exploration/combat; **260** formation menu). Combat uses `party-formation-floater-host--combat-center` inset. Formation bind copy uses global `InputHints`, not inline labels on the floater.
 
 ### Floater visibility
@@ -166,15 +166,15 @@ Party strip is **not** embedded in `ExplorationHud.uxml`. Bootstrap creates `Par
 
 | API | Role |
 |-----|------|
-| `PartyFormationFloater.SetExplorationActive(bool)` | Phase ownership |
-| `PartyFormationFloater.SetRevealed(bool)` | Slide floater; map fullscreen collapses strip |
+| `PartyFormationFloater.SyncPhaseOwnership(GamePhase)` | Phase context (called from presenter on `PhaseChanged`; exploration HUD may call after bootstrap) |
+| `PartyFormationFloater.ApplyFormationDockState(false, revealed)` | Slide floater; map fullscreen / transition suppress strip |
 | `PartyFormationFloater.ExplorationSync` | `PartyFormationExplorationSync` — bind + status labels |
 
-`SetRevealed` slides floater; map fullscreen collapses strip. Status summaries: `party-formation-slot__status` via `PartyFormationExplorationSync`.
+`ApplyFormationDockState` slides floater; map fullscreen collapses strip. Status summaries: `party-formation-slot__status` via `PartyFormationExplorationSync`.
 
 ### Shipped wiring
 
-1. `ExplorationHudView` calls `PartyFormationFloater.SetExplorationActive` / `SetRevealed` on phase and map fullscreen.
+1. `ExplorationHudView` calls `ApplyFormationDockState(formationEditActive: false, revealed: …)` on phase, map fullscreen, and floor-transition suppress.
 2. `ExplorationHudReactivePresenter` calls `ExplorationSync.SyncParty` on `DungeonExplorer.OnPartyStep`, `OnPartyEnteredCell`, and after map reveal beats (gate only).
 3. **Combat → Exploration** uses `forceRebuild: true` and optional HP pulse.
 
@@ -211,7 +211,7 @@ void OnEnable(GameState gs, DungeonExplorer ex, PartyRuntime party)
 |----------|-------|
 | **Reskin** | Keep shared grid; change `PartyFormationSlot.uss` or fork `PartyFormationSlotBinder` |
 | **New layout, same data** | Fork `PartyFormationFloaterPresenter` or replace grid mount; still read `PartyRuntime`; optional reuse of `ExplorationPartyStripFormatter.FormatStatusSummary` for status text |
-| **Drop strip** | `PartyFormationFloater.SetRevealed(false)`; ensure map or other UI still exposes party state if needed for your mode |
+| **Drop strip** | `PartyFormationFloater.ApplyFormationDockState(false, revealed: false)`; ensure map or other UI still exposes party state if needed for your mode |
 
 Reference: `PartyFormationFloaterPresenter.cs`, `PartyFormationExplorationSync.cs`, `ExplorationPartyStripFormatter.cs`.
 
@@ -302,7 +302,7 @@ Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [explor
 ## Step-by-step: new exploration strip (UITK)
 
 1. Fork `PartyFormationFloaterPresenter` or extend `PartyFormationExplorationSync` for custom bind/status logic.
-2. Publish via `PartyFormationFloater.SetExplorationActive` / `SetRevealed` from your phase HUD.
+2. Drive visibility via `PartyFormationFloater.ApplyFormationDockState` from your phase HUD; ensure `SyncPhaseOwnership` runs on phase changes.
 3. Subscribe phase/explorer events above; call `ExplorationSync.SyncParty` on step/cell.
 4. On disable: unsubscribe all; clear tweens if you use DOTween gates like `ExplorationHudReactivePresenter`.
 

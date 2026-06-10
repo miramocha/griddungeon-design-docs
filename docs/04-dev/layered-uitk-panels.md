@@ -9,6 +9,8 @@ Make HUD feel **more 3-dimensional** by splitting monolithic `UIDocument` trees 
 
 ## What already exists
 
+See [centralized UI services](centralized-ui-services.md) for the full cross-phase overlay catalog and `sortingOrder` table.
+
 | Pattern | Example |
 |---------|---------|
 | Multi-document bootstrap | `PartyMenuOverlay`, `StoryHud`, `InputHintPresenter`, `ScreenFadePresenter` |
@@ -24,8 +26,8 @@ Make HUD feel **more 3-dimensional** by splitting monolithic `UIDocument` trees 
 | Panel | Current owner | Notes |
 |-------|---------------|-------|
 | Map | `MapView` via `map-view-mount` on shared doc | Remove `BindToHud`; own `UIDocument` |
-| Party strip | `ExplorationPartyStripView` in shell UXML | Own doc; orchestrator toggles visibility |
-| Pause | `ExplorationPauseView` in shell UXML | Own doc; higher sort when open |
+| Party strip | `PartyFormationFloaterPresenter` (already own doc, sort **10**) | Optional: merge into exploration orchestrator only |
+| Pause / party menu | `PartyMenuOverlayView` (already own doc, sort **250**) | Optional: split formation pane only |
 
 `ExplorationHudView` keeps: phase bind, `ExplorationPresentationGate`, reactive presenter wiring.
 
@@ -91,7 +93,7 @@ UITK focus is **per panel**. Handlers must know active panel:
 | Area | Paths |
 |------|-------|
 | Bootstrap | `DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs` |
-| Exploration | `ExplorationHudView.cs`, `MapView.cs`, `ExplorationPauseView.cs`, `ExplorationHud.uxml` (split) |
+| Exploration | `ExplorationHudView.cs`, `MapView.cs`, `PartyMenuOverlayView.cs`, `ExplorationHud.uxml` (split) |
 | Combat | `CombatHudView.cs`, `CombatHud.uxml` (split) |
 | Input | `InputRouter.cs`, `*InputHandler.cs` |
 | Tests | `Assets/Tests/UI/` — panel sort, focus owner, map fullscreen sort |
