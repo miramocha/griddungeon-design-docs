@@ -172,10 +172,10 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 | Screen | Owner | UXML hook |
 |--------|-------|-----------|
-| Combat command bar | `CommandPanelView` | `CombatHud.uxml` → `command-panel__btn` |
-| Hub root menu | `HubHudView` / `HubRootMenuFocus` | `HubHud.uxml` |
-| Hub service back/actions | `HubHudServicePanelView` | per-service panel |
-| Party section rail | `PartyMenuShellToolkitView` | `PartyMenu.uxml` → Inventory / Equipment |
+| Combat command bar | `CommandPanelView` | `CommandRail.PanelHost` — buttons built in code |
+| Hub root menu | `HubHudView` / `HubRootMenuFocus` | `CommandRail.PanelHost` via `CommandRailPanelBuilder` |
+| Hub service back/actions | `HubHudServicePanelView` | same `PanelHost`; hub chrome via `CommandRailChromeView` |
+| Party section rail | `PartyMenuOverlayView` → `PartyMenuShellToolkitView` | `CommandRail.PanelHost` on Tab open |
 
 ### Consumers (horizontal)
 
@@ -184,7 +184,9 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | Tab strips (all pickers) | `PickerTabStripView` | Thin wrapper over `CreateHorizontal` |
 | Party equipment member tabs | `PartyEquipmentToolkitView` | `RailMenuPresenter.CreateHorizontal` on `party-equipment-members` |
 
-**Extend:** New vertical rail → clone `command-rail` + `command-panel` from `RailMenuVertical.uxml`, wire `RailMenuPresenter.CreateVerticalFocus()`, bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
+**Global command rail:** One shipped shell — `CommandRail.uxml` (`command-rail__chrome` + `command-rail-panel`). Phase owners populate `CommandRail.PanelHost` through `CommandRailPanelBuilder`; optional header copy via `CommandRailChromeView`. Canonical empty template for new rails: `RailMenuVertical.uxml`.
+
+**Extend:** New vertical rail → populate `PanelHost` with `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`, bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
 
 ---
 
