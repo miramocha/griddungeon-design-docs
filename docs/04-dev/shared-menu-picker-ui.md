@@ -330,7 +330,6 @@ flowchart LR
 **UXML patterns:**
 
 - **Full-screen overlay (shipped):** `tabbed-picker` root + `tabbed-picker__panel` — hub shop, combat item, **party bag** via `ItemListInventory` service; combat skill via `SkillUsePickerPresenter`.
-- **Legacy embedded pane (migrate away):** `PartyInventory.uxml` cloned into `party-menu__dialog` — not the target architecture.
 
 ---
 
@@ -344,9 +343,9 @@ flowchart LR
 | Combat item | 200 | `CombatItemInput` | `Immediate` |
 | Party bag | 251 | `OpenBag` / `CloseBag` / `RefreshBag` | `EngageOnConfirm` |
 
-**Chrome:** full-screen transparent overlay + centered panel + `tabbed-picker--rail-offset` (`left: 240px`). Party menu `party-menu-pane-inventory` stays empty shell chrome while the bag modal draws above the menu (251 > 250).
+**Chrome:** full-screen transparent overlay + centered panel + `tabbed-picker--rail-offset` (`left: 240px`). Party bag draws on `ItemListInventory` (sort **251**) above the party menu shell (250).
 
-**Do not ship:** `CloneTree(PartyInventory.uxml)` in party menu, `DockBag` / `worldBound` geometry sync, or hub/combat `CloneTree(ItemListPicker.uxml)` on phase HUD roots.
+**Do not ship:** embedded bag clones in `PartyMenu`, `DockBag` / `worldBound` geometry sync, or hub/combat `CloneTree(ItemListPicker.uxml)` on phase HUD roots.
 
 Agent rule: [`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-services.mdc).
 
@@ -394,7 +393,7 @@ flowchart TB
   ILPV --> CIA
 ```
 
-**Host:** all three consumers call `ItemListInventory` facade — not local `HubShopPickerPresenter` or embedded `PartyInventory.uxml` clones.
+**Host:** all three consumers call `ItemListInventory` facade — not local `HubShopPickerPresenter` or embedded bag clones in phase HUDs.
 
 ### `ItemListPickerView` responsibilities
 
@@ -412,8 +411,8 @@ Same C# view, different UXML **name hooks** and hidden class. Bind copy: global 
 
 | Profile | `HiddenClass` | Used by |
 |---------|---------------|---------|
-| `ShopOverlay` (default) | `tabbed-picker--hidden` | `ItemListPicker.uxml` |
-| `PartyInventoryPane` | `party-inventory--hidden` | `PartyInventory.uxml` |
+| `ShopOverlay` (default) | `tabbed-picker--hidden` | `ItemListInventoryOverlay.uxml`, `ItemListPicker.uxml` |
+| `CombatOverlay` | `tabbed-picker--hidden` | Same host names; combat item context |
 
 Required element names (party profile uses the same ids):
 
@@ -665,7 +664,6 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine + single `ItemListPickerView` host |
 | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
 | `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
-| `Assets/UI/Screens/Shared/PartyInventory.uxml` | Legacy pane template — tests only after migration |
 | `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
 | `Assets/Scripts/UI/Views/RailMenuPresenter.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |

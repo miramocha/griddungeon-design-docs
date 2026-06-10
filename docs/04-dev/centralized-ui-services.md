@@ -51,14 +51,14 @@ Phase views **orchestrate** (show/hide, publish hint copy, bind data). They do *
 A centralized service **owns one scene `GameObject` + `UIDocument` + root UXML**. Phase HUDs and overlays call the **facade** (`OpenBag`, `SetHubShopMode`, `CombatItemInput`, …). They do **not**:
 
 - `CloneTree` the service UXML into hub / combat / party phase trees as the **shipped** integration
-- Reparent service `VisualElement` nodes into another document’s host (`InventoryPaneHost`, `party-menu-pane-inventory`, …)
+- Reparent service `VisualElement` nodes into another document’s host (embedded party-menu pane hosts, `InventoryPaneHost`, …)
 - Sync layout with **`worldBound` / `GeometryChangedEvent`** to fake embedding across `UIDocument` roots
 
 **When migrating** a panel that today lives inside a phase HUD (embedded clone or “docked” pane), the **final** implementation must move the tree to a centralized presenter and show it as a **full-screen transparent modal** (or other self-contained overlay chrome) at the service’s `sortingOrder`. Align beside fixed rails with **USS modifiers** (e.g. `tabbed-picker--rail-offset`, `left: 240px`) — not by parenting into the phase shell.
 
 | OK | Not OK (reject in review / migration complete) |
 |----|------------------------------------------------|
-| `ItemListInventory.OpenBag` while party menu section = Inventory | `PartyInventory.uxml` cloned into `party-menu-pane-inventory` |
+| `ItemListInventory.OpenBag` while party menu section = Inventory | Bag picker cloned into `PartyMenu` dialog panes |
 | Hub shop modal at sort **200** via `ItemListInventory.SetHubShopMode` | `ItemListPicker.uxml` cloned on `HubHud` root |
 | Combat item via `ItemListInventory.CombatItemInput` | Local `CombatItemPickerHost` + picker clone on `CombatHud` |
 | `PartyFormationFloater.ApplyFormationDockState` / `ApplyPartyMenuFloaterDock` — **context** + sort on the **same** floater document | Reparenting floater grid nodes into `PartyMenu.uxml` |
@@ -338,7 +338,7 @@ Integrator detail (replace grid, events, combat chrome): [custom party UI](custo
 | Overlay root | Full-screen bleed (`left/right/top/bottom: 0`) on service document |
 | Panel | Centered `tabbed-picker__panel`; transparent host (no dim) |
 | Rail inset | `tabbed-picker--rail-offset` — **240px** left (command / section rail bookmark stays visible) |
-| Party menu shell | `party-menu-pane-inventory` stays **empty chrome** — bag UI is **not** cloned into the dialog |
+| Party menu shell | Quit confirm only — bag UI lives on `ItemListInventory` at sort **251** |
 
 **Context ownership**
 
@@ -472,7 +472,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 2. Move picker UXML to the service overlay (`Assets/UI/Screens/Shared/`).
 3. Replace phase `CloneTree` / local presenter with facade calls only.
 4. Leave phase hosts empty if the shell still needs a section hook (e.g. party inventory pane).
-5. Verify grep: no `CloneTree(ItemListPicker` / `PartyInventory` on phase HUDs; no `Dock*` APIs on the facade.
+5. Verify grep: no `CloneTree(ItemListPicker` on phase HUDs; no embedded bag panes in `PartyMenu`; no `Dock*` APIs on the facade.
 
 ---
 
