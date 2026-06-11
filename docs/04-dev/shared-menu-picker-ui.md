@@ -214,14 +214,14 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 |----------|-----------------|--------------|
 | `CommandPanelView` | Skill/item picker, target select, combat log | Command slot that opened the modal (`CombatController.PendingTargetCommand` for targeting) |
 | `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service chip (`ItemListInventory.HubMode` + `HubShopServiceFocus`) |
-| `PartyMenuOverlayView` | Section pane **engaged** (not merely revealed) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+| `PartyMenuOverlayView` | Section pane modal per signal below (Inventory bag open, Equipment pane revealed, Formation swap engaged, Quit focused) | Active section chip (`PartyMenuSectionRailFocusRules`) |
 
 **Party section modal** — siblings disable only when:
 
 | Section | Engaged signal |
 |---------|----------------|
 | Inventory | Bag picker open (`inventoryBagOpen`) |
-| Equipment | Worn slots engaged on `CharacterDetail` (`equipmentSlotsEngaged`) — floater member focus alone does **not** modal the section rail |
+| Equipment | Equipment pane revealed (`paneRevealed` — first **Z** after section select; `PartyMenuSectionRailFocusRules`) — floater member focus alone does not need its own modal signal |
 | Formation | Swap mode engaged (`formationPaneEngaged`) |
 | Quit | Quit pane has menu focus (`quitPaneFocused`) |
 
@@ -405,6 +405,7 @@ flowchart TB
 | Row DOM | `ItemListRowBuilder` + `ItemListRow.uss` |
 | Detail panel | `item-list-picker-detail` label text from `ItemListRowModel.Detail` |
 | Confirm / cancel | `RowSelected` / `Cancelled` events |
+| Show / hide / refresh | `Show`, `Hide`, `Refresh`, `IsClosing` — rapid cancel+reopen must not call `Refresh` during exit animation; see [centralized UI gotchas § Pop-in exit](centralized-ui-gotchas.md#pop-in-exit-vs-rapid-reopen-itemlistpickerview) |
 
 ### Layout profiles (`ItemListPickerLayout`)
 

@@ -252,7 +252,7 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 
 Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
 
-Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail modal applies only when **worn slots** are engaged on `CharacterDetail`, not during floater-only member focus — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail siblings disable when the Equipment pane is **revealed** (`paneRevealed` — first **Z** after section select; same session as Inventory bag open), via `PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport` — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport). Revealing the pane is sufficient; floater-only member focus does not need a separate modal signal. Worn-slot engage on `CharacterDetail` still switches **hints** (`PartyEquipmentEngage` → `PartyEquipmentSlots`) and worn-slot **W/S** input; it does not gate section-rail modal.
 
 Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
 

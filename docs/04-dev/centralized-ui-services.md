@@ -363,6 +363,8 @@ ItemListInventory.CloseBag();
 
 Picker integration detail: [shared menu & picker UI § Item list inventory service](shared-menu-picker-ui.md#item-list-inventory-service).
 
+Implementation traps (rapid cancel/reopen, animated hide vs context switch): [centralized UI gotchas § Pop-in exit vs rapid reopen](centralized-ui-gotchas.md#pop-in-exit-vs-rapid-reopen-itemlistpickerview).
+
 ---
 
 ### Character detail — `CharacterDetailPresenter` + `CharacterDetail`
@@ -481,6 +483,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 | Topic | Authoritative doc |
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
+| Implementation gotchas (exit races, flags, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |
