@@ -29,7 +29,7 @@ Parent UITK epic: [game#201](https://github.com/miramocha/griddungeon-game/issue
 | 7 | game | [#215](https://github.com/miramocha/griddungeon-game/issues/215) | `WalletHud` + `SlidePresentationDriver` | #207 |
 | 8 | game | [#216](https://github.com/miramocha/griddungeon-game/issues/216) | `InputHint` + slide driver | #215 |
 | 9 | game | [#214](https://github.com/miramocha/griddungeon-game/issues/214) | `PartyFormationFloater` + `CollapsePresentationDriver` | #207 |
-| 10 | design-docs | [#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) | Docs: vocabulary + gotchas sync | migrations |
+| 10 | design-docs | [#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) | Docs: vocabulary + gotchas sync | migrations ✅ |
 
 ---
 
@@ -68,7 +68,8 @@ public interface ICentralizedUiSurface
 | Doc | Role |
 |-----|------|
 | [centralized-ui-services.md](../centralized-ui-services.md) | Pattern + mandatory lifecycle |
-| [centralized-ui-gotchas.md](../centralized-ui-gotchas.md) | Pop-in exit vs reopen |
+| [centralized-ui-gotchas.md](../centralized-ui-gotchas.md) | Pop-in exit vs reopen, `IsSettling`, CharacterDetail trap |
+| [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) | Team-locked public API |
 | [shared-menu-picker-ui.md](../shared-menu-picker-ui.md) | Picker shells, rail focus |
 
 ---

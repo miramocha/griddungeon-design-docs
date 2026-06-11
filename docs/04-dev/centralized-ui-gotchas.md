@@ -4,6 +4,8 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — `Assets/Scripts/UI/Views/`, `Assets/Scripts/Runtime/UI/`.
 
+**Reference consumers:** [`ItemListInventory`](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) / `ItemListPickerView` ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) — stable PopIn reference. [`CharacterDetail`](centralized-ui-services.md#character-detail--characterdetailpresenter--characterdetail) ([#209](https://github.com/miramocha/griddungeon-game/issues/209)) — second PopIn consumer; same `ICentralizedUiSurface` traps.
+
 ---
 
 ## How to use this doc
@@ -11,63 +13,87 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | When | Action |
 |------|--------|
 | Hit a weird modal / picker bug | Search here before adding guards in phase HUDs |
-| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle-in-progress) |
-| Planned unified lifecycle API (`Show` / `Hide` / `IsSettling`) | [game#206](https://github.com/miramocha/griddungeon-game/issues/206) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
+| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
+| Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 
 ---
 
-## Pop-in exit vs rapid reopen (`ItemListPickerView`)
+## Pop-in exit vs rapid reopen (`ItemListInventory` / `ItemListPickerView`)
 
 **Symptom:** Hub → Shop → Buy → **X** → spam **Buy** again — buy list never appears (or flashes then vanishes).
 
 **Cause:** `ItemListPickerView.Hide()` runs a **~420ms** `PopInTransition` exit (`PopInTransition.DurationMs`). During that window:
 
-- `IsActive` stays **true** until the exit callback runs.
-- `IsClosing` is **true**.
-- A naive reopen that calls **`Refresh`** (because `IsActive`) only updates row data — it does **not** cancel the exit or re-show the shell.
-- When the stale exit callback eventually runs, it calls `CompleteHide`, applies the hidden USS class, and fires the hide callback (`SetContext(Hidden)`, `m_hubMode = Hub`).
+- `IsShown` stays **true** until the exit callback runs.
+- `IsSettling` is **true** (public name for the old `IsClosing` / `m_isClosing` trap).
+- `RequestedVisible` is **false** after dismiss starts — intent and on-screen state disagree.
+- A naive reopen that calls **`Refresh`** (because `IsShown` is still true) only updates row data — it does **not** cancel the exit or re-show the shell.
+- When the stale exit callback eventually runs, it applies the hidden USS class and fires the hide callback (`SetContext(Hidden)`, `m_hubMode = Hub`).
 
-`Show()` during exit **is** safe for animation: it bumps `PopInTransition` generation and clears `m_isClosing`, which suppresses the stale exit callback. The bug is taking the **Refresh** path while closing.
+`Show()` during exit **is** safe: `CentralizedUiPresentation` / `PopInTransition` bump generation and clear settle state, which suppresses the stale exit callback. The bug is taking the **Refresh** path while `IsSettling`.
 
-**Fix (shipped):**
+**Fix (shipped on [#207](https://github.com/miramocha/griddungeon-game/issues/207)):**
 
-- `ItemListPickerView.Refresh` — if `m_isClosing`, delegate to `Show`.
-- `ItemListInventoryPresenter.SetHubShopMode` — use `Refresh` only when `IsActive && !IsClosing`; otherwise `Show`.
+- `ItemListPickerView.Refresh` — if `IsSettling`, delegate to `Show`.
+- `ItemListInventoryPresenter.PresentHubShop` / `SetHubShopContext` — use `Refresh` only when `IsShown && !IsSettling`; otherwise `Show`.
 
 **Test:** `ItemListInventoryPresenterTests.SetHubShopMode_RapidReopenAfterCancel_StaysActiveAfterExitAnimation`.
 
-**Rule for new hosts:** Any code that reopens a pop-in picker while an exit may still be running must call **`Show`**, not **`Refresh`**, unless you have explicitly confirmed `!IsClosing`. Treat `IsActive` alone as insufficient.
+**Rule for new hosts:** Any code that reopens a pop-in picker while an exit may still be running must call **`Show`**, not **`Refresh`**, unless you have explicitly confirmed `!IsSettling`. Treat `IsShown` alone as insufficient.
 
 ```csharp
 // ❌ BAD — reopen during exit animation
-if (m_picker.IsActive)
+if (m_picker.IsShown)
     m_picker.Refresh(model);
 else
     m_picker.Show(model);
 
-// ✅ GOOD
-if (m_picker.IsActive && !m_picker.IsClosing)
+// ✅ GOOD — ICentralizedUiSurface vocabulary (#207)
+if (m_picker.IsShown && !m_picker.IsSettling)
     m_picker.Refresh(model);
 else
     m_picker.Show(model);
 ```
 
-**Same class of bug elsewhere:** Any overlay using `PopInTransition.PlayExit` + deferred `onHidden` (party menu shell, character detail, wallet slide, input hint retract) can race if the host reopens before exit completes. Prefer **`Show` / reopen entry points** that reset closing state, or **`ForceHideImmediate`** when switching authority (phase/context), not `Refresh`-style data-only updates.
+**Same class of bug elsewhere:** Any overlay using deferred dismiss (`PopInTransition`, slide retract, floater collapse) can race if the host reopens before exit completes. Prefer **`Show`** on reopen entry points, or **`HideImmediate()`** when switching authority (phase/context), not `Refresh`-style data-only updates.
 
 ---
 
-## `IsActive` ≠ on-screen ≠ modal-open signal
+## `RequestedVisible` / `IsShown` / `IsSettling` ≠ domain flags
 
-| Flag | Meaning | Trap |
-|------|---------|------|
-| `ItemListPickerView.IsActive` | Presentation model loaded; exit not finished | Still **true** during exit animation |
-| `ItemListPickerView.IsClosing` | `Hide()` started, exit not complete | **true** during the 420ms window |
-| `ItemListInventory.IsHubShopActive` | `context == HubShop` **and** `picker.IsActive` | Can stay true briefly after **X** until exit completes |
-| Visible to player | Hidden USS class off **and** pop-in expanded | Requires `Show` path, not mid-exit `Refresh` |
+Public surface is **`ICentralizedUiSurface`** only — do not expose legacy `IsActive`, `IsClosing`, or `IsVisible` on facades.
+
+| Member / flag | Meaning | Trap |
+|---------------|---------|------|
+| `RequestedVisible` | Authority wants the panel open | Can be **true** while exit animation runs if context not cleared yet |
+| `IsShown` | Panel presented for current authority | Stays **true** through exit settle until dismiss animation completes ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) |
+| `IsSettling` | Enter/exit animation in flight after `Hide()` (or chained dismiss) | **true** during the ~420ms PopIn exit window — use this instead of `IsClosing` |
+| `ItemListInventory.IsHubShopActive` | `context == HubShop` **and** `picker.IsShown` | Domain composite — **not** `RequestedVisible`; false after exit completes even if hub mode enum lags |
+| `ItemListInventory.IsModalActive` | Hub shop or combat item modal composite | Uses `IsShown` / combat host `IsOpen` — not `IsSettling` alone |
+| Visible to player | Hidden USS class off **and** pop-in expanded | Requires `Show` path, not mid-settle `Refresh` |
 
 Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off `IsHubShopActive` / `HubMode` — rapid cancel+reopen can leave rail/hint state wrong if hide callbacks run after a reopen. The pop-in reopen fix above is the primary guard; phase owners should still **`RefreshInputHint` / `RebuildServiceFocus`** after shop mode changes.
+
+---
+
+## Character detail — context intent vs on-screen (`CharacterDetail`)
+
+**Symptom:** Formation/Equipment pane thinks detail is open; panel invisible or stale after rapid section swap; party menu sort **251** fights bag modal.
+
+**Cause (pre-#209):** Facade used domain flags (`ActiveContext`, ad-hoc `IsVisible`) that did not track PopIn settle. `Refresh()` during `Hide()` exit updated slot copy without re-presenting the shell — same class as inventory **Refresh while `IsSettling`**.
+
+**Fix (shipped on [#209](https://github.com/miramocha/griddungeon-game/issues/209)):**
+
+- `CharacterDetailPresenter` implements `ICentralizedUiSurface`; facade exposes `RequestedVisible`, `IsShown`, `IsSettling`.
+- `Show()` while `IsSettling` cancels pending schedule and re-enters via `PresentCurrentContext` — not `Refresh()` alone.
+- Context enum swap (`SetPartyMenuContext`) calls `TeardownPresentationForContextSwap` → `HideImmediate()` on the internal presentation — not animated `Hide()` across authorities.
+- `PartyMenuOverlayView` orchestrates context + `Show`/`Hide`; it does **not** own a second PopIn stack ([#208](https://github.com/miramocha/griddungeon-game/issues/208)).
+
+**Tests:** `CharacterDetailPresenterTests` (settle + `HideImmediate`), `PartyMenuSort251LifecycleTests` (bag + detail at sort 251).
+
+**Rule:** Callers distinguish **`ActiveContext`** (which party-menu layout is armed) from **`IsShown`** (whether the PopIn panel is on-screen). Use `IsSettling` before choosing `Refresh` vs `Show`.
 
 ---
 
@@ -77,9 +103,9 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 **Cause:** `ItemListInventoryPresenter` owns **one** `ItemListPickerView` across `HubShop` / `CombatItem` / `PartyBag` / `Hidden`. Animated `Hide()` callbacks can fire **after** the next context already called `Show`.
 
-**Fix pattern (shipped):** `ForceHideForContextSwitch` / `HideHubShopInternal(immediate: true)` / `ItemListPickerView.ForceHideImmediate()` — skip exit animation, clear `m_isClosing`, do not rely on deferred callbacks when **authority** changes (phase leave, context enum swap).
+**Fix pattern (shipped):** `ForceHideForContextSwitch` / `HideHubShopInternal(immediate: true)` / `ItemListPickerView.HideImmediate()` — skip exit animation, clear `IsSettling`, do not rely on deferred callbacks when **authority** changes (phase leave, context enum swap).
 
-**Rule:** Animated hide is for **player dismiss** within the same context. **System dismiss** (phase exit, service close, switch HubShop → PartyBag) uses **immediate** hide.
+**Rule:** Animated `Hide()` is for **player dismiss** within the same context. **System dismiss** (phase exit, service close, switch HubShop → PartyBag) uses **`HideImmediate()`**.
 
 ---
 
@@ -87,7 +113,7 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 `PopInTransition` tracks a per-target **generation**. `PlayEnter` / `Reset` bump generation and pause pending scheduled exit callbacks. A new `Show()` during exit therefore **should not** run the old exit `onComplete` — unless the host never called `Show` and only called `Refresh`.
 
-Documented in `PopInTransition.cs`; do not bypass with hand-rolled delays. If you add a new animated overlay, reuse `PopInTransition` (or the same generation pattern), not ad-hoc `schedule.Execute` without invalidation.
+Documented in `PopInTransition.cs`; do not bypass with hand-rolled delays. If you add a new animated overlay, reuse `CentralizedUiPresentation` + `IPresentationDriver` (or the same generation pattern), not ad-hoc `schedule.Execute` without invalidation.
 
 ---
 
@@ -136,7 +162,7 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 | `PartyBag` | 251 | `PartyMenuOverlayView` |
 | `Hidden` | — | Phase exit, explicit hide |
 
-`SyncPickingMode` enables host hits when combat item is open **or** picker is **`IsClosing`** (keeps hits coherent through exit). New contexts should follow the same immediate-hide-on-switch rule.
+`SyncPickingMode` enables host hits when combat item is open **or** picker is **`IsSettling`** (keeps hits coherent through exit). New contexts should follow the same immediate-hide-on-switch rule.
 
 ---
 
@@ -146,7 +172,7 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 
 **Cause:** `ItemListPickerView` tests that clone UXML **without** a live `panel` run `PopInTransition.PlayExit` **synchronously** (`panel == null` → immediate `onComplete`). Exit-animation races **do not reproduce** unless the host is under a `UIDocument` with `PanelSettings` (see `ItemListInventoryPresenterTests.CreatePresenter`).
 
-**Rule:** Any bug involving animated hide/show needs at least one test with a **real panel** or an explicit `IsClosing` regression test on the presenter path.
+**Rule:** Any bug involving animated hide/show needs at least one test with a **real panel** or an explicit `IsSettling` regression test on the presenter path.
 
 ---
 
@@ -155,8 +181,9 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 | Topic | Doc |
 |-------|-----|
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
-| Presentation lifecycle (planned API, pull order) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle-in-progress) |
+| Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
+| ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
 | **Gotchas (this page)** | **Here** |
