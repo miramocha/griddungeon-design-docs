@@ -1,4 +1,4 @@
-# Combat
+﻿# Combat
 
 Turn-based battles: readable **AGI turn order**, **3+3 core rows** plus **+1+1 auxiliary** slots for summons/guests.
 
@@ -20,8 +20,8 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 - **Melee** without pierce targets **front row** (core + aux front) before back.
 - **Ranged / spells** — per skill targeting rules.
 - **Row collapse (locked MVP1):** when a front-row enemy dies, survivors **shift forward** (EO-style). Back-row-only remaining enemies become valid **melee** targets without pierce.
-- **AllEnemies** skills hit **occupied enemy slots** only; pierce/back flags per skill ([mvp1-class-skills](../03-content/mvp1-class-skills.md)).
-- **Status inflict:** resolve **damage first**, then roll bind/ailment if target still alive ([mvp1-class-skills § Locked](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
+- **AllEnemies** skills hit **occupied enemy slots** only; pierce/back flags per skill ([mvp1-class-skills](../03-content/class-skills.md)).
+- **Status inflict:** resolve **damage first**, then roll bind/ailment if target still alive ([mvp1-class-skills § Locked](../03-content/class-skills.md#locked-implementation-rules)).
 
 ## Turn structure — AGI order (EO-style)
 
@@ -268,7 +268,7 @@ Combat must show a **vertical strip** on the **right rail** (top → bottom = so
 | Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Protocol only; separate portrait) |
 | | Dead / KO at **queue rebuild** (round start/end); mid-round deaths **skip** turn without rebuild |
 
-**Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design-mvp1.md#view-controllers)).
+**Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design.md#view-controllers)).
 
 **Visual rules (MVP1):**
 
@@ -283,7 +283,7 @@ Combat must show a **vertical strip** on the **right rail** (top → bottom = so
 
 **Not in MVP1 UI:** speed buff/debuff reordering ([ADR 015](../../decisions/015-mvp1-combat.md)); strip order still reflects AGI at build time once those statuses ship.
 
-**Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](../mvp1-spec.md) AGI queue UI.
+**Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [MVP1 spec](../archive/mvp1-spec.md) AGI queue UI.
 
 ### Enemy roster UI (formation rows)
 
@@ -310,7 +310,7 @@ Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[
 
 ## Related docs
 
-- [MVP1 spec](../mvp1-spec.md)
+- [MVP1 spec](../archive/mvp1-spec.md)
 - [Combat scene & enemy rendering](combat-scene.md)
 - [Combat status & buffs](combat-status-and-buffs.md)
 - [Navigator](navigator.md)

@@ -1,4 +1,4 @@
-# Map reveal save format (floor packing)
+﻿# Map reveal save format (floor packing)
 
 How **exploration map reveal** is stored in the save file: runtime grids in memory, **sparse packed lists** on disk. Implementation: `FloorMapStateCodec` in the game repo (`GridDungeon.Runtime.Map`).
 
@@ -155,5 +155,5 @@ Category: **Map** (see [Assets/Tests/README.md](https://github.com/miramocha/gri
 - [Mapping](mapping.md) — player-facing reveal rules and UI
 - [ADR 002 — Mapping model](../../decisions/002-mapping-model.md) — auto-reveal, no drawing
 - [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md) — bump, perimeter, persist
-- [05 — Class design MVP1 § Map data](../05-class-design-mvp1.md#map-data-model) — type sketches
+- [05 — Class design MVP1 § Map data](../05-class-design.md#map-data-model) — type sketches
 - [04 — Tech notes § Map system](../04-tech-notes.md#map-system) — module overview

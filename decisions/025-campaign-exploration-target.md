@@ -1,4 +1,4 @@
-# ADR 025 — Campaign exploration target (per-stratum policy)
+﻿# ADR 025 — Campaign exploration target (per-stratum policy)
 
 **Status:** Proposed (stub)  
 **Date:** 2026-05-22  
@@ -60,7 +60,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 
 ## Consequences (when implemented)
 
-- [05 — Class design MVP1](../docs/05-class-design-mvp1.md) — update `ExplorationPhaseController` sketch and campaign types.
+- [05 — Class design MVP1](../docs/05-class-design.md) — update `ExplorationPhaseController` sketch and campaign types.
 - [game phase](../docs/02-systems/game-phase.md) — hub → explore table references policy dispatch, not only S1.
 - [improvement plan](../docs/plans/core-assembly-improvement-plan.md) — link this ADR from §0.2 / §1.1 audit row for `Core/Campaign/`.
 - **Tests:** per-stratum fixtures under `Tests/GameFlow/` (e.g. `S1CampaignResolverTests`, future `S2CampaignResolverTests`).

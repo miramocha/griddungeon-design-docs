@@ -1,6 +1,8 @@
-# Autopilot (MVP2)
+﻿# Autopilot (MVP2)
 
 **Scope:** MVP2 — not required for first playable ([release scope](../00-release-scope.md)).
+
+> **Scope: Optional feature** — not required for initial release.
 
 **Autopilot** pathfinds and walks the party along **already discovered** floor tiles so players skip manual stepping on routes they mapped earlier. EO uses **drawn paths**; Grid Dungeon uses **auto-reveal only** ([ADR 002](../../decisions/002-mapping-model.md)) — autopilot replaces drawn paths with routing on **revealed walkable** cells.
 
@@ -125,7 +127,7 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 | Map click → goal | `MapView` / exploration presenter → `AutopilotController` |
 | Overlay | `MapView` |
 
-Add class sketch to [05 — Class design MVP1](../05-class-design-mvp1.md) when implementing.
+Add class sketch to [05 — Class design MVP1](../05-class-design.md) when implementing.
 
 ---
 

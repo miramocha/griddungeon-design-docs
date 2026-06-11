@@ -1,6 +1,6 @@
-# Class Design — MVP1
+﻿# Class Design — MVP1
 
-Concrete classes, interfaces, and enums for the MVP1 implementation. Derived from [tech notes](04-tech-notes.md), [MVP1 spec](mvp1-spec.md), [ADR 014–016](../decisions/), and all locked system docs.
+Concrete classes, interfaces, and enums for the MVP1 implementation. Derived from [tech notes](04-tech-notes.md), [MVP1 spec](archive/mvp1-spec.md), [ADR 014–016](../decisions/), and all locked system docs.
 
 > **Status:** design draft — structure locked for MVP1; **game phase flow locked** ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md)); other naming open for bikeshedding before first `.cs` files commit.
 
@@ -125,7 +125,7 @@ class SkillDefinition : ScriptableObject
 {
     string skillId;
     string displayName;
-    string descriptionEn;         // mechanical summary for picker detail / tooltips — no exact MP/power/% in prose ([mvp1-class-skills](03-content/mvp1-class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
+    string descriptionEn;         // mechanical summary for picker detail / tooltips — no exact MP/power/% in prose ([mvp1-class-skills](03-content/class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
     SkillType skillType;
     DamageElement element;
     BodyPart bodyPartTag;         // which bind blocks this skill
@@ -1338,7 +1338,7 @@ Assets/
 
 These string IDs must be stable across code and SO assets.
 
-**Full skill kit (targeting, effects, stubs):** [MVP1 class skills](03-content/mvp1-class-skills.md).
+**Full skill kit (targeting, effects, stubs):** [MVP1 class skills](03-content/class-skills.md).
 
 | Type | ID | Notes |
 |------|----|-------|
@@ -1354,7 +1354,7 @@ These string IDs must be stable across code and SO assets.
 | Equipment | `guild_shortsword`, `leather_coif`, `leather_jacket`, `leather_boots`, `scout_charm` | MVP1 shop slice — [progression § MVP1 equipment](02-systems/character-progression.md#mvp1-equipment-locked) |
 | Status | `poison`, `sleep`, `panic`, `bind_head`, `bind_arm` | MVP1 subset |
 | Stat mods | `offense_up`, `offense_down`, `defense_up`, `defense_down`, `magic_up`, `magic_down`, `speed_up`, `speed_down`, `blind`, `regen` | |
-| Enemy | `stray_hound`, `rust_mite`, `gutter_crow`, `scrapling`, `shackle_rat`, `venom_slime`, `alley_thug`, `rubble_guard`, `s1_warden` | [mvp1-enemy-roster](03-content/mvp1-enemy-roster.md) |
+| Enemy | `stray_hound`, `rust_mite`, `gutter_crow`, `scrapling`, `shackle_rat`, `venom_slime`, `alley_thug`, `rubble_guard`, `s1_warden` | [mvp1-enemy-roster](03-content/enemy-roster.md) |
 | Enemy skill | `enemy_attack`, `atk_peck_volt`, `atk_bind_arm`, `atk_poison_spit`, `atk_heavy_swing`, `atk_guard_slam`, `atk_warden_bind`, `atk_warden_venom` | Enemy pool only |
 | Encounter group | `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden`, `grp_b1_chaff_hound`, `grp_b1_chaff_mite`, `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime`, `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | Slot layouts in roster doc |
 | FOE entity | `foe_alley_stalker`, `foe_s1_warden` | Map keys; not `EnemyDefinition` ids |
@@ -1416,9 +1416,9 @@ struct ExplorationStateSave
 
 ## Related docs
 
-- [MVP1 enemy roster](03-content/mvp1-enemy-roster.md) — locked S1 enemies, groups, skill stubs
+- [MVP1 enemy roster](03-content/enemy-roster.md) — locked S1 enemies, groups, skill stubs
 - [04 — Tech notes](04-tech-notes.md) — engine stack, high-level module map, save format
-- [MVP1 spec](mvp1-spec.md) — systems checklist
+- [MVP1 spec](archive/mvp1-spec.md) — systems checklist
 - [ADR 014 — MVP1 exploration & map](../decisions/014-mvp1-exploration-map.md)
 - [ADR 015 — MVP1 combat](../decisions/015-mvp1-combat.md)
 - [ADR 016 — Summon control MVP1](../decisions/016-summon-control-mvp1.md)
@@ -1427,7 +1427,7 @@ struct ExplorationStateSave
 - [Combat](02-systems/combat.md)
 - [Combat status & buffs](02-systems/combat-status-and-buffs.md)
 - [Party & classes](02-systems/party-and-classes.md)
-- [MVP1 class skills](03-content/mvp1-class-skills.md)
+- [MVP1 class skills](03-content/class-skills.md)
 - [Character progression](02-systems/character-progression.md)
 - [FOE encounters](02-systems/foe-encounters.md)
 - [Side dungeons (MVP3)](02-systems/side-dungeons.md)

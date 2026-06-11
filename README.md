@@ -1,4 +1,4 @@
-# Grid Dungeon — Design Docs
+﻿# Grid Dungeon — Design Docs
 
 First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey** — mapping as gameplay, FOE threats, guild hub loop, and AGI-driven combat turns.
 
@@ -15,7 +15,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Dev / integrator** — [04-dev/](docs/04-dev/README.md) (e.g. [UI event contract](docs/04-dev/ui-event-contract.md), [shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md), [custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md), [custom party UI](docs/04-dev/custom-party-ui.md))
 - **Decisions** — ADRs when we lock a design choice
 - **Refs** — visual / UX scratchpads (screenshots, links; not spec authority)
-- **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/mvp1-spec.md)** (implementation checklist)
+- **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/archive/mvp1-spec.md)** (implementation checklist)
 
 ## Release milestones
 
@@ -29,7 +29,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 | Doc | Status | Summary |
 |-----|--------|---------|
-| [MVP1 spec](docs/mvp1-spec.md) | Active | MVP1 checklist + locked rules |
+| [MVP1 spec](docs/archive/mvp1-spec.md) | Active | MVP1 checklist + locked rules |
 | [00 — Release scope](docs/00-release-scope.md) | Draft | MVP1, MVP2, MVP3, later |
 | [00 — Vision](docs/00-vision.md) | Draft | EO-first pillars, inspirations |
 | [00 — Game references](docs/00-game-references.md) | Draft | EO + Mary Skelter, etc. — future design reference |
@@ -57,14 +57,14 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
 | [02 — UVS phase & presentation](docs/02-systems/uvs-phase-presentation.md) | Draft | Optional Visual Scripting hooks: `GameState`, movement, gates, examples |
-| [05 — Class design MVP1](docs/05-class-design-mvp1.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
+| [05 — Class design MVP1](docs/05-class-design.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |
 | [02 — Autopilot](docs/02-systems/autopilot.md) | MVP2 | Pathfind to discovered tile on map |
 | [02 — Side dungeons](docs/02-systems/side-dungeons.md) | MVP3 | Hub menu → non-strata grid maps |
 | [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; B1F–B3F MVP1 layouts |
-| [03 — MVP1 enemy roster](docs/03-content/mvp1-enemy-roster.md) | Draft | S1 enemy stats/skills, encounter groups, FOE mapping ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2)) |
-| [03 — MVP1 class skills](docs/03-content/mvp1-class-skills.md) | Locked | 3 skills × 6 classes; deploy + summon script IDs ([#3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
+| [03 — MVP1 enemy roster](docs/03-content/enemy-roster.md) | Draft | S1 enemy stats/skills, encounter groups, FOE mapping ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2)) |
+| [03 — MVP1 class skills](docs/03-content/class-skills.md) | Locked | 3 skills × 6 classes; deploy + summon script IDs ([#3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
 | [ADR 001 — Grid movement](decisions/001-grid-movement.md) | Accepted | Step lerp, hold-to-repeat, strafe, turn rules |
@@ -128,7 +128,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 ## Open questions
 
-- MVP1 **structure** locked — [mvp1-spec](docs/mvp1-spec.md), [ADR 014](decisions/014-mvp1-exploration-map.md), [ADR 015](decisions/015-mvp1-combat.md)
+- MVP1 **structure** locked — [mvp1-spec](docs/archive/mvp1-spec.md), [ADR 014](decisions/014-mvp1-exploration-map.md), [ADR 015](decisions/015-mvp1-combat.md)
 - **Map during combat** — show persistent schematic for incoming FOE threat vs `M` toggle only? [mapping § Consider / explore](docs/02-systems/mapping.md#consider--explore--map-during-combat) (ties to [ADR 005](decisions/005-foe-combat-patrol.md))
 - **Navigator 3D presence** — bottom-right model in exploration + combat; Protocol Deploy → aux slot, Transform → core slot transition — [navigator § Consider / explore](docs/02-systems/navigator.md#consider--explore--navigator-3d-presence)
 - Remaining work: **content** (floors, enemies, skills), **tuning numbers**, MVP2 features

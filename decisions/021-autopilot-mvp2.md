@@ -1,4 +1,6 @@
-# ADR 021 — Autopilot (MVP2)
+﻿# ADR 021 — Autopilot (MVP2)
+
+> **Scope: Optional feature** — not required for initial release.
 
 **Status:** Accepted (MVP2 scope)  
 **Date:** 2026-05-21
@@ -11,7 +13,7 @@ MVP1: **manual** grid steps + hold-to-repeat only ([ADR 001](001-grid-movement.m
 
 ## Decision
 
-1. **Defer to MVP2** — no autopilot in MVP1 ([mvp1-spec](../docs/mvp1-spec.md)).
+1. **Defer to MVP2** — no autopilot in MVP1 ([mvp1-spec](../docs/archive/mvp1-spec.md)).
 2. **Autopilot** — on the map, player selects a **revealed walkable** destination; runtime **pathfinds** on discovered floor cells and walks the party along that path one grid step at a time ([autopilot](../docs/02-systems/autopilot.md)).
 3. **Discovered-only graph** — path nodes are cells the auto-map has charted as walkable floor on the current `level`; **no** routing through unrevealed/fog tiles.
 4. **No player path drawing** — does not amend ADR 002.

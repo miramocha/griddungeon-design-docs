@@ -1,4 +1,4 @@
-# Summons & Guests (Auxiliary slots)
+﻿# Summons & Guests (Auxiliary slots)
 
 Combat formation extends the core **3+3 guild party** with **one auxiliary slot per row** — front and back — for **summons** or **guest** allies.
 
@@ -38,7 +38,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 | **Death** | Disappears; no hospital revive |
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
-**Stacking:** One summon per aux slot. **`deploy_scout_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/mvp1-class-skills.md#locked-implementation-rules)).
+**Stacking:** One summon per aux slot. **`deploy_scout_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/class-skills.md#locked-implementation-rules)).
 
 ### Navigator sortie (Protocol Deploy — post-MVP1)
 
@@ -71,7 +71,7 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 |---------|------|
 | **Attack** | Standard melee/ranged attack action |
 | **Guard** | Self guard |
-| **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([mvp1-class-skills](../03-content/mvp1-class-skills.md#summon-kit-scout_drone)) |
+| **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([mvp1-class-skills](../03-content/class-skills.md#summon-kit-scout_drone)) |
 
 **UI during planning:** aux portrait in party roster (front/back slot); highlight when `CommandTarget`; command panel Attack / Guard / Skill (summon kit). **UI during AGI:** strip highlight on acting aux; command panel **disabled** — playback only.
 

@@ -1,4 +1,6 @@
-# ADR 027 — Combat Cinematic Timeline Events
+﻿# ADR 027 — Combat Cinematic Timeline Events
+
+> **Scope: Optional feature** — not required for initial release.
 
 **Status:** Accepted  
 **Date:** 2026-05-23  
@@ -148,5 +150,5 @@ Confirm skill (Cinematic | CinematicQTE)
 - [ADR 018 — Exploration animation speed](018-exploration-animation-speed.md) (orthogonal — exploration presets only)
 - [Combat presentation](../docs/02-systems/combat-presentation.md)
 - [04 — Tech notes § Animation](../docs/04-tech-notes.md#animation-dotween--timeline)
-- [05 — Class design MVP1 § Skills](../docs/05-class-design-mvp1.md#skills)
+- [05 — Class design MVP1 § Skills](../docs/05-class-design.md#skills)
 - [Input bindings — cinematic QTE](../docs/02-systems/input-bindings.md#cinematic-qte)

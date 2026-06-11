@@ -1,4 +1,4 @@
-# ADR 022 — Side dungeons (MVP3)
+﻿# ADR 022 — Side dungeons (MVP3)
 
 **Status:** Accepted (MVP3 scope)  
 **Date:** 2026-05-21
@@ -21,7 +21,7 @@ The EO-style loop uses **strata** as the main campaign vertical slice ([dungeons
 
 - [Side dungeons](../docs/02-systems/side-dungeons.md) is the rules authority.
 - [Hub & services](../docs/02-systems/hub-and-services.md), [game phase](../docs/02-systems/game-phase.md), [01 — Core loop](../docs/01-core-loop.md) gain MVP3 cross-links.
-- [05 — Class design MVP1](../docs/05-class-design-mvp1.md) appendix sketches API/save only — MVP1 implementation unchanged.
+- [05 — Class design MVP1](../docs/05-class-design.md) appendix sketches API/save only — MVP1 implementation unchanged.
 - `griddungeon-game`: implement in MVP3 milestone after MVP2 material loop.
 
 ## Related

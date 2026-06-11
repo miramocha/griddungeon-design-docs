@@ -1,10 +1,10 @@
-# Core assembly — improvement plan (Unity-only)
+﻿# Core assembly — improvement plan (Unity-only)
 
 **Status:** Draft  
 **Last updated:** 2026-05-22  
 **Scope:** `GridDungeon.Core` boundaries inside `griddungeon-game`; no non-Unity extraction, no second-repo split unless a second Unity project appears.
 
-**Related:** [05-class-design MVP1](../05-class-design-mvp1.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
+**Related:** [05-class-design MVP1](../05-class-design.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
 ---
 
@@ -85,7 +85,7 @@
 | Task | Priority |
 |------|----------|
 | Treat class design “CI without headless Unity” as **aspirational** until a second harness exists | Low |
-| Link this plan from [05-class-design](../05-class-design-mvp1.md) assembly table | Done in same PR as this file |
+| Link this plan from [05-class-design](../05-class-design.md) assembly table | Done in same PR as this file |
 | Game repo Scripts README points here for assembly strategy | Done in same PR |
 
 ### Phase 0 exit criteria
@@ -254,6 +254,6 @@ GridDungeon.Core   →  (none)
 
 ### Links
 
-- Implementation tree: [05-class-design MVP1 § MVP1 folder tree](../05-class-design-mvp1.md)
+- Implementation tree: [05-class-design MVP1 § MVP1 folder tree](../05-class-design.md)
 - Phase ownership: [game-phase.md](../02-systems/game-phase.md)
 - ADR 017 (phase controller): [017-game-phase-controller](../../decisions/017-game-phase-controller.md)

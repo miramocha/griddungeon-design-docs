@@ -1,4 +1,4 @@
-# ADR 019 — Floor Verticality (Doom-style)
+﻿# ADR 019 — Floor Verticality (Doom-style)
 
 **Status:** Accepted  
 **Date:** 2026-05-21
@@ -58,4 +58,4 @@ Some floors need **height bands** (upper walkways, pits, jump pads) while keepin
 - [ADR 002 — Mapping model](002-mapping-model.md)
 - [ADR 001 — Grid movement](001-grid-movement.md)
 - [ADR 003 — FOE step patrol](003-foe-step-patrol.md)
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)

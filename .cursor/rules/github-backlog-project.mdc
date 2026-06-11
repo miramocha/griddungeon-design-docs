@@ -1,11 +1,11 @@
----
+﻿---
 description: GitHub Project backlog for Grid Dungeon — read config before ticket/backlog queries
 alwaysApply: true
 ---
 
 # GitHub backlog project
 
-Grid Dungeon MVP1 work is tracked on **[Codename: GridDungeon](https://github.com/users/miramocha/projects/3)** (GitHub Project #3, owner `miramocha`).
+Grid Dungeon required-feature work is tracked on **[Codename: GridDungeon](https://github.com/users/miramocha/projects/3)** (GitHub Project #3, owner `miramocha`).
 
 ## Config file (read first)
 
@@ -20,7 +20,7 @@ The only per-repo difference is **`repoPrefer`** — project identity and column
 
 ## Pull order
 
-Wave labels (`pull-w01` … `pull-w08`) and epic trackers are documented in design-docs [mvp1-spec §7](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/mvp1-spec.md#7-pull-order-github-backlog) (also linked as `pullOrderDoc` in the JSON).
+Wave labels (`pull-w01` … `pull-w08`) are legacy labels; new work uses `required` / `optional` labels. Pull-order history is archived at [docs/archive/mvp1-spec.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-spec.md) (also linked as `pullOrderDoc` in the JSON).
 
 ## Skill workflow
 

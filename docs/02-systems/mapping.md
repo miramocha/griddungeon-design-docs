@@ -1,4 +1,4 @@
-# Mapping
+﻿# Mapping
 
 The labyrinth **reveals itself** as the party explores. There are **no manual drawing tools** (no wall/door/icon toolbar, eraser, or map notes). The map panel is **read-only** — a record of what the party has already discovered.
 
@@ -94,7 +94,7 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 ### Implementation notes (if we adopt A or B)
 
-- `MapView` today lives on the **`ExplorationHud`** GameObject only ([exploration UI](exploration-ui.md), [class design § View controllers](../05-class-design-mvp1.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
+- `MapView` today lives on the **`ExplorationHud`** GameObject only ([exploration UI](exploration-ui.md), [class design § View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
 - FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
 - Arena stays **slot-based** ([combat scene](combat-scene.md)) — map shows **grid** threat, not live battle positions.
 

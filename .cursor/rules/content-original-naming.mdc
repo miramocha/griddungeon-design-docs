@@ -1,4 +1,4 @@
----
+﻿---
 description: Original names for content IDs — do not copy reference-game item/skill/enemy names
 globs: docs/**/*.md, decisions/**/*.md
 alwaysApply: false
@@ -29,8 +29,8 @@ Renames already locked: [ADR 020](../decisions/020-team-burst-naming.md) (Union 
 
 ## When editing existing locked IDs
 
-- **Do not rename** locked IDs in [05-class-design-mvp1.md](../docs/05-class-design-mvp1.md#mvp1-content-ids-locked) without an explicit ticket — saves and game assets depend on them.
-- New rows in content tables (e.g. [mvp1-enemy-roster.md](../docs/03-content/mvp1-enemy-roster.md)) must follow this rule before merge.
+- **Do not rename** locked IDs in [05-class-design.md](../docs/05-class-design.md#mvp1-content-ids-locked) without an explicit ticket — saves and game assets depend on them.
+- New rows in content tables (e.g. [enemy-roster.md](../docs/03-content/enemy-roster.md)) must follow this rule before merge.
 
 ## PR / agent self-check
 

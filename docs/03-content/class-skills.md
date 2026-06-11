@@ -1,7 +1,7 @@
-# MVP1 class skills (content kit)
+﻿# MVP1 class skills (content kit)
 
 **Status:** Locked for MVP1 ContentDB ([design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12))  
-**Authority:** Skill IDs and targeting here; implementation types in [05 — Class design MVP1](../05-class-design-mvp1.md).
+**Authority:** Skill IDs and targeting here; implementation types in [05 — Class design MVP1](../05-class-design.md).
 
 ---
 
@@ -158,6 +158,6 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 - [Party & classes](../02-systems/party-and-classes.md) — roster, deploy rules
 - [Summons & guests](../02-systems/summons-and-guests.md) — aux slots, `scout_drone` kit
 - [Combat](../02-systems/combat.md) — damage pipeline, targeting, row collapse
-- [05 — Class design MVP1 § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked)
-- [MVP1 spec](../mvp1-spec.md) — checklist row
+- [05 — Class design MVP1 § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked)
+- [MVP1 spec](../archive/mvp1-spec.md) — checklist row
 - [ADR 016](../../decisions/016-summon-control-mvp1.md) — summon player control

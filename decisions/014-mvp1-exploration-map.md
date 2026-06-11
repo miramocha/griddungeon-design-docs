@@ -1,4 +1,4 @@
-# ADR 014 — MVP1 Exploration & Map
+﻿# ADR 014 — Exploration & Map
 
 **Status:** Accepted  
 **Date:** 2026-05-20
@@ -18,7 +18,7 @@
 
 ## Related
 
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)
 - [Mapping](../docs/02-systems/mapping.md)
 - [Exploration UI](../docs/02-systems/exploration-ui.md) — `MapView` / pause bind lifecycle
 - [ADR 002](002-mapping-model.md)

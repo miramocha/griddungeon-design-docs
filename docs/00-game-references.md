@@ -1,4 +1,4 @@
-# Game references
+﻿# Game references
 
 Curated titles for **future design and tone checks**. **MVP1 authority** stays **Etrian Odyssey–first** ([00 — Vision](00-vision.md)); entries here inform optional systems, UX, and post-MVP1 ideas — they do not override locked ADRs unless we explicitly amend one.
 
@@ -105,4 +105,4 @@ When a feature proposal cites Mary Skelter, link it here and note **EO compatibi
 
 - [00 — Vision](00-vision.md)
 - [00 — Release scope](00-release-scope.md)
-- [MVP1 spec](mvp1-spec.md)
+- [MVP1 spec](archive/mvp1-spec.md)

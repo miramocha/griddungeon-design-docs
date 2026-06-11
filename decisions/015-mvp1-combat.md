@@ -1,4 +1,4 @@
-# ADR 015 — MVP1 Combat
+﻿# ADR 015 — Combat
 
 **Status:** Accepted  
 **Date:** 2026-05-20  
@@ -18,5 +18,5 @@
 
 ## Related
 
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)
 - [Combat status & buffs](../docs/02-systems/combat-status-and-buffs.md)

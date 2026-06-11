@@ -1,4 +1,4 @@
-# Guided Tutorial (player coaching)
+﻿# Guided Tutorial (player coaching)
 
 **Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **MVP1 (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Post-MVP1:** Act 1 coach, `GuidedTutorialController`, pause-menu codex ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 
@@ -45,7 +45,7 @@ A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (
 | **Hub** | `Hub` | Page block when used | **Blocking** while open |
 | **Codex** | **Pause menu** (`Esc` — exploration / combat / hub) | Read-only replay of unlocked entries | Non-blocking navigation inside codex UI |
 
-**Post-MVP1** ships Act 1 exploration entries + B2F Protocol coach + **codex replay** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). **MVP1** uses VN + Protocol HUD gate only ([mvp1-spec §5](../../docs/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)). Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
+**Post-MVP1** ships Act 1 exploration entries + B2F Protocol coach + **codex replay** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). **MVP1** uses VN + Protocol HUD gate only ([mvp1-spec §5](../../docs/archive/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)). Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
 
 Early MVP: one simple **tutorial panel** layout (screen block + optional still / short clip) — not separate toast vs VN chrome stacks.
 
@@ -232,5 +232,5 @@ Deferred: map (`M`) coach, shared panel UXML with story layer, authoring format 
 - [S1 guided tutorials (content)](../03-content/campaign/s1-guided-tutorials.md)
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [Story events](story-events.md)
-- [mvp1-spec §1](../mvp1-spec.md#1-player-facing-loop-mvp1)
-- [05 — class design § CombatEntryContext](../05-class-design-mvp1.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via `CombatTutorialHudRules`
+- [mvp1-spec §1](../archive/mvp1-spec.md#1-player-facing-loop-mvp1)
+- [05 — class design § CombatEntryContext](../05-class-design.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via `CombatTutorialHudRules`

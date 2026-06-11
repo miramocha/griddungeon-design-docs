@@ -1,4 +1,4 @@
-# Navigator
+﻿# Navigator
 
 **Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
@@ -156,7 +156,7 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 
 ## MVP1 content (locked)
 
-Matches [mvp1-spec §4](../mvp1-spec.md#4-mvp1-navigator--synchro-protocol) and [class design — MVP1 IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked).
+Matches [mvp1-spec §4](../archive/mvp1-spec.md#4-mvp1-navigator--synchro-protocol) and [class design — MVP1 IDs](../05-class-design.md#mvp1-content-ids-locked).
 
 | Navigator | `navigator_id` | Unlock | Aura (MVP1) | Protocol kit |
 |-----------|----------------|--------|-------------|--------------|

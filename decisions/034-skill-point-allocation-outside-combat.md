@@ -1,4 +1,4 @@
-# ADR 034 — Skill point allocation outside combat
+﻿# ADR 034 — Skill point allocation outside combat
 
 **Status:** Accepted (MVP1)  
 **Date:** 2026-05-30  
@@ -51,7 +51,7 @@ Players should be able to **react to a level-up** (or spend banked points) **wit
 - **`HubServices.TryAllocateSkillPoint`** (game repo) — extend or extract to `PartyProgressionService` (or equivalent) used by Guild **and** exploration menus
 - **Exploration UI** — party menu / pause **Skills** screen (may not exist yet); gate on ADR §1 blockers
 - **Save:** `AllocatedSkillPoints` / `AllocatedSkillIds` unchanged — allocation timing only
-- **MVP1 trees:** still flat 3 nodes per class ([mvp1-class-skills](../docs/03-content/mvp1-class-skills.md))
+- **MVP1 trees:** still flat 3 nodes per class ([mvp1-class-skills](../docs/03-content/class-skills.md))
 
 ## Implementation (game repo)
 
@@ -67,7 +67,7 @@ No mandatory issue number at accept time — file against hub/exploration UI or 
 
 - [Party & classes](../docs/02-systems/party-and-classes.md)
 - [Hub & services](../docs/02-systems/hub-and-services.md)
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)
 - [ADR 007 — Navigator role](007-navigator-role.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
 - [ADR 028 — Story visual novel events](028-story-visual-novel-events.md)

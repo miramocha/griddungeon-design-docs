@@ -1,5 +1,7 @@
 # ADR 033 — Hub environment camera (Cinemachine)
 
+> **Scope: Optional feature** — not required for initial release.
+
 **Status:** Accepted  
 **Date:** 2026-05-29  
 **Aligns with:** [ADR 012](012-unity-6-stack.md) (Cinemachine in stack), [ADR 017](017-game-phase-controller.md) (phase-owned presentation), [ADR 032](032-floor-transition-vignette-mvp1.md) (session brain + vcam priority pattern), [hub and services](../docs/02-systems/hub-and-services.md#hub-environment-presentation)

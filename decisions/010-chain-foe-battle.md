@@ -1,5 +1,7 @@
 # ADR 010 — FOE Mid-Battle Join
 
+> **Scope: Optional feature** — not required for initial release.
+
 **Status:** Accepted  
 **Date:** 2026-05-20  
 **Amended:** 2026-05-20  

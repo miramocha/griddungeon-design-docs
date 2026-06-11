@@ -1,4 +1,4 @@
-{
+﻿{
   "projectUrl": "https://github.com/users/miramocha/projects/3",
   "name": "Codename: GridDungeon",
   "owner": "miramocha",
@@ -13,5 +13,5 @@
   "repoPrefer": "game",
   "excludeLabels": ["blocked", "wontfix"],
   "limit": 50,
-  "pullOrderDoc": "https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/mvp1-spec.md#7-pull-order-github-backlog"
+  "pullOrderDoc": "https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-spec.md#7-pull-order-github-backlog"
 }

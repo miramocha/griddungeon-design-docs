@@ -2,6 +2,8 @@
 
 **Scope:** MVP2 — not required for first playable ([release scope](../00-release-scope.md)).
 
+> **Scope: Optional feature** — not required for initial release.
+
 Dungeon **interact nodes** where the party plays a short **minigame** to earn **materials** for [synthesis](character-progression.md) and [gather quests](../03-content/dungeons-and-encounters.md). EO parallel: chop/mining points; fishing adds a pacing break and stratum-flavored loot.
 
 ## Design goals

@@ -1,4 +1,6 @@
-# Release Scope
+﻿# Release Scope
+
+> **Terminology update** — "MVP1" is now **Required features** and "MVP2/MVP3" are **Optional features**. This document is preserved for historical reference; see project board for current feature status.
 
 Phased delivery for **Grid Dungeon**.
 
@@ -25,7 +27,7 @@ MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered m
 | Chest loot; gather **instant loot** (no minigame) | Fishing + gather **minigame** (MVP2) |
 | PC input defaults ([ADR 009](../decisions/009-input-bindings-pc.md)) | Rebind UI (can ship defaults only) |
 
-**Full MVP1 checklist:** [mvp1-spec.md](mvp1-spec.md) · [ADR 014](../decisions/014-mvp1-exploration-map.md) · [ADR 015](../decisions/015-mvp1-combat.md)
+**Full MVP1 checklist:** [archive/mvp1-spec.md](archive/mvp1-spec.md) · [ADR 014](../decisions/014-mvp1-exploration-map.md) · [ADR 015](../decisions/015-mvp1-combat.md)
 
 ---
 
@@ -54,7 +56,7 @@ MVP2 adds dungeon-side resource play and **autopilot** (pathfind on discovered m
 | Feature | Doc |
 |---------|-----|
 | Hub **Side expedition** menu → unlocked `locationId`s | [side dungeons](02-systems/side-dungeons.md), [hub](02-systems/hub-and-services.md) |
-| `EnterSideDungeon` (separate from `LeaveHub`) | [game phase](02-systems/game-phase.md), [05 — Class design MVP3 sketch](05-class-design-mvp1.md#mvp3--side-dungeons-sketch) |
+| `EnterSideDungeon` (separate from `LeaveHub`) | [game phase](02-systems/game-phase.md), [05 — Class design MVP3 sketch](05-class-design.md#mvp3--side-dungeons-sketch) |
 | Save/map keys `sd##_F#` | [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md) |
 | Placeholder content `sd01` | [side dungeons § sd01](02-systems/side-dungeons.md#placeholder-content--sd01-salvage-annex) |
 

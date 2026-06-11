@@ -1,4 +1,4 @@
-# ADR 036 — Party inventory & equipment model
+﻿# ADR 036 — Party inventory & equipment model
 
 **Status:** Proposed  
 **Date:** 2026-06-03  
@@ -10,7 +10,7 @@
 
 MVP1 needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
 
-Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design-mvp1.md#mvp1-content-ids-locked), [character progression § MVP1 equipment](../docs/02-systems/character-progression.md#mvp1-equipment-locked)).
+Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#mvp1-content-ids-locked), [character progression § MVP1 equipment](../docs/02-systems/character-progression.md#mvp1-equipment-locked)).
 
 ## Decision (MVP1)
 
@@ -28,7 +28,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 
 ### 2. Fixed bag slots (EO-style)
 
-- **`partyBagSlotCount`** default **30** — tuning constant ([mvp1-spec §6](../docs/mvp1-spec.md#6-open-for-tuning-only-locked-structure)).
+- **`partyBagSlotCount`** default **30** — tuning constant ([mvp1-spec §6](../docs/archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)).
 - Each slot: **empty**, **one consumable/material stack**, or **one equipment instance** — never both; no multi-slot stacks.
 - Equipped items **do not** consume bag slots.
 

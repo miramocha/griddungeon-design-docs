@@ -1,8 +1,8 @@
-# Stratum 1 — Campaign intro (MVP1)
+﻿# Stratum 1 — Campaign intro (MVP1)
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Floor layouts (ASCII, FOE YAML):** [dungeons — MVP1 §](../dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) — do not duplicate grids here.  
-**Enemy stats / encounter groups:** [mvp1-enemy-roster](../mvp1-enemy-roster.md).  
+**Enemy stats / encounter groups:** [mvp1-enemy-roster](../enemy-roster.md).  
 **Hub services (Act 2):** [hub — S1 intro](../../02-systems/hub-and-services.md#stratum-1-intro)  
 **Guided tutorials (S1):** [s1-guided-tutorials](s1-guided-tutorials.md) · [system](../../02-systems/guided-tutorial.md)  
 **Synchro tutorial FOE:** [synchro — S1 gating](../../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe) · [B2F FOE](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe) · **Rules:** [#10](https://github.com/miramocha/griddungeon-game/issues/10) · **VN:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) · **Coach:** [#88](https://github.com/miramocha/griddungeon-game/issues/88) · **HUD:** [#35](https://github.com/miramocha/griddungeon-game/issues/35) (done)
@@ -63,7 +63,7 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 
 - **`v` B1F → B2F:** blocked until Act 3 (`s1_tutorial_dive_started`).
 - **B3F / north path:** blocked until `s1_first_foe_tutorial_complete` (tutorial FOE on B2F).
-- **Win:** defeat `foe_s1_warden` on B3F ([mvp1-spec §3](../../mvp1-spec.md#3-content-slice-stratum-1-mvp1)).
+- **Win:** defeat `foe_s1_warden` on B3F ([mvp1-spec §3](../../archive/mvp1-spec.md#3-content-slice-stratum-1-mvp1)).
 
 ---
 
@@ -71,7 +71,7 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 
 - [s1-guided-tutorials.md](s1-guided-tutorials.md) — Act 1 / hub / combat coach beats
 - [guided-tutorial.md](../../02-systems/guided-tutorial.md) — system (modes, schema, runtime)
-- [mvp1-spec §1](../../mvp1-spec.md#1-player-facing-loop-mvp1) — player-facing loop
+- [mvp1-spec §1](../../archive/mvp1-spec.md#1-player-facing-loop-mvp1) — player-facing loop
 - [01 — Core loop](../../01-core-loop.md)
 - [game-phase](../../02-systems/game-phase.md) — new game bootstrap, `LeaveHub`
 - [foe-encounters — tutorial FOE](../../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)

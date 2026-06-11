@@ -1,4 +1,4 @@
-# Floor level painter (Unity Editor)
+﻿# Floor level painter (Unity Editor)
 
 **Status:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)  
 **Authority:** [ADR 002 — floor level painter](../decisions/002-mapping-model.md#authoring--floor-level-painter-primary)
@@ -83,4 +83,4 @@ Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](
 ## Related
 
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
-- [05-class-design — `FloorPainterWindow`](05-class-design-mvp1.md)
+- [05-class-design — `FloorPainterWindow`](05-class-design.md)

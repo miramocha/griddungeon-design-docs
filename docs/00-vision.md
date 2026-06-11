@@ -1,4 +1,4 @@
-# 00 — Vision
+﻿# 00 — Vision
 
 ## Elevator pitch
 
@@ -65,7 +65,7 @@ Exploration camera follows the **party on the grid**; identity and dialogue rema
 
 ## Success criteria (MVP1)
 
-See [mvp1-spec.md](mvp1-spec.md) for full checklist. Prototype bar:
+See [archive/mvp1-spec.md](archive/mvp1-spec.md) for full checklist. Prototype bar:
 
 - [ ] Explore a test floor in FPV; **map auto-reveals** floor and walls on bump
 - [ ] **FOE** appears on map when visible; combat on contact

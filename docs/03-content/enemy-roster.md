@@ -1,4 +1,4 @@
-# MVP1 enemy roster (Stratum 1)
+﻿# MVP1 enemy roster (Stratum 1)
 
 **Tracking:** [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) · **Implementation:** [game #12](https://github.com/miramocha/griddungeon-game/issues/12) (`ContentDatabase` + `EnemyDefinition` / `EncounterGroup` SOs)
 
@@ -10,7 +10,7 @@
 | Campaign acts, save flags, tutorial FOE rules | [campaign/s1-intro](campaign/s1-intro.md) · [foe-encounters — tutorial](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker) |
 | **This file** | Locked enemy IDs, stats stubs, skills, encounter groups, FOE ↔ group mapping |
 
-Tuning numbers may move in data ([mvp1-spec §6](../mvp1-spec.md#6-open-for-tuning-only-locked-structure)); **IDs and group compositions are locked** for MVP1.
+Tuning numbers may move in data ([mvp1-spec §6](../archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)); **IDs and group compositions are locked** for MVP1.
 
 ---
 
@@ -45,7 +45,7 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling in MVP1). **ATK** in
 
 ## Enemy skill stubs
 
-Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design-mvp1.md#skills)); enemy AI picks from `skillIds` (MVP1: weighted random or cycle — implementation in game #12).
+Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` (MVP1: weighted random or cycle — implementation in game #12).
 
 | Skill ID | `descriptionEn` | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
 |----------|-----------------|------|---------|------|----|----------------|--------|---------------|---------|
@@ -64,7 +64,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## Encounter groups
 
-`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤3 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([05 — enemies & encounters](../05-class-design-mvp1.md#enemies--encounters)). Slot order = left-to-right in combat UI.
+`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤3 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([05 — enemies & encounters](../05-class-design.md#enemies--encounters)). Slot order = left-to-right in combat UI.
 
 ### FOE & boss (authored spawns)
 
@@ -124,7 +124,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## ContentDatabase checklist (game #12)
 
-Author under `Assets/Content/Enemies/` and `Assets/Content/Encounters/` per [05 — folder structure](../05-class-design-mvp1.md#folder-structure-game-repo).
+Author under `Assets/Content/Enemies/` and `Assets/Content/Encounters/` per [05 — folder structure](../05-class-design.md#folder-structure-game-repo).
 
 | Asset kind | Count | IDs |
 |------------|-------|-----|
@@ -146,13 +146,13 @@ Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeo
 | Encounter groups incl. `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden` | ✅ [FOE & boss](#foe--boss-authored-spawns) |
 | Stats/skills stubs for MVP1 fights | ✅ [stats](#enemy-definitions-9-types) · [skills](#enemy-skill-stubs) |
 | FOE vs random per floor | ✅ [placement table](#foe-vs-random-placement-per-floor) · [dungeons](dungeons-and-encounters.md#mvp1-floor-summary) |
-| Locked IDs in [05 — content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
+| Locked IDs in [05 — content IDs](../05-class-design.md#mvp1-content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
 | Unity SOs / `ContentDatabase` | ⬜ **game #12** |
 
 ---
 
 ## Related
 
-- [mvp1-spec — combat content](../mvp1-spec.md#combat-adr-015)
+- [mvp1-spec — combat content](../archive/mvp1-spec.md#combat-adr-015)
 - [combat scene — enemy slots](../02-systems/combat-scene.md)
 - [synchro — S1 first FOE](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)

@@ -1,8 +1,8 @@
-# Items & inventory
+﻿# Items & inventory
 
 Party **bag** (shared, fixed slots) and **worn equipment** (per core member). **Credits** (hub wallet) stay on save — not a bag slot.
 
-**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked) · equipment stats table [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked)
+**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked) · equipment stats table [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked)
 
 **Implementation tracker:** [design-docs #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) · [game epic #151](https://github.com/miramocha/griddungeon-game/issues/151) (#152–#157, loot [#31](https://github.com/miramocha/griddungeon-game/issues/31))
 
@@ -56,7 +56,7 @@ Shop/hospital/identify copy uses the **display label** via `Mvp1HubConstants.Cur
 
 ## Bag model (MVP1)
 
-- **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([mvp1-spec §6](../mvp1-spec.md#6-open-for-tuning-only-locked-structure)); tune in data, not code forks.
+- **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([mvp1-spec §6](../archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)); tune in data, not code forks.
 - Each slot holds **at most one** of:
   - **Empty**
   - **Consumable stack** — one `itemId`, quantity ≤ `ItemDefinition.maxStack`
@@ -92,7 +92,7 @@ sealed class PartyInventory
 
 ## Worn equipment (per character)
 
-Five slots per core — `EquipSlot`: Weapon, Head, Body, Legs, Accessory ([05 — Class design](../05-class-design-mvp1.md)).
+Five slots per core — `EquipSlot`: Weapon, Head, Body, Legs, Accessory ([05 — Class design](../05-class-design.md)).
 
 ```csharp
 sealed class EquipmentLoadout
@@ -135,7 +135,7 @@ Stat and resist bonuses: full table in [character progression § MVP1 equipment]
 
 ## Consumables
 
-Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design-mvp1.md#mvp1-content-ids-locked):
+Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked):
 
 | `itemId` | MVP1 use context |
 |----------|------------------|
@@ -332,5 +332,5 @@ Coordinate equipment SOs with [#12](https://github.com/miramocha/griddungeon-gam
 - [Gathering & fishing](gathering-and-fishing.md) — MVP2 materials
 - [Input bindings](input-bindings.md) — `Tab`, inventory modal
 - [Combat](combat.md) — Item command
-- [05 — Class design](../05-class-design-mvp1.md) — SO sketches, save types
+- [05 — Class design](../05-class-design.md) — SO sketches, save types
 - [UI event contract](../04-dev/ui-event-contract.md) — phase events

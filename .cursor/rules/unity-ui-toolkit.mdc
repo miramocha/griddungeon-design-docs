@@ -89,7 +89,7 @@ New UI should **compose** existing shared blocks under `Assets/UI/Screens/Shared
 **Before adding a new UXML file**, ask:
 
 1. Does a shared component already cover this? → extend profile, modifier, or presenter instead.
-2. Will a second screen need the same chrome within MVP1? → put it in `Shared/` with its own `UIDocument` + presenter ([centralized UI services](../../docs/04-dev/centralized-ui-services.md)).
+2. Will a second screen need the same chrome for the initial release? → put it in `Shared/` with its own `UIDocument` + presenter ([centralized UI services](../../docs/04-dev/centralized-ui-services.md)).
 3. Is the difference only data or visibility? → C# + USS class toggle on one tree.
 
 **Phase HUDs** (`HubHud`, `CombatHud`, `ExplorationHud`) orchestrate: bind events, call shared facades, toggle modifiers. They do **not** own cross-phase overlays inline in their UXML.

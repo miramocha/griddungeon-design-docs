@@ -1,4 +1,4 @@
-# ADR 020 — Team burst naming (retire “Union”)
+﻿# ADR 020 — Team burst naming (retire “Union”)
 
 **Status:** Accepted  
 **Date:** 2026-05-21 (amended 2026-05-21 — **Synchro Charge** resource term)  
@@ -55,4 +55,4 @@ Presentation:
 
 - [Synchro Protocol system](../docs/02-systems/synchro-protocol.md)
 - [Navigator](007-navigator-role.md)
-- [mvp1-spec §4](../docs/mvp1-spec.md#4-mvp1-navigator--synchro-protocol)
+- [mvp1-spec §4](../docs/archive/mvp1-spec.md#4-mvp1-navigator--synchro-protocol)

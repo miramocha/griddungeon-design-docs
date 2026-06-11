@@ -1,13 +1,13 @@
----
-description: Maps clean-code principles to Grid Dungeon MVP1 architecture (design-docs)
+﻿---
+description: Maps clean-code principles to Grid Dungeon architecture (design-docs)
 alwaysApply: true
 ---
 
-# Architecture design principles (MVP1)
+# Architecture design principles
 
 Applies when editing **design docs** and **class architecture** in this repo. Implementation C# follows the shared Unity rules (`unity-clean-code-principles.mdc`, `unity-csharp-language.mdc`, hard-linked from `griddungeon-game`).
 
-Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP1](../../docs/05-class-design-mvp1.md), [ADR 017](../../decisions/017-game-phase-controller.md).
+Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP1](../../docs/05-class-design.md), [ADR 017](../../decisions/017-game-phase-controller.md).
 
 ## Single responsibility (SRP)
 
@@ -30,13 +30,13 @@ Reject designs that put combat formulas, map reveal, or phase transitions in one
 ## DRY
 
 - **One formula** for damage, AGI order, retreat cell, map reveal — document once in Core; Runtime calls simulators.
-- **One content ID table** — [05-class-design MVP1](../../docs/05-class-design-mvp1.md#mvp1-content-ids-locked); do not duplicate IDs across docs without linking.
+- **One content ID table** — [05-class-design MVP1](../../docs/05-class-design.md#mvp1-content-ids-locked); do not duplicate IDs across docs without linking.
 - **One phase flow doc** — [game-phase.md](../../docs/02-systems/game-phase.md) for diagrams; ADR 017 for the decision; class design for type sketches.
 - Tolerate a single duplicated diagram if it aids readability; do not fork transition rules in three places.
 
 ## KISS / YAGNI
 
-- MVP1 macro flow: **pure C#** `GamePhaseController` — no UVS state graph as authority ([ADR 017](../../decisions/017-game-phase-controller.md)).
+- Current macro flow: **pure C#** `GamePhaseController` — no UVS state graph as authority ([ADR 017](../../decisions/017-game-phase-controller.md)).
 - No generic “state machine framework” for three phases.
 - Defer optional systems (UVS presentation layer, guest combat, minigames) until spec checklist says otherwise.
 - `GridDungeon.Core` stays free of `UnityEngine` and ScriptableObject types — use DTOs at simulator boundaries.
@@ -47,8 +47,8 @@ Architecture docs should name **who initiates transitions** and **who owns state
 
 ## Be consistent
 
-- Match locked ADRs and [mvp1-spec](../../docs/mvp1-spec.md); if class design contradicts an ADR, fix class design.
-- Use the same type names across `game-phase.md`, `05-class-design-mvp1.md`, and `04-tech-notes.md` (`CombatScenePresenter`, not `CombatSceneController`).
+- Match locked ADRs and [mvp1-spec](../../docs/archive/mvp1-spec.md); if class design contradicts an ADR, fix class design.
+- Use the same type names across `game-phase.md`, `05-class-design.md`, and `04-tech-notes.md` (`CombatScenePresenter`, not `CombatSceneController`).
 
 ## When proposing new types
 
@@ -56,4 +56,4 @@ Architecture docs should name **who initiates transitions** and **who owns state
 2. Does it belong in **Core** (testable rules) or **Runtime** (Unity)?
 3. Is there already a subsystem in the module tree ([04-tech-notes](../../docs/04-tech-notes.md))?
 
-If none apply, question whether the type is needed for MVP1.
+If none apply, question whether the type is required.

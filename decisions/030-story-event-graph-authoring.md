@@ -1,5 +1,7 @@
 # ADR 030 — Story Event Graph Authoring (follow-up)
 
+> **Scope: Optional feature** — not required for initial release.
+
 **Status:** Proposed  
 **Date:** 2026-05-25  
 **Follows:** [ADR 028 — Story events (VN)](028-story-visual-novel-events.md) · [story-events.md](../docs/02-systems/story-events.md)  

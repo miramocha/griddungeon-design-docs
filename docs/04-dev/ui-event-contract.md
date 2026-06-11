@@ -1,4 +1,4 @@
-# UI event contract (integrator / external HUD)
+﻿# UI event contract (integrator / external HUD)
 
 Forward-facing reference for **replacing or extending Grid Dungeon HUD** without reading every shipped view. Describes **runtime events and command entry points** that custom UI in `GridDungeon.UI` (or a sibling assembly) should use.
 
@@ -23,7 +23,7 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 | Combat **motion** (flash, lerp, block?) | [combat § UI motion](../02-systems/combat.md#ui-motion--feedback) | Event names only |
 | Macro phase transitions, Enter/Exit | [game phase](../02-systems/game-phase.md) | `PhaseChanged` summary |
 | UVS / Timeline bridges, scripted walk | [UVS phase presentation](../02-systems/uvs-phase-presentation.md) | Same events, UVS examples |
-| Type sketches (target vs shipped) | [05 — Class design MVP1](../05-class-design-mvp1.md) | Prefer link over copying events |
+| Type sketches (target vs shipped) | [05 — Class design MVP1](../05-class-design.md) | Prefer link over copying events |
 | Short tech index | [04 — Tech notes](../04-tech-notes.md) | One-line pointer |
 
 ---

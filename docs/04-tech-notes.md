@@ -1,4 +1,4 @@
-# Tech Notes (Unity 6 / URP)
+﻿# Tech Notes (Unity 6 / URP)
 
 **Engine:** **Unity 6** (6000.x) + **URP** ([ADR 012](../decisions/012-unity-6-stack.md)).  
 **Platform:** PC Standalone ([ADR 008](../decisions/008-campaign-defaults.md), [input bindings](02-systems/input-bindings.md)).
@@ -313,7 +313,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 ## Related docs
 
-- [05 — Class design MVP1](05-class-design-mvp1.md) — full class hierarchy, assembly layout, folder structure
+- [05 — Class design MVP1](05-class-design.md) — full class hierarchy, assembly layout, folder structure
 - [Game phase](02-systems/game-phase.md) — design goals, diagrams, `GamePhaseController` + phase controllers ([ADR 017](../decisions/017-game-phase-controller.md))
 - [Mapping](02-systems/mapping.md)
 - [ADR 002](../decisions/002-mapping-model.md)

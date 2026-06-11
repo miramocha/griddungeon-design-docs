@@ -1,4 +1,4 @@
-# Map cell art (2D schematic)
+﻿# Map cell art (2D schematic)
 
 MVP1 exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
 
@@ -180,5 +180,5 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 - [Mapping](mapping.md) · [Map reveal save format](map-reveal-save-format.md)
 - [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)
 - [04 — Tech notes § Map assets](../04-tech-notes.md#map-cell-art-assets)
-- [mvp1-spec § Exploration & map](../mvp1-spec.md#2-systems-checklist)
+- [mvp1-spec § Exploration & map](../archive/mvp1-spec.md#2-systems-checklist)
 - Game: [#38](https://github.com/miramocha/griddungeon-game/issues/38) (cell art + door overlay), [#18](https://github.com/miramocha/griddungeon-game/issues/18) (baseline MapView), [#26](https://github.com/miramocha/griddungeon-game/issues/26) (shared painter), [#33](https://github.com/miramocha/griddungeon-game/issues/33) (campaign gates ≠ map icons)

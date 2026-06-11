@@ -1,4 +1,4 @@
-# Dungeons & Encounters
+﻿# Dungeons & Encounters
 
 Content structured like **Etrian Odyssey strata** — themed zones with multiple floors, FOE placements, and floor gimmicks.
 
@@ -36,14 +36,14 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 | B4F | Ruined plaza | Red-tier FOE guards chest | **MVP2:** salvage pile + flooded cistern |
 | B5F | Civic fortress | Stratum boss FOE | Boss room, stairs to Stratum 2 |
 
-**MVP1 vertical slice** stops at **B3F** with the stratum boss and win condition ([mvp1-spec §3](../mvp1-spec.md#3-content-slice-stratum-1-mvp1)). B4F–B5F stay in the full-game arc table above; do not block MVP1 on them. Authoritative MVP1 layouts: [§ MVP1 — Stratum 1 (B1F–B3F)](#mvp1--stratum-1-b1fb3f).
+**MVP1 vertical slice** stops at **B3F** with the stratum boss and win condition ([mvp1-spec §3](../archive/mvp1-spec.md#3-content-slice-stratum-1-mvp1)). B4F–B5F stay in the full-game arc table above; do not block MVP1 on them. Authoritative MVP1 layouts: [§ MVP1 — Stratum 1 (B1F–B3F)](#mvp1--stratum-1-b1fb3f).
 
 ---
 
 ## MVP1 — Stratum 1 (B1F–B3F)
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
-**Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design-mvp1.md#mvp1-content-ids-locked) (save/map/FOE state)  
+**Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design.md#mvp1-content-ids-locked) (save/map/FOE state)  
 **Grid:** **20×20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) — no jump pads in MVP1 slice)  
 **Implementation:** hand-fill `StratumFloor` ScriptableObjects until the floor painter ships ([ADR 002](../../decisions/002-mapping-model.md)); game path `Assets/Content/Floors/s1_B1F.asset` etc. ([04 — Tech notes](../04-tech-notes.md#map-system))
 
@@ -58,7 +58,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
 
-**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 — Class design](../05-class-design-mvp1.md#floors--stratum)).
+**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 — Class design](../05-class-design.md#floors--stratum)).
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace gate stairs.
 
@@ -101,7 +101,7 @@ Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate ti
 
 ### MVP1 enemy & encounter IDs (locked names)
 
-**Stats, skills, group slot layouts, FOE mapping:** [mvp1-enemy-roster.md](mvp1-enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 — Class design](../05-class-design-mvp1.md#mvp1-content-ids-locked).
+**Stats, skills, group slot layouts, FOE mapping:** [enemy-roster.md](enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 — Class design](../05-class-design.md#mvp1-content-ids-locked).
 
 | Enemy ID | Role | MVP1 status teaching |
 |----------|------|----------------------|
@@ -325,7 +325,7 @@ Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall 
 - [ ] `s1_B1F.asset` — grid 20×20, intro + gate spawns, gate `stairsUp`→hub, tutorial blockers, Act 1/3 flags
 - [ ] `s1_B2F.asset` — patrol path indices match `foe_alley_stalker` YAML
 - [ ] `s1_B3F.asset` — boss `noFlee` on encounter group / fight tag
-- [ ] `EncounterGroup` + `EnemyDefinition` SOs per [mvp1-enemy-roster](mvp1-enemy-roster.md) ([game #12](https://github.com/miramocha/griddungeon-game/issues/12))
+- [ ] `EncounterGroup` + `EnemyDefinition` SOs per [mvp1-enemy-roster](enemy-roster.md) ([game #12](https://github.com/miramocha/griddungeon-game/issues/12))
 - [ ] Playtest: B1F tutorial ≤ 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1–3 attempts at level 5–8
 - [ ] `foe_alley_stalker`: crisis AOE, VN unlock, guided `protocol_strike`, FOE kill, hub warp — B3F block until `s1_first_foe_tutorial_complete`
 
@@ -409,7 +409,7 @@ Between fights on the same dive **without** hub visit: FOE positions **persist**
 
 ## Related docs
 
-- [MVP1 enemy roster](mvp1-enemy-roster.md) — stats, skills, encounter groups ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2))
+- [MVP1 enemy roster](enemy-roster.md) — stats, skills, encounter groups ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2))
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [ADR 003 — FOE step patrol](../../decisions/003-foe-step-patrol.md)
 - [02 — Combat](../02-systems/combat.md)

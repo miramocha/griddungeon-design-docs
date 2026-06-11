@@ -1,11 +1,11 @@
-# ADR 017 — Game Phase Controller (C#)
+﻿# ADR 017 — Game Phase Controller (C#)
 
 **Status:** Accepted (MVP1)  
 **Date:** 2026-05-21
 
 ## Context
 
-MVP1 alternates between **hub**, **exploration**, and **combat** ([mvp1-spec](../docs/mvp1-spec.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
+MVP1 alternates between **hub**, **exploration**, and **combat** ([mvp1-spec](../docs/archive/mvp1-spec.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
 
 Requirements:
 
@@ -63,7 +63,7 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 
 ## Consequences
 
-- Implement under `Assets/Scripts/Runtime/Game/` per [class design MVP1](../docs/05-class-design-mvp1.md).
+- Implement under `Assets/Scripts/Runtime/Game/` per [class design MVP1](../docs/05-class-design.md).
 - `InputRouter` subscribes to `PhaseChanged` (or is called from phase `OnExit`/`OnEnter`).
 - Systems request transitions through `GameState` / `GamePhaseController`, not by enabling scenes ad hoc.
 - Document flow and APIs in [game phase system](../docs/02-systems/game-phase.md). UVS integration examples: [uvs-phase-presentation](../docs/02-systems/uvs-phase-presentation.md).
@@ -72,7 +72,7 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 
 - [Game phase (system doc)](../docs/02-systems/game-phase.md)
 - [UVS — phase & presentation hooks](../docs/02-systems/uvs-phase-presentation.md)
-- [05 — Class design MVP1](../docs/05-class-design-mvp1.md)
+- [05 — Class design MVP1](../docs/05-class-design.md)
 - [04 — Tech notes](../docs/04-tech-notes.md)
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)
 - [Combat](../docs/02-systems/combat.md) — combat round vs game phase terminology

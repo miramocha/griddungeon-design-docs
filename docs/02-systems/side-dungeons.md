@@ -1,4 +1,4 @@
-# Side dungeons (non-strata)
+﻿# Side dungeons (non-strata)
 
 **MVP3** — optional grid zones outside the main **stratum** ladder. Same exploration and combat subsystems as the labyrinth; different hub entry, save keys, and progression rules.
 
@@ -99,7 +99,7 @@ Same as labyrinth unless noted:
 
 ## Authoring (MVP3)
 
-Reuse the **StratumFloor** tile/FOE shape from [class design — floors](../05-class-design-mvp1.md#floors--stratum); tag content as side via `ExplorationMapKind` or parallel `SideDungeonFloor` SO ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)).
+Reuse the **StratumFloor** tile/FOE shape from [class design — floors](../05-class-design.md#floors--stratum); tag content as side via `ExplorationMapKind` or parallel `SideDungeonFloor` SO ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)).
 
 | Field | Side dungeon note |
 |-------|-------------------|

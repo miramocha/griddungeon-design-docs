@@ -1,4 +1,6 @@
-# ADR 029 — Guided Tutorial (player coaching)
+﻿# ADR 029 — Guided Tutorial (player coaching)
+
+> **Scope: Optional feature** — not required for initial release.
 
 **Status:** Accepted (2026-05-23)  
 **Date:** 2026-05-23  
@@ -180,7 +182,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 - **Content:** `Assets/Content/GuidedTutorials/` + campaign beat table.
 - **Runtime:** `GuidedTutorialController`, `GuidedTutorialView`; `StoryEventRunner` effect `start_guided_protocol` delegates here.
 - **Issues:** [#88](https://github.com/miramocha/griddungeon-game/issues/88) — coach; [#87](https://github.com/miramocha/griddungeon-game/issues/87) — story VN; [#20](https://github.com/miramocha/griddungeon-game/issues/20) — S1 wiring.
-- **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design-mvp1.md).
+- **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design.md).
 
 ## Stakeholder decisions (2026-05-23)
 
@@ -196,7 +198,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | Codex | Unlock on complete / full read; **no** re-apply of combat gates or flags on replay |
 | Hub Act 2 hints | **Cut in MVP1** unless playtest fails |
 | Combat Protocol coach | **Blocking** + command gate; may use same page block for copy + HUD pulse |
-| **MVP1 full coach + codex** | **Deferred post-MVP1** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); MVP1 relies on VN + `CombatTutorialHudRules` only ([mvp1-spec §5](../docs/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)) |
+| **MVP1 full coach + codex** | **Deferred post-MVP1** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); MVP1 relies on VN + `CombatTutorialHudRules` only ([mvp1-spec §5](../docs/archive/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)) |
 | Progression storage | **Campaign flags** for gates + **codex unlock list** for replay index |
 | Story vs guided | **S1 unlock/outro** remain **story events** ([ADR 028](028-story-visual-novel-events.md)); Act 1 movement + Protocol coach = **guided** |
 

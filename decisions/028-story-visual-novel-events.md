@@ -1,4 +1,4 @@
-# ADR 028 — Story Events (Visual Novel Presentation)
+﻿# ADR 028 — Story Events (Visual Novel Presentation)
 
 **Status:** Proposed (decisions locked 2026-05-23 — UI-retract detail open; implementation [#87](https://github.com/miramocha/griddungeon-game/issues/87))  
 **Date:** 2026-05-23  
@@ -174,7 +174,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 - **Content:** `Assets/Content/StoryEvents/` + `docs/03-content/story-events/` index.
 - **Runtime:** `StoryEventRunner`, `StoryEventView`; combat tutorial invokes runner instead of ad-hoc modal.
 - **Issues:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) (story runner + S1 content); [#88](https://github.com/miramocha/griddungeon-game/issues/88) (guided coach — handoff from `start_guided_protocol`).
-- **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design-mvp1.md) when accepted.
+- **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design.md) when accepted.
 
 ## Stakeholder decisions (2026-05-23)
 

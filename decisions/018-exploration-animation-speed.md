@@ -1,4 +1,4 @@
-# ADR 018 — Exploration Animation Speed
+﻿# ADR 018 — Exploration Animation Speed
 
 **Status:** Accepted (amended 2026-05-26)  
 **Date:** 2026-05-21  
@@ -57,4 +57,4 @@ Bump animation total = 2 × bump segment. Turn lerp ≈ 81% of Normal step lerp 
 - [ADR 001 — Grid movement](001-grid-movement.md)
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [Input bindings](../docs/02-systems/input-bindings.md)
-- [05 — Class design MVP1](../docs/05-class-design-mvp1.md#exploration)
+- [05 — Class design MVP1](../docs/05-class-design.md#exploration)

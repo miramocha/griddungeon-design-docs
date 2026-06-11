@@ -1,4 +1,4 @@
-# Combat Scene & Enemy Rendering
+﻿# Combat Scene & Enemy Rendering
 
 How encounters **leave exploration FPV** and present **enemies** during AGI combat. Locked: **battle arena + fixed backdrop** ([ADR 013](../../decisions/013-combat-scene-rendering.md)), not fighting inside the live dungeon geometry.
 
@@ -66,7 +66,7 @@ Combat UI and rules use **front/back rows** (like the party). The arena is **not
 
 | Anchor / slot | Content |
 |---------------|---------|
-| `0..5` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/mvp1-enemy-roster.md)) |
+| `0..5` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/enemy-roster.md)) |
 | Join mid-fight | Next free **tactical** slot (front first, else back); slide-in on matching anchor ([chain FOE](chain-foe-battle.md)) |
 
 **Enemy render mode** (per enemy definition, same slot rig):

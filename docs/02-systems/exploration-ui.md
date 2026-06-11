@@ -1,4 +1,4 @@
-# Exploration UI (UI Toolkit)
+﻿# Exploration UI (UI Toolkit)
 
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, party menu / pause overlay, party strip floater) without re-tracing the scene graph.
 
@@ -300,7 +300,7 @@ For a **clean replacement** (not a fork of `MapView`), see [Appendix — future 
 
 **Gate policy:** MVP1 — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
-Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design-mvp1.md#ui-layer).
+Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design.md#ui-layer).
 
 ---
 
@@ -312,5 +312,5 @@ Type names and combat mirror table: [05 — Class design § UI layer](../05-clas
 - [Input bindings](input-bindings.md) — `M` / `Esc` / exploration moves
 - [Map cell art](map-cell-art.md) — glyphs, USS, sprite target
 - [04 — Tech notes § Exploration HUD](../04-tech-notes.md#exploration-hud-ui-toolkit) — short index
-- [05 — Class design MVP1 § UI layer](../05-class-design-mvp1.md#ui-layer) — target types vs shipped names
+- [05 — Class design MVP1 § UI layer](../05-class-design.md#ui-layer) — target types vs shipped names
 - [ADR 014 — MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)

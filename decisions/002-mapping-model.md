@@ -1,4 +1,4 @@
-# ADR 002 — Mapping Model
+﻿# ADR 002 — Mapping Model
 
 **Status:** Accepted (amended 2026-05-21)  
 **Aligns with:** *Etrian Odyssey* presentation; **without** manual drawing tools
@@ -84,4 +84,4 @@ If used: `MapProxy` layer, FPV excludes it; same grid alignment rules as before.
 - [Mapping system](../docs/02-systems/mapping.md)
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [ADR 019 — Floor verticality](019-floor-verticality.md)
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)

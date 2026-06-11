@@ -1,4 +1,4 @@
-# ADR 032 — Floor transition vignette (MVP1)
+﻿# ADR 032 — Floor transition vignette
 
 **Status:** Accepted  
 **Date:** 2026-05-28  
@@ -67,7 +67,7 @@ Presentation only ([uvs phase presentation](../docs/02-systems/uvs-phase-present
 
 - **Game:** refactor `TryChangeFloor` to async/coroutine path through `FloorTransitionPresenter`; [#102](https://github.com/miramocha/griddungeon-game/issues/102) Play Mode tests target transition enter → load → exit.
 - **Art:** author `Transitions/stairs_default` prefab (black skybox, door mesh, 2 vcams, Timeline).
-- **Docs:** [mvp1-spec](../docs/mvp1-spec.md) checklist row; [release scope](../docs/00-release-scope.md) in-scope line.
+- **Docs:** [mvp1-spec](../docs/archive/mvp1-spec.md) checklist row; [release scope](../docs/00-release-scope.md) in-scope line.
 
 ## Related
 

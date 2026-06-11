@@ -1,4 +1,4 @@
-# Custom skill use picker UI (dev / integrator)
+﻿# Custom skill use picker UI (dev / integrator)
 
 How to replace or extend the **combat skill selection modal** without changing catalog rules, combat queue logic, or `CombatController`. Locked behavior: [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md). Player bindings: [input bindings § Skill use picker](../02-systems/input-bindings.md#skill-use-picker-modal).
 
@@ -186,7 +186,7 @@ Built only by `SkillPickerCatalog` in Core. Read-only at the view boundary.
 | `SkillPickerTabModel` | `TabId`, `Label`, `Rows[]` |
 | `SkillPickerRowModel` | `SkillId`, `DisplayName`, `DescriptionEn`, `CostLabel`, `MpCost`, `SkillType`, `IsEnabled`, `DisabledReason` |
 
-Copy authority: [mvp1-class-skills](../03-content/mvp1-class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
+Copy authority: [mvp1-class-skills](../03-content/class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
 
 Tab rules (MVP1):
 

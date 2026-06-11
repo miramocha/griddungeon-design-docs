@@ -1,10 +1,10 @@
-# Game Phase (Hub / Exploration / Combat)
+﻿# Game Phase (Hub / Exploration / Combat)
 
 Macro runtime modes for MVP1. **Locked:** pure C# orchestration ([ADR 017](../../decisions/017-game-phase-controller.md)). Unity Visual Scripting state graphs are **not** used for phase authority in MVP1.
 
 ## Design goals (MVP1)
 
-These goals drive the split between **macro phases** (this doc), **assemblies** ([class design MVP1](../05-class-design-mvp1.md)), and **combat rounds** ([combat](combat.md)).
+These goals drive the split between **macro phases** (this doc), **assemblies** ([class design MVP1](../05-class-design.md)), and **combat rounds** ([combat](combat.md)).
 
 | Goal | How the architecture supports it |
 |------|-----------------------------------|
@@ -381,7 +381,7 @@ Implementation: gate `GuildService` / party skill UI on `GamePhase` + `StoryEven
 | Exploration | `UI`, `Exploration`, `Map` (map overlay pass-through per ADR 014) |
 | Combat | `UI`, `Combat` |
 
-Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design-mvp1.md)). HUD integrators: full runtime event list in [UI event contract](../04-dev/ui-event-contract.md).
+Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design MVP1](../05-class-design.md)). HUD integrators: full runtime event list in [UI event contract](../04-dev/ui-event-contract.md).
 
 ## Dev bootstrap HUD (UI Toolkit)
 
@@ -405,7 +405,7 @@ MVP1 acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.u
 
 **F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_medic` (AGI 9, **Skill** = ally heal `dev_field_patch`) + `dev_slime` (AGI 5) — for turn-order strip and ally-target keyboard QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue; **player command** turns highlight the acting core on the **party roster**, not the AGI strip ([combat.md](combat.md#turn-order-strip-agi-queue-ui)).
 
-Dev UI is **not** authoritative — it only calls `GameState` APIs. Production exploration/combat HUDs are separate `UIDocument` roots; see [exploration UI](exploration-ui.md), [combat](combat.md), and [class design MVP1](../05-class-design-mvp1.md#ui-layer).
+Dev UI is **not** authoritative — it only calls `GameState` APIs. Production exploration/combat HUDs are separate `UIDocument` roots; see [exploration UI](exploration-ui.md), [combat](combat.md), and [class design MVP1](../05-class-design.md#ui-layer).
 
 ## Visual Scripting (post-MVP1 optional)
 
@@ -421,9 +421,9 @@ Summary:
 ## Related docs
 
 - [ADR 017 — Game phase controller](../../decisions/017-game-phase-controller.md)
-- [05 — Class design MVP1](../05-class-design-mvp1.md)
+- [05 — Class design MVP1](../05-class-design.md)
 - [04 — Tech notes](../04-tech-notes.md)
-- [MVP1 spec](../mvp1-spec.md)
+- [MVP1 spec](../archive/mvp1-spec.md)
 - [Exploration UI](exploration-ui.md) — UXML mounts, `MapView` / pause binding, input
 - [Combat](combat.md)
 - [Hub & services](hub-and-services.md)

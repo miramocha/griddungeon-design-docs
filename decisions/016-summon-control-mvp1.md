@@ -1,4 +1,4 @@
-# ADR 016 — Summon Control (MVP1 Player)
+﻿# ADR 016 — Summon Control (Player)
 
 **Status:** Accepted (MVP1)  
 **Date:** 2026-05-20  
@@ -21,7 +21,7 @@ Aux slots ([ADR 004](004-auxiliary-slots.md)) can hold **summons** with their ow
 
 ### Deploy (core turn)
 
-- **`deploy_scout_drone`** may be **queued** while aux back is occupied (e.g. player expects current drone to die before the summoner’s AGI turn). On **resolve**, if the slot is still occupied: **fail**, **no MP spent**, player feedback ([mvp1-class-skills](../docs/03-content/mvp1-class-skills.md#locked-implementation-rules)).
+- **`deploy_scout_drone`** may be **queued** while aux back is occupied (e.g. player expects current drone to die before the summoner’s AGI turn). On **resolve**, if the slot is still occupied: **fail**, **no MP spent**, player feedback ([mvp1-class-skills](../docs/03-content/class-skills.md#locked-implementation-rules)).
 
 ## Rejected for MVP1
 
@@ -57,8 +57,8 @@ Aux slots ([ADR 004](004-auxiliary-slots.md)) can hold **summons** with their ow
 ## Related
 
 - [Summons & guests](../docs/02-systems/summons-and-guests.md)
-- [MVP1 class skills](../docs/03-content/mvp1-class-skills.md)
-- [MVP1 spec](../docs/mvp1-spec.md)
+- [MVP1 class skills](../docs/03-content/class-skills.md)
+- [MVP1 spec](../docs/archive/mvp1-spec.md)
 - [ADR 004 — Auxiliary slots](004-auxiliary-slots.md)
 - [ADR 015 — MVP1 combat](015-mvp1-combat.md)
 - [Game #11](https://github.com/miramocha/griddungeon-game/issues/11) — `deploy_scout_drone` (acceptance: planning-phase summon commands)

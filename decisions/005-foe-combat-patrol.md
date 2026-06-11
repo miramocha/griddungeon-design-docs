@@ -1,5 +1,7 @@
 # ADR 005 — FOE Movement During Combat (Optional Later)
 
+> **Scope: Optional feature** — not required for initial release.
+
 **Status:** Deferred (**MVP2** — optional per floor flag `foeCombatPatrol: true`)  
 **Date:** 2026-05-20  
 **Depends on:** [ADR 003 — FOE step patrol](003-foe-step-patrol.md)
