@@ -51,14 +51,14 @@ Phase views **orchestrate** (show/hide, publish hint copy, bind data). They do *
 A centralized service **owns one scene `GameObject` + `UIDocument` + root UXML**. Phase HUDs and overlays call the **facade** (`OpenBag`, `SetHubShopMode`, `CombatItemInput`, …). They do **not**:
 
 - `CloneTree` the service UXML into hub / combat / party phase trees as the **shipped** integration
-- Reparent service `VisualElement` nodes into another document’s host (`InventoryPaneHost`, `party-menu-pane-inventory`, …)
+- Reparent service `VisualElement` nodes into another document’s host (embedded party-menu pane hosts, `InventoryPaneHost`, …)
 - Sync layout with **`worldBound` / `GeometryChangedEvent`** to fake embedding across `UIDocument` roots
 
 **When migrating** a panel that today lives inside a phase HUD (embedded clone or “docked” pane), the **final** implementation must move the tree to a centralized presenter and show it as a **full-screen transparent modal** (or other self-contained overlay chrome) at the service’s `sortingOrder`. Align beside fixed rails with **USS modifiers** (e.g. `tabbed-picker--rail-offset`, `left: 240px`) — not by parenting into the phase shell.
 
 | OK | Not OK (reject in review / migration complete) |
 |----|------------------------------------------------|
-| `ItemListInventory.OpenBag` while party menu section = Inventory | `PartyInventory.uxml` cloned into `party-menu-pane-inventory` |
+| `ItemListInventory.OpenBag` while party menu section = Inventory | Bag picker cloned into `PartyMenu` dialog panes |
 | Hub shop modal at sort **200** via `ItemListInventory.SetHubShopMode` | `ItemListPicker.uxml` cloned on `HubHud` root |
 | Combat item via `ItemListInventory.CombatItemInput` | Local `CombatItemPickerHost` + picker clone on `CombatHud` |
 | `PartyFormationFloater.ApplyFormationDockState` / `ApplyPartyMenuFloaterDock` — **context** + sort on the **same** floater document | Reparenting floater grid nodes into `PartyMenu.uxml` |
@@ -121,7 +121,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **100** | Map fullscreen (reuses exploration doc) | `MapView` via `BindToHud` |
 | **150** | Story modal | `StoryEventView` on `StoryHud` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
-| **251** | Party bag modal (same chrome as hub/combat; rail offset) | `ItemListInventoryPresenter` (`PartyBag`) |
+| **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
 | **300** | Global input hint strip | `InputHintPresenter` |
 | **10000** | Full-screen fade | `ScreenFadePresenter` |
@@ -338,7 +338,7 @@ Integrator detail (replace grid, events, combat chrome): [custom party UI](custo
 | Overlay root | Full-screen bleed (`left/right/top/bottom: 0`) on service document |
 | Panel | Centered `tabbed-picker__panel`; transparent host (no dim) |
 | Rail inset | `tabbed-picker--rail-offset` — **240px** left (command / section rail bookmark stays visible) |
-| Party menu shell | `party-menu-pane-inventory` stays **empty chrome** — bag UI is **not** cloned into the dialog |
+| Party menu shell | Quit confirm only — bag UI lives on `ItemListInventory` at sort **251** |
 
 **Context ownership**
 
@@ -362,6 +362,35 @@ ItemListInventory.CloseBag();
 ```
 
 Picker integration detail: [shared menu & picker UI § Item list inventory service](shared-menu-picker-ui.md#item-list-inventory-service).
+
+Implementation traps (rapid cancel/reopen, animated hide vs context switch): [centralized UI gotchas § Pop-in exit vs rapid reopen](centralized-ui-gotchas.md#pop-in-exit-vs-rapid-reopen-itemlistpickerview).
+
+---
+
+### Character detail — `CharacterDetailPresenter` + `CharacterDetail`
+
+**Job:** One **single-combatant inspect panel** (stats + optional worn equipment rows) for party menu **Formation** and **Equipment** sections. Separate `UIDocument` at sort **251** — same full-bleed + `tabbed-picker--rail-offset` modal chrome as party bag ([`ItemListInventoryOverlay.uxml`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml)). Not embedded in `PartyMenu.uxml`.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Context: `Hidden` / `PartyMenuFormation` / `PartyMenuEquipment`; `sortingOrder` **251** when visible |
+| View | `Assets/Scripts/UI/Views/CharacterDetailView.cs` | Toolkit bind API; slot engage via `MenuFocusNavigator` |
+| Facade | `Assets/Scripts/UI/Views/CharacterDetail.cs` | `SetPartyMenuContext`, `Bind`, `Refresh`, `View`, `Hide` |
+| UXML / USS | `CharacterDetailOverlay.uxml` (hosts `CharacterDetail.uxml` instance), `CharacterDetail.uss` | Two-layer overlay: outer full bleed + inner rail-offset centered panel |
+| Bootstrap | `DevSceneComposition.WireCharacterDetail` | Child `CharacterDetail` GO under `GameState` |
+
+**Publishers:** `PartyMenuOverlayView.ShowActivePaneContent` — Formation → `PartyFormationInspect`; Equipment → `PartyEquipDisplay`; Inventory / Quit / close → `Hide`. Member bind from `PartyFormationToolkitView` / `PartyEquipmentFloaterToolkitView`.
+
+```csharp
+CharacterDetail.SetPartyMenuContext(
+    CharacterDetailContext.PartyMenuEquipment,
+    CharacterDetailLayout.PartyEquipDisplay
+);
+CharacterDetail.Bind(subject);
+CharacterDetail.Hide();
+```
+
+**Deferred:** equipment bag picker window on slot confirm; combat analyze host (third caller → optional `GameState` ref).
 
 ---
 
@@ -406,6 +435,7 @@ GameState
 ├── PartyFormationFloater (PartyFormationFloaterPresenter)
 ├── SkillUsePicker (SkillUsePickerPresenter)
 ├── ItemListInventory (ItemListInventoryPresenter)
+├── CharacterDetail (CharacterDetailPresenter)
 ├── ExplorationHud
 ├── CombatHud
 ├── HubHud
@@ -444,7 +474,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 2. Move picker UXML to the service overlay (`Assets/UI/Screens/Shared/`).
 3. Replace phase `CloneTree` / local presenter with facade calls only.
 4. Leave phase hosts empty if the shell still needs a section hook (e.g. party inventory pane).
-5. Verify grep: no `CloneTree(ItemListPicker` / `PartyInventory` on phase HUDs; no `Dock*` APIs on the facade.
+5. Verify grep: no `CloneTree(ItemListPicker` on phase HUDs; no embedded bag panes in `PartyMenu`; no `Dock*` APIs on the facade.
 
 ---
 
@@ -453,6 +483,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 | Topic | Authoritative doc |
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
+| Implementation gotchas (exit races, flags, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |

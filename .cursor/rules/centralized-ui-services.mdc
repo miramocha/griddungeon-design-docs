@@ -8,14 +8,14 @@ alwaysApply: false
 
 Cross-phase overlays (`InputHintPresenter`, `PartyFormationFloater`, `ItemListInventory`, `SkillUsePickerPresenter`, …) use **one scene `GameObject` + `UIDocument`** under `GameState`. Phase views **orchestrate** via static facades; they do **not** own duplicate picker trees.
 
-**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md).
+**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsClosing`, context-switch hide).
 
 ## Standalone document — required for migrations
 
 When moving UI into this pattern, the **shipped** integration must **not**:
 
 - `CloneTree` the service UXML into `HubHud`, `CombatHud`, `PartyMenu`, or other phase roots
-- Reparent service `VisualElement` nodes into another document’s host (`party-menu-pane-inventory`, `InventoryPaneHost`, …)
+- Reparent service `VisualElement` nodes into another document’s host (embedded party-menu pane hosts, `InventoryPaneHost`, …)
 - Use **`worldBound` / `GeometryChangedEvent`** to position a service panel inside another `UIDocument` (“geometry dock”)
 
 **Do instead:**
@@ -31,7 +31,7 @@ Reject migration PRs that still have:
 | Smell | Example |
 |-------|---------|
 | Embedded picker clone | `CloneTree(ItemListPicker.uxml)` on `HubHudView` / `CombatHudView` |
-| Embedded party bag | `CloneTree(PartyInventory.uxml)` into `party-menu-pane-inventory` |
+| Embedded party bag | Cloning bag picker into `PartyMenu` dialog panes instead of `ItemListInventory` |
 | Cross-document dock API | `DockBag`, `UndockBag`, `SyncBagDockGeometry`, inline `style.left/top` from foreign `worldBound` |
 | Local duplicate presenter | `HubShopPickerPresenter` after `ItemListInventory` ships |
 

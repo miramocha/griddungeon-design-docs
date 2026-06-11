@@ -14,8 +14,8 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 |---------|--------------|----------------|---------------|
 | **Exploration party strip** | `GamePhase.Exploration` | `PartyRuntime.CoreSlots` | `ExplorationHudView` → `PartyFormationFloater` facade → shared `PartyFormationGridView` |
 | **Combat party roster** | `GamePhase.Combat` | `CombatController.State.CoreSlots` (`BattleState` copy) | `CombatHudView` → `PartyFormationFloater.Grid` (combat-center inset) |
-| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → `CharacterDetailView` (center dialog) + `PartyFormationToolkitView` on shared floater (sort **260**) |
-| **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → shared `CharacterDetailView` + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
+| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → **`CharacterDetail`** facade (`PartyFormationInspect`, sort **251**) + `PartyFormationToolkitView` on shared floater (sort **260**) |
+| **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → **`CharacterDetail`** facade (sort **251**) + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
 | **Map party marker** | Exploration map open | `DungeonExplorer` cell + facing | `MapPartyMarkerPresenter` |
 
 **Out of scope for this doc:** Hub guild roster / party-ready gate (`s1_party_ready`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
@@ -233,13 +233,13 @@ Global bind copy: `TabbedPickerRailHints.PartyFormationSwap` while engaged; `Par
 
 Section rail siblings disable only while swap mode is **engaged** (`PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport`). Leaving the pane (`HideActivePane`) or switching sections calls `ResetPaneEngagement()` → `SyncSectionRailFocus()`.
 
-Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + shared `CharacterDetailView` in `party-menu-pane-character-detail`. Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)`.
+Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + **`CharacterDetail`** service overlay (sort **251**). Party menu floater context: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)`.
 
 ---
 
 ## Equipment menu (party pause)
 
-**Formation** and **Equipment** share one `CharacterDetail` clone in `party-menu-pane-character-detail` (never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
+**Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
 
 | Step | Behaviour |
 |------|-----------|
@@ -252,7 +252,7 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 
 Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
 
-Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail modal applies only when **worn slots** are engaged on `CharacterDetail`, not during floater-only member focus — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail siblings disable when the Equipment pane is **revealed** (`paneRevealed` — first **Z** after section select; same session as Inventory bag open), via `PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport` — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport). Revealing the pane is sufficient; floater-only member focus does not need a separate modal signal. Worn-slot engage on `CharacterDetail` still switches **hints** (`PartyEquipmentEngage` → `PartyEquipmentSlots`) and worn-slot **W/S** input; it does not gate section-rail modal.
 
 Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
 

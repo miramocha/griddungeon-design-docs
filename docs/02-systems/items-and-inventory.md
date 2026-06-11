@@ -35,7 +35,7 @@ flowchart TB
 |---------|--------|
 | Bag slots, stack rules, tab filter | **Core** — `InventoryRules`, `InventoryBagCatalog` |
 | Content defs, shop, coordinators | **Runtime** — `ItemDefinition`, `EquipmentDefinition`, `ShopService` |
-| Tabbed bag panel, party menu | **UI** — UITK `party-inventory` (swappable port) |
+| Tabbed bag panel, party menu | **UI** — `ItemListInventory` + `PartyInventoryBagView` on shared `ItemListPickerView` ([centralized UI services](../04-dev/centralized-ui-services.md)) |
 | Persist | **`SaveGame`** — source of truth; `PartyRuntime` mirrors on load |
 
 ---
@@ -227,7 +227,7 @@ Party menu section **Inventory** uses **horizontal category tabs**, same interac
 |-------|------|
 | Core | `InventoryBagCatalog` → `InventoryBagPresentationModel` with `Tabs[]` / slot rows |
 | Runtime | `IInventoryBagView`, `InventoryBagCoordinator` |
-| UI | `PartyInventoryBagView` → shared **`ItemListPickerView`** (same row/tab stack as hub shop); embedded in party menu pane — [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) |
+| UI | `PartyInventoryBagView` → shared **`ItemListPickerView`** on **`ItemListInventoryPresenter`** (sort **251** when opened from party menu) — [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [centralized UI services](../04-dev/centralized-ui-services.md) |
 
 Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
 
@@ -243,7 +243,7 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 |-------|------|
 | Core | `PartyEquipmentCatalog`, `PartyEquipmentStatPreview`, bag-row filter for slot + class |
 | Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations`, `PartyEquipmentApply` |
-| UI | `CharacterDetail.uxml` / `CharacterDetailView` in `party-menu-pane-character-detail`; floater member bridge `PartyEquipmentFloaterToolkitView` |
+| UI | **`CharacterDetail`** facade / `CharacterDetailView` (sort **251**); floater member bridge `PartyEquipmentFloaterToolkitView` — [custom party UI](../04-dev/custom-party-ui.md) |
 
 Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](https://github.com/miramocha/griddungeon-game/issues/155)).
 

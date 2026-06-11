@@ -214,14 +214,14 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 |----------|-----------------|--------------|
 | `CommandPanelView` | Skill/item picker, target select, combat log | Command slot that opened the modal (`CombatController.PendingTargetCommand` for targeting) |
 | `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service chip (`ItemListInventory.HubMode` + `HubShopServiceFocus`) |
-| `PartyMenuOverlayView` | Section pane **engaged** (not merely revealed) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+| `PartyMenuOverlayView` | Section pane modal per signal below (Inventory bag open, Equipment pane revealed, Formation swap engaged, Quit focused) | Active section chip (`PartyMenuSectionRailFocusRules`) |
 
 **Party section modal** — siblings disable only when:
 
 | Section | Engaged signal |
 |---------|----------------|
 | Inventory | Bag picker open (`inventoryBagOpen`) |
-| Equipment | Worn slots engaged on `CharacterDetail` (`equipmentSlotsEngaged`) — floater member focus alone does **not** modal the section rail |
+| Equipment | Equipment pane revealed (`paneRevealed` — first **Z** after section select; `PartyMenuSectionRailFocusRules`) — floater member focus alone does not need its own modal signal |
 | Formation | Swap mode engaged (`formationPaneEngaged`) |
 | Quit | Quit pane has menu focus (`quitPaneFocused`) |
 
@@ -314,14 +314,15 @@ flowchart LR
 | `TabbedPicker.uss` | Panel layout; **transparent** full-screen host (`tabbed-picker { background-color: rgba(0,0,0,0) }` — **no modal dim**); imports `RailMenu.uss` |
 | `WindowedList.uss` | `windowed-list`, `windowed-list__slots`, scroll bars |
 | `TabbedPickerShellClasses` | BEM constants (`Hidden`, `TabsHidden`, …) |
-| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss` + `TabbedPicker.uss` for embedded bag/equipment panes |
+| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss`. **`party-menu__dialog`** hosts quit confirm only — bag and character detail modals live on centralized services ([centralized UI services](centralized-ui-services.md)) |
 
 **Overlay contrast:**
 
 | Host | Root chrome | List panel |
 |------|-------------|------------|
 | Hub shop / combat pickers | `tabbed-picker` — transparent; stage/rail stay visible | `tabbed-picker__panel` — dim panel (`rgba(30, 34, 40, 0.97)`) |
-| Party menu | `party-menu` — opaque full-screen | `party-menu__dialog` — shares panel metrics with `tabbed-picker__panel` |
+| Party menu shell | `party-menu` — opaque full-screen | `party-menu__dialog` — quit confirm only |
+| Party bag (menu Inventory) | `ItemListInventory` modal — transparent (sort **251**) | `tabbed-picker__panel` |
 
 **Rail inset (240px):** centralized item modals use `tabbed-picker--rail-offset` on [`ItemListInventoryOverlay.uss`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uss) (see [centralized UI services](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory)). Legacy embedded clones used `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`) — remove when phase HUDs migrate off local picker trees.
 
@@ -330,7 +331,6 @@ flowchart LR
 **UXML patterns:**
 
 - **Full-screen overlay (shipped):** `tabbed-picker` root + `tabbed-picker__panel` — hub shop, combat item, **party bag** via `ItemListInventory` service; combat skill via `SkillUsePickerPresenter`.
-- **Legacy embedded pane (migrate away):** `PartyInventory.uxml` cloned into `party-menu__dialog` — not the target architecture.
 
 ---
 
@@ -344,9 +344,9 @@ flowchart LR
 | Combat item | 200 | `CombatItemInput` | `Immediate` |
 | Party bag | 251 | `OpenBag` / `CloseBag` / `RefreshBag` | `EngageOnConfirm` |
 
-**Chrome:** full-screen transparent overlay + centered panel + `tabbed-picker--rail-offset` (`left: 240px`). Party menu `party-menu-pane-inventory` stays empty shell chrome while the bag modal draws above the menu (251 > 250).
+**Chrome:** full-screen transparent overlay + centered panel + `tabbed-picker--rail-offset` (`left: 240px`). Party bag draws on `ItemListInventory` (sort **251**) above the party menu shell (250).
 
-**Do not ship:** `CloneTree(PartyInventory.uxml)` in party menu, `DockBag` / `worldBound` geometry sync, or hub/combat `CloneTree(ItemListPicker.uxml)` on phase HUD roots.
+**Do not ship:** embedded bag clones in `PartyMenu`, `DockBag` / `worldBound` geometry sync, or hub/combat `CloneTree(ItemListPicker.uxml)` on phase HUD roots.
 
 Agent rule: [`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-services.mdc).
 
@@ -394,7 +394,7 @@ flowchart TB
   ILPV --> CIA
 ```
 
-**Host:** all three consumers call `ItemListInventory` facade — not local `HubShopPickerPresenter` or embedded `PartyInventory.uxml` clones.
+**Host:** all three consumers call `ItemListInventory` facade — not local `HubShopPickerPresenter` or embedded bag clones in phase HUDs.
 
 ### `ItemListPickerView` responsibilities
 
@@ -405,6 +405,7 @@ flowchart TB
 | Row DOM | `ItemListRowBuilder` + `ItemListRow.uss` |
 | Detail panel | `item-list-picker-detail` label text from `ItemListRowModel.Detail` |
 | Confirm / cancel | `RowSelected` / `Cancelled` events |
+| Show / hide / refresh | `Show`, `Hide`, `Refresh`, `IsClosing` — rapid cancel+reopen must not call `Refresh` during exit animation; see [centralized UI gotchas § Pop-in exit](centralized-ui-gotchas.md#pop-in-exit-vs-rapid-reopen-itemlistpickerview) |
 
 ### Layout profiles (`ItemListPickerLayout`)
 
@@ -412,8 +413,8 @@ Same C# view, different UXML **name hooks** and hidden class. Bind copy: global 
 
 | Profile | `HiddenClass` | Used by |
 |---------|---------------|---------|
-| `ShopOverlay` (default) | `tabbed-picker--hidden` | `ItemListPicker.uxml` |
-| `PartyInventoryPane` | `party-inventory--hidden` | `PartyInventory.uxml` |
+| `ShopOverlay` (default) | `tabbed-picker--hidden` | `ItemListInventoryOverlay.uxml`, `ItemListPicker.uxml` |
+| `CombatOverlay` | `tabbed-picker--hidden` | Same host names; combat item context |
 
 Required element names (party profile uses the same ids):
 
@@ -579,7 +580,8 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | Hub shop buy/sell | — | `PickerTabStripView` | `ItemListPickerView` via `ItemListInventory` | `HubShopStockCatalogBuilder` | `ItemListInventory` facade + `HubHudView` |
 | Party menu section | `PartyMenuShellToolkitView` | — | — | — | `PartyMenuInputHandler` |
 | Party inventory | — | ✓ | `ItemListPickerView` via `ItemListInventory` → `PartyInventoryBagView` | `InventoryBagDisplayBuilder` → mapper | `ItemListInventory.BagKeyboardView` |
-| Party equipment members | — | `RailMenuPresenter` | slots + picker | `PartyEquipmentCatalog` | `IPartyEquipmentKeyboardView` |
+| Party equipment display | — | — | — | `CharacterDetailView` via `CharacterDetail` facade | `IPartyEquipmentKeyboardView` |
+| Party equipment members (floater) | — | — | — | `PartyFormationFloater` grid focus | `PartyEquipmentFloaterToolkitView` |
 | Combat Item | — | ✓ (single tab) | `ItemListPickerView` via `ItemListInventory` → adapter | `CombatItemListPresentationBuilder` | `ItemListInventory.CombatItemInput` |
 | Combat Skill | — | ✓ | `SkillUsePickerToolkitView` | `SkillPickerCatalog` (Core) | `ICombatSkillPickerHost` |
 
@@ -632,6 +634,8 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | `PartyMenuSectionRailFocusRulesTests` | `Tests/UI/` — section rail modal only when pane engaged |
 | `HubShopServiceFocusTests` | `Tests/UI/` — buy/sell rail index + service-rail W/S block when picker unengaged |
 | `PartyEquipmentFloaterToolkitViewTests` | `Tests/UI/` — `ClearMemberFocus` removes `party-formation-grid__cell--focused` |
+| `CharacterDetailPresenterTests` | `Tests/UI/` — party-menu context, sort 251, rail-offset modal chrome |
+| `CharacterDetailViewTests` | `Tests/UI/` — layouts, slot engage, confirm noop |
 
 Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party inventory / equipment / formation section rails, **F3** combat Skill / Item pickers; hub after combat end (command rail not dim).
 
@@ -655,10 +659,13 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/UI/Screens/Shared/WindowedList.uss` | Windowed list chrome |
 | `Assets/UI/Screens/Shared/ItemListRow.uss` | Item row BEM |
 | `Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml` | Centralized item-list service (hub / combat / party bag modals) |
+| `Assets/UI/Screens/Shared/CharacterDetailOverlay.uxml` | Centralized character detail service (party Formation / Equipment) |
+| `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Character detail context + modal chrome |
+| `Assets/Scripts/UI/Views/CharacterDetail.cs` | Static facade |
+| `Assets/Scripts/UI/Views/CharacterDetailView.cs` | Single-combatant bind + slot focus |
 | `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine + single `ItemListPickerView` host |
 | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
 | `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
-| `Assets/UI/Screens/Shared/PartyInventory.uxml` | Legacy pane template — tests only after migration |
 | `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
 | `Assets/Scripts/UI/Views/RailMenuPresenter.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |
