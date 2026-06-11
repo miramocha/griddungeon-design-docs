@@ -49,6 +49,7 @@ If no config file exists in any open workspace root, **ask once** for project UR
 | `sizeOrder` | `["XS","S","M","L","XL"]` | Prefer smaller when priorities tie |
 | `repoPrefer` | auto | `game`, `docs`, or `null` — boost issues whose repo matches open workspace |
 | `excludeLabels` | `["blocked","wontfix"]` | Skip items with any of these |
+| `preferLabels` | `["required"]` | Tie-break: prefer `required` over `optional`; legacy `mvp1` label counts as required |
 | `limit` | `50` | Max items per `item-list` call |
 
 ## Workflow overview
@@ -134,13 +135,14 @@ Apply in order until one winner remains:
 1. **Tier** — Ready before Backlog.
 2. **Priority** — `P0` > `P1` > `P2` > unset (config order).
 3. **Repo relevance** — If workspace has `origin` remotes, prefer issues where `repository` or `content.repository` matches an open folder’s repo (e.g. `griddungeon-game` vs `griddungeon-design-docs`). Use `repoPrefer` when set.
-4. **Unblocked** — Skip if body contains `Depends on` / `Blocked by` referencing open issues:
+4. **Feature scope** — Prefer issues labeled `required` (or legacy `mvp1`) over `optional` when `preferLabels` is set in config.
+5. **Unblocked** — Skip if body contains `Depends on` / `Blocked by` referencing open issues:
    ```bash
    gh issue view <owner>/<repo>#<n> --json state -q .state
    ```
    Skip when dependency `state != CLOSED`. (Heuristic; not all teams use this format.)
-5. **Size** — Prefer smaller `sizeOrder` when still tied (quick wins).
-6. **Board order** — If still tied, keep first item returned by `item-list` (approximates view order).
+6. **Size** — Prefer smaller `sizeOrder` when still tied (quick wins).
+7. **Board order** — If still tied, keep first item returned by `item-list` (approximates view order).
 
 **Announce the pick** before coding:
 

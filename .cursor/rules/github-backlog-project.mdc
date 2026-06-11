@@ -13,7 +13,7 @@ Before searching for a project URL or asking the user which board to use:
 
 1. Read **`.cursor/backlog-project.json`** at the repo root of any open workspace folder (`griddungeon-game` or `griddungeon-design-docs`).
 2. Use `owner` + `number` (or `projectUrl`) for `gh project view`, `gh project item-list`, and `gh project item-edit`.
-3. Honor `readyStatus`, `backlogStatus`, `priorityOrder`, `excludeLabels`, and `limit` from the config.
+3. Honor `readyStatus`, `backlogStatus`, `priorityOrder`, `excludeLabels`, `preferLabels`, and `limit` from the config.
 4. When both repos are open, prefer issues whose repository matches `repoPrefer` (`game` vs `docs`) when ranking ties.
 
 The only per-repo difference is **`repoPrefer`** — project identity and column names are the same in both copies.

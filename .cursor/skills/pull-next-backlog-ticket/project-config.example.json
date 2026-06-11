@@ -12,6 +12,7 @@
   "sizeOrder": ["XS", "S", "M", "L", "XL"],
   "repoPrefer": "game",
   "excludeLabels": ["blocked", "wontfix"],
+  "preferLabels": ["required"],
   "limit": 50,
   "pullOrderDoc": "https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-spec.md#7-pull-order-github-backlog"
 }
