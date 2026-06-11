@@ -392,7 +392,7 @@ CharacterDetail.Hide();
 
 **Deferred:** equipment bag picker window on slot confirm; combat analyze host (third caller → optional `GameState` ref).
 
-**Lifecycle refactor:** [game#209](https://github.com/miramocha/griddungeon-game/issues/209) — adopt `ICentralizedUiSurface` ([§ Presentation lifecycle](#presentation-lifecycle-in-progress)).
+**Lifecycle:** [game#209](https://github.com/miramocha/griddungeon-game/issues/209) shipped — presenter implements `ICentralizedUiSurface` ([§ Presentation lifecycle](#presentation-lifecycle)).
 
 ---
 
@@ -462,7 +462,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 7. **Wire bootstrap** — `DevSceneComposition.Wire…` + menu item so clones stay consistent.
 8. **Ownership doc** — list which views publish/clear; add row to [Global input hints](shared-menu-picker-ui.md#global-input-hints) publishers table if it touches bind copy.
 9. **Tests** — Edit Mode under `Assets/Tests/UI/` for sort order, visibility, hint publish/clear (see existing `InputHint` / floater fixtures).
-10. **Presentation lifecycle (PopIn-family)** — implement or compose `ICentralizedUiSurface` when #207 lands; use `HideImmediate()` on context/phase authority change ([§ Presentation lifecycle](#presentation-lifecycle-in-progress)).
+10. **`ICentralizedUiSurface` (required)** — presenter **must** implement the interface (directly or via composed `CentralizedUiPresentation` + internal `IPresentationDriver`). Facade exposes `RequestedVisible`, `IsShown`, `IsSettling` when a static facade exists. Use `HideImmediate()` on phase exit, context swap, or competing overlay ([§ Presentation lifecycle](#presentation-lifecycle)).
 
 **Do not**
 
@@ -481,14 +481,31 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 
 ---
 
-## Presentation lifecycle (in progress)
+## Presentation lifecycle
 
-**Status:** Planned — implementation tracked on GitHub; vocabulary and rules below are **target API** (not all shipped yet). When #207 closes, treat this section as authoritative for new PopIn-family services.
+**Status:** Contract shipped (#207). **All** centralized services in [Scene graph](#scene-graph-dev-bootstrap) must implement `ICentralizedUiSurface` on the presenter (migration tracked on [game#206](https://github.com/miramocha/griddungeon-game/issues/206)).
 
-**Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — unified show/hide for centralized UITK overlays.  
-**Pull order:** [#207](https://github.com/miramocha/griddungeon-game/issues/207) (contract + inventory migrate) → [#209](https://github.com/miramocha/griddungeon-game/issues/209) (`CharacterDetail`) → [#208](https://github.com/miramocha/griddungeon-game/issues/208) (party menu orchestration).  
-**Docs follow-up:** [griddungeon-design-docs#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) — sync this page + gotchas when API lands.  
-**Draft index:** [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md).
+**Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — transition-agnostic show/hide for centralized UITK services (PopIn modals, slide strips, collapse floaters).  
+**Docs follow-up:** [griddungeon-design-docs#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) — sync gotchas + facade tables when migrations land.  
+**Issue index:** [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md).
+
+### Mandatory rule (new + migrated services)
+
+Every **centralized UI service** (`GameState` child with its own `UIDocument` listed in [Shipped services](#shipped-services) or [Scene graph](#scene-graph-dev-bootstrap)) **must**:
+
+1. Implement **`ICentralizedUiSurface`** on the presenter (or delegate to an internal `CentralizedUiPresentation` backed by `IPresentationDriver`).
+2. Expose **`RequestedVisible`**, **`IsShown`**, **`IsSettling`** on the static facade when one exists — not domain-only flags that imply visibility (`IsVisible`, `IsOpen`, context ≠ hidden).
+3. Route **phase exit**, **context enum swap**, and **competing overlay** teardown through **`HideImmediate()`**.
+4. Keep **visual driver names internal** — PopIn, slide, collapse, USS classes stay out of public facades.
+
+**Documented exceptions (no `ICentralizedUiSurface` required):**
+
+| Service | Why |
+|---------|-----|
+| `ScreenFadePresenter` | Beat-driven opaque/transparent; imperative `FadeOut`/`FadeIn` on `GameState.ScreenFade` — not authority-toggled chrome |
+| Phase HUDs (`HubHud`, `CombatHud`, `ExplorationHud`) | Not centralized services — phase-owned documents |
+
+Passive copy rails (`CommandRailInfoPresenter`) should still implement the interface where visibility toggles exist; use immediate `Hide` when there is no settle animation.
 
 ### Problem
 
@@ -533,16 +550,28 @@ public interface ICentralizedUiSurface
 | `SetContext(open)` | `HideImmediate()` if leaving another open context, then `Show()` |
 | Data refresh while settling | `Show` path — not refresh-only while `IsSettling` |
 
-Party formation floater uses **collapse/dip** internally — same *rules*, different driver; not required to implement `ICentralizedUiSurface` until a third collapse-based service needs the same facade shape.
+### Internal drivers (`IPresentationDriver`)
 
-### Service status (MVP1)
+| Driver | Animation family | Used by |
+|--------|------------------|---------|
+| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`) | `ItemListPickerView`, `CharacterDetailPresenter` |
+| `CollapsePresentationDriver` | Floater collapse / dip | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
+| `SlidePresentationDriver` | USS retract / slide | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
 
-| Service | Lifecycle | Notes |
-|---------|-----------|-------|
-| `ItemListInventory` / `ItemListPickerView` | Reference impl | Migrate to `IPresentationDriver` in #207; keep domain facade (`OpenBag`, …) |
-| `CharacterDetail` | **Refactor** (#209) | Replace hand-rolled flags; fix `IsVisible` intent vs on-screen |
-| `PartyFormationFloater` | Stable (non-PopIn) | USS `--collapsed`; document as parallel family |
-| `PartyMenuOverlayView` | Orchestration (#208) | Competing sort-251 modals: hide immediate before open |
+Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters expose only `ICentralizedUiSurface` vocabulary.
+
+### Service migration status (MVP1)
+
+| Service | `ICentralizedUiSurface` | Driver | Issue |
+|---------|-------------------------|--------|-------|
+| `ItemListPickerView` / `ItemListInventory` | View composes surface; facade lifecycle pending | PopIn | [#207](https://github.com/miramocha/griddungeon-game/issues/207) done, [#213](https://github.com/miramocha/griddungeon-game/issues/213) facade |
+| `CharacterDetail` | Presenter implements | PopIn | [#209](https://github.com/miramocha/griddungeon-game/issues/209) done |
+| `SkillUsePicker` | Not yet | PopIn | [#212](https://github.com/miramocha/griddungeon-game/issues/212) |
+| `PartyFormationFloater` | Not yet | Collapse | [#214](https://github.com/miramocha/griddungeon-game/issues/214) |
+| `WalletHud` | Not yet | Slide | [#215](https://github.com/miramocha/griddungeon-game/issues/215) |
+| `InputHint` | Not yet | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
+| `PartyMenuOverlayView` | Orchestration only | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
+| `ScreenFade` | Exception (imperative fade) | Opacity | — |
 
 ---
 
