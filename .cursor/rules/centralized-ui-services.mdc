@@ -8,7 +8,17 @@ alwaysApply: false
 
 Cross-phase overlays (`InputHintPresenter`, `PartyFormationFloater`, `ItemListInventory`, `SkillUsePickerPresenter`, …) use **one scene `GameObject` + `UIDocument`** under `GameState`. Phase views **orchestrate** via static facades; they do **not** own duplicate picker trees.
 
-**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsClosing`, context-switch hide).
+**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`).
+
+## `ICentralizedUiSurface` — required
+
+Every centralized service (`GameState` child with its own `UIDocument` — see doc § Scene graph) **must** implement `ICentralizedUiSurface` on the presenter (directly or via `CentralizedUiPresentation` + internal `IPresentationDriver`).
+
+- Facades expose `RequestedVisible`, `IsShown`, `IsSettling` — not misleading `IsOpen` / context-as-visible.
+- `HideImmediate()` on phase exit, context swap, competing overlay.
+- **Exception:** `ScreenFadePresenter` (imperative beat fade on `GameState.ScreenFade`).
+
+Epic: [game#206](https://github.com/miramocha/griddungeon-game/issues/206). New services: reject PRs without the interface.
 
 ## Standalone document — required for migrations
 
