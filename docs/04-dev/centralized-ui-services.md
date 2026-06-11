@@ -456,17 +456,135 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 1. **Name the concern** — one reason to change (hints, party strip, fade). Do not merge unrelated chrome.
 2. **New `GameObject` + `UIDocument`** under `GameState` (or documented sibling), UXML in `Assets/UI/Screens/Shared/` if cross-phase.
 3. **Pick `sortingOrder`** from the table above; document the value in the presenter constant.
-4. **Presenter** builds tree in `EnsureOverlay`, caches `Q()` results, ignores hits if non-interactive (`pickingMode = Ignore` for hint strip).
-5. **Facade (optional)** — static `Register`/`Unregister` in `OnEnable`/`OnDisable` if UI views need access without serialized refs.
-6. **`GameState` field (optional)** — when Runtime systems must drive the panel (`ScreenFade`, `InputHint`).
-7. **Wire bootstrap** — `DevSceneComposition.Wire…` + menu item so clones stay consistent.
-8. **Ownership doc** — list which views publish/clear; add row to [Global input hints](shared-menu-picker-ui.md#global-input-hints) publishers table if it touches bind copy.
-9. **Tests** — Edit Mode under `Assets/Tests/UI/` for sort order, visibility, hint publish/clear (see existing `InputHint` / floater fixtures).
-10. **`CentralizedUiPresenterBase` (required)** — inherit `CentralizedUiPresenterBase` (shipped [#229](https://github.com/miramocha/griddungeon-game/issues/229)); do **not** re-implement `ICentralizedUiSurface` boilerplate directly. Static facades inherit `CentralizedUiFacade<TPresenter>` ([#230](https://github.com/miramocha/griddungeon-game/issues/230)) — base provides `Register`/`Unregister`/`Resolve` and `ICentralizedUiSurface` delegation. Use `HideImmediate()` on phase exit, context swap, or competing overlay ([§ Presentation lifecycle](#presentation-lifecycle)). **Driver family is internal only** — PopIn (pickers, character detail, skill picker), slide (wallet, input hint), collapse (party floater), rail enter (`CommandRail`) all share the same public vocabulary; document non-PopIn choice in the service row below, not on the facade.
+4. **Inherit `CentralizedUiPresenterBase`** ([#229](https://github.com/miramocha/griddungeon-game/issues/229)) — do **not** re-implement `ICentralizedUiSurface` boilerplate directly. Required shape:
+   - `Awake` / first domain call → `EnsureOverlay()`: build UXML, assign `m_document.panelSettings` + `sortingOrder`, cache `Q()` refs, create `m_presentation` (step 5), call `WirePresentationSubscription()`.
+   - `OnEnable` → `WirePresentationSubscription()` (safe to call again after domain-side `EnsureOverlay`).
+   - `OnDisable` → `TeardownPresentationSubscription()` + `HideImmediate()`.
+   - Override abstract `Show()` / `Hide()` / `HideImmediate()` — delegate to `m_presentation` + sync visuals.
+   - Non-interactive strips: `root.pickingMode = PickingMode.Ignore`.
+5. **Pick a presentation driver** — set `m_presentation` inside `EnsureOverlay`:
+
+| Driver | Factory | When to use |
+|--------|---------|-------------|
+| **PopIn** | `CentralizedUiPresentation.CreatePopIn(root)` | Full-screen modal pickers, character detail, skill picker |
+| **Slide** | `CentralizedUiPresentation.CreateSlide(panel, retractedClass)` | Strips that retract off-screen (wallet HUD, input hint) |
+| **Collapse** | `CentralizedUiPresentation.CreateCollapse(root)` | Floaters that collapse / dip in place (party formation) |
+| Custom | `new CentralizedUiPresentation(root, myDriver)` | Specialised only (e.g. rail-enter on `CommandRail`) — internal; document choice in service row |
+
+6. **Facade (optional)** — static access without serialized refs ([#230](https://github.com/miramocha/griddungeon-game/issues/230)). Hold `static readonly CentralizedUiFacade<TPresenter> s_facade = new(debugName: "MyService")`; expose thin `Register`/`Unregister` (called from presenter `OnEnable`/`OnDisable`); delegate `RequestedVisible`, `IsShown`, `IsSettling`, `Show`/`Hide`/`HideImmediate`, and `PresentationChanged` to `s_facade`; domain calls via `s_facade.Resolve()?.Method()`. **Not applicable** to `GameState`-forwarding variants (`InputHints`, `WalletHud` resolve through a `GameState` reference instead).
+7. **`GameState` field (optional)** — when Runtime systems must drive the panel (`ScreenFade`, `InputHint`).
+8. **Wire bootstrap** — `DevSceneComposition.Wire…` + menu item so clones stay consistent.
+9. **Ownership doc** — list which views publish/clear; add row to [Global input hints](shared-menu-picker-ui.md#global-input-hints) publishers table if it touches bind copy.
+10. **Tests** — Edit Mode under `Assets/Tests/UI/` for sort order, visibility, hint publish/clear (see existing `InputHint` / floater fixtures).
+
+### Code skeleton — presenter
+
+```csharp
+namespace GridDungeon.Runtime.UI
+{
+    [RequireComponent(typeof(UIDocument))]
+    public sealed class MyOverlayPresenter : CentralizedUiPresenterBase
+    {
+        const int k_SortOrder = 200; // pick from sortingOrder table
+
+        [SerializeField] PanelSettings m_panelSettings = null!;
+        [SerializeField] VisualTreeAsset m_layout = null!;
+
+        UIDocument m_document = null!;
+        bool m_overlayBuilt;
+
+        void Awake() => EnsureOverlay();
+
+        void OnEnable()
+        {
+            MyOverlay.Register(this);   // omit if no facade / GameState-forwarding only
+            WirePresentationSubscription();
+        }
+
+        void OnDisable()
+        {
+            MyOverlay.Unregister(this);
+            TeardownPresentationSubscription();
+            HideImmediate();
+        }
+
+        public override void Show()
+        {
+            EnsureOverlay();
+            m_presentation?.Show();
+        }
+
+        public override void Hide() => m_presentation?.Hide();
+
+        public override void HideImmediate() => m_presentation?.HideImmediate();
+
+        void EnsureOverlay()
+        {
+            if (m_overlayBuilt)
+            {
+                return;
+            }
+
+            m_document = GetComponent<UIDocument>();
+            m_document.panelSettings = m_panelSettings;
+            m_document.sortingOrder = k_SortOrder;
+
+            var root = m_document.rootVisualElement;
+            m_layout.CloneTree(root);
+            // cache root.Q<Label>("my-label") etc. here
+
+            // swap CreatePopIn → CreateSlide / CreateCollapse per step 5
+            m_presentation = CentralizedUiPresentation.CreatePopIn(root);
+            WirePresentationSubscription();
+            m_overlayBuilt = true;
+        }
+    }
+}
+```
+
+### Code skeleton — facade
+
+```csharp
+namespace GridDungeon.UI.Views
+{
+    /// <summary>Static access to the scene-wide <see cref="MyOverlayPresenter"/>.</summary>
+    public static class MyOverlay
+    {
+        static readonly CentralizedUiFacade<MyOverlayPresenter> s_facade = new(
+            debugName: "MyOverlay"
+        );
+
+        public static void Register(MyOverlayPresenter p) => s_facade.Register(p);
+
+        public static void Unregister(MyOverlayPresenter p) => s_facade.Unregister(p);
+
+        public static bool RequestedVisible => s_facade.RequestedVisible;
+
+        public static bool IsShown => s_facade.IsShown;
+
+        public static bool IsSettling => s_facade.IsSettling;
+
+        public static event Action? PresentationChanged
+        {
+            add => s_facade.PresentationChanged += value;
+            remove => s_facade.PresentationChanged -= value;
+        }
+
+        // domain calls — add service-specific methods below
+        public static void Open(/* context args */) => s_facade.Resolve()?.Open(/* args */);
+
+        public static void Show() => s_facade.Show();
+
+        public static void Hide() => s_facade.Hide();
+
+        public static void HideImmediate() => s_facade.HideImmediate();
+    }
+}
+```
 
 **Do not**
 
-- Embed a second copy of the panel inside phase UXML “for convenience.”
+- Embed a second copy of the panel inside phase UXML "for convenience."
 - **Dock** or reparent the service tree into another `UIDocument` host, or ship `worldBound` geometry sync as the integration — use modal + `sortingOrder` + rail-offset USS instead.
 - Duplicate bind footers on modals when `InputHints` already covers the context.
 - Put gameplay rules or `CombatController` logic inside presenters.
