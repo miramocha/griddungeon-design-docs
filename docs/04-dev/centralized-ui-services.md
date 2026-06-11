@@ -392,6 +392,8 @@ CharacterDetail.Hide();
 
 **Deferred:** equipment bag picker window on slot confirm; combat analyze host (third caller → optional `GameState` ref).
 
+**Lifecycle refactor:** [game#209](https://github.com/miramocha/griddungeon-game/issues/209) — adopt `ICentralizedUiSurface` ([§ Presentation lifecycle](#presentation-lifecycle-in-progress)).
+
 ---
 
 ### Screen fade — `ScreenFadePresenter` (no static facade)
@@ -460,6 +462,7 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 7. **Wire bootstrap** — `DevSceneComposition.Wire…` + menu item so clones stay consistent.
 8. **Ownership doc** — list which views publish/clear; add row to [Global input hints](shared-menu-picker-ui.md#global-input-hints) publishers table if it touches bind copy.
 9. **Tests** — Edit Mode under `Assets/Tests/UI/` for sort order, visibility, hint publish/clear (see existing `InputHint` / floater fixtures).
+10. **Presentation lifecycle (PopIn-family)** — implement or compose `ICentralizedUiSurface` when #207 lands; use `HideImmediate()` on context/phase authority change ([§ Presentation lifecycle](#presentation-lifecycle-in-progress)).
 
 **Do not**
 
@@ -478,11 +481,77 @@ Use this checklist when a panel must survive phase changes or serve multiple HUD
 
 ---
 
+## Presentation lifecycle (in progress)
+
+**Status:** Planned — implementation tracked on GitHub; vocabulary and rules below are **target API** (not all shipped yet). When #207 closes, treat this section as authoritative for new PopIn-family services.
+
+**Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — unified show/hide for centralized UITK overlays.  
+**Pull order:** [#207](https://github.com/miramocha/griddungeon-game/issues/207) (contract + inventory migrate) → [#209](https://github.com/miramocha/griddungeon-game/issues/209) (`CharacterDetail`) → [#208](https://github.com/miramocha/griddungeon-game/issues/208) (party menu orchestration).  
+**Docs follow-up:** [griddungeon-design-docs#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) — sync this page + gotchas when API lands.  
+**Draft index:** [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md).
+
+### Problem
+
+PopIn-style centralized services today each reimplement show/hide flags (`IsActive`, `m_isClosing`, deferred `schedule.Execute`, …). `ItemListInventory` / `ItemListPickerView` is the **stable reference**; `CharacterDetailPresenter` duplicates the pattern and races (reopen during dismiss, facade `IsVisible` vs on-screen state). See [centralized UI gotchas](centralized-ui-gotchas.md).
+
+### Public contract (transition-agnostic)
+
+Facades and presenters expose **intent and presentation state** — not PopIn, slide, collapse, or USS names.
+
+| Member | Meaning |
+|--------|---------|
+| `RequestedVisible` | Authority wants the panel open (context ≠ hidden) |
+| `IsShown` | Presentation settled on-screen |
+| `IsSettling` | Enter or exit in flight (`RequestedVisible` ≠ `IsShown`, or internal settle flag) |
+| `Show()` | Present panel |
+| `Hide()` | Dismiss within same authority (may settle) |
+| `HideImmediate()` | Phase exit, context enum swap, competing overlay — cancel deferred callbacks |
+
+```csharp
+// Target: GridDungeon.UI — game#207
+public interface ICentralizedUiSurface
+{
+    bool RequestedVisible { get; }
+    bool IsShown { get; }
+    bool IsSettling { get; }
+    event Action? PresentationChanged;
+    void Show();
+    void Hide();
+    void HideImmediate();
+}
+```
+
+**Do not** put `PlayEnter`, `IsClosing`, `PopIn`, or animation duration on this interface. Visual drivers (`IPresentationDriver`, e.g. PopIn vs collapse) stay **internal** to each presenter.
+
+### Lifecycle rules
+
+| Call | When |
+|------|------|
+| `Hide()` | Player dismiss; same context authority |
+| `HideImmediate()` | Phase leave, `SetContext` swap, another overlay at same sort takes focus |
+| `SetContext(Hidden)` | System → `HideImmediate()` |
+| `SetContext(open)` | `HideImmediate()` if leaving another open context, then `Show()` |
+| Data refresh while settling | `Show` path — not refresh-only while `IsSettling` |
+
+Party formation floater uses **collapse/dip** internally — same *rules*, different driver; not required to implement `ICentralizedUiSurface` until a third collapse-based service needs the same facade shape.
+
+### Service status (MVP1)
+
+| Service | Lifecycle | Notes |
+|---------|-----------|-------|
+| `ItemListInventory` / `ItemListPickerView` | Reference impl | Migrate to `IPresentationDriver` in #207; keep domain facade (`OpenBag`, …) |
+| `CharacterDetail` | **Refactor** (#209) | Replace hand-rolled flags; fix `IsVisible` intent vs on-screen |
+| `PartyFormationFloater` | Stable (non-PopIn) | USS `--collapsed`; document as parallel family |
+| `PartyMenuOverlayView` | Orchestration (#208) | Competing sort-251 modals: hide immediate before open |
+
+---
+
 ## Documentation map
 
 | Topic | Authoritative doc |
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
+| **Presentation lifecycle** (planned API, issue index) | **Here § Presentation lifecycle** |
 | Implementation gotchas (exit races, flags, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |

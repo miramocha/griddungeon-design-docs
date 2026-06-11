@@ -11,7 +11,8 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | When | Action |
 |------|--------|
 | Hit a weird modal / picker bug | Search here before adding guards in phase HUDs |
-| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen** and **Context switches** |
+| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle-in-progress) |
+| Planned unified lifecycle API (`Show` / `Hide` / `IsSettling`) | [game#206](https://github.com/miramocha/griddungeon-game/issues/206) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 
@@ -154,6 +155,8 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 | Topic | Doc |
 |-------|-----|
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
+| Presentation lifecycle (planned API, pull order) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle-in-progress) |
+| GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
 | **Gotchas (this page)** | **Here** |
