@@ -159,8 +159,12 @@ Built under `map-view-grid-host` (siblings above `map-view-grid`):
 |----------------------|-----------|-------------------|
 | `map-view-gather-markers` | `MapGatherMarkersPresenter` | `HasGatherNode` + visited (or dev reveal-all); `map-view__marker--gather` |
 | `map-view-hub-entrance-markers` | `MapHubEntranceMarkersPresenter` | B1F `stairsUp` gate when visited — `MapHubEntranceMarkerRules` |
+| `map-view-stairs-markers` | `MapStairsMarkersPresenter` | Stairs cells (down/up); `map-view__marker--stairs` |
+| `map-view-story-event-markers` | `MapStoryEventMarkersPresenter` | Active story event cells; `map-view__marker--story-event` |
 | `map-view-foe-markers` | `MapFoeMarkersPresenter` | FOE in LOS / last known; patrol slide via `MapGridMarkerAnimator` |
 | `map-view-party-markers` | `MapPartyMarkerPresenter` | Party cell + facing; lerp with step; resync on return from combat |
+
+`MapGatherMarkersPresenter`, `MapStairsMarkersPresenter`, `MapStoryEventMarkersPresenter`, and `MapFoeMarkersPresenter` implement `IMapMarkerLayerPresenter` ([#233](https://github.com/miramocha/griddungeon-game/issues/233)), enabling `MapView` to manage the layer collection polymorphically (`BindMetrics`, `BindCellGrid`, `BindFloor`, `KillAnimations`, `SyncImmediate`, `SyncForCell`).
 
 `MapGridMarkerAnimator` — shared fade/slide tweens; FOE patrol is **ambient** (does not block exploration input). Dev **Tools → Dev Tools Map** can pass `revealAllMarkers` for preview.
 

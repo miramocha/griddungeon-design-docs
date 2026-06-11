@@ -521,7 +521,7 @@ flowchart LR
 | `PickerTabStripView` + `RailMenu.uss` tabs | `SkillPickerPresentationModel` / `SkillPickerRowModel` |
 | `WindowedListPaneView` + `WindowedList.uss` | Row DOM: `skill-picker__row` in `SkillUsePicker.uss` |
 | `TabbedPicker.uss` shell | `CreateRowElement` inline in view (name, cost, disabled reason) |
-| `MenuFocusNavigator` on rows | `ISkillUsePickerView` / `ICombatSkillPickerKeyboardView` ports |
+| `MenuFocusNavigator` on rows | `ISkillUsePickerView` / `ITabbedRowPickerKeyboardView` ports (shared keyboard contract — [#232](https://github.com/miramocha/griddungeon-game/issues/232); replaces deleted `ICombatSkillPickerKeyboardView` / `ICombatItemPickerKeyboardView`) |
 
 **Not** using `ItemListPickerView` today — skill rows have a different column layout (MP cost, disabled reason) and a Runtime presentation type owned by ADR 035. A future refactor could introduce a generic `TabbedListPickerView<TRow>` or a row-builder delegate; MVP1 keeps **`SkillUsePickerToolkitView`** separate to avoid coupling item economy to combat skill catalog.
 

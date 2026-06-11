@@ -69,13 +69,15 @@ flowchart LR
 
 ### Presentation gates (Runtime + UI tweens)
 
+All gates implement `IPresentationGate` and inherit `PresentationGateBase : MonoBehaviour` ([#231](https://github.com/miramocha/griddungeon-game/issues/231)). Callers type against `IPresentationGate` where possible.
+
 | Component | Location | `IsLocked` | Purpose |
 |-----------|----------|------------|---------|
 | `HubPresentationGate` | `HubController` | Yes | Block hub confirms during feedback tweens |
-| `ExplorationPresentationGate` | `ExplorationHud` GO | Yes | Block exploration HUD actions during beats |
+| `ExplorationPresentationGate` | `ExplorationHud` GO | Yes | Block exploration HUD actions during beats; adds `AcquireHudSuppress()` / `ReleaseHudSuppress()` |
 | `CombatPresentationGate` | `CombatController` | Yes | Combat playback waits; `CombatController.IsPresentationLocked` |
 
-Pattern: UI `Acquire()` → play DOTween → `Release()`. `ResetLocks()` on phase exit.
+`Hub` and `Combat` gates share the same base logic; `ExplorationPresentationGate` extends with HUD suppress. Pattern: `Acquire()` → play DOTween → `Release()`. `ResetLocks()` on phase exit.
 
 ---
 

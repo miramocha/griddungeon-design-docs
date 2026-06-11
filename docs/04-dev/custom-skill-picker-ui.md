@@ -54,11 +54,11 @@ Path: `Assets/Scripts/Runtime/Combat/ISkillUsePickerView.cs`
 
 **Empty list:** When the actor has no combat skills, the catalog still returns one **All** tab with **zero rows**. **Show the picker** (modal visible, empty list). Do not auto-close or invent an `attack` row for cores — **Attack** stays on the command bar.
 
-### `ICombatSkillPickerKeyboardView` (required for keyboard parity)
+### `ITabbedRowPickerKeyboardView` (required for keyboard parity)
 
-Path: `Assets/Scripts/Runtime/Combat/ICombatSkillPickerKeyboardView.cs`
+Path: `Assets/Scripts/UI/Views/ITabbedRowPickerKeyboardView.cs`
 
-Implement on the same class as the view (or a wrapper). `CombatInputHandler` calls these only while `ICombatSkillPickerHost.IsOpen`:
+Replaces the deleted per-picker interfaces `ICombatSkillPickerKeyboardView` and `ICombatItemPickerKeyboardView` ([#232](https://github.com/miramocha/griddungeon-game/issues/232)). Implement on the same class as the view (or a wrapper). `CombatInputHandler` calls these only while `ICombatSkillPickerHost.IsOpen`:
 
 | Method | MVP1 input |
 |--------|------------|
@@ -118,7 +118,7 @@ Reference: `Assets/Scripts/UI/Views/SkillUsePickerToolkitView.cs`
 ```csharp
 public sealed class MySkillPickerView
     : ISkillUsePickerView,
-        ICombatSkillPickerKeyboardView
+        ITabbedRowPickerKeyboardView
 {
     public bool IsOpen { get; private set; }
     public event Action<string>? Selected;
@@ -172,7 +172,7 @@ Only if you have explicit approval for new uGUI ([unity-ui-toolkit](https://gith
 
 1. Implement `ISkillUsePickerView` on a `MonoBehaviour` that owns your Canvas/widgets.
 2. `Show` / `Hide` toggle visibility; raise `Selected` / `Cancelled` from buttons.
-3. Implement `ICombatSkillPickerKeyboardView` or leave keyboard no-op and document mouse-only.
+3. Implement `ITabbedRowPickerKeyboardView` or leave keyboard no-op and document mouse-only.
 4. Wire host + `CommandPanelView` as above — **no** changes to `CombatController`.
 
 ---
@@ -215,7 +215,7 @@ Edit Mode paths: `Tests → Combat → SkillPickerCatalogTests`, `SkillPickerCoo
 
 Catalog tests ([#149](https://github.com/miramocha/griddungeon-game/issues/149)): `Build_RowIncludesDescriptionEnFromSkillData`, `Build_RowCostLabel_ShowsMpOnly`. UI: focus row → `skill-picker-detail` text; row shows `CostLabel`.
 
-Do not simulate `<Keyboard>/q` in Edit Mode — test tab/row via `ICombatSkillPickerKeyboardView` or view public methods ([unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc)).
+Do not simulate `<Keyboard>/q` in Edit Mode — test tab/row via `ITabbedRowPickerKeyboardView` or view public methods ([unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc)).
 
 Manual: **DevBootstrap → F3** → **Skill** → focus rows: detail panel updates; MP on row; medic/breaker kits; empty allocation → All tab, zero rows.
 
