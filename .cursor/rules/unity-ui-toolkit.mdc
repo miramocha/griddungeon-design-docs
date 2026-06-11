@@ -79,24 +79,24 @@ New UI should **compose** existing shared blocks under `Assets/UI/Screens/Shared
 | Shared component | UXML / presenter | Reuse rule |
 |------------------|------------------|------------|
 | **Party menu overlay** | `PartyMenu.uxml`, `PartyMenuOverlayView` | Hub **Tab** and exploration **Esc** — same shell; phase hosts only open/close and publish hints |
-| **Command rail** | `CommandRail.uxml`, `CommandRailPresenter`, `CommandPanelModalSupport` | One shell; hub / combat / party section rails populate `PanelHost` in code (`CommandRailPanelBuilder`, `RailMenuPresenter`); `ResetPanelChrome` when combat ends or non-combat owner repopulates |
+| **Command rail** | `CommandRail.uxml`, `CommandRailPresenter` | One shell; hub / combat / party section rails populate `PanelHost` in code (`CommandRailPanelBuilder`, `RailMenuPresenter`) |
 | **Command rail info** | `CommandRailInfo.uxml`, `CommandRailInfoPresenter` | Non-button copy (titles, service lines) — not duplicated per phase UXML |
 | **Global input hints** | `InputHint.uxml`, `InputHintPresenter` | One strip, `sortingOrder` 300 — phase views publish via `InputHints`; see `unity-global-input-hints.mdc` |
-| **Tabbed item picker** | `ItemListPicker.uxml`, `ItemListPickerView` | Shared row/tab view; **hosts** use [`ItemListInventory`](../../docs/04-dev/centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) service (standalone `UIDocument`) — not `CloneTree` on phase HUDs |
+| **Tabbed item picker** | `ItemListPicker.uxml`, `ItemListPickerView` | Shared row/tab view; **hosts** use [ItemListInventory](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) service (standalone `UIDocument`) — not `CloneTree` on phase HUDs |
 | **Item list inventory** | `ItemListInventoryOverlay.uxml`, `ItemListInventoryPresenter` | Hub shop, combat item, party bag — one facade; modal + rail offset; see `centralized-ui-services.mdc` |
 | **Rail menu template** | `RailMenuVertical.uxml` | Empty host for new vertical rails — do not copy-paste rail markup |
 
 **Before adding a new UXML file**, ask:
 
 1. Does a shared component already cover this? → extend profile, modifier, or presenter instead.
-2. Will a second screen need the same chrome for the initial release? → put it in `Shared/` with its own `UIDocument` + presenter ([centralized UI services](../../docs/04-dev/centralized-ui-services.md)).
+2. Will a second screen need the same chrome for the initial release? → put it in `Shared/` with its own `UIDocument` + presenter ([centralized UI services](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-services.md)).
 3. Is the difference only data or visibility? → C# + USS class toggle on one tree.
 
 **Phase HUDs** (`HubHud`, `CombatHud`, `ExplorationHud`) orchestrate: bind events, call shared facades, toggle modifiers. They do **not** own cross-phase overlays inline in their UXML.
 
-**Centralized services** (`ItemListInventory`, `InputHints`, `PartyFormationFloater`, …): one `UIDocument` per concern under `GameState`. **Do not** embed or geometry-dock service trees into phase UXML as the final integration — modal + `sortingOrder` + USS rail offset instead ([`centralized-ui-services.mdc`](centralized-ui-services.mdc)).
+**Centralized services** (`ItemListInventory`, `InputHints`, `PartyFormationFloater`, …): one `UIDocument` per concern under `GameState`. **Do not** embed or geometry-dock service trees into phase UXML as the final integration — modal + `sortingOrder` + USS rail offset instead (`centralized-ui-services.mdc`).
 
-Design reference: [shared menu & picker UI](../../docs/04-dev/shared-menu-picker-ui.md), [centralized UI services](../../docs/04-dev/centralized-ui-services.md).
+Design reference: [shared menu & picker UI](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/shared-menu-picker-ui.md), [centralized UI services](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-services.md).
 
 ## BEM naming (UXML + USS classes)
 

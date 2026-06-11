@@ -32,6 +32,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `unity-clean-code-principles.mdc` | SRP, DRY, KISS, YAGNI (always apply) |
 | `unity-csharp-naming.mdc` | Names for C# sketches in class design docs |
 | `unity-csharp-language.mdc` | C# 9 subset — no `init`, `record`, etc. |
+| `unity-csharp-unityengine-object.mdc` | Qualify `UnityEngine.Object` — avoid CS0104 vs `System.Object` |
 | `unity-csharp-formatting.mdc` | Layout / class organization |
 | `unity-csharp-comments.mdc` | Comment style |
 | `unity-common-pitfalls.mdc` | Unity gotchas |

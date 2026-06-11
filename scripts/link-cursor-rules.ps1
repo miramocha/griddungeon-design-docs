@@ -21,6 +21,7 @@ $ruleNames = @(
     "unity-csharp-formatting.mdc",
     "unity-csharp-naming.mdc",
     "unity-csharp-language.mdc",
+    "unity-csharp-unityengine-object.mdc",
     "unity-ui-toolkit.mdc",
     "unity-meta-files.mdc",
     "ticket-test-documentation.mdc",

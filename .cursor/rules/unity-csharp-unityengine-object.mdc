@@ -1,0 +1,30 @@
+---
+description: Always qualify UnityEngine.Object to avoid CS0104 ambiguity with System.Object in generic constraints and static calls
+globs: Assets/**/*.cs
+alwaysApply: false
+---
+# Qualify `UnityEngine.Object` explicitly in C#
+
+`UnityEngine.Object` and `System.Object` (`object`) share the short name `Object`. Using bare `Object` in any Unity C# file causes **CS0104 ambiguous reference**.
+
+## Always write fully-qualified
+
+```csharp
+// ❌ BAD — CS0104 ambiguous reference
+where TPresenter : Object, IMyInterface
+UnityEngine.Object found = Object.FindAnyObjectByType<T>();
+
+// ✅ GOOD
+where TPresenter : UnityEngine.Object, IMyInterface
+UnityEngine.Object found = UnityEngine.Object.FindAnyObjectByType<T>();
+```
+
+## Applies to
+
+- Generic type constraints: `where T : UnityEngine.Object`
+- Static calls: `UnityEngine.Object.FindAnyObjectByType`, `Instantiate`, `Destroy`, etc.
+- Any variable/field typed as the base `Object` class
+
+## Using directives don't help
+
+Adding `using UnityEngine;` does **not** resolve the ambiguity — both `UnityEngine.Object` and `System.Object` are still in scope. Only fully-qualified names are unambiguous.
