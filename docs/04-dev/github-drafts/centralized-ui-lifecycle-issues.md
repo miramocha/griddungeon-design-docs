@@ -23,12 +23,13 @@ Parent UITK epic: [game#201](https://github.com/miramocha/griddungeon-game/issue
 | 1 | game | [#207](https://github.com/miramocha/griddungeon-game/issues/207) | Contract + `ItemListPickerView` | — ✅ |
 | 2 | game | [#209](https://github.com/miramocha/griddungeon-game/issues/209) | `CharacterDetail` | #207 ✅ |
 | 3 | game | [#208](https://github.com/miramocha/griddungeon-game/issues/208) | Party menu orchestration | #209 |
-| 4 | game | [#213](https://github.com/miramocha/griddungeon-game/issues/213) | `ItemListInventory` facade lifecycle | #207 |
-| 5 | game | [#212](https://github.com/miramocha/griddungeon-game/issues/212) | `SkillUsePicker` | #207 |
-| 6 | game | [#215](https://github.com/miramocha/griddungeon-game/issues/215) | `WalletHud` + `SlidePresentationDriver` | #207 |
-| 7 | game | [#216](https://github.com/miramocha/griddungeon-game/issues/216) | `InputHint` + slide driver | #215 |
-| 8 | game | [#214](https://github.com/miramocha/griddungeon-game/issues/214) | `PartyFormationFloater` + `CollapsePresentationDriver` | #207 |
-| 9 | design-docs | [#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) | Docs: vocabulary + gotchas sync | migrations |
+| 4 | game | [#217](https://github.com/miramocha/griddungeon-game/issues/217) | `CommandRail` + `CommandRailInfo` | #207; pairs #208 |
+| 5 | game | [#213](https://github.com/miramocha/griddungeon-game/issues/213) | `ItemListInventory` facade lifecycle | #207 |
+| 6 | game | [#212](https://github.com/miramocha/griddungeon-game/issues/212) | `SkillUsePicker` | #207 |
+| 7 | game | [#215](https://github.com/miramocha/griddungeon-game/issues/215) | `WalletHud` + `SlidePresentationDriver` | #207 |
+| 8 | game | [#216](https://github.com/miramocha/griddungeon-game/issues/216) | `InputHint` + slide driver | #215 |
+| 9 | game | [#214](https://github.com/miramocha/griddungeon-game/issues/214) | `PartyFormationFloater` + `CollapsePresentationDriver` | #207 |
+| 10 | design-docs | [#29](https://github.com/miramocha/griddungeon-design-docs/issues/29) | Docs: vocabulary + gotchas sync | migrations |
 
 ---
 
@@ -56,6 +57,7 @@ public interface ICentralizedUiSurface
 | Driver | Services |
 |--------|----------|
 | `PopInPresentationDriver` | Inventory picker, character detail, skill picker |
+| `RailEnterPresentationDriver` (or slide) | Command rail panel (`CommandRailEnterTransition`) |
 | `SlidePresentationDriver` | Wallet HUD, input hints |
 | `CollapsePresentationDriver` | Party formation floater |
 
