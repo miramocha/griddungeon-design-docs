@@ -557,6 +557,7 @@ public interface ICentralizedUiSurface
 | `PopInPresentationDriver` | Pop-in scale (`PopInTransition`) | `ItemListPickerView`, `CharacterDetailPresenter` |
 | `CollapsePresentationDriver` | Floater collapse / dip | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | USS retract / slide | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
+| `RailEnterPresentationDriver` (internal) | USS enter on rail panel (`CommandRailEnterTransition`) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
 
 Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters expose only `ICentralizedUiSurface` vocabulary.
 
@@ -570,6 +571,8 @@ Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters exp
 | `PartyFormationFloater` | Not yet | Collapse | [#214](https://github.com/miramocha/griddungeon-game/issues/214) |
 | `WalletHud` | Not yet | Slide | [#215](https://github.com/miramocha/griddungeon-game/issues/215) |
 | `InputHint` | Not yet | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
+| `CommandRail` | Not yet | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
+| `CommandRailInfo` | Not yet | Immediate (no settle) | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `PartyMenuOverlayView` | Orchestration only | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |
 
