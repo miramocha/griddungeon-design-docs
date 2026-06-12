@@ -279,15 +279,17 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
 | `PartyQuitConfirm` | Z Confirm · X Back · W/S Row |
+| `HubService` | Z Confirm · X Back · W/S Action |
+| `HubHospitalPick` | Z Pick · X Back · WASD Member — hub hospital heal/revive on party floater |
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
-| `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |
-| `PartyEquipmentSlots` | Z Pick · X Back · Q/E Member · W/S Slots |
-| `PartyFormationSwap` | Z Pick · X Cancel · Q/E Column · W/S Row — default when Formation pane is open (auto-engage on reveal) |
-| `PartyFormationEngage` | Z Engage · X Back · Q/E Column · W/S Row — after **X** backs out of swap mode while pane stays open |
+| `PartyEquipmentEngage` | Z Engage · X Back · WASD Member |
+| `PartyEquipmentSlots` | X Back · W/S Slots |
+| `PartyFormationSwap` | Z Pick · X Cancel · WASD Member — default when Formation pane is open (auto-engage on reveal) |
+| `PartyFormationEngage` | Z Engage · X Back · WASD Member — after **X** backs out of swap mode while pane stays open |
 | `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
 | `ForItemPickerRows(multiTab, backVerb)` | Z Confirm · X {backVerb} · Q/E Tab · W/S Row — or Z Confirm · X {backVerb} · W/S Row when single tab |
 
-Party equipment (slots engaged): `Z Pick · X Back · Q/E Member · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip.
+Party equipment (slots engaged): `X Back · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Member pick on the party floater uses **WASD** before slot engage (`PartyEquipmentEngage`).
 
 ---
 

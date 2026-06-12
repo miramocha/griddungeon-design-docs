@@ -225,7 +225,7 @@ Hub / exploration pause → **Formation** section shows centered **`CharacterDet
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Formation (pane reveal) | Center dialog + floater slide in; **Z** again engages swap mode — front slot **0** gets `party-formation-grid__cell--focused`. |
-| **W/S** / **Q/E** (engaged) | Move focus across the 2×4 grid (row / column); read-only detail mirrors focused **core** (`CharacterDetailView`). |
+| **WASD** (engaged) | Move focus across the 2×4 grid; read-only detail mirrors focused **core** (`CharacterDetailView`). |
 | **Z** (engaged) | Pick core slot or confirm swap (`PartyFormationCoordinator`). |
 | **X** | Cancel pending swap, or disengage swap mode; **X** again hides pane. |
 
@@ -244,7 +244,7 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Equipment (pane reveal) | Center `CharacterDetail` + floater dock (sort **260**). |
-| **Q/E** / **W/S** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
+| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. |
 | **W/S** (slots engaged) | Move worn-slot focus. |
 | **Z** (slot engaged) | **No picker** — equip deferred. |

@@ -284,7 +284,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `PartyFormationFloaterPresenterTests.ApplyHubHospitalFloaterDock_RapidExitAndRedock_CancelsPendingDismiss`, `DismissHubHospitalDockImmediate_ClearsSettlingState`, `HubHospitalServiceFocusTests`.
 
-**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; restore `HubService` on exit.
+**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; **WASD** (Hub `MenuNavigate`) moves focus on the floater grid — not Q/E. Restore `HubService` on exit.
 
 ---
 
