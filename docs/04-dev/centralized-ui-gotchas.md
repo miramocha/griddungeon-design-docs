@@ -284,7 +284,28 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `PartyFormationFloaterPresenterTests.ApplyHubHospitalFloaterDock_RapidExitAndRedock_CancelsPendingDismiss`, `DismissHubHospitalDockImmediate_ClearsSettlingState`, `HubHospitalServiceFocusTests`.
 
-**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; **WASD** (Hub `MenuNavigate`) moves focus on the floater grid — not Q/E. Restore `HubService` on exit.
+**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; **WASD** (Hub `MenuNavigate`) moves focus on the floater grid — not Q/E. Restore `HubService` on exit. Service rail chrome uses **`CommandPanelModalSupport.SyncModalChipRail`** (Heal chip selected + Revive disabled) — same recipe as hub shop Buy/Sell; see [shared menu § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+
+---
+
+## Hub service modal chip rail (`CommandPanelModalSupport.SyncModalChipRail`)
+
+**Symptom:** Hub **Heal member** / **Buy** opens a child modal but both service chips stay enabled and neither shows `rail-menu__item--selected` — player cannot tell which action owns the floater/picker.
+
+**Cause:** Re-implementing per-service `SetEnabledForModal` + `BindSelectionTargets` + `SetSelectedIndex` in the phase HUD instead of the shared helper. Shop and hospital had duplicate private methods that drifted.
+
+**Fix (shipped — `CommandPanelModalSupport`, `HubHudView`):**
+
+1. **`SyncModalChipRail`** — one call: bind selection targets, disable non-owner siblings while modal open, apply `rail-menu__item--selected` on owner (`CommandPanel.uss` keeps owner bright even when `:disabled`).
+2. **`ApplyModalChipEnables`** — index-stable nullable chip list for party section rail (same enable rule, selection handled separately).
+3. **Domain index helpers** — `HubShopServiceFocus`, `HubHospitalServiceFocus.ResolveSelectedRailIndex`; do not hardcode chip order in the HUD beyond action button indices.
+4. **`RebuildServiceFocus`** — `SetModalOpen` → `Sync*ServiceModalChips` → **then** build `MenuFocusItem` rows from `button.enabledSelf` → `ClearFocusItems` when modal open.
+
+**Trap:** Building `MenuFocusItem(button.enabledSelf, …)` **before** `SyncModalChipRail` leaves siblings permanently non-focusable in `MenuFocusNavigator` after modal dismiss (Revive skipped after Heal pick **X**). Chip sync must precede focus-item snapshot.
+
+**Tests:** `CommandPanelModalSupportTests`, `HubHospitalServiceFocusTests`, `HubShopServiceFocusTests`.
+
+**Rule:** Any new hub service action that opens a rail-offset modal or floater pick with **two+ sibling chips** must use `SyncModalChipRail` (or `ApplyModalChipEnables` when selection is owned elsewhere). Document the consumer row in [shared menu § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
 
 ---
 
