@@ -196,14 +196,153 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Map panel fade vs floor transition screen fade (`MapView` / `FadeTransition`)
+
+**Symptom:** Exploration map **hard cuts** on stairs (or hub boot shows empty frame); opacity fade never visible; map pops in only after screen is already clear.
+
+**Cause (layered — fix all that apply):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Dismiss `onComplete` order** | `ClearMotionStyles` / `style.opacity = null` **before** `map-view--faded` → USS `.map-view { opacity: 1 }` flashes one frame (snap). |
+| **`SnapFadeOpaque` same frame as HUD suppress** | `AcquireHudSuppress` starts map dismiss (280ms) then `SnapFadeOpaque` → full-screen black at sort **10000** hides the map tween entirely. Looks like instant cut. |
+| **Map reveal after screen clear** | `PresentationReleased` / map `Present` only after `FadeFromColor` finished → map appears in one frame when tween is broken or too late. |
+| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` → animated dismiss skipped while panel still visible. Host must drive **visual** state (`map-view--faded`), not presentation flags alone. |
+| **`visibility: hidden` on `--faded`** | Steady hidden via visibility can fight opacity tween; prefer **opacity-only** steady class (same pattern as `map-view__marker--fade-hidden`). |
+| **Slide retract on side panel** | `translate: 100%` on right-docked panel does not read well; map uses **opacity fade** only (`FadeTransition`, 280ms). |
+
+**Fix (shipped — `MapView`, `FadeTransition`, `FloorTransitionPresenter`):**
+
+1. **`FadeTransition`** — mirror `MapMarkerVisibility`: dismiss tweens inline opacity, then **`SetFaded` → clear inline opacity** (never clear inline before steady hidden class). Present: `wasFaded ? 0f` start opacity, remove `--faded`, tween to 1, clear inline on complete.
+2. **`MapView.SyncMapChromeVisibility`** — call `FadeTransition.Present` / `Dismiss` from **faded class vs `ShouldShowMapChrome()`**; hub / non-exploration still `HideImmediate()`.
+3. **Stairs leave floor** — `AcquireHudSuppress()` then **`yield return FadeToColor()`** (not `SnapFadeOpaque`) so map dismiss and screen darken overlap (~280ms / ~400ms). Skip duplicate intro `FadeToColor` in `RunFadeOnlyTransition` when routine already faded.
+4. **Land reveal** — `ReleaseExplorationChromeForReveal()` (`m_transitionInProgress = false`, `ResetHudSuppress`, `PresentationReleased`) **before** `FadeFromColor()` in `RevealFloorArtStep` so map fade-in runs with screen fade-in.
+5. **Steady hidden** — `map-view--faded { opacity: 0; }` only.
+
+**Authority:**
+
+| Layer | Owns |
+|-------|------|
+| `map-view--faded` | Steady hidden pixels |
+| `FadeTransition` + `UiToolkitTweens` | Motion (`style.opacity` during tween) |
+| `ExplorationPresentationGate.AcquireHudSuppress` | When map **should** hide (stairs); `MapView` subscribes + `FloorTransition.IsTransitioning` |
+| `ScreenFadePresenter` | Full-screen black — must not **snap** opaque on the same frame as map dismiss if players should see map fade |
+
+**Tests:** `MapViewPresenterTests`, `UiToolkitTweensTests.FadeTransition_Present_ClearsFadedClassAfterComplete`, `FadeTransition.SimulateDueScheduleCompletionForTests`.
+
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [`BemMotionCompletion`](uitk-bem-transition-guide.md#bemmotioncompletion), [`VisualPresentationSync`](uitk-bem-transition-guide.md#visualpresentationsync), [map chrome recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
+
+**Rule for new phase chrome:** If UITK chrome must animate **with** `ScreenFadePresenter`, coordinate timing in `FloorTransitionPresenter` (or phase owner) — do not rely on HUD suppress alone while screen snaps opaque.
+
+---
+
+## Party floater collapse — double slide-up (`CollapseTransition` / `PartyFormationFloater`)
+
+**Symptom:** Bottom party strip **slides up twice** (or dips down then up) on exploration reveal, floor land, or HUD suppress release.
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Two-leg `Present` tween** | Old sequence: inline translate **0 → dipY** (down) then **dipY → 0** (up) — reads as double vertical motion. |
+| **Present `onComplete` order** | `ClearMotionStyles` before removing `--collapsed` → one-frame snap when USS steady state catches up (same class as map `FadeTransition`). |
+| **`IsShown` without visual class** | `CentralizedUiPresentation.Show()` sets `IsShown = true` immediately; `SyncPresentation` skip logic missed re-entrant calls while the floater was still visually collapsed. |
+| **Duplicate suppress release** | `OnHudSuppressedChanged(false)` called `ApplyPartyStripVisibility` then `RefreshExplorationChrome` (which called it again) in the same frame. |
+
+**Fix (shipped — `CollapseTransition`, `PartyFormationFloaterPresenter`, `ExplorationHudView`):**
+
+1. **`CollapseTransition.Present`** — single slide **dipY → 0**; `onComplete`: `SetCollapsed(false)` **then** `ClearMotionStyles`. Dismiss `onComplete`: collapsed class **then** clear inline.
+2. **`SyncPresentation`** — gate on **`party-formation-floater--collapsed`** (visual), like `MapView` + `map-view--faded`; skip hide when already collapsed and not settling.
+3. **HUD suppress release** — `RefreshExplorationChrome` only (includes party strip visibility); no duplicate `ApplyPartyStripVisibility` before it.
+
+**Tests:** `PartyFormationFloaterPresenterTests`, `UiToolkitTweensTests.CollapseTransition_Present_ClearsCollapsedClassAfterComplete`.
+
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [collapse steady class](uitk-bem-transition-guide.md#steady-class-registry), [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
+
+---
+
+## Hub hospital pick — floater dock vs party menu (`PartyFormationFloater` / `HubHudView`)
+
+**Symptom:** Hospital **Heal member** opens rail pick mode but party strip never slides up (or shows party-menu bind state); leaving hub with pick active leaves `command-panel--modal-open` on the shared rail.
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Context priority** | `PartyMenuDock` resolved before `HubHospitalDock` — Tab party menu floater owns the strip while hospital pick is active. |
+| **System dismiss uses animated hide** | `CloseServicePanelImmediate` / phase exit called `ApplyHubHospitalFloaterDock(false)` — collapse exit can finish after reopen or after hub teardown (same class as **Context switches must not use animated hide**). |
+| **Rail chrome leak** | `CommandPanelModalSupport.SetModalOpen(true)` during hospital pick; immediate service teardown did not clear modal class before root menu rebuild. |
+| **Rapid X → Heal** | Stale collapse exit if reopen does not `CancelPendingDismiss` before `Show` (mirrors party-menu dock redock). |
+
+**Fix (shipped — `PartyFormationFloaterPresenter`, `HubHudView`):**
+
+1. **`HubHospitalDock` before `PartyMenuDock`** in `ResolveActiveContext` when `m_hubHospitalDocked` (formation-edit still wins).
+2. **`DismissHubHospitalDockImmediate()`** — system/phase/service teardown; restores `m_requestedVisible` when party-menu dock survives.
+3. **Player X / Back** — keep animated `ApplyHubHospitalFloaterDock(false)` within hospital service.
+4. **`ResetHospitalPickState`** → `DismissHubHospitalDockImmediate()`; `CloseServicePanelImmediate` also `SetModalOpen(host, false)`.
+5. **Enter pick** — `CancelPendingDismiss` at start of `ApplyHubHospitalFloaterDock(true)` (rapid redock).
+
+**Tests:** `PartyFormationFloaterPresenterTests.ApplyHubHospitalFloaterDock_RapidExitAndRedock_CancelsPendingDismiss`, `DismissHubHospitalDockImmediate_ClearsSettlingState`, `HubHospitalServiceFocusTests`.
+
+**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; **WASD** (Hub `MenuNavigate`) moves focus on the floater grid — not Q/E. Restore `HubService` on exit. Service rail chrome uses **`CommandPanelModalSupport.SyncModalChipRail`** (Heal chip selected + Revive disabled) — same recipe as hub shop Buy/Sell; see [shared menu § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+
+---
+
+## Hub service modal chip rail (`CommandPanelModalSupport.SyncModalChipRail`)
+
+**Symptom:** Hub **Heal member** / **Buy** opens a child modal but both service chips stay enabled and neither shows `rail-menu__item--selected` — player cannot tell which action owns the floater/picker.
+
+**Cause:** Re-implementing per-service `SetEnabledForModal` + `BindSelectionTargets` + `SetSelectedIndex` in the phase HUD instead of the shared helper. Shop and hospital had duplicate private methods that drifted.
+
+**Fix (shipped — `CommandPanelModalSupport`, `HubHudView`):**
+
+1. **`SyncModalChipRail`** — one call: bind selection targets, disable non-owner siblings while modal open, apply `rail-menu__item--selected` on owner (`CommandPanel.uss` keeps owner bright even when `:disabled`).
+2. **`ApplyModalChipEnables`** — index-stable nullable chip list for party section rail (same enable rule, selection handled separately).
+3. **Domain index helpers** — `HubShopServiceFocus`, `HubHospitalServiceFocus.ResolveSelectedRailIndex`; do not hardcode chip order in the HUD beyond action button indices.
+4. **`RebuildServiceFocus`** — `SetModalOpen` → `Sync*ServiceModalChips` → **then** build `MenuFocusItem` rows from `button.enabledSelf` → `ClearFocusItems` when modal open.
+
+**Trap:** Building `MenuFocusItem(button.enabledSelf, …)` **before** `SyncModalChipRail` leaves siblings permanently non-focusable in `MenuFocusNavigator` after modal dismiss (Revive skipped after Heal pick **X**). Chip sync must precede focus-item snapshot.
+
+**Tests:** `CommandPanelModalSupportTests`, `HubHospitalServiceFocusTests`, `HubShopServiceFocusTests`.
+
+**Rule:** Any new hub service action that opens a rail-offset modal or floater pick with **two+ sibling chips** must use `SyncModalChipRail` (or `ApplyModalChipEnables` when selection is owned elsewhere). Document the consumer row in [shared menu § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+
+---
+
+## Slide retract dismiss order (`SlideTransition` / input hint / wallet)
+
+**Symptom:** Input hint or wallet strip **double-slides** or **one-frame snap** on hide/show; re-publishing hint text retriggers slide while strip already expanded.
+
+**Cause:**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Dismiss `onComplete` order** | `ClearMotionStyles` before `--retracted` → USS steady state flashes visible one frame. |
+| **Present `onComplete` order** | Clear inline before confirming retracted class off → same snap on slide-in complete. |
+| **`IsShown` without visual class** | `Show()` sets `IsShown` immediately; `SyncPresentation` skipped re-show while label still had `--retracted`, or called `Show` again while already expanded. |
+
+**Fix (shipped — `SlideTransition`, `InputHintPresenter`, `WalletHudPresenter`):**
+
+1. **`SlideTransition`** — dismiss: `SetRetracted(true)` then `ClearMotionStyles`; present complete: `SetRetracted(false)` then clear inline.
+2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like `MapView` + `PartyFormationFloater`.
+3. **`CommandRailEnterTransition.PlayClose`** — apply `hiddenClass` **before** `ClearMotionStyles` when panel close uses hidden BEM.
+
+**Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
+
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
 |-------|-----|
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
 | Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
+| BEM transition helpers (API, recipes, registry) | [uitk-bem-transition-guide.md](uitk-bem-transition-guide.md) |
 | GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
+| Floor transition + map panel fade timing | [authoring-floor-transition-beats.md § Screen fade](authoring-floor-transition-beats.md#screen-fade-uitk) |
 | **Gotchas (this page)** | **Here** |

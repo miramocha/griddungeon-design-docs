@@ -235,7 +235,7 @@ When the menu is open, exploration movement actions are **unbound** so the party
 | `ExplorationHud` + `MapView` | UI Toolkit | Map gated on `GamePhase.Exploration`; party/pause menu on overlay `UIDocument` |
 | `DungeonExplorer` + `MapSystem` | Simulation | `ExplorationPhaseController` wires on enter, unwires on exit |
 
-The **`ExplorationHud` GameObject is not disabled** on Hub or Combat. Visibility is **per-widget** (`MapView` display / pause overlay classes), not by destroying `ExplorationHudView`.
+The **`ExplorationHud` GameObject is not disabled** on Hub or Combat. Visibility is **per-widget** (`MapView` opacity fade + `map-view--faded` via `SyncMapChromeVisibility`; pause overlay BEM classes), not by destroying `ExplorationHudView`. Floor transitions hide the map in sync with `ScreenFadePresenter` — [gotchas § Map panel fade](../04-dev/centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition).
 
 ```mermaid
 stateDiagram-v2

@@ -208,12 +208,24 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 |--------|------|
 | `SetModalOpen(host, open)` | Toggles `command-panel--modal-open` on the host |
 | `SetEnabledForModal(button, baseEnabled, modalOpen, isActiveOwner)` | Per-chip enable while modal open |
+| `SyncModalChipRail(railMenu, chips, modalOpen, activeOwnerIndex, selectedIndex, resolveBaseEnabled?)` | **Hub service pair** — bind `rail-menu__item--selected`, disable siblings, highlight owner |
+| `ApplyModalChipEnables(modalOpen, activeOwnerIndex, chipsByIndex, resolveBaseEnabled?)` | **Index-stable multi-chip** — party section rail (nullable slots skipped) |
 | `ResetPanelChrome(host)` | Clears `command-panel--modal-open`, `command-panel--disabled`, `command-panel--protocol-only` — **required** when combat ends or a non-combat owner repopulates the host |
+
+**Recipe — hub service chip opens a child modal (Buy/Sell, Heal/Revive):**
+
+1. Domain helper resolves owner index (`HubShopServiceFocus`, `HubHospitalServiceFocus`, …) — both delegate **`HubDualActionServiceFocus.RememberChipIndex` / `ResolveChipIndex`** for two-chip rails.
+2. `SetModalOpen(RailPanelHost, modalOpen)`.
+3. `SyncModalChipRail(serviceRailMenu, actionButtons, modalOpen, activeOwnerIndex, selectedIndex, resolveBaseEnabled?)`.
+4. While `modalOpen`, `serviceRailMenu.ClearFocusItems()` — W/S routes to the child modal, not sibling chips.
+5. On dismiss: `selectedIndex: -1`, `SetModalOpen(false)`, `Remember*ActionIndex` keeps focus on the chip that opened the modal, then `SetFocusItems(..., Resolve*RailIndex(...))`.
+6. **Build `MenuFocusItem` rows after chip sync** — `MenuFocusItem` snapshots `enabledSelf`; syncing chips first avoids siblings staying non-focusable after dismiss.
 
 | Consumer | Modal-open when | Active owner |
 |----------|-----------------|--------------|
 | `CommandPanelView` | Skill/item picker, target select, combat log | Command slot that opened the modal (`CombatController.PendingTargetCommand` for targeting) |
 | `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service chip (`ItemListInventory.HubMode` + `HubShopServiceFocus`) |
+| `HubHudView` | Hub hospital heal/revive pick open | Heal or Revive service chip (`HubHospitalMode` + `HubHospitalServiceFocus`) |
 | `PartyMenuOverlayView` | Section pane modal per signal below (Inventory bag open, Equipment pane revealed, Formation swap engaged, Quit focused) | Active section chip (`PartyMenuSectionRailFocusRules`) |
 
 **Party section modal** — siblings disable only when:
@@ -279,15 +291,17 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
 | `PartyQuitConfirm` | Z Confirm · X Back · W/S Row |
+| `HubService` | Z Confirm · X Back · W/S Action |
+| `HubHospitalPick` | Z Pick · X Back · WASD Member — hub hospital heal/revive on party floater |
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
-| `PartyEquipmentEngage` | Z Engage · X Back · Q/E Member |
-| `PartyEquipmentSlots` | Z Pick · X Back · Q/E Member · W/S Slots |
-| `PartyFormationSwap` | Z Pick · X Cancel · Q/E Column · W/S Row — default when Formation pane is open (auto-engage on reveal) |
-| `PartyFormationEngage` | Z Engage · X Back · Q/E Column · W/S Row — after **X** backs out of swap mode while pane stays open |
+| `PartyEquipmentEngage` | Z Engage · X Back · WASD Member |
+| `PartyEquipmentSlots` | X Back · W/S Slots |
+| `PartyFormationSwap` | Z Pick · X Cancel · WASD Member — default when Formation pane is open (auto-engage on reveal) |
+| `PartyFormationEngage` | Z Engage · X Back · WASD Member — after **X** backs out of swap mode while pane stays open |
 | `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
 | `ForItemPickerRows(multiTab, backVerb)` | Z Confirm · X {backVerb} · Q/E Tab · W/S Row — or Z Confirm · X {backVerb} · W/S Row when single tab |
 
-Party equipment (slots engaged): `Z Pick · X Back · Q/E Member · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip.
+Party equipment (slots engaged): `X Back · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Member pick on the party floater uses **WASD** before slot engage (`PartyEquipmentEngage`).
 
 ---
 

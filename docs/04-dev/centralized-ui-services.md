@@ -409,6 +409,8 @@ CharacterDetail.Hide();
 
 **Publishers:** `MapView.RefreshGlobalInputHint` / `ClearGlobalInputHint` (exploration idle); `InputRouter.RestoreGlobalInputHintForPhase` on story/pause dismiss. Party strip hides on fullscreen via `ExplorationHudView` → `PartyFormationFloater.ApplyFormationDockState`.
 
+**Visibility:** `MapView.SyncMapChromeVisibility` owns panel show/hide — exploration phase **and** not `FloorTransition.IsTransitioning` **and** not `ExplorationPresentationGate.IsHudSuppressed`. Uses `FadeTransition` (`map-view--faded` steady hidden); coordinates with `ScreenFadePresenter` on stairs — see [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition). Hub / non-exploration: `HideImmediate()`.
+
 ```csharp
 // InputRouter / MapInputHandler — serialized MapView ref (not ExplorationHud mount)
 m_mapView.ToggleFullscreenFromInput();
@@ -700,7 +702,9 @@ public interface ICentralizedUiSurface
 |------|------|------|
 | `UiToolkitTweens` | `Assets/Scripts/Runtime/UI/UiToolkitTweens.cs` | DOTween helpers for `VisualElement.style` (opacity, translate, scale, width/height) |
 | `UiTransitionSession` | `Assets/Scripts/Runtime/UI/UiTransitionSession.cs` | Per-target generation; `Begin` bumps **before** kill; `KillWithoutCompleting` on detach |
-| Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `CommandRailEnterTransition` |
+| `BemMotionCompletion` | `Assets/Scripts/Runtime/UI/BemMotionCompletion.cs` | Steady BEM **then** `ClearMotionStyles` on tween complete / reset — [implementation guide](uitk-bem-transition-guide.md#bemmotioncompletion) |
+| `VisualPresentationSync` | `Assets/Scripts/Runtime/UI/VisualPresentationSync.cs` | Presenter show/hide gates from steady hidden class + `IsSettling` — [implementation guide](uitk-bem-transition-guide.md#visualpresentationsync) |
+| Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition` |
 
 **Rules:** One duration source in C# constants. Toggle BEM modifiers for **steady** visibility; tween inline `style` during motion; `StyleKeyword.Null` on complete. Map marker opacity uses a **separate DOTween target** so step `Kill` does not cancel fade-in ([`MapMarkerVisibility`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/MapMarkerVisibility.cs)).
 
@@ -713,8 +717,9 @@ public interface ICentralizedUiSurface
 | `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker` |
 | `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
+| `FadePresentationDriver` | Opacity fade (`FadeTransition`, 280ms; `map-view--faded` authority) | `MapView` exploration panel show/hide; fullscreen layout settle uses `MapViewPanelTransition` |
 | `RailEnterPresentationDriver` (internal) | Opacity + translate enter (`CommandRailEnterTransition`; `--entering` on body) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
-| `InstantPresentationDriver` | BEM `--hidden` only | `MapView` (panel show/hide); fullscreen layout settle uses `MapViewPanelTransition` |
+| `InstantPresentationDriver` | BEM `--hidden` only | Detached / test hosts without `panel` (see [gotchas § Edit Mode tests](centralized-ui-gotchas.md#edit-mode-tests-without-a-panel)) |
 
 Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters expose only `ICentralizedUiSurface` vocabulary.
 
@@ -732,7 +737,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
 | `CommandRail` | Presenter + facade ✅ | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `CommandRailInfo` | Presenter ✅ (immediate dismiss) | — | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `MapView` | Presenter ✅ (`InstantPresentationDriver` + `MapViewPanelTransition`) | Instant + panel layout tween | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC |
+| `MapView` | Presenter ✅ (`FadePresentationDriver` + `MapViewPanelTransition`) | Opacity fade (280ms) + panel layout tween | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC; [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |
 
@@ -744,7 +749,8 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
 | **Presentation lifecycle** (shipped API, migration index) | **Here § Presentation lifecycle** + [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) + [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
-| Implementation gotchas (exit races, flags, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
+| BEM transition helpers (`BemMotionCompletion`, `VisualPresentationSync`) | [UITK BEM transition guide](uitk-bem-transition-guide.md) |
+| Implementation gotchas (exit races, flags, map fade vs screen fade, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |

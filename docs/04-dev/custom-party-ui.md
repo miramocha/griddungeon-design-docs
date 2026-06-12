@@ -225,7 +225,7 @@ Hub / exploration pause → **Formation** section shows centered **`CharacterDet
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Formation (pane reveal) | Center dialog + floater slide in; **Z** again engages swap mode — front slot **0** gets `party-formation-grid__cell--focused`. |
-| **W/S** / **Q/E** (engaged) | Move focus across the 2×4 grid (row / column); read-only detail mirrors focused **core** (`CharacterDetailView`). |
+| **WASD** (engaged) | Move focus across the 2×4 grid; read-only detail mirrors focused **core** (`CharacterDetailView`). |
 | **Z** (engaged) | Pick core slot or confirm swap (`PartyFormationCoordinator`). |
 | **X** | Cancel pending swap, or disengage swap mode; **X** again hides pane. |
 
@@ -244,7 +244,7 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Equipment (pane reveal) | Center `CharacterDetail` + floater dock (sort **260**). |
-| **Q/E** / **W/S** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
+| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. |
 | **W/S** (slots engaged) | Move worn-slot focus. |
 | **Z** (slot engaged) | **No picker** — equip deferred. |
@@ -317,9 +317,10 @@ Separate from strip/roster plates: a single glyph on the exploration map.
 | Piece | Path |
 |-------|------|
 | Presenter | `MapPartyMarkerPresenter` |
-| Tests | `Tests → UI → MapPartyMarkerPresenterTests` |
+| `SyncImmediate(forceSnap: true)` | Kills step tween; snaps shell to explorer cell + facing **even in fog** — floor load / layout resync via `MapView` |
+| Tests | `Tests → UI → MapPartyMarkerPresenterTests` (`SyncImmediate_WithForceSnap_StopsStepTweenAndSnapsToCell`) |
 
-Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates). Replacing the strip does **not** require replacing the map marker unless you want a unified visual language.
+Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates). Replacing the strip does **not** require replacing the map marker unless you want a unified visual language. Marker snap semantics: [UITK BEM transition guide § Map marker](uitk-bem-transition-guide.md#related-map-party-marker-forcesnap).
 
 ---
 
