@@ -29,7 +29,7 @@ Facades mirror the three flags when a static facade exists. **Do not** expose `P
 
 ### 2. Visual drivers stay internal
 
-Presenters compose **`CentralizedUiPresentation`** + **`IPresentationDriver`** (`PopIn`, slide, collapse, rail enter). Driver choice is an implementation detail per service — not a second public API.
+Presenters compose **`CentralizedUiPresentation`** + **`IPresentationDriver`** (`PopIn`, slide, collapse, rail enter). Driver choice is an implementation detail per service — not a second public API. Motion is implemented with **DOTween** via `UiToolkitTweens` + `UiTransitionSession` ([ADR 039](039-uitk-dotween-show-hide.md)) — not USS `transition-property` or `schedule.Execute` on those overlays.
 
 ### 3. Hide semantics
 
@@ -57,4 +57,6 @@ Presenters compose **`CentralizedUiPresentation`** + **`IPresentationDriver`** (
 ## Related
 
 - [game #206](https://github.com/miramocha/griddungeon-game/issues/206) — migration tracker  
+- [ADR 039](039-uitk-dotween-show-hide.md) — internal animation stack (DOTween)  
+- [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240) — shipped DOTween migration  
 - [design-docs #29](https://github.com/miramocha/griddungeon-design-docs/issues/29) — vocabulary + gotchas sync

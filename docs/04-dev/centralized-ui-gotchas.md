@@ -87,7 +87,7 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 **Fix (shipped on [#209](https://github.com/miramocha/griddungeon-game/issues/209)):**
 
 - `CharacterDetailPresenter` implements `ICentralizedUiSurface`; facade exposes `RequestedVisible`, `IsShown`, `IsSettling`.
-- `Show()` while `IsSettling` cancels pending schedule and re-enters via `PresentCurrentContext` — not `Refresh()` alone.
+- `Show()` while `IsSettling` bumps `UiTransitionSession` generation (kills in-flight tweens) and re-enters via `PresentCurrentContext` — not `Refresh()` alone.
 - Context enum swap (`SetPartyMenuContext`) calls `TeardownPresentationForContextSwap` → `HideImmediate()` on the internal presentation — not animated `Hide()` across authorities.
 - `PartyMenuOverlayView` orchestrates context + `Show`/`Hide`; it does **not** own a second PopIn stack ([#208](https://github.com/miramocha/griddungeon-game/issues/208)).
 
@@ -109,11 +109,17 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 ---
 
-## `PopInTransition` generation cancels stale schedules
+## `UiTransitionSession` generation cancels stale exit callbacks
 
-`PopInTransition` tracks a per-target **generation**. `PlayEnter` / `Reset` bump generation and pause pending scheduled exit callbacks. A new `Show()` during exit therefore **should not** run the old exit `onComplete` — unless the host never called `Show` and only called `Refresh`.
+**Shipped:** [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240) · [ADR 039](../../decisions/039-uitk-dotween-show-hide.md)
 
-Documented in `PopInTransition.cs`; do not bypass with hand-rolled delays. If you add a new animated overlay, reuse `CentralizedUiPresentation` + `IPresentationDriver` (or the same generation pattern), not ad-hoc `schedule.Execute` without invalidation.
+`PopInTransition`, `SlideTransition`, `CollapseTransition`, and `CommandRailEnterTransition` call **`UiTransitionSession.Begin`** before starting DOTween motion. `Begin` **increments generation then kills** in-flight tweens on that target (or on a separate DOTween target for map marker fades). Exit `onComplete` handlers capture generation and return early when `!IsCurrent`.
+
+A new `Show()` during exit therefore **should not** run the old exit `onComplete` — unless the host never called `Show` and only called `Refresh`.
+
+Do not bypass with hand-rolled delays or USS `transition-duration`. New animated overlays: `CentralizedUiPresentation` + `IPresentationDriver` + `UiTransitionSession` — not ad-hoc `schedule.Execute`.
+
+**Detach:** `UiTransitionSession` cleanup on `DetachFromPanelEvent` uses `KillWithoutCompleting` so DOTween does not fire callbacks while UITK is modifying hierarchy.
 
 ---
 
@@ -170,9 +176,23 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 
 **Symptom:** Picker tests pass in isolation but Play Mode still breaks on rapid cancel.
 
-**Cause:** `ItemListPickerView` tests that clone UXML **without** a live `panel` run `PopInTransition.PlayExit` **synchronously** (`panel == null` → immediate `onComplete`). Exit-animation races **do not reproduce** unless the host is under a `UIDocument` with `PanelSettings` (see `ItemListInventoryPresenterTests.CreatePresenter`).
+**Cause (post-#240):** `ItemListPickerView` tests that clone UXML **without** a live `panel` take **`CentralizedUiPresentation.HideDetached`** — instant dismiss, no `IsSettling`, no exit tween. Exit-animation races **do not reproduce** unless the host is under a `UIDocument` with `PanelSettings` (see `ItemListInventoryPresenterTests.CreatePresenter`, `ItemListPickerViewTests.Hide_WithPanel_ThenSimulatedExit_CompletesHide`).
+
+Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueExitCompletionForTests`** on detached `VisualElement`s; generation guards apply even without a panel.
 
 **Rule:** Any bug involving animated hide/show needs at least one test with a **real panel** or an explicit `IsSettling` regression test on the presenter path.
+
+---
+
+## Map marker fade vs step motion
+
+**Symptom:** FOE marker invisible after patrol step, or fade interrupted when `MapGridMarkerAnimator.Kill` runs.
+
+**Cause:** Opacity fade and step translate shared one DOTween target on the marker element.
+
+**Fix (shipped #240):** `MapMarkerVisibility` registers opacity tweens on a **separate session target** (`Begin(marker, separateTweenTarget: true)`). Hide applies `map-view__marker--fade-hidden` **immediately**; opacity tween is visual polish only.
+
+**Test:** `MapGridMarkerAnimatorTests.Kill_DoesNotCancelMarkerFadeInTween`, `MapFoeMarkersPresenterTests.PatrolIntoFog_HidesMarkerAndStopsTween`.
 
 ---
 
@@ -183,7 +203,7 @@ Only one context active at a time. Opening bag while shop modal logic still thin
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
 | Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
-| ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) |
+| ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
 | **Gotchas (this page)** | **Here** |

@@ -54,12 +54,15 @@ public interface ICentralizedUiSurface
 
 ## Internal drivers
 
+Motion via **DOTween** (`UiToolkitTweens`, `UiTransitionSession`) — [ADR 039](../../decisions/039-uitk-dotween-show-hide.md), [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240).
+
 | Driver | Services |
 |--------|----------|
-| `PopInPresentationDriver` | Inventory picker, character detail, skill picker |
-| `RailEnterPresentationDriver` (or slide) | Command rail panel (`CommandRailEnterTransition`) |
-| `SlidePresentationDriver` | Wallet HUD, input hints |
-| `CollapsePresentationDriver` | Party formation floater |
+| `PopInPresentationDriver` | Inventory picker, character detail, skill picker (`PopInTransition`) |
+| `RailEnterPresentationDriver` | Command rail body enter (`CommandRailEnterTransition`) |
+| `SlidePresentationDriver` | Wallet HUD, input hints (`SlideTransition`) |
+| `CollapsePresentationDriver` | Party formation floater (`CollapseTransition`) |
+| `InstantPresentationDriver` | `MapView` hidden class; fullscreen layout uses `MapViewPanelTransition` |
 
 ---
 
@@ -70,6 +73,7 @@ public interface ICentralizedUiSurface
 | [centralized-ui-services.md](../centralized-ui-services.md) | Pattern + mandatory lifecycle |
 | [centralized-ui-gotchas.md](../centralized-ui-gotchas.md) | Pop-in exit vs reopen, `IsSettling`, CharacterDetail trap |
 | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) | Team-locked public API |
+| [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) | DOTween animation stack |
 | [shared-menu-picker-ui.md](../shared-menu-picker-ui.md) | Picker shells, rail focus |
 
 ---

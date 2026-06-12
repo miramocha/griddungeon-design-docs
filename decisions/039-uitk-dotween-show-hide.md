@@ -1,0 +1,73 @@
+# ADR 039 — UITK show/hide motion via DOTween
+
+**Status:** Accepted  
+**Date:** 2026-06-12  
+**Implementation:** [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240)  
+**Builds on:** [ADR 038](038-centralized-ui-presentation-lifecycle.md) (`ICentralizedUiSurface`, `IPresentationDriver`)  
+**Docs:** [centralized-ui-services § Animation stack](../docs/04-dev/centralized-ui-services.md#animation-stack-dotween), [unity-ui-toolkit.mdc](../.cursor/rules/unity-ui-toolkit.mdc)
+
+## Context
+
+Centralized UITK overlays (PopIn pickers, party floater collapse, wallet/input-hint slide, command-rail enter, map panel layout settle) originally used **USS `transition-property`** and **`schedule.Execute`** delays. That was brittle in Edit Mode tests, fought inline layout tweens (map markers, geometry-driven coordinates), and duplicated duration sources across USS and C#.
+
+[game #206](https://github.com/miramocha/griddungeon-game/issues/206) locked **public** lifecycle vocabulary on `ICentralizedUiSurface`; animation mechanics remain **internal** to `GridDungeon.Runtime.UI`.
+
+## Decision
+
+### 1. Orchestrated show/hide uses DOTween — not USS transitions
+
+| Layer | Owns |
+|-------|------|
+| **USS + BEM modifiers** | Steady-state pixels (`--hidden`, `--collapsed`, `--entering`, `--retracted`, `--expanded`) and hover/focus micro-states |
+| **`UiToolkitTweens`** | DOTween on `VisualElement.style` (opacity, translate, scale, width/height) during motion |
+| **`UiTransitionSession`** | Per-element **generation**; bump before kill so superseded exit callbacks bail via `IsCurrent` |
+| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `CommandRailEnterTransition`, `MapViewPanelTransition` |
+
+**Do not** add `transition-duration` on blocks that C# animates. **Do not** use `schedule.Execute` for dismiss timing on centralized overlays.
+
+Durations live in **C# constants only** (e.g. `PopInTransition.DurationMs` = 420).
+
+### 2. Session rules
+
+- **`Begin(target)`** — increment generation, then kill in-flight tweens on that session.
+- **`Cancel(target)`** — same generation bump + kill (used by `HideImmediate` / `Reset` paths).
+- **Detach cleanup** — `KillWithoutCompleting` only (no `onComplete` while UITK processes `DetachFromPanelEvent`).
+- **Map marker fades** — `Begin(marker, separateTweenTarget: true)` so `MapGridMarkerAnimator.Kill` on the element does not cancel opacity tweens registered on a dedicated DOTween target.
+
+### 3. BEM authority during motion
+
+| Transition | Class authority |
+|------------|-----------------|
+| Pop-in exit | `--hidden` applied in `CentralizedUiPresentation.FinishDismissVisual` after driver `onComplete` |
+| Collapse reveal | `--collapsed` **true** at dip start; **false** after bounce-in completes |
+| Collapse dismiss | `--collapsed` **true** at slide-off start (before tween ends) |
+| Command rail enter | `--entering` on body at open start; removed when enter tween completes (or immediately when `startingInMs == 0`) |
+| Map marker hide | `map-view__marker--fade-hidden` applied **immediately**; opacity tweens for polish |
+
+Inline `style` drives motion; **`StyleKeyword.Null`** clears inline motion on complete.
+
+### 4. Detached overlays (no `panel`)
+
+`CentralizedUiPresentation.Hide` calls **`HideDetached`** when `ResolveTarget()?.panel == null` — instant dismiss + hidden class (Edit Mode picker tests without `UIDocument`). **Play Mode** hosts under `PanelSettings` still run animated `Hide()`.
+
+Direct `PopInTransition` tests use **`SimulateDueExitCompletionForTests`** + generation guards; do not assume `panel == null` implies synchronous `PlayExit`.
+
+### 5. Edit Mode test helpers
+
+- `UiTransitionSession.CompleteImmediatelyForTests(target)`
+- `PopInTransition.SimulateDueEnterCompletionForTests` / `SimulateDueExitCompletionForTests`
+- `CollapseTransition.SimulateDueScheduleCompletionForTests`
+- `SlideTransition.SimulateDueScheduleCompletionForTests`
+
+## Consequences
+
+- New animated overlay: reuse `CentralizedUiPresentation` + `IPresentationDriver` + `UiTransitionSession`; do not fork USS transition timing.
+- `UiToolkitTweens` lives under `Assets/Scripts/Runtime/UI/` (not `GridDungeon.UI`).
+- Hover/focus USS transitions remain OK; orchestrated show/hide does not.
+- Regression tests for exit races need a **panel-attached** presenter path or explicit `IsSettling` coverage — see [centralized-ui-gotchas § Edit Mode tests](../docs/04-dev/centralized-ui-gotchas.md#edit-mode-tests-without-a-panel).
+
+## Related
+
+- [game #206](https://github.com/miramocha/griddungeon-game/issues/206) — lifecycle epic  
+- [ADR 038](038-centralized-ui-presentation-lifecycle.md) — public API  
+- [ADR 018](018-exploration-animation-speed.md) — exploration step timing (separate from UITK overlay durations)

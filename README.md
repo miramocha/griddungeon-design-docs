@@ -95,6 +95,8 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 034 — Skill point allocation outside combat](decisions/034-skill-point-allocation-outside-combat.md) | Accepted | Class trees in hub or labyrinth when not in combat / story / cutscene |
 | [ADR 035 — Skill use picker](decisions/035-skill-use-picker.md) | Accepted | Modal picker; default tab **All**; type tabs from `SkillType`; swappable `ISkillUsePickerView` |
 | [ADR 037 — Layered UITK panels](decisions/037-layered-uitk-panels.md) | Proposed | Split phase HUDs into smaller `UIDocument` panels + sort stack for HUD depth (draft) |
+| [ADR 038 — Centralized UI presentation lifecycle](decisions/038-centralized-ui-presentation-lifecycle.md) | Accepted | `ICentralizedUiSurface`, `Show`/`Hide`/`IsSettling`; internal `IPresentationDriver` |
+| [ADR 039 — UITK show/hide via DOTween](decisions/039-uitk-dotween-show-hide.md) | Accepted | `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS overlay transitions |
 
 ## Resolved
 
