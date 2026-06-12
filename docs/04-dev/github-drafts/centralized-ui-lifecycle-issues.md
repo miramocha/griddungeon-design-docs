@@ -62,7 +62,7 @@ Motion via **DOTween** (`UiToolkitTweens`, `UiTransitionSession`) — [ADR 039](
 | `RailEnterPresentationDriver` | Command rail body enter (`CommandRailEnterTransition`) |
 | `SlidePresentationDriver` | Wallet HUD, input hints (`SlideTransition`) |
 | `CollapsePresentationDriver` | Party formation floater (`CollapseTransition`) |
-| `InstantPresentationDriver` | `MapView` hidden class; fullscreen layout uses `MapViewPanelTransition` |
+| `FadePresentationDriver` | `MapView` panel fade (`FadeTransition`, `map-view--faded`); fullscreen layout uses `MapViewPanelTransition` |
 
 ---
 
@@ -71,7 +71,7 @@ Motion via **DOTween** (`UiToolkitTweens`, `UiTransitionSession`) — [ADR 039](
 | Doc | Role |
 |-----|------|
 | [centralized-ui-services.md](../centralized-ui-services.md) | Pattern + mandatory lifecycle |
-| [centralized-ui-gotchas.md](../centralized-ui-gotchas.md) | Pop-in exit vs reopen, `IsSettling`, CharacterDetail trap |
+| [centralized-ui-gotchas.md](../centralized-ui-gotchas.md) | Pop-in exit vs reopen, `IsSettling`, map fade vs screen fade, CharacterDetail trap |
 | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) | Team-locked public API |
 | [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) | DOTween animation stack |
 | [shared-menu-picker-ui.md](../shared-menu-picker-ui.md) | Picker shells, rail focus |

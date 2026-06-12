@@ -196,6 +196,67 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Map panel fade vs floor transition screen fade (`MapView` / `FadeTransition`)
+
+**Symptom:** Exploration map **hard cuts** on stairs (or hub boot shows empty frame); opacity fade never visible; map pops in only after screen is already clear.
+
+**Cause (layered — fix all that apply):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Dismiss `onComplete` order** | `ClearMotionStyles` / `style.opacity = null` **before** `map-view--faded` → USS `.map-view { opacity: 1 }` flashes one frame (snap). |
+| **`SnapFadeOpaque` same frame as HUD suppress** | `AcquireHudSuppress` starts map dismiss (280ms) then `SnapFadeOpaque` → full-screen black at sort **10000** hides the map tween entirely. Looks like instant cut. |
+| **Map reveal after screen clear** | `PresentationReleased` / map `Present` only after `FadeFromColor` finished → map appears in one frame when tween is broken or too late. |
+| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` → animated dismiss skipped while panel still visible. Host must drive **visual** state (`map-view--faded`), not presentation flags alone. |
+| **`visibility: hidden` on `--faded`** | Steady hidden via visibility can fight opacity tween; prefer **opacity-only** steady class (same pattern as `map-view__marker--fade-hidden`). |
+| **Slide retract on side panel** | `translate: 100%` on right-docked panel does not read well; map uses **opacity fade** only (`FadeTransition`, 280ms). |
+
+**Fix (shipped — `MapView`, `FadeTransition`, `FloorTransitionPresenter`):**
+
+1. **`FadeTransition`** — mirror `MapMarkerVisibility`: dismiss tweens inline opacity, then **`SetFaded` → clear inline opacity** (never clear inline before steady hidden class). Present: `wasFaded ? 0f` start opacity, remove `--faded`, tween to 1, clear inline on complete.
+2. **`MapView.SyncMapChromeVisibility`** — call `FadeTransition.Present` / `Dismiss` from **faded class vs `ShouldShowMapChrome()`**; hub / non-exploration still `HideImmediate()`.
+3. **Stairs leave floor** — `AcquireHudSuppress()` then **`yield return FadeToColor()`** (not `SnapFadeOpaque`) so map dismiss and screen darken overlap (~280ms / ~400ms). Skip duplicate intro `FadeToColor` in `RunFadeOnlyTransition` when routine already faded.
+4. **Land reveal** — `ReleaseExplorationChromeForReveal()` (`m_transitionInProgress = false`, `ResetHudSuppress`, `PresentationReleased`) **before** `FadeFromColor()` in `RevealFloorArtStep` so map fade-in runs with screen fade-in.
+5. **Steady hidden** — `map-view--faded { opacity: 0; }` only.
+
+**Authority:**
+
+| Layer | Owns |
+|-------|------|
+| `map-view--faded` | Steady hidden pixels |
+| `FadeTransition` + `UiToolkitTweens` | Motion (`style.opacity` during tween) |
+| `ExplorationPresentationGate.AcquireHudSuppress` | When map **should** hide (stairs); `MapView` subscribes + `FloorTransition.IsTransitioning` |
+| `ScreenFadePresenter` | Full-screen black — must not **snap** opaque on the same frame as map dismiss if players should see map fade |
+
+**Tests:** `MapViewPresenterTests`, `UiToolkitTweensTests.FadeTransition_Present_ClearsFadedClassAfterComplete`, `FadeTransition.SimulateDueScheduleCompletionForTests`.
+
+**Rule for new phase chrome:** If UITK chrome must animate **with** `ScreenFadePresenter`, coordinate timing in `FloorTransitionPresenter` (or phase owner) — do not rely on HUD suppress alone while screen snaps opaque.
+
+---
+
+## Party floater collapse — double slide-up (`CollapseTransition` / `PartyFormationFloater`)
+
+**Symptom:** Bottom party strip **slides up twice** (or dips down then up) on exploration reveal, floor land, or HUD suppress release.
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Two-leg `Present` tween** | Old sequence: inline translate **0 → dipY** (down) then **dipY → 0** (up) — reads as double vertical motion. |
+| **Present `onComplete` order** | `ClearMotionStyles` before removing `--collapsed` → one-frame snap when USS steady state catches up (same class as map `FadeTransition`). |
+| **`IsShown` without visual class** | `CentralizedUiPresentation.Show()` sets `IsShown = true` immediately; `SyncPresentation` skip logic missed re-entrant calls while the floater was still visually collapsed. |
+| **Duplicate suppress release** | `OnHudSuppressedChanged(false)` called `ApplyPartyStripVisibility` then `RefreshExplorationChrome` (which called it again) in the same frame. |
+
+**Fix (shipped — `CollapseTransition`, `PartyFormationFloaterPresenter`, `ExplorationHudView`):**
+
+1. **`CollapseTransition.Present`** — single slide **dipY → 0**; `onComplete`: `SetCollapsed(false)` **then** `ClearMotionStyles`. Dismiss `onComplete`: collapsed class **then** clear inline.
+2. **`SyncPresentation`** — gate on **`party-formation-floater--collapsed`** (visual), like `MapView` + `map-view--faded`; skip hide when already collapsed and not settling.
+3. **HUD suppress release** — `RefreshExplorationChrome` only (includes party strip visibility); no duplicate `ApplyPartyStripVisibility` before it.
+
+**Tests:** `PartyFormationFloaterPresenterTests`, `UiToolkitTweensTests.CollapseTransition_Present_ClearsCollapsedClassAfterComplete`.
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
@@ -206,4 +267,5 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 | ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
+| Floor transition + map panel fade timing | [authoring-floor-transition-beats.md § Screen fade](authoring-floor-transition-beats.md#screen-fade-uitk) |
 | **Gotchas (this page)** | **Here** |

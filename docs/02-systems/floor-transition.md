@@ -110,7 +110,7 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 | Element | Behavior |
 |---------|----------|
 | `DungeonView` / floor art | Hidden before unload; new art loaded before reveal |
-| `MapView` | Hidden or frozen |
+| `MapView` | Fades out on leave (`FadeTransition` + HUD suppress); fades in with screen on reveal — [gotchas § Map panel fade](../04-dev/centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
 | Exploration HUD | Gated |
 | Input | Off (`ExplorationPresentationGate` + `InputRouter` explore map) |
 | Combat | N/A — transitions only from exploration |
