@@ -47,6 +47,9 @@ Durations live in **C# constants only** (e.g. `PopInTransition.DurationMs` = 420
 | Map panel fade present | Remove `map-view--faded`, tween inline opacity up, clear inline on complete |
 | Party floater collapse present | Keep `--collapsed` during tween; single translate **dipY → 0**; remove collapsed **then** clear inline on complete |
 | Party floater collapse dismiss | Set `--collapsed` **then** clear inline translate on complete |
+| Slide retract dismiss | Retracted BEM **then** clear inline translate/opacity on complete |
+| Slide retract present | Clear retracted BEM **then** clear inline on complete |
+| Command rail panel close | `hiddenClass` **then** clear inline motion on complete |
 
 Inline `style` drives motion; **`StyleKeyword.Null`** clears inline motion on complete.
 

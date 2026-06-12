@@ -257,6 +257,28 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Slide retract dismiss order (`SlideTransition` / input hint / wallet)
+
+**Symptom:** Input hint or wallet strip **double-slides** or **one-frame snap** on hide/show; re-publishing hint text retriggers slide while strip already expanded.
+
+**Cause:**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Dismiss `onComplete` order** | `ClearMotionStyles` before `--retracted` → USS steady state flashes visible one frame. |
+| **Present `onComplete` order** | Clear inline before confirming retracted class off → same snap on slide-in complete. |
+| **`IsShown` without visual class** | `Show()` sets `IsShown` immediately; `SyncPresentation` skipped re-show while label still had `--retracted`, or called `Show` again while already expanded. |
+
+**Fix (shipped — `SlideTransition`, `InputHintPresenter`, `WalletHudPresenter`):**
+
+1. **`SlideTransition`** — dismiss: `SetRetracted(true)` then `ClearMotionStyles`; present complete: `SetRetracted(false)` then clear inline.
+2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like `MapView` + `PartyFormationFloater`.
+3. **`CommandRailEnterTransition.PlayClose`** — apply `hiddenClass` **before** `ClearMotionStyles` when panel close uses hidden BEM.
+
+**Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
