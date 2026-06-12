@@ -702,6 +702,8 @@ public interface ICentralizedUiSurface
 |------|------|------|
 | `UiToolkitTweens` | `Assets/Scripts/Runtime/UI/UiToolkitTweens.cs` | DOTween helpers for `VisualElement.style` (opacity, translate, scale, width/height) |
 | `UiTransitionSession` | `Assets/Scripts/Runtime/UI/UiTransitionSession.cs` | Per-target generation; `Begin` bumps **before** kill; `KillWithoutCompleting` on detach |
+| `BemMotionCompletion` | `Assets/Scripts/Runtime/UI/BemMotionCompletion.cs` | Steady BEM **then** `ClearMotionStyles` on tween complete / reset — [implementation guide](uitk-bem-transition-guide.md#bemmotioncompletion) |
+| `VisualPresentationSync` | `Assets/Scripts/Runtime/UI/VisualPresentationSync.cs` | Presenter show/hide gates from steady hidden class + `IsSettling` — [implementation guide](uitk-bem-transition-guide.md#visualpresentationsync) |
 | Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition` |
 
 **Rules:** One duration source in C# constants. Toggle BEM modifiers for **steady** visibility; tween inline `style` during motion; `StyleKeyword.Null` on complete. Map marker opacity uses a **separate DOTween target** so step `Kill` does not cancel fade-in ([`MapMarkerVisibility`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/MapMarkerVisibility.cs)).
@@ -747,6 +749,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
 | **Presentation lifecycle** (shipped API, migration index) | **Here § Presentation lifecycle** + [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) + [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
+| BEM transition helpers (`BemMotionCompletion`, `VisualPresentationSync`) | [UITK BEM transition guide](uitk-bem-transition-guide.md) |
 | Implementation gotchas (exit races, flags, map fade vs screen fade, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |

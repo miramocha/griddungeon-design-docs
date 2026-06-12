@@ -317,9 +317,10 @@ Separate from strip/roster plates: a single glyph on the exploration map.
 | Piece | Path |
 |-------|------|
 | Presenter | `MapPartyMarkerPresenter` |
-| Tests | `Tests → UI → MapPartyMarkerPresenterTests` |
+| `SyncImmediate(forceSnap: true)` | Kills step tween; snaps shell to explorer cell + facing **even in fog** — floor load / layout resync via `MapView` |
+| Tests | `Tests → UI → MapPartyMarkerPresenterTests` (`SyncImmediate_WithForceSnap_StopsStepTweenAndSnapsToCell`) |
 
-Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates). Replacing the strip does **not** require replacing the map marker unless you want a unified visual language.
+Subscribe `DungeonExplorer` position/facing and `MapSystem` reveal as in [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates). Replacing the strip does **not** require replacing the map marker unless you want a unified visual language. Marker snap semantics: [UITK BEM transition guide § Map marker](uitk-bem-transition-guide.md#related-map-party-marker-forcesnap).
 
 ---
 

@@ -1,0 +1,42 @@
+---
+description: ADR 039 BEM steady-state + VisualPresentationSync — new UITK transition helpers and presenter chrome
+globs:
+  - "**/Assets/Scripts/Runtime/UI/*Transition*.cs"
+  - "**/Assets/Scripts/Runtime/UI/BemMotionCompletion.cs"
+  - "**/Assets/Scripts/Runtime/UI/VisualPresentationSync.cs"
+  - "**/*Presenter*.cs"
+alwaysApply: false
+---
+
+# UITK BEM transition standard (ADR 039)
+
+Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.md) (API + recipes), [ADR 039](../decisions/039-uitk-dotween-show-hide.md) §3 + §6, [centralized-ui-gotchas](../docs/04-dev/centralized-ui-gotchas.md) (symptoms).
+
+## Transition helpers (`*Transition.cs`)
+
+- Steady visibility lives in **BEM modifiers**; motion uses **inline `style`** during tweens only.
+- **`onComplete` / `Reset`:** call `BemMotionCompletion.ApplySteadyClassThenClearMotion(target, steadyClass, active)` — never `ClearMotionStyles` before the steady class.
+- Collapse with `pickingMode`: use `CollapseTransition`’s `ApplyCollapsedSteady` (wraps class + picking + clear).
+- Add **two** Edit Mode tests in `UiToolkitTweensTests`: present clears steady hidden class; dismiss sets steady hidden class.
+
+## Presenter sync (`SyncPresentation`, chrome visibility)
+
+- Gate on **steady hidden class** on the animation target + `IsSettling` via `VisualPresentationSync.ShouldCallShow` / `ShouldCallHide`.
+- Do **not** skip `Show()` only because `IsShown` is true — retracted/faded class may be off mid-dismiss tween.
+- Prefer deriving public `IsShown` from steady class when the animation target is the surface (`MapView`, `CommandRailInfoPresenter`).
+- One phase owner per chrome; avoid duplicate visibility apply in the same frame.
+
+## Exceptions (do not force this pattern)
+
+| Area | Why |
+|------|-----|
+| PopIn pickers | Host `tabbed-picker--hidden`; race is `Refresh` vs `Show` during settle |
+| `MapViewPanelTransition` | Layout dimensions, not show/hide authority |
+| `ScreenFadePresenter` | Imperative full-screen fade |
+
+## PR checklist
+
+- [ ] ADR 039 §3 row for new steady class
+- [ ] `BemMotionCompletion` or documented exception
+- [ ] `VisualPresentationSync` or visual `IsShown`
+- [ ] `UiToolkitTweensTests` + presenter settle test if behavior changed

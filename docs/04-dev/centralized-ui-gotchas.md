@@ -230,6 +230,8 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `MapViewPresenterTests`, `UiToolkitTweensTests.FadeTransition_Present_ClearsFadedClassAfterComplete`, `FadeTransition.SimulateDueScheduleCompletionForTests`.
 
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [`BemMotionCompletion`](uitk-bem-transition-guide.md#bemmotioncompletion), [`VisualPresentationSync`](uitk-bem-transition-guide.md#visualpresentationsync), [map chrome recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
+
 **Rule for new phase chrome:** If UITK chrome must animate **with** `ScreenFadePresenter`, coordinate timing in `FloorTransitionPresenter` (or phase owner) — do not rely on HUD suppress alone while screen snaps opaque.
 
 ---
@@ -255,6 +257,8 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `PartyFormationFloaterPresenterTests`, `UiToolkitTweensTests.CollapseTransition_Present_ClearsCollapsedClassAfterComplete`.
 
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [collapse steady class](uitk-bem-transition-guide.md#steady-class-registry), [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
+
 ---
 
 ## Slide retract dismiss order (`SlideTransition` / input hint / wallet)
@@ -277,6 +281,8 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
 
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+
 ---
 
 ## Documentation map
@@ -285,6 +291,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 |-------|-----|
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
 | Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
+| BEM transition helpers (API, recipes, registry) | [uitk-bem-transition-guide.md](uitk-bem-transition-guide.md) |
 | GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |

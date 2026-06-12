@@ -67,6 +67,28 @@ Direct `PopInTransition` tests use **`SimulateDueExitCompletionForTests`** + gen
 - `SlideTransition.SimulateDueScheduleCompletionForTests`
 - `FadeTransition.SimulateDueScheduleCompletionForTests`
 
+### 6. Shared completion + presenter sync (mandatory for new BEM motion)
+
+**Implementation guide:** [uitk-bem-transition-guide.md](../docs/04-dev/uitk-bem-transition-guide.md) — API reference, truth tables, transition/presenter recipes, steady-class registry, testing checklist.
+
+| Helper | Path | Use |
+|--------|------|-----|
+| **`BemMotionCompletion`** | `Assets/Scripts/Runtime/UI/BemMotionCompletion.cs` | **All** transition `onComplete` / `Reset` paths that apply a steady BEM modifier — `ApplySteadyClassThenClearMotion(target, class, active)` |
+| **`VisualPresentationSync`** | `Assets/Scripts/Runtime/UI/VisualPresentationSync.cs` | Presenter `SyncPresentation` / chrome visibility — `ShouldCallShow` / `ShouldCallHide` / `IsSteadyVisible` on **steady hidden class + `IsSettling`**, not `IsShown` alone |
+
+**New transition helper checklist:**
+
+- [ ] Steady modifier documented in §3 table above
+- [ ] Present / dismiss / reset complete via `BemMotionCompletion` (or collapse `ApplyCollapsedSteady` when `pickingMode` must flip)
+- [ ] Presenter sync via `VisualPresentationSync` or derive `IsShown` from steady class (`MapView`, `CommandRailInfoPresenter`)
+- [ ] Edit Mode: `{Transition}_Present_*` + `{Transition}_Dismiss_*` class tests in `UiToolkitTweensTests`
+- [ ] Presenter: rapid reopen during `IsSettling` test
+- [ ] Phase owner: single visibility path; no duplicate apply same frame (see gotchas)
+
+**Exceptions:** PopIn (host `--hidden` + scale; reopen = `Show` not `Refresh`). `MapViewPanelTransition` (layout tween). `ScreenFadePresenter` (imperative).
+
+Rule: `.cursor/rules/uitk-bem-transition.mdc`
+
 ## Consequences
 
 - New animated overlay: reuse `CentralizedUiPresentation` + `IPresentationDriver` + `UiTransitionSession`; do not fork USS transition timing.
