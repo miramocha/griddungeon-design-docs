@@ -261,6 +261,33 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Hub hospital pick — floater dock vs party menu (`PartyFormationFloater` / `HubHudView`)
+
+**Symptom:** Hospital **Heal member** opens rail pick mode but party strip never slides up (or shows party-menu bind state); leaving hub with pick active leaves `command-panel--modal-open` on the shared rail.
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Context priority** | `PartyMenuDock` resolved before `HubHospitalDock` — Tab party menu floater owns the strip while hospital pick is active. |
+| **System dismiss uses animated hide** | `CloseServicePanelImmediate` / phase exit called `ApplyHubHospitalFloaterDock(false)` — collapse exit can finish after reopen or after hub teardown (same class as **Context switches must not use animated hide**). |
+| **Rail chrome leak** | `CommandPanelModalSupport.SetModalOpen(true)` during hospital pick; immediate service teardown did not clear modal class before root menu rebuild. |
+| **Rapid X → Heal** | Stale collapse exit if reopen does not `CancelPendingDismiss` before `Show` (mirrors party-menu dock redock). |
+
+**Fix (shipped — `PartyFormationFloaterPresenter`, `HubHudView`):**
+
+1. **`HubHospitalDock` before `PartyMenuDock`** in `ResolveActiveContext` when `m_hubHospitalDocked` (formation-edit still wins).
+2. **`DismissHubHospitalDockImmediate()`** — system/phase/service teardown; restores `m_requestedVisible` when party-menu dock survives.
+3. **Player X / Back** — keep animated `ApplyHubHospitalFloaterDock(false)` within hospital service.
+4. **`ResetHospitalPickState`** → `DismissHubHospitalDockImmediate()`; `CloseServicePanelImmediate` also `SetModalOpen(host, false)`.
+5. **Enter pick** — `CancelPendingDismiss` at start of `ApplyHubHospitalFloaterDock(true)` (rapid redock).
+
+**Tests:** `PartyFormationFloaterPresenterTests.ApplyHubHospitalFloaterDock_RapidExitAndRedock_CancelsPendingDismiss`, `DismissHubHospitalDockImmediate_ClearsSettlingState`, `HubHospitalServiceFocusTests`.
+
+**Rule:** Hub hospital pick uses the **standalone** `PartyFormationFloater` facade (`ApplyHubHospitalFloaterDock` / slot handler) — not `CloneTree` on `HubHud`. Publish `TabbedPickerRailHints.HubHospitalPick` while pick active; restore `HubService` on exit.
+
+---
+
 ## Slide retract dismiss order (`SlideTransition` / input hint / wallet)
 
 **Symptom:** Input hint or wallet strip **double-slides** or **one-frame snap** on hide/show; re-publishing hint text retriggers slide while strip already expanded.
