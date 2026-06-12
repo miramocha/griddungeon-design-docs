@@ -155,7 +155,10 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 | Width / height / min-max size | `style.width = 336f`, `style.height = …` |
 | Opacity, display, flex alignment | `style.opacity`, `style.display` (when a `--hidden` / `--fullscreen` modifier exists) |
 | Colours, borders, padding | `style.backgroundColor`, `style.borderTopWidth`, … |
-| **Transitions** (`transition-property`, duration) | Animating via per-frame `style` writes |
+| **Hover/focus micro-states** (`:hover`, `menu-item--focused`) | Per-frame `style` writes for selection chrome |
+| **Show/hide overlay motion** | USS `transition-property` + `schedule.Execute` duration hacks — use DOTween instead (below) |
+
+**Show/hide transitions (overlays, panels, map layout settle):** drive motion with **`UiToolkitTweens`** + **`UiTransitionSession`** (`Assets/Scripts/Runtime/UI/`). Helpers: `PopInTransition`, `SlideTransition`, `CollapseTransition`, `CommandRailEnterTransition`, `MapViewPanelTransition`. Toggle BEM modifiers for **steady end state**; tween via inline `style` during motion; `StyleKeyword.Null` on complete. **One duration source** — C# constants only; no matching `transition-duration` on those USS blocks. Edit Mode tests: `UiTransitionSession.CompleteImmediatelyForTests`.
 
 **Pattern:** one active modifier per axis when values are discrete — e.g. `map-view--panel-cols-20`, `map-view--panel-rows-20`, `map-view--panel-cell-24`, `map-view__grid--cell-size-24`. Centralize toggles in a small helper (e.g. `MapViewLayoutClasses`) when many mutually exclusive classes exist.
 
@@ -176,7 +179,7 @@ cell.style.width = cellSize;
 - **One-off Editor or dev tools** not worth a modifier matrix.
 - **No stable discrete set** of values and adding dozens of USS classes would be noise — document why in a short comment.
 
-When adding a new modifier family, add matching **`transition-property`** on the base block in USS so class swaps animate (see `MapView.uss` panel + cell scale).
+For **hover/focus** modifier families only, USS `transition-property` on the base block is OK. Do **not** add USS transitions for orchestrated show/hide — use `UiToolkitTweens` instead.
 
 ```csharp
 // naming: PascalCase type; query by kebab-case name matching UXML name=""

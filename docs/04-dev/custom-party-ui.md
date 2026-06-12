@@ -122,7 +122,7 @@ UXML/USS: `PartyFormationFloater.uxml`, `PartyFormationFloater.uss` — one scen
 
 | Modifier / API | Use |
 |----------------|-----|
-| `party-formation-floater--collapsed` | Floater translated off bottom edge (always rendered; not `display:none`) |
+| `party-formation-floater--collapsed` | Floater translated off bottom edge (always rendered; not `display:none`). **Authority** for off-screen state — reveal/dismiss motion is DOTween via `CollapseTransition` ([ADR 039](../../decisions/039-uitk-dotween-show-hide.md)). |
 | `PartyFormationFloaterView.SetRevealed(bool)` | Exploration strip + formation menu slide; combat HUD stays revealed |
 
 ### Bind / refresh

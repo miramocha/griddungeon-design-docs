@@ -98,7 +98,7 @@ flowchart LR
 
 1. **Runtime does not reference UITK views** — presenters live in Runtime (`InputHintPresenter`, `ScreenFadePresenter`) or UI (`PartyFormationFloaterPresenter`); phase logic stays in controllers.
 2. **One publisher per strip** — e.g. only `CombatHudView.RefreshInputHint` owns combat bind copy while combat is idle; overlays call `InputHints.Publish` while open, then `Clear` or restore underlying hint on dismiss.
-3. **USS owns pixels; C# toggles classes** — slide-in/out uses BEM modifiers (`input-hint__text--retracted`, `party-formation-floater--collapsed`), not per-frame `style` writes except layout-derived coordinates.
+3. **BEM owns steady state; DOTween owns orchestrated motion** — USS modifiers declare end/layout pixels (`tabbed-picker--hidden`, `party-formation-floater--collapsed`, `command-rail__body--entering`, `input-hint__text--retracted`). Show/hide **animation** uses `UiToolkitTweens` + `UiTransitionSession` ([ADR 039](../../decisions/039-uitk-dotween-show-hide.md)); inline `style` only during tweens and for layout-derived coordinates (map markers). No `transition-duration` on those blocks.
 4. **Shared `PanelSettings`** — `Assets/UI/Settings/GamePanelSettings.asset` on every `UIDocument` unless a panel needs a deliberate scale override ([04 — Tech notes](../04-tech-notes.md#combat-hud-ui-toolkit)).
 5. **Standalone service document** — one `UIDocument` per concern; phase views orchestrate via facade only. **No** embedding clones in phase UXML and **no** cross-document dock / geometry sync as the shipped integration (see [Standalone document — no cross-`UIDocument` dock](#standalone-document--no-cross-uidocument-dock)).
 
@@ -628,7 +628,7 @@ namespace GridDungeon.UI.Views
 **Status:** Contract shipped (#207); abstract base `CentralizedUiPresenterBase` + generic `CentralizedUiFacade<T>` shipped ([#229](https://github.com/miramocha/griddungeon-game/issues/229), [#230](https://github.com/miramocha/griddungeon-game/issues/230)). **All** centralized services in [Scene graph](#scene-graph-dev-bootstrap) must inherit `CentralizedUiPresenterBase` on the presenter (migration tracked on [game#206](https://github.com/miramocha/griddungeon-game/issues/206)).
 
 **Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — transition-agnostic show/hide for centralized UITK services (PopIn modals, slide strips, collapse floaters).  
-**ADR:** [038 — Centralized UI presentation lifecycle](../../decisions/038-centralized-ui-presentation-lifecycle.md)  
+**ADR:** [038 — Centralized UI presentation lifecycle](../../decisions/038-centralized-ui-presentation-lifecycle.md) · [039 — UITK show/hide via DOTween](../../decisions/039-uitk-dotween-show-hide.md)  
 **Issue index:** [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md).
 
 ### Mandatory rule (new + migrated services)
@@ -692,14 +692,29 @@ public interface ICentralizedUiSurface
 | `SetContext(open)` | `HideImmediate()` if leaving another open context, then `Show()` |
 | Data refresh while settling | `Show` path — not refresh-only while `IsSettling` |
 
+### Animation stack (DOTween)
+
+**Shipped:** [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240) · **ADR:** [039](../../decisions/039-uitk-dotween-show-hide.md)
+
+| Type | Path | Role |
+|------|------|------|
+| `UiToolkitTweens` | `Assets/Scripts/Runtime/UI/UiToolkitTweens.cs` | DOTween helpers for `VisualElement.style` (opacity, translate, scale, width/height) |
+| `UiTransitionSession` | `Assets/Scripts/Runtime/UI/UiTransitionSession.cs` | Per-target generation; `Begin` bumps **before** kill; `KillWithoutCompleting` on detach |
+| Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `CommandRailEnterTransition` |
+
+**Rules:** One duration source in C# constants. Toggle BEM modifiers for **steady** visibility; tween inline `style` during motion; `StyleKeyword.Null` on complete. Map marker opacity uses a **separate DOTween target** so step `Kill` does not cancel fade-in ([`MapMarkerVisibility`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/MapMarkerVisibility.cs)).
+
+**Detached hosts:** `CentralizedUiPresentation.Hide` → `HideDetached` when animation target has no `panel` (instant dismiss for Edit Mode clones). Panel-attached services still animate `Hide()`.
+
 ### Internal drivers (`IPresentationDriver`)
 
 | Driver | Animation family | Used by |
 |--------|------------------|---------|
-| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`) | `ItemListPickerView`, `CharacterDetailPresenter` |
-| `CollapsePresentationDriver` | Floater collapse / dip | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
-| `SlidePresentationDriver` | USS retract / slide | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
-| `RailEnterPresentationDriver` (internal) | USS enter on rail panel (`CommandRailEnterTransition`) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
+| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker` |
+| `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
+| `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
+| `RailEnterPresentationDriver` (internal) | Opacity + translate enter (`CommandRailEnterTransition`; `--entering` on body) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
+| `InstantPresentationDriver` | BEM `--hidden` only | `MapView` (panel show/hide); fullscreen layout settle uses `MapViewPanelTransition` |
 
 Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters expose only `ICentralizedUiSurface` vocabulary.
 
@@ -717,7 +732,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
 | `CommandRail` | Presenter + facade ✅ | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `CommandRailInfo` | Presenter ✅ (immediate dismiss) | — | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `MapView` | Presenter ✅ (class toggle + sort) | — | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC |
+| `MapView` | Presenter ✅ (`InstantPresentationDriver` + `MapViewPanelTransition`) | Instant + panel layout tween | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |
 
@@ -728,7 +743,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | Topic | Authoritative doc |
 |-------|-------------------|
 | **This pattern** (presenter, sort stack, bootstrap) | **Here** |
-| **Presentation lifecycle** (shipped API, migration index) | **Here § Presentation lifecycle** + [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) |
+| **Presentation lifecycle** (shipped API, migration index) | **Here § Presentation lifecycle** + [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) + [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Implementation gotchas (exit races, flags, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
