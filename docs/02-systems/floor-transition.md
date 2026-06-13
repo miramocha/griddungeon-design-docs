@@ -74,14 +74,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-  root[FloorTransitionBeat prefab]
-  root --> env[Environment<br/>black skybox / unlit void]
+  root["FloorTransitionBeat prefab"]
+  root --> env["Environment<br/>black skybox / unlit void"]
   root --> props[Props]
-  props --> door[ThresholdDoor<br/>mesh + Animator]
+  props --> door["ThresholdDoor<br/>mesh + Animator"]
   root --> cams[Cameras]
   cams --> wide[CM_Wide]
   cams --> thresh[CM_Threshold]
-  root --> tl[Timeline optional<br/>PlayableDirector]
+  root --> tl["Timeline optional<br/>PlayableDirector"]
 ```
 
 ### ScriptableObject catalog row
