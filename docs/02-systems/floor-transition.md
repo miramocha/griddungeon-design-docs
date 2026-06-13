@@ -35,20 +35,20 @@ sequenceDiagram
     participant FTP as FloorTransitionPresenter
     participant Gate as ExplorationPresentationGate
     participant Art as FloorArtPresenter
-    participant Map as MapSystem / FoeSystem
+    participant Map as MapSystem and FoeSystem
 
     EPC->>FTP: RunTransition(leave, enter, beatId, commit)
-    FTP->>Gate: Acquire + HUD suppress
-    Note over FTP: Snap black; spawn beat; CM brain on
+    FTP->>Gate: Acquire, HUD suppress
+    Note over FTP: Snap black, spawn beat, CM brain on
     FTP->>Art: UnloadFloorArt (await)
-    Note over FTP: Fade from black — door vignette
+    Note over FTP: Fade from black, door vignette
     FTP->>FTP: BeatEndFired
-    Note over FTP: Fade to black; destroy beat
-    FTP->>Map: CommitFloorSession (map/foes; spawn per caller)
+    Note over FTP: Fade to black, destroy beat
+    FTP->>Map: CommitFloorSession (map/foes, spawn per caller)
     FTP->>Art: LoadFloorArt(enter) under black (await)
-    Note over FTP: FPV rig attach; fade in to level
+    Note over FTP: FPV rig attach, fade in to level
     FTP->>Gate: Release
-    FTP->>EPC: OnFinished → wire bindings
+    FTP->>EPC: OnFinished, wire bindings
 ```
 
 | Type | Responsibility |
