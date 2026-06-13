@@ -1,0 +1,72 @@
+---
+description: USS is a CSS subset — no calc(), limited selectors; verify before web-CSS habits.
+globs:
+  - "**/Assets/**/*.uss"
+  - "**/Assets/UI/**/*.uxml"
+alwaysApply: false
+---
+
+# USS is not full CSS (UI Toolkit)
+
+USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets and assume they compile or layout correctly.
+
+**Authority:** [USS supported properties (Unity 6)](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-SupportedProperties.html), [USS selectors](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-Selectors.html). When unsure, check the manual — not MDN.
+
+## Common traps (not in USS or not like the web)
+
+| Web CSS habit | USS reality |
+|---------------|-------------|
+| `calc(100% - 24px)` | **No `calc()`** — use fixed px, theme `var(--token)`, flex grow/shrink, or C# |
+| `min()` / `max()` / `clamp()` | **Not supported** — discrete BEM modifiers or C# |
+| CSS Grid (`display: grid`) | **Flexbox only** — `display: flex` / default flex children |
+| `@media (max-width: …)` | **No responsive `@media`** — BEM modifiers toggled in C#, separate layout classes, or `UIDocument` / panel settings |
+| Complex selectors (`:not()`, `+`, `~`, deep chains) | **Limited** — prefer one BEM class per node; shallow selectors |
+| `::before` / `::after` content | **Limited / not for arbitrary content** — use extra `VisualElement` in UXML |
+| Orchestrated show/hide motion | **Do not rely on USS `transition-*` alone** — `UiToolkitTweens` + ADR 039 (`unity-ui-toolkit.mdc`) |
+| Layout from runtime geometry (markers, world bounds) | **C# inline `style`** or tween — USS cannot know coordinates ahead of time |
+
+## What USS does support (use these)
+
+- Flex layout (`flex-direction`, `flex-grow`, `align-items`, `justify-content`, …)
+- Theme variables: `var(--spacing-md)`, `var(--color-*)` from project Theme StyleSheet
+- BEM class selectors, `:hover`, `:active`, `:focus` (where UITK exposes them)
+- Fixed units: `px`, `%`, and supported keywords (`auto`, `none`, … per manual)
+
+## When math or responsiveness is needed
+
+| Need | Pattern |
+|------|---------|
+| Rail offset beside command rail | Fixed px in USS (e.g. `left: 240px`) + modifier class — see `centralized-ui-services.mdc` |
+| Few discrete sizes | Mutually exclusive BEM modifiers (`map-view--panel-cell-24`) — C# picks one |
+| Value depends on measured layout | C# sets `style.left` / `style.width` once per layout pass — not USS `calc` |
+| Hide/show steady state | BEM `--hidden` / `--collapsed` — motion in C# tweens |
+
+## Examples
+
+```css
+/* ❌ BAD — calc does not exist in USS */
+.command-rail__panel {
+    width: calc(100% - var(--rail-width));
+}
+
+/* ✅ GOOD — token or fixed layout */
+.command-rail__panel {
+    flex-grow: 1;
+    margin-left: 240px;
+}
+```
+
+```css
+/* ❌ BAD — assumes web media queries */
+@media (max-width: 1280px) {
+    .hub-hud { display: none; }
+}
+
+/* ✅ GOOD — C# toggles hub-hud--compact on root */
+```
+
+## Agent / PR checklist
+
+- [ ] New USS property verified in [supported properties](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-SupportedProperties.html)
+- [ ] No `calc` / `clamp` / grid / `@media` without explicit team exception
+- [ ] Dynamic layout → C# or discrete modifiers, not web-only CSS
