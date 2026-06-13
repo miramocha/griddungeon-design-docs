@@ -23,7 +23,7 @@ Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.
 
 - Gate on **steady hidden class** on the animation target + `IsSettling` via `VisualPresentationSync.ShouldCallShow` / `ShouldCallHide`.
 - Do **not** skip `Show()` only because `IsShown` is true — retracted/faded class may be off mid-dismiss tween.
-- Prefer deriving public `IsShown` from steady class when the animation target is the surface (`MapView`, `CommandRailInfoPresenter`).
+- Prefer deriving public `IsShown` from steady class when the animation target is the surface (`MinimapPanelView`, `ExpandedMapOverlayView`, `CommandRailInfoPresenter`).
 - One phase owner per chrome; avoid duplicate visibility apply in the same frame.
 
 ## Exceptions (do not force this pattern)

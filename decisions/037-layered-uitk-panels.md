@@ -16,7 +16,7 @@ Within exploration and combat, **one monolithic `UIDocument` per phase** still h
 | Exploration | `ExplorationHud` | map panel, party strip, pause overlay |
 | Combat | `CombatHud` | command rail, enemy/party rosters, synchro, AGI strip, log, cloned pickers |
 
-`MapView` borrows the parent document via `BindToHud(mount, document)` rather than owning a panel. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
+`MapView` borrows the parent document via `BindToHud(mount, document)` rather than owning a panel. **Shipped [#244](https://github.com/miramocha/griddungeon-game/pull/244):** `ExplorationMapCoordinator` + per-surface `UIDocument`. Legacy `MapView` shim delegates until scenes refresh. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
 
 Product direction: HUD should feel **more dimensional** — layered plates, slide/tilt depth, independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
 
@@ -86,7 +86,7 @@ Exact sort values are implementation tuning; order matters more than absolute nu
 
 | Phase | Deliverable |
 |-------|-------------|
-| **POC** | Exploration: `MapPanel` owns `UIDocument`; drop `MapView.BindToHud` mount borrow |
+| **POC** | Exploration map split — **shipped** [#244](https://github.com/miramocha/griddungeon-game/pull/244): `ExplorationMap` GO, `MinimapPanelView` + `ExpandedMapOverlayView`, drop `BindToHud` |
 | **Wave A** | Exploration full split (map + strip + pause) + bootstrap/tests |
 | **Wave B** | Combat split (rail / center / AGI / pickers) |
 | **Wave C (optional)** | Tier 2 world-space for 1–2 panels (Navigator corner, command rail tilt) |
@@ -95,7 +95,7 @@ Exact sort values are implementation tuning; order matters more than absolute nu
 ## Consequences
 
 - **Game:** refactor `ExplorationHudView`, `MapView`, `CombatHudView`, `DevBootstrapSceneCreator` / `DevSceneComposition`; add panel prefabs or scene children; Edit Mode tests for sort order + focus handoff smoke paths.
-- **Docs:** [layered UITK panels dev note](../docs/04-dev/layered-uitk-panels.md); amend [exploration UI](../docs/02-systems/exploration-ui.md) scene diagram when POC lands.
+- **Docs:** [layered UITK panels dev note](../docs/04-dev/layered-uitk-panels.md); [exploration UI](../docs/02-systems/exploration-ui.md) scene diagram updated ([#244](https://github.com/miramocha/griddungeon-game/pull/244)).
 - **Art/USS:** per-panel depth tokens (tilt, shadow, slide) — reuse BEM modifiers; avoid C# `style` writes per `unity-ui-toolkit` rules.
 
 ## Related

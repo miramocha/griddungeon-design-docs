@@ -62,7 +62,7 @@ Motion via **DOTween** (`UiToolkitTweens`, `UiTransitionSession`) — [ADR 039](
 | `RailEnterPresentationDriver` | Command rail body enter (`CommandRailEnterTransition`) |
 | `SlidePresentationDriver` | Wallet HUD, input hints (`SlideTransition`) |
 | `CollapsePresentationDriver` | Party formation floater (`CollapseTransition`) |
-| `FadePresentationDriver` | `MapView` panel fade (`FadeTransition`, `map-view--faded`); fullscreen layout uses `MapViewPanelTransition` |
+| `SlidePresentationDriver` | Minimap slide retract (`SlideTransition`, `map-minimap--retracted`); expanded uses `ScaleInPresentationDriver` |
 
 ---
 

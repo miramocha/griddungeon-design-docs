@@ -26,7 +26,7 @@ flowchart TB
   subgraph ui [GridDungeon.UI]
     GB[GameBootstrap]
     IR[InputRouter]
-    EHUD[ExplorationHudView / MapView]
+    EHUD[ExplorationHudView / ExplorationMapCoordinator]
     CHUD[CombatHudView]
   end
   subgraph runtime [GridDungeon.Runtime]
@@ -69,7 +69,7 @@ flowchart TB
 
 **Authority rule:** only `GamePhaseController` changes `GamePhase`. UI and gameplay code call `GameState.RequestTransition` or `GameState.RequestCombat`; they do not toggle scenes or input maps directly.
 
-**Exploration HUD** (`ExplorationHudView`, `MapView`, pause overlay) and **Combat HUD** (`CombatHudView`) ship in the game repo; wiring and bind lifecycle are documented in [exploration UI](exploration-ui.md) and [combat](combat.md). **Dev-only** `GamePhaseDevHudView` remains for macro-phase smoke tests (see [Dev bootstrap HUD](#dev-bootstrap-hud-ui-toolkit)).
+**Exploration HUD** (`ExplorationHudView`, `ExplorationMapCoordinator`, pause overlay) and **Combat HUD** (`CombatHudView`) ship in the game repo; wiring and bind lifecycle are documented in [exploration UI](exploration-ui.md) and [combat](combat.md). **Dev-only** `GamePhaseDevHudView` remains for macro-phase smoke tests (see [Dev bootstrap HUD](#dev-bootstrap-hud-ui-toolkit)).
 
 ## Terminology
 
@@ -424,7 +424,7 @@ Summary:
 - [05 — Class design MVP1](../05-class-design.md)
 - [04 — Tech notes](../04-tech-notes.md)
 - [MVP1 spec](../archive/mvp1-spec.md)
-- [Exploration UI](exploration-ui.md) — UXML mounts, `MapView` / pause binding, input
+- [Exploration UI](exploration-ui.md) — UXML mounts, exploration map coordinator / pause binding, input
 - [Combat](combat.md)
 - [Hub & services](hub-and-services.md)
 - [Side dungeons (MVP3)](side-dungeons.md)

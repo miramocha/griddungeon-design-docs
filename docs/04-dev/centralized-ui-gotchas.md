@@ -142,7 +142,7 @@ Do not bypass with hand-rolled delays or USS `transition-duration`. New animated
 **Rules:**
 
 - One strip (`InputHintPresenter`, sort **300**). Constants in `TabbedPickerRailHints`.
-- Overlay **publish** on open, **clear** or **restore** phase hint on close (`HubHudView.RestoreInputHint`, `MapView.RefreshGlobalInputHint`, …).
+- Overlay **publish** on open, **clear** or **restore** phase hint on close (`HubHudView.RestoreInputHint`, `ExplorationMapCoordinator.RefreshGlobalInputHint`, …).
 - Non-bind copy (tutorial, save warning) stays on modal body — not the global strip. See [global input hints rule](../../.cursor/rules/unity-global-input-hints.mdc).
 
 ---
@@ -196,41 +196,43 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
-## Map panel fade vs floor transition screen fade (`MapView` / `FadeTransition`)
+## Map chrome vs floor transition screen fade (`ExplorationMapCoordinator`)
 
-**Symptom:** Exploration map **hard cuts** on stairs (or hub boot shows empty frame); opacity fade never visible; map pops in only after screen is already clear.
+**Symptom:** Exploration minimap **hard cuts** on stairs (or hub boot shows empty frame); slide retract never visible; map pops in only after screen is already clear.
 
 **Cause (layered — fix all that apply):**
 
 | Trap | What goes wrong |
 |------|-----------------|
-| **Dismiss `onComplete` order** | `ClearMotionStyles` / `style.opacity = null` **before** `map-view--faded` → USS `.map-view { opacity: 1 }` flashes one frame (snap). |
-| **`SnapFadeOpaque` same frame as HUD suppress** | `AcquireHudSuppress` starts map dismiss (280ms) then `SnapFadeOpaque` → full-screen black at sort **10000** hides the map tween entirely. Looks like instant cut. |
-| **Map reveal after screen clear** | `PresentationReleased` / map `Present` only after `FadeFromColor` finished → map appears in one frame when tween is broken or too late. |
-| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` → animated dismiss skipped while panel still visible. Host must drive **visual** state (`map-view--faded`), not presentation flags alone. |
-| **`visibility: hidden` on `--faded`** | Steady hidden via visibility can fight opacity tween; prefer **opacity-only** steady class (same pattern as `map-view__marker--fade-hidden`). |
-| **Slide retract on side panel** | `translate: 100%` on right-docked panel does not read well; map uses **opacity fade** only (`FadeTransition`, 280ms). |
+| **Dismiss `onComplete` order** | `ClearMotionStyles` / inline translate **before** steady retract class → USS steady state flashes one frame (snap). |
+| **`SnapFadeOpaque` same frame as HUD suppress** | `AcquireHudSuppress` starts minimap dismiss then `SnapFadeOpaque` → full-screen black at sort **10000** hides the slide tween entirely. Looks like instant cut. |
+| **Map reveal after screen clear** | `PresentationReleased` / minimap `Show` only after `FadeFromColor` finished → map appears in one frame when tween is broken or too late. |
+| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` → animated dismiss skipped while panel still visible. Host must drive **visual** state (`map-minimap--retracted`), not presentation flags alone. |
+| **Opacity fade on side panel** | Right-docked panel opacity fade does not read well; minimap uses **slide retract** (`SlideTransition`, `map-minimap--retracted`) — not `map-view--faded`. |
+| **Expanded open during suppress** | Coordinator must `CloseExpandedImmediate()` when chrome should hide — expanded overlay at sort **100** can cover fade beats. |
 
-**Fix (shipped — `MapView`, `FadeTransition`, `FloorTransitionPresenter`):**
+**Fix (shipped — `ExplorationMapCoordinator`, `MinimapPanelView`, `FloorTransitionPresenter`):**
 
-1. **`FadeTransition`** — mirror `MapMarkerVisibility`: dismiss tweens inline opacity, then **`SetFaded` → clear inline opacity** (never clear inline before steady hidden class). Present: `wasFaded ? 0f` start opacity, remove `--faded`, tween to 1, clear inline on complete.
-2. **`MapView.SyncMapChromeVisibility`** — call `FadeTransition.Present` / `Dismiss` from **faded class vs `ShouldShowMapChrome()`**; hub / non-exploration still `HideImmediate()`.
-3. **Stairs leave floor** — `AcquireHudSuppress()` then **`yield return FadeToColor()`** (not `SnapFadeOpaque`) so map dismiss and screen darken overlap (~280ms / ~400ms). Skip duplicate intro `FadeToColor` in `RunFadeOnlyTransition` when routine already faded.
-4. **Land reveal** — `ReleaseExplorationChromeForReveal()` (`m_transitionInProgress = false`, `ResetHudSuppress`, `PresentationReleased`) **before** `FadeFromColor()` in `RevealFloorArtStep` so map fade-in runs with screen fade-in.
-5. **Steady hidden** — `map-view--faded { opacity: 0; }` only.
+1. **`MinimapPanelView.SyncMapChromeVisibility`** (via coordinator) — `VisualPresentationSync` gates on `map-minimap--retracted` + `IsSettling`; hub / non-exploration: `HideImmediate()`.
+2. **M-toggle** — expanded `UniformScaleTransition` / `ScaleInPresentationDriver`; minimap `SlideTransition.Hide()` while expanded open (MSK-style).
+3. **Stairs leave floor** — `AcquireHudSuppress()` then **`yield return FadeToColor()`** (not `SnapFadeOpaque`) so minimap retract and screen darken overlap. Skip duplicate intro `FadeToColor` in `RunFadeOnlyTransition` when routine already faded.
+4. **Land reveal** — `ReleaseExplorationChromeForReveal()` (`m_transitionInProgress = false`, `ResetHudSuppress`, `PresentationReleased`) **before** `FadeFromColor()` in `RevealFloorArtStep` so minimap slide-in runs with screen fade-in.
+5. **Steady hidden** — `map-minimap--retracted` on slide shell (translate off-screen).
 
 **Authority:**
 
 | Layer | Owns |
 |-------|------|
-| `map-view--faded` | Steady hidden pixels |
-| `FadeTransition` + `UiToolkitTweens` | Motion (`style.opacity` during tween) |
-| `ExplorationPresentationGate.AcquireHudSuppress` | When map **should** hide (stairs); `MapView` subscribes + `FloorTransition.IsTransitioning` |
-| `ScreenFadePresenter` | Full-screen black — must not **snap** opaque on the same frame as map dismiss if players should see map fade |
+| `map-minimap--retracted` | Steady hidden minimap pixels |
+| `SlideTransition` + `UiToolkitTweens` | Minimap motion (`style.translate` during tween) |
+| `map-expanded--hidden` / `map-expanded-scale--expanded` | Expanded overlay steady + scale end state |
+| `UniformScaleTransition` | Expanded present/dismiss motion |
+| `ExplorationPresentationGate.AcquireHudSuppress` | When map chrome **should** hide (stairs); coordinator subscribes + `FloorTransition.IsTransitioning` |
+| `ScreenFadePresenter` | Full-screen black — must not **snap** opaque on the same frame as minimap dismiss if players should see slide |
 
-**Tests:** `MapViewPresenterTests`, `UiToolkitTweensTests.FadeTransition_Present_ClearsFadedClassAfterComplete`, `FadeTransition.SimulateDueScheduleCompletionForTests`.
+**Tests:** `ExplorationMapCoordinatorTests`, `MinimapPanelPresenterTests`, `ExpandedMapOverlayPresenterTests`, `UiToolkitTweensTests` (`SlideTransition_*`, `UniformScaleTransition_*`).
 
-**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [`BemMotionCompletion`](uitk-bem-transition-guide.md#bemmotioncompletion), [`VisualPresentationSync`](uitk-bem-transition-guide.md#visualpresentationsync), [map chrome recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — [`BemMotionCompletion`](uitk-bem-transition-guide.md#bemmotioncompletion), [`VisualPresentationSync`](uitk-bem-transition-guide.md#visualpresentationsync), [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation).
 
 **Rule for new phase chrome:** If UITK chrome must animate **with** `ScreenFadePresenter`, coordinate timing in `FloorTransitionPresenter` (or phase owner) — do not rely on HUD suppress alone while screen snaps opaque.
 
@@ -252,7 +254,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 **Fix (shipped — `CollapseTransition`, `PartyFormationFloaterPresenter`, `ExplorationHudView`):**
 
 1. **`CollapseTransition.Present`** — single slide **dipY → 0**; `onComplete`: `SetCollapsed(false)` **then** `ClearMotionStyles`. Dismiss `onComplete`: collapsed class **then** clear inline.
-2. **`SyncPresentation`** — gate on **`party-formation-floater--collapsed`** (visual), like `MapView` + `map-view--faded`; skip hide when already collapsed and not settling.
+2. **`SyncPresentation`** — gate on **`party-formation-floater--collapsed`** (visual), like minimap + `map-minimap--retracted`; skip hide when already collapsed and not settling.
 3. **HUD suppress release** — `RefreshExplorationChrome` only (includes party strip visibility); no duplicate `ApplyPartyStripVisibility` before it.
 
 **Tests:** `PartyFormationFloaterPresenterTests`, `UiToolkitTweensTests.CollapseTransition_Present_ClearsCollapsedClassAfterComplete`.
@@ -324,12 +326,72 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 **Fix (shipped — `SlideTransition`, `InputHintPresenter`, `WalletHudPresenter`):**
 
 1. **`SlideTransition`** — dismiss: `SetRetracted(true)` then `ClearMotionStyles`; present complete: `SetRetracted(false)` then clear inline.
-2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like `MapView` + `PartyFormationFloater`.
+2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like minimap + `PartyFormationFloater`; hide: `ShouldCallHide` → `Hide()` only — **no** instant teardown in an `else` branch (see **Wallet dual hide layer** below).
 3. **`CommandRailEnterTransition.PlayClose`** — apply `hiddenClass` **before** `ClearMotionStyles` when panel close uses hidden BEM.
 
 **Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
 
-**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation) + [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+
+---
+
+## Input hint hard cut — hub → stratum (`InputHintPresenter` + `FloorTransitionPresenter`)
+
+**Symptom:** Global bind strip **snaps off** when leaving hub for stairs / Enter Stratum — no slide retract; strip may linger through first half of hub leave fade then vanish instantly.
+
+**Cause:**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Hint outlives hub chrome** | Hub leave hides `hub-hud__chrome` via USS; `InputHintPresenter` is a separate `UIDocument` (sort 300) — still visible until phase flip. |
+| **`HideImmediate` mid-beat** | `FloorTransitionPresenter` called `InputHint.HideImmediate()` at transition start → kills slide tween if hub already called `Clear`, or snaps without motion if strip still extended. |
+| **Late clear** | Waiting until `SetHubVisible(false)` / phase change to clear hint — desync from leave fade start. |
+
+**Fix (shipped):**
+
+1. **`HubHudView.OnEnterStratumClicked`** — `InputHints.Clear` when leave transition **starts** (slide retract with fade).
+2. **`FloorTransitionPresenter`** — `InputHint.Hide()` not `HideImmediate()` (animated dismiss; no-op if already clearing).
+3. **`ExplorationMapCoordinator.OnFloorTransitionPresentationReleased`** — republish exploration copy (`MinimapPanelView.Show()` slide in).
+
+**Rule:** Floor-transition and other Runtime beat code must not `HideImmediate()` player-visible centralized chrome. Coordinate with phase owners per [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
+
+**Tests:** `InputHintPresenterTests` (settle, rapid swap during hide); manual F1 → Enter Stratum.
+
+---
+
+## Wallet / slide strip — dual hide layer hard cut (`WalletHudPresenter`)
+
+**Symptom:** Credits wallet **snaps off** (hard cut) on shop close, party bag → Formation tab, or transient pulse end — while party floater / other chrome still animates out smoothly.
+
+**Cause (layered — same class of bug as map `display:none` + fade, but on slide retract):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Two visibility authorities** | Parent `wallet-hud--hidden` (`display: none`) **and** child `wallet-hud__panel--retracted` (translate + opacity). Slide tweens the panel; `PrepareHiddenVisual` / `SetRootVisible(false)` nukes the root **instantly** — player sees cut, not retract. |
+| **`SyncPresentation` else on hide** | When `!RequestedVisible` and `!ShouldCallHide` (steady retracted, not settling), an `else { PrepareHiddenVisual() }` applies `display: none` without running `SlideTransition.Dismiss`. |
+| **`CancelPendingDismiss` on deactivate** | `SetReason(..., false)` while dismiss is settling called `HideImmediate` → **snap**. Party floater only cancels on **activate** / redock (`ApplyHubHospitalFloaterDock(true)`), not every reason clear. |
+| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` skips driver dismiss while panel still extended — or pairs with forced teardown for a snap. `TryDismissVisuallyExtended` on slide driver runs dismiss from steady class. |
+| **Zero-length slide sample** | `translate: 0 -100%` with `layout.height == 0` → sampled end offset **0** → tween noop → retract class on complete = instant. Use `CreateSlide(..., fallbackRetractOffsetSign)` (-1 wallet up, +1 input hint down), same idea as `CollapseTransition.SampleCollapsedOffsetY`. |
+| **Show path un-hides root before slide** | `SetRootVisible(true)` before `ShouldCallShow` / `Show()` — root visible while presentation `IsShown` can lag; clearing reasons then hits early-return hide + callback hard cut. |
+
+**Reference (good):** `PartyFormationFloaterPresenter` — **one** steady class on the animation target (`party-formation-floater--collapsed`), `SyncPresentation` hide calls `Hide()` only when gated, **no** second `display: none` parent, `CancelPendingDismiss` only when **activating** / redocking.
+
+**Fix (shipped — `WalletHudPresenter`, `WalletHudView`, `WalletHud.uxml` / `.uss`, `SlideTransition`, `CentralizedUiPresentation`):**
+
+1. **Remove** `wallet-hud--hidden` — panel `wallet-hud__panel--retracted` + `SlideTransition` is the only show/hide authority.
+2. **`SyncPresentation`** — mirror floater: hide → `ShouldCallHide` → `m_presentation.Hide()` (no callback, no `else` teardown); show → `IsSteadyVisible` early-out, then `ShouldCallShow` → `Show()`.
+3. **`CancelPendingDismiss`** — call on `SetReason(..., true)` and `StartTransient` only; **not** on `SetReason(..., false)` while dismiss is settling.
+4. **`CreateSlide(..., fallbackRetractOffsetSign: -1)`** for wallet — non-zero retract distance when `%` layout sample fails.
+5. **Override `IsShown`** from `!IsPanelRetracted` (like `MinimapPanelView` + retracted class).
+6. **`CentralizedUiPresentation.TryDismissVisuallyExtended`** — slide dismiss when target is extended but lifecycle missed `Show()`.
+7. **Cold start / phase teardown** — `m_presentation.HideImmediate()` only; reserve `HideImmediate` for `OnDisable` and system dismiss, not player context close within the same phase.
+8. **Balance lerp** (`SyncBalance` / transient pulse) stays separate from chrome slide — do not conflate number snap on shop open with visibility hard cut.
+
+**Tests:** `WalletHudPresenterTests` — `Hide_EntersSettleWindowBeforeShownClears`, `SetReason_RapidSwapDuringHideSettle_CancelsDismissAndShowsAgain`, `SetReason_DeactivateAgainDuringHideSettle_DoesNotSnapRetract`, `ClearAllReasons_WhenAlreadyRetracted_DoesNotRecallHide`.
+
+**Rule for new slide strips:** Do **not** stack `display: none` (or `visibility: hidden`) on a parent **and** retract/fade on a child unless the parent toggle is **only** used after the child dismiss tween completes — and never in a `SyncPresentation` `else` branch. Prefer **`PartyFormationFloaterPresenter` / `InputHintPresenter`** sync shape: one animation target, `VisualPresentationSync`, optional `CancelPendingDismiss`. `InputHint` may still use a dismiss callback to clear label text — it does **not** add a root `display: none` layer.
+
+**Cross-ref:** [Slide retract dismiss order](#slide-retract-dismiss-order-slidetransition--input-hint--wallet), [Party floater collapse](#party-floater-collapse--double-slide-up-collapsetransition--partyformationfloater), [Map chrome vs floor transition](#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator) (`CentralizedUiPresentation.Hide` early return).
 
 ---
 

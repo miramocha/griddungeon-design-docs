@@ -25,7 +25,7 @@ See [centralized UI services](centralized-ui-services.md) for the full cross-pha
 
 | Panel | Current owner | Notes |
 |-------|---------------|-------|
-| Map | `MapView` via `map-view-mount` on shared doc | Remove `BindToHud`; own `UIDocument` |
+| Map | `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` — own `UIDocument` each ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) | **Shipped** — no `BindToHud` mount |
 | Party strip | `PartyFormationFloaterPresenter` (already own doc, sort **10**) | Optional: merge into exploration orchestrator only |
 | Pause / party menu | `PartyMenuOverlayView` (already own doc, sort **250**) | Optional: split formation pane only |
 
@@ -45,11 +45,13 @@ See [centralized UI services](centralized-ui-services.md) for the full cross-pha
 
 ```mermaid
 flowchart TB
-    subgraph Explore["ExplorationHud (orchestrator)"]
+    subgraph Explore["Exploration (orchestrator + panels)"]
         EHV[ExplorationHudView]
-        MP[MapPanel + UIDocument]
-        PS[PartyStripPanel + UIDocument]
-        PO[PauseOverlay + UIDocument]
+        EMC[ExplorationMapCoordinator]
+        MM[MinimapPanelView]
+        EXP[ExpandedMapOverlayView]
+        PS[PartyFormationFloater]
+        PO[PartyMenuOverlayView]
     end
     subgraph Combat["CombatHud (orchestrator)"]
         CHV[CombatHudView]
@@ -59,9 +61,9 @@ flowchart TB
         PK[PickerPanel]
     end
   IH[InputHintPresenter]
-  EHV --> MP
-  EHV --> PS
-  EHV --> PO
+  EHV --> EMC
+  EMC --> MM
+  EMC --> EXP
   CHV --> CR
   CHV --> CC
   CHV --> TO
@@ -93,7 +95,7 @@ UITK focus is **per panel**. Handlers must know active panel:
 | Area | Paths |
 |------|-------|
 | Bootstrap | `DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs` |
-| Exploration | `ExplorationHudView.cs`, `MapView.cs`, `PartyMenuOverlayView.cs`, `ExplorationHud.uxml` (split) |
+| Exploration | `ExplorationHudView.cs`, `ExplorationMapCoordinator.cs`, `MinimapPanelView.cs`, `ExpandedMapOverlayView.cs`, `PartyMenuOverlayView.cs` |
 | Combat | `CombatHudView.cs`, `CombatHud.uxml` (split) |
 | Input | `InputRouter.cs`, `*InputHandler.cs` |
 | Tests | `Assets/Tests/UI/` — panel sort, focus owner, map fullscreen sort |
@@ -101,12 +103,12 @@ UITK focus is **per panel**. Handlers must know active panel:
 ## Test plan (when implementing)
 
 ### Automated
-- [ ] Edit Mode → `Tests → UI` — panel sort order, map no longer borrows parent `UIDocument`
+- [x] Edit Mode → `Tests → UI` — `ExplorationMapCoordinatorTests`, `MinimapPanelPresenterTests`, `ExpandedMapOverlayPresenterTests` ([#244](https://github.com/miramocha/griddungeon-game/pull/244))
 - [ ] Focus owner — modal supersedes underlying panel
 
 ### Manual (Play Mode)
 - **Scene:** `DevBootstrap.unity` — F2 exploration, F3 combat
-- **Steps:** map fullscreen `M`; pause `Esc`; combat command rail focus `W/S`; open skill picker — confirm depth + input on each layer
+- **Steps:** expanded map `M`; pause `Esc`; combat command rail focus `W/S`; open skill picker — confirm depth + input on each layer
 - **Expected:** panels stack correctly; no duplicate input; hints strip still bottom-right
 
 ## Out of scope
