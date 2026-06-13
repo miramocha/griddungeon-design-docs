@@ -17,7 +17,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 ## Map UI
 
-- **Implementation wiring:** [exploration UI](exploration-ui.md) — `ExplorationHudView` → `map-view-mount` → `MapView` (event subscriptions, input, phase visibility).
+- **Implementation wiring:** [exploration UI](exploration-ui.md) — `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` (event subscriptions, input, phase visibility).
 - **Presentation:** **2D schematic** in UI Toolkit from `StratumFloor` + revealed state — authored via **floor level painter** → SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
@@ -30,7 +30,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
 
-**Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapView`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)). Full read-model + `ExplorationMapPresenter` refactor: [exploration UI appendix](exploration-ui.md#appendix--future-map-read-model-refactor).
+**Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapGridPaintController`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94), [#244](https://github.com/miramocha/griddungeon-game/pull/244)). Full read-model + `ExplorationMapPresenter` refactor: [exploration UI appendix](exploration-ui.md#appendix--future-map-read-model-refactor).
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
@@ -94,7 +94,7 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 ### Implementation notes (if we adopt A or B)
 
-- `MapView` today lives on the **`ExplorationHud`** GameObject only ([exploration UI](exploration-ui.md), [class design § View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded `MapView` + `Map` input map while `Combat` map stays primary.
+- Exploration map lives on sibling **`ExplorationMap`** GameObject ([exploration UI](exploration-ui.md), [class design § View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded map surfaces + `Map` input map while `Combat` map stays primary.
 - FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
 - Arena stays **slot-based** ([combat scene](combat-scene.md)) — map shows **grid** threat, not live battle positions.
 
@@ -112,7 +112,7 @@ Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest
 
 Locked **cell stack**, **composite walls** (edge segments + alcove — not 16 autotiles), **door overlay** tints, sprite checklist, and USS classes: **[map-cell-art.md](map-cell-art.md)**.
 
-**Cell labels** (`MapView.PaintCellAt` via `MapGridPainter`): fog → solid `#` → revealed `WallMask` edges (3+ → `█`) → features (**stairs only** in cells) → floor `·`. Party, FOE, gather, and B1F hub-gate are **not** painted into cell labels — they live in sibling overlay layers (see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)).
+**Cell labels** (`MapGridPaintController` / `MapGridPainter`): fog → solid `#` → revealed `WallMask` edges (3+ → `█`) → features (**stairs only** in cells) → floor `·`. Party, FOE, gather, and B1F hub-gate are **not** painted into cell labels — they live in sibling overlay layers (see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)).
 
 **Overlay layers** (bottom → top under `map-view-grid-host`): gather → hub entrance (B1F `stairsUp` when visited) → FOE → party. `MapGridMarkerAnimator` handles fade/slide tweens; FOE patrol slides are **ambient** (do not block input).
 

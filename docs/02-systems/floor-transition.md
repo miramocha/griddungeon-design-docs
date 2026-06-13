@@ -112,7 +112,7 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 | Element | Behavior |
 |---------|----------|
 | `DungeonView` / floor art | Screen fade covers the leave-floor slice; **`DungeonView` stays active** during unload/load so `FloorArtPresenter` coroutines are not stopped. Hub destination hides `DungeonView` after a successful handoff. |
-| `MapView` | Fades out on leave (`FadeTransition` + HUD suppress); fades in with screen on reveal — [gotchas § Map panel fade](../04-dev/centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
+| `ExplorationMapCoordinator` | Minimap slide retract on leave; slide in with screen on reveal — [gotchas § Map chrome vs floor transition](../04-dev/centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator) |
 | Exploration HUD | Gated |
 | Input | Off (`ExplorationPresentationGate` + `InputRouter` explore map) |
 | Combat | N/A — transitions only from exploration |

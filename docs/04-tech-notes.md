@@ -125,7 +125,7 @@ GameState (composition root)
 |---------|----------|
 | **Authoring (primary)** | **Floor level painter** (Unity Editor) → exports **`StratumFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol — epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
 | **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map — [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
-| **Runtime HUD (primary)** | **`MapView`** — 2D UI Toolkit grid or blitted `Texture2D` from `StratumFloor` + `FloorMapState` reveal; refresh on dirty |
+| **Runtime HUD (primary)** | **`ExplorationMapCoordinator`** + `MapGridPaintController` — 2D UI Toolkit grid from `StratumFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
 | **Party / FOE** | Icons on 2D map at `(x, y, level)`; patrol updates view without RT |
 | **Verticality** | Cell `(x,y,level)`; jump pads / stairs in painter data ([ADR 019](../decisions/019-floor-verticality.md)) |
@@ -198,10 +198,10 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Exploration HUD (UI Toolkit)
 
-Shipped on **`ExplorationHud`** (`ExplorationHudView` + `MapView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
+Shipped on **`ExplorationHud`** (`ExplorationHudView`) + sibling **`ExplorationMap`** (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
 - `ExplorationHud.uxml` — `map-view-mount` only (map built in C# under mount). Integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
-- `MapView` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)).
+- `MapGridPaintController` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#244](https://github.com/miramocha/griddungeon-game/pull/244)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
 - **Exploration log** — not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
 - **Layered panels (draft):** split monolith `ExplorationHud` / `CombatHud` into smaller `UIDocument` roots + `sortingOrder` stack — [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).

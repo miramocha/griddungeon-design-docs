@@ -133,6 +133,8 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 
 ## USS
 
+**Reminder:** USS is **not** full browser CSS — no `calc()`, limited selectors, flex-only layout. See [`unity-uitk-uss-limits.mdc`](unity-uitk-uss-limits.mdc) before assuming web CSS works.
+
 - Selectors target **BEM classes** — `.combat-log { }`, `.combat-log__entry { }`, `.combat-log__entry--selected { }`
 - **Theme / variables** for shared colours, spacing, fonts — `var(--spacing-md)` on blocks.
 - Prefer **modifiers** (`--selected`, `--disabled`) over ad-hoc class names like `.selected-red`.
@@ -158,7 +160,7 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 | **Hover/focus micro-states** (`:hover`, `menu-item--focused`) | Per-frame `style` writes for selection chrome |
 | **Show/hide overlay motion** | USS `transition-property` + `schedule.Execute` duration hacks — use DOTween instead (below) |
 
-**Show/hide transitions (overlays, panels, map layout settle):** drive motion with **`UiToolkitTweens`** + **`UiTransitionSession`** (`Assets/Scripts/Runtime/UI/`). Helpers: `PopInTransition`, `SlideTransition`, `CollapseTransition`, `CommandRailEnterTransition`, `MapViewPanelTransition`. Toggle BEM modifiers for **steady end state**; tween via inline `style` during motion; `StyleKeyword.Null` on complete. **One duration source** — C# constants only; no matching `transition-duration` on those USS blocks. Edit Mode tests: `UiTransitionSession.CompleteImmediatelyForTests`.
+**Show/hide transitions (overlays, panels, map layout settle):** drive motion with **`UiToolkitTweens`** + **`UiTransitionSession`** (`Assets/Scripts/Runtime/UI/`). Helpers: `PopInTransition`, `SlideTransition`, `CollapseTransition`, `UniformScaleTransition`, `CommandRailEnterTransition`, `CommandRailPanelTransition`, `RailInfoCopyTransition`, `MapViewPanelTransition`. Panel host repopulates go through **`CommandRail.SwapPanelContent`** — not ad-hoc `PanelHost.Clear` on phase HUDs. Toggle BEM modifiers for **steady end state**; tween via inline `style` during motion; `StyleKeyword.Null` on complete. **One duration source** — C# constants only; no matching `transition-duration` on those USS blocks. Edit Mode tests: `UiTransitionSession.CompleteImmediatelyForTests`.
 
 **Pattern:** one active modifier per axis when values are discrete — e.g. `map-view--panel-cols-20`, `map-view--panel-rows-20`, `map-view--panel-cell-24`, `map-view__grid--cell-size-24`. Centralize toggles in a small helper (e.g. `MapViewLayoutClasses`) when many mutually exclusive classes exist.
 
@@ -194,6 +196,18 @@ public class CombatHudView : MonoBehaviour
     }
 }
 ```
+
+## Command rail modal chip rail
+
+When a **service or section chip** opens a child modal (hub Buy/Sell, Heal/Revive, party bag, combat skill picker), use **`CommandPanelModalSupport`** — do not hand-roll per-screen enable/selected logic.
+
+| API | Use when |
+|-----|----------|
+| `SyncModalChipRail` | Hub service **action button pair** opens modal — binds `rail-menu__item--selected`, disables siblings |
+| `ApplyModalChipEnables` | Multi-chip rail with nullable slots (party menu sections) |
+| `SetModalOpen(host, open)` | Host `command-panel--modal-open` while child owns input |
+
+Recipe: domain helper → `SetModalOpen` → `SyncModalChipRail` / `ApplyModalChipEnables` → `ClearFocusItems` on service rail while modal open. See design-docs [shared menu § Modal rail sibling disable](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport) and [centralized UI gotchas § Hub service modal chip rail](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md#hub-service-modal-chip-rail-commandpanelmodalsupportsyncmodalchiprail).
 
 ## Global input hints
 

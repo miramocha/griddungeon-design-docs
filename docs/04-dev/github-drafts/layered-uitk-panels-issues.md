@@ -30,7 +30,7 @@ Split monolithic phase HUDs (`ExplorationHud`, `CombatHud`) into **smaller `UIDo
 
 ## Child issues
 
-- [ ] #TBD — POC: MapPanel owns UIDocument (exploration)
+- [x] #244 — POC: exploration map split (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`) — **merged**
 - [ ] #TBD — Exploration panel split (strip + pause)
 - [ ] #TBD — Combat panel split (rail / center / AGI)
 - [ ] #TBD — Cross-panel focus orchestration
@@ -53,42 +53,21 @@ Split monolithic phase HUDs (`ExplorationHud`, `CombatHud`) into **smaller `UIDo
 
 ---
 
-## Child 1 — POC: MapPanel
+## Child 1 — POC: MapPanel — **SHIPPED** ([#244](https://github.com/miramocha/griddungeon-game/pull/244))
 
-**Title:** UI: MapPanel owns UIDocument (layered HUD POC)
+**Title:** UI: Split exploration map into minimap and expanded overlay
 
-**Labels:** `UI`, `P2`, `S`
+**Status:** Merged 2026-06-13. `ExplorationMap` GO + `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView`; legacy `MapView` obsolete shim.
 
-**Body:**
+**Shipped tasks:**
 
-```markdown
-## Summary
+- [x] `ExplorationMap` GO with coordinator + two child `UIDocument` presenters
+- [x] Drop `BindToHud` — trees built via `MapGridHostBuilder` on each surface root
+- [x] `ExplorationHudView` orchestrates party strip only; map on sibling GO
+- [x] `DevSceneComposition.WireExplorationMap`
+- [x] Expanded overlay sort **100**; M-toggle = scale in + minimap slide retract
 
-First slice of [ADR 037](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/037-layered-uitk-panels.md): **`MapView` stops borrowing** parent `ExplorationHud` `UIDocument` via `BindToHud`. Map gets own `GameObject` + `UIDocument` + sort order.
-
-Parent epic: #TBD
-
-## Tasks
-
-- [ ] New `MapPanel` child GO (or rename pattern) with `UIDocument`
-- [ ] Refactor `MapView` — remove `BindToHud(mount, document)`; build tree on own root
-- [ ] `ExplorationHudView` orchestrates visibility; drop `map-view-mount` from monolith UXML or leave empty stub
-- [ ] Wire `DevBootstrapSceneCreator` / `DevSceneComposition`
-- [ ] Map fullscreen `M` still raises sort order on **map panel only**
-
-## Test plan
-
-### Automated
-- [ ] Edit Mode → `Tests → UI` — map panel binding (new or extend `MapView` tests)
-
-### Manual
-- F2 exploration → map side panel + fullscreen; markers animate; no double map
-
-## References
-
-- `MapView.cs` — `BindToHud`, `sortingOrder` fullscreen
-- `ExplorationHud.uxml` — `map-view-mount`
-```
+**Tests:** `ExplorationMapCoordinatorTests`, `MinimapPanelPresenterTests`, `ExpandedMapOverlayPresenterTests`
 
 ---
 

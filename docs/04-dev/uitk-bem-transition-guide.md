@@ -20,6 +20,45 @@ Two helpers prevent order drift and presenter skip bugs:
 
 `IsShown` stays **true through exit settle** ([ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md)). A presenter that only checks `IsShown` can skip re-show while `--retracted` / `--faded` / `--collapsed` is still on, or call `Show()` again while already steady-visible.
 
+## No hard cuts (player-visible show/hide)
+
+**Default:** If the player can see a UITK chrome surface (slide strip, map panel, pop-in modal, command-rail body), its show/hide must use the presentation driver — **`Show()` / `Hide()`** — not an instant teardown that skips the exit tween.
+
+| Player sees | Use | Avoid |
+|-------------|-----|--------|
+| Dismiss within same authority (close shop, leave service, floor beat starting) | `Hide()` / facade `Clear` | `HideImmediate()` mid-dismiss or mid-fade |
+| Reopen / republish copy while strip still expanded | `SetHint` / `Show()` + `VisualPresentationSync` | `display: none` on parent while child still extended |
+| Cross-fade with hub leave or `ScreenFadePresenter` | Phase owner **`Clear` at beat start** (sync with fade) | Second system caller `HideImmediate()` on same strip |
+
+### `HideImmediate()` — allowed only when
+
+1. **`OnDisable` / destroyed host** — no panel to animate.
+2. **Context enum swap on a shared surface** — one picker across `HubShop` / `PartyBag` / `CombatItem`; deferred exit callback must not fire after the next context owns the tree ([gotchas § context switches](centralized-ui-gotchas.md#context-switches-must-not-use-animated-hide)).
+3. **Competing overlay at the same sort** — authority handoff before the player could perceive exit motion.
+4. **Chrome already steady-hidden** — `HideImmediate()` when `RequestedVisible` is already false and dismiss is not in flight (idempotent teardown).
+5. **Fully occluded** — surface was never shown, or a full-screen fade already covers it **and** no overlapping chrome from the same family is still visible (e.g. do not snap input hint while hub leave fade is only half done).
+
+`HideImmediate()` is **not** a shortcut for “system dismiss” when the strip is still on screen. Prefer **`Hide()`** and coordinate **who** dismisses (one owner per beat).
+
+### One owner per beat
+
+Multi-step flows (hub → stratum, stairs vignette, service panel close):
+
+- **Start of player-visible beat** — phase owner calls animated dismiss (`InputHints.Clear`, minimap slide retract, hub leave fade + hint clear).
+- **Mid-beat cross-system code** (`FloorTransitionPresenter`, gates, phase `OnEnter`) — do **not** call `HideImmediate()` on chrome the player still sees; use `Hide()` or skip if the owner already cleared.
+- **End of beat** — `PresentationReleased` (or equivalent); underlying phase republishes with `Show()`.
+
+**Shipped example:** hub Enter Stratum — `HubHudView` clears input hint when leave transition starts; `FloorTransitionPresenter` uses `InputHint.Hide()` (not `HideImmediate`); `ExplorationMapCoordinator.RefreshGlobalInputHint` on `PresentationReleased`.
+
+### Review smells (reject in PR)
+
+- `HideImmediate()` from Runtime beat code while phase HUD fade is in progress.
+- USS `display: none` on a parent **and** slide/fade on a child in the same frame (dual authority).
+- `SyncPresentation` `else` branch that applies `display: none` or steady hidden class **without** calling `Hide()` when the panel is still extended.
+- `CancelPendingDismiss` → `HideImmediate` on every reason clear (wallet/floater pattern: cancel only on activate/reopen).
+
+**Tests:** presenter settle tests (`Hide_EntersSettleWindowBeforeShownClears`, rapid swap during settle); `UiToolkitTweensTests` for transition helpers.
+
 ## Architecture
 
 ```mermaid
@@ -156,7 +195,8 @@ Use `IsSteadyVisible` to skip redundant present when context is unchanged (see `
 |-----------|--------------|---------|
 | `InputHintPresenter` | `input-hint__text--retracted` | `ShouldCallShow` / `ShouldCallHide` on label |
 | `WalletHudPresenter` | `wallet-hud__panel--retracted` | Same slide driver |
-| `MapView` | `map-view--faded` | `SyncMapChromeVisibility` → `FadeTransition.Present` / `Dismiss` |
+| `MinimapPanelView` | `map-minimap--retracted` | `SyncMapChromeVisibility` → `SlideTransition` via `CentralizedUiPresentation` |
+| `ExpandedMapOverlayView` | `map-expanded--hidden` | `UniformScaleTransition` via `ScaleInPresentationDriver` |
 | `PartyFormationFloaterPresenter` | `party-formation-floater--collapsed` | `IsSteadyVisible` + `ShouldCallShow` with context-reveal guard |
 
 **Input hint sketch:**
@@ -178,16 +218,16 @@ if (!VisualPresentationSync.ShouldCallShow(true, steadyHidden, isSettling))
 m_presentation.Show();
 ```
 
-**Map chrome sketch:**
+**Minimap chrome sketch:**
 
 ```csharp
-bool steadyHidden = m_root.ClassListContains(k_FadedClass);
-bool isSettling = m_presentation?.IsSettling ?? false;
+bool steadyHidden = RetractTarget.ClassListContains(MinimapPanelView.RetractedClass);
+bool isSettling = m_minimap.IsSettling;
 
 if (wantVisible && VisualPresentationSync.ShouldCallShow(true, steadyHidden, isSettling))
-    FadeTransition.Present(m_root, k_FadedClass);
+    m_minimap.Show();
 else if (!wantVisible && VisualPresentationSync.ShouldCallHide(false, steadyHidden, isSettling))
-    FadeTransition.Dismiss(m_root, k_FadedClass);
+    m_minimap.Hide();
 ```
 
 Wire `SyncPresentation` from: `RequestedVisible` / context changes, `PresentationChanged`, phase suppress gates, and any authority that toggles chrome without going through `Show()` directly.
@@ -200,7 +240,8 @@ When the **animation target is the surface root**, public `IsShown` can mirror B
 
 | Type | `IsShown` |
 |------|-----------|
-| `MapView` | `!m_root.ClassListContains("map-view--faded")` |
+| `MinimapPanelView` | `!RetractTarget.ClassListContains("map-minimap--retracted")` |
+| `ExpandedMapOverlayView` | `!m_surface.Root.ClassListContains("map-expanded--hidden")` |
 | `CommandRailInfoPresenter` | `!m_view.Root.ClassListContains(CommandRailInfoView.HiddenClass)` |
 
 `IsSettling` still comes from `CentralizedUiPresentation` when a driver is attached. Immediate-dismiss surfaces (`CommandRailInfoPresenter`: `IsSettling => false`) use BEM-only hide.
@@ -211,7 +252,9 @@ When the **animation target is the surface root**, public `IsShown` can mirror B
 
 | Transition | Steady class | USS | Present complete (`active`) | Dismiss complete (`active`) | Consumer |
 |------------|--------------|-----|----------------------------|----------------------------|----------|
-| `FadeTransition` | `map-view--faded` | `MapView.uss` | `false` | `true` | `MapView` |
+| `SlideTransition` | `map-minimap--retracted` | `MinimapPanel.uss` | `false` | `true` | `MinimapPanelView` |
+| `UniformScaleTransition` | `map-expanded--hidden` (+ `map-expanded-scale--expanded` on present complete) | `ExpandedMapPanel.uss` | scale steady | hidden steady | `ExpandedMapOverlayView` |
+| `FadeTransition` | `map-view--faded` | `MapView.uss` | `false` | `true` | Legacy / marker helpers |
 | `SlideTransition` | `input-hint__text--retracted` | `InputHint.uss` | `false` | `true` | `InputHintPresenter` |
 | `SlideTransition` | `wallet-hud__panel--retracted` | `WalletHud.uss` | `false` | `true` | `WalletHudPresenter` |
 | `CollapseTransition` | `party-formation-floater--collapsed` | `PartyFormationFloater.uss` | `false` (+ picking) | `true` (+ picking) | `PartyFormationFloaterPresenter` |
@@ -227,7 +270,7 @@ Map marker row uses immediate class + opacity tween (separate DOTween target) �
 | Area | Why |
 |------|-----|
 | **PopIn pickers** | Host `tabbed-picker--hidden` + scale; race is `Refresh` vs `Show` during settle — hidden class applied in `CentralizedUiPresentation.FinishDismissVisual` |
-| **`MapViewPanelTransition`** | Layout dimensions (cols/rows/cell size), not show/hide authority |
+| `MapViewPanelTransition` | Layout dimensions (cols/rows/cell size) on expanded surface — not show/hide authority |
 | **`ScreenFadePresenter`** | Imperative full-screen fade; not `ICentralizedUiSurface` chrome |
 | **`PopInTransition` enter `onComplete`** | Clears inline before host hidden class removed — documented ADR exception; do not “fix” without picker test pass |
 
@@ -243,6 +286,7 @@ Map marker row uses immediate class + opacity tween (separate DOTween target) �
 | `VisualPresentationSyncTests` | All four gate methods |
 | `InputHintPresenterTests` / `WalletHudPresenterTests` | Slide sync + retracted class |
 | `PartyFormationFloaterPresenterTests` | Collapse sync + rapid reopen |
+| `ExplorationMapCoordinatorTests` / `MinimapPanelPresenterTests` / `ExpandedMapOverlayPresenterTests` | Map chrome slide + scale sync |
 | `MapPartyMarkerPresenterTests` | Marker snap (see below) |
 
 Do not run Unity CLI batch tests while the Editor has the project open — use **Test Runner → Edit Mode** ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
@@ -259,7 +303,7 @@ Detached hosts (`panel == null`) use instant dismiss — see [gotchas § Edit Mo
 
 ### Manual (Play Mode)
 
-- **F2** exploration — map panel fade with stairs / HUD suppress ([gotchas § map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition)).
+- **F2** exploration — minimap slide retract with stairs / HUD suppress ([gotchas § Map chrome vs floor transition](centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator)).
 - Hub shop — wallet slide retract on context change.
 - Bottom-right — input hint slide on overlay open/close.
 

@@ -37,7 +37,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — Dungeon navigation](docs/02-dungeon-navigation.md) | Draft | Grid FPV, FOEs on map |
 | [02 — Floor art (FPV)](docs/02-systems/floor-art-fpv.md) | Draft | `FloorArtGrid`, Populate wall blocks, runtime art load |
 | [02 — Mapping](docs/02-systems/mapping.md) | Draft | Auto-reveal only; no drawing tools |
-| [02 — Exploration UI](docs/02-systems/exploration-ui.md) | Accepted | UI Toolkit HUD wiring: `ExplorationHudView`, `MapView`, pause, input |
+| [02 — Exploration UI](docs/02-systems/exploration-ui.md) | Accepted | UI Toolkit HUD wiring: `ExplorationHudView`, `ExplorationMapCoordinator`, pause, input |
 | [04 — Dev: UI event contract](docs/04-dev/ui-event-contract.md) | Active | Integrator reference: Runtime events + command APIs for custom HUD |
 | [04 — Dev: Custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md) | Active | Replace combat skill modal (`ISkillUsePickerView`, host wiring, tests) |
 | [04 — Dev: Shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md) | Active | Rail menu, item list picker, skill picker — shared UITK components and diagrams |

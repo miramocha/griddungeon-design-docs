@@ -21,7 +21,7 @@ Centralized UITK overlays (PopIn pickers, party floater collapse, wallet/input-h
 | **USS + BEM modifiers** | Steady-state pixels (`--hidden`, `--collapsed`, `--entering`, `--retracted`, `--expanded`) and hover/focus micro-states |
 | **`UiToolkitTweens`** | DOTween on `VisualElement.style` (opacity, translate, scale, width/height) during motion |
 | **`UiTransitionSession`** | Per-element **generation**; bump before kill so superseded exit callbacks bail via `IsCurrent` |
-| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `MapViewPanelTransition` |
+| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `UniformScaleTransition`, `CommandRailEnterTransition`, `CommandRailPanelTransition`, `RailInfoCopyTransition`, `MapViewPanelTransition` |
 
 **Do not** add `transition-duration` on blocks that C# animates. **Do not** use `schedule.Execute` for dismiss timing on centralized overlays.
 
@@ -43,8 +43,10 @@ Durations live in **C# constants only** (e.g. `PopInTransition.DurationMs` = 420
 | Collapse dismiss | `--collapsed` **true** at slide-off start (before tween ends) |
 | Command rail enter | `--entering` on body at open start; removed when enter tween completes (or immediately when `startingInMs == 0`) |
 | Map marker hide | `map-view__marker--fade-hidden` applied **immediately**; opacity tweens for polish |
-| Map panel fade dismiss | `map-view--faded` applied **after** opacity tween completes; **then** clear inline opacity — never clear inline before steady hidden class |
-| Map panel fade present | Remove `map-view--faded`, tween inline opacity up, clear inline on complete |
+| Minimap slide retract dismiss | `map-minimap--retracted` applied **after** slide tween completes; **then** clear inline translate/opacity |
+| Minimap slide retract present | Remove `map-minimap--retracted`, tween inline translate/opacity, clear inline on complete |
+| Expanded map dismiss | `map-expanded--hidden` via `ScaleInPresentationDriver` + `BemMotionCompletion`; remove `map-expanded-scale--expanded`, scale out |
+| Expanded map present | Remove `map-expanded--hidden`, `UniformScaleTransition` scale in; apply `map-expanded-scale--expanded` on complete |
 | Party floater collapse present | Keep `--collapsed` during tween; single translate **dipY → 0**; remove collapsed **then** clear inline on complete |
 | Party floater collapse dismiss | Set `--collapsed` **then** clear inline translate on complete |
 | Slide retract dismiss | Retracted BEM **then** clear inline translate/opacity on complete |
@@ -66,6 +68,7 @@ Direct `PopInTransition` tests use **`SimulateDueExitCompletionForTests`** + gen
 - `CollapseTransition.SimulateDueScheduleCompletionForTests`
 - `SlideTransition.SimulateDueScheduleCompletionForTests`
 - `FadeTransition.SimulateDueScheduleCompletionForTests`
+- `UniformScaleTransition.SimulateDueEnterCompletionForTests` / `SimulateDueExitCompletionForTests`
 
 ### 6. Shared completion + presenter sync (mandatory for new BEM motion)
 
@@ -85,7 +88,7 @@ Direct `PopInTransition` tests use **`SimulateDueExitCompletionForTests`** + gen
 - [ ] Presenter: rapid reopen during `IsSettling` test
 - [ ] Phase owner: single visibility path; no duplicate apply same frame (see gotchas)
 
-**Exceptions:** PopIn (host `--hidden` + scale; reopen = `Show` not `Refresh`). `MapViewPanelTransition` (layout tween). `ScreenFadePresenter` (imperative).
+**Exceptions:** PopIn (host `--hidden` + scale; reopen = `Show` not `Refresh`). `ScreenFadePresenter` (imperative). Legacy `MapViewPanelTransition` retained for reference only — expanded map uses `UniformScaleTransition` via `ScaleInPresentationDriver`.
 
 Rule: `.cursor/rules/uitk-bem-transition.mdc`
 

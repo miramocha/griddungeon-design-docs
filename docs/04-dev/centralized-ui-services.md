@@ -26,7 +26,8 @@ flowchart TB
   end
 
   subgraph shared [Centralized services]
-    MV[MapView sort 0 / 100]
+    MM[MinimapPanel sort 0]
+    EXP[ExpandedMap sort 100]
     PF[PartyFormationFloater sort 10 / 260]
     WH[WalletHudPresenter sort 27]
     PM[PartyMenuOverlay sort 250]
@@ -34,14 +35,16 @@ flowchart TB
     SF[ScreenFadePresenter sort 10000]
   end
 
-  MV --> PF
+  MM --> PF
+  EXP --> PF
   CH --> PF
   HH --> WH
   PM --> WH
   PM --> IH
   CH --> IH
-  MV --> IH
-  SF -.->|fade beats| MV
+  MM --> IH
+  EXP --> IH
+  SF -.->|fade beats| MM
 ```
 
 Phase views **orchestrate** (show/hide, publish hint copy, bind data). They do **not** embed these trees in their UXML.
@@ -79,7 +82,7 @@ Agent rule: [`centralized-ui-services.mdc`](../../.cursor/rules/centralized-ui-s
 ```mermaid
 flowchart LR
   subgraph ui [GridDungeon.UI]
-    HV[HubHudView / CombatHudView / MapView]
+    HV[HubHudView / CombatHudView / ExplorationMapCoordinator]
     FH[InputHints / PartyFormationFloater]
   end
 
@@ -110,7 +113,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 
 | `sortingOrder` | Document | Owner |
 |----------------|----------|--------|
-| **0** | Exploration map (side panel) | `MapView` |
+| **0** | Exploration minimap (side panel) | `MinimapPanelView` |
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
@@ -118,7 +121,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
-| **100** | Exploration map fullscreen | `MapView` |
+| **100** | Exploration expanded map overlay | `ExpandedMapOverlayView` |
 | **150** | Story modal | `StoryEventView` on `StoryHud` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
@@ -239,7 +242,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 |-----------------|--------------|
 | Hub | `HubHudView.RefreshInputHint` / `RestoreInputHint` |
 | Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
-| Exploration map | `MapView.RefreshGlobalInputHint` |
+| Exploration map | `ExplorationMapCoordinator.RefreshGlobalInputHint` |
 | Party menu / pause | `PartyMenuOverlayView.RefreshMenuHint` |
 | Story modal | `StoryEventView` → `TabbedPickerRailHints.ModalDismiss` |
 | Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
@@ -396,28 +399,32 @@ CharacterDetail.Hide();
 
 ---
 
-### Exploration map — `MapView`
+### Exploration map — `ExplorationMapCoordinator`
 
-**Job:** Exploration minimap (side panel + fullscreen) — grid paint, markers, global input-hint publish. One `MapView` component owns both modes via BEM modifiers and `sortingOrder` **0** / **100**.
+**Job:** Exploration minimap (side panel) + expanded map overlay — shared `MapGridPaintController`, global input-hint publish. Two `UIDocument` presenters; coordinator owns event wiring and M-toggle choreography.
 
 | Type | Path | Notes |
 |------|------|-------|
-| Presenter | `Assets/Scripts/UI/Views/MapView.cs` | `CentralizedUiPresenterBase`; `sortingOrder` **0** (panel) / **100** (fullscreen) |
-| USS | `Assets/UI/Screens/Exploration/MapView.uss` | Side panel + fullscreen layout; tree built in C# |
-| Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` | Phase party-strip sync only — **no** `UIDocument` |
-| Bootstrap | `DevSceneComposition.WireMapView` | Child `MapView` GO under `GameState` |
+| Coordinator | `Assets/Scripts/UI/Views/ExplorationMapCoordinator.cs` | Subscriptions, `ToggleExpandedFromInput`, hint publish, chrome visibility |
+| Minimap | `Assets/Scripts/UI/Views/MinimapPanelView.cs` | `ICentralizedUiSurface`; `sortingOrder` **0**; `SlideTransition` (`map-minimap--retracted` on slide shell) |
+| Expanded | `Assets/Scripts/UI/Views/ExpandedMapOverlayView.cs` | `UniformScaleTransition` (`map-expanded--hidden`, `map-expanded-scale--expanded`); `sortingOrder` **100** |
+| Paint | `Assets/Scripts/UI/MapGridPaintController.cs` | Shared grid paint + marker sync across surfaces |
+| USS | `MapView.uss` (shared grid), `MinimapPanel.uss`, `ExpandedMapPanel.uss` | Trees built in C# via `MapGridHostBuilder` |
+| Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` | Party strip hides when expanded open |
+| Bootstrap | `DevSceneComposition.WireExplorationMap` | `ExplorationMap` GO → `MinimapPanel` + `ExpandedMapOverlay` children |
 
-**Publishers:** `MapView.RefreshGlobalInputHint` / `ClearGlobalInputHint` (exploration idle); `InputRouter.RestoreGlobalInputHintForPhase` on story/pause dismiss. Party strip hides on fullscreen via `ExplorationHudView` → `PartyFormationFloater.ApplyFormationDockState`.
+**M-toggle (MSK-style):** expanded `UniformScaleTransition` / `ScaleInPresentationDriver.Show()`; minimap `SlideTransition.Hide()` → `map-minimap--retracted` on slide shell (not dimmed/faded).
 
-**Visibility:** `MapView.SyncMapChromeVisibility` owns panel show/hide — exploration phase **and** not `FloorTransition.IsTransitioning` **and** not `ExplorationPresentationGate.IsHudSuppressed`. Uses `FadeTransition` (`map-view--faded` steady hidden); coordinates with `ScreenFadePresenter` on stairs — see [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition). Hub / non-exploration: `HideImmediate()`.
+**Publishers:** `ExplorationMapCoordinator.RefreshGlobalInputHint` / `ClearGlobalInputHint`. Party strip: `ExplorationHudView` → `ExpandedChanged`.
+
+**Visibility:** Coordinator `SyncMapChromeVisibility` → minimap slide retract when expanded opens or chrome suppressed; hub / non-exploration: `HideImmediate()`.
 
 ```csharp
-// InputRouter / MapInputHandler — serialized MapView ref (not ExplorationHud mount)
-m_mapView.ToggleFullscreenFromInput();
-m_mapView.RefreshGlobalInputHint();
+m_mapCoordinator.ToggleExpandedFromInput();
+m_mapCoordinator.RefreshGlobalInputHint();
 ```
 
-**Do not** embed map chrome in `ExplorationHud.uxml` or borrow another phase HUD `UIDocument`.
+Legacy `MapView` shim delegates to coordinator until scenes refresh. **Do not** embed map chrome in `ExplorationHud.uxml`.
 
 ---
 
@@ -463,7 +470,9 @@ GameState
 ├── SkillUsePicker (SkillUsePickerPresenter)
 ├── ItemListInventory (ItemListInventoryPresenter)
 ├── CharacterDetail (CharacterDetailPresenter)
-├── MapView (MapView)
+├── ExplorationMap (ExplorationMapCoordinator)
+│   ├── MinimapPanel (MinimapPanelView)
+│   └── ExpandedMapOverlay (ExpandedMapOverlayView)
 ├── ExplorationHud (ExplorationHudView — orchestrator only)
 ├── CombatHud
 ├── HubHud
@@ -717,7 +726,8 @@ public interface ICentralizedUiSurface
 | `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker` |
 | `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
-| `FadePresentationDriver` | Opacity fade (`FadeTransition`, 280ms; `map-view--faded` authority) | `MapView` exploration panel show/hide; fullscreen layout settle uses `MapViewPanelTransition` |
+| `ScaleInPresentationDriver` | Uniform scale (`UniformScaleTransition`) | `ExpandedMapOverlayView` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) |
+| `FadePresentationDriver` | Opacity fade (`FadeTransition`, 280ms; `map-view--faded` authority) | Legacy map fade paths; marker fade helpers |
 | `RailEnterPresentationDriver` (internal) | Opacity + translate enter (`CommandRailEnterTransition`; `--entering` on body) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
 | `InstantPresentationDriver` | BEM `--hidden` only | Detached / test hosts without `panel` (see [gotchas § Edit Mode tests](centralized-ui-gotchas.md#edit-mode-tests-without-a-panel)) |
 
@@ -736,8 +746,10 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `WalletHud` | Presenter + facade ✅ | Slide | [#215](https://github.com/miramocha/griddungeon-game/issues/215) |
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
 | `CommandRail` | Presenter + facade ✅ | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `CommandRailInfo` | Presenter ✅ (immediate dismiss) | — | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `MapView` | Presenter ✅ (`FadePresentationDriver` + `MapViewPanelTransition`) | Opacity fade (280ms) + panel layout tween | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC; [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
+| `CommandRailInfo` | Presenter ✅ (immediate root dismiss; copy block swaps animated) | `RailInfoCopyTransition` (slide+fade / fade) | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
+| `MinimapPanelView` | Presenter ✅ | Slide retract (`map-minimap--retracted`) | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
+| `ExpandedMapOverlayView` | Presenter ✅ | `ScaleInPresentationDriver` + `UniformScaleTransition` | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
+| `ExplorationMapCoordinator` | Orchestration (events, M-toggle, hints) | Coordinates minimap slide + expanded scale | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |
 

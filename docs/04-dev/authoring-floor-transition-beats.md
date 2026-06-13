@@ -213,7 +213,7 @@ Floor transitions use **`ScreenFadePresenter`** on a child **`ScreenFade`** unde
 | Alpha | `FadeTo` / `FadeFrom` lerp from **current** overlay alpha — no flash when already opaque |
 | Stairs leave floor | `AcquireHudSuppress` (map panel fade out) then **`yield return FadeToColor()`** — not `SnapFadeOpaque` on the same frame (screen snap hides map tween). First-floor / no leave key still snaps opaque. |
 | Vignette beat | After routine start fade, vignette path fades **from** black for door beat — **no** second fade-to before door when already black |
-| Final reveal | FPV attached while opaque; **`ReleaseExplorationChromeForReveal`** (map may fade in) then **`FadeFromColor`** — see [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
+| Final reveal | FPV attached while opaque; **`ReleaseExplorationChromeForReveal`** (minimap may slide in) then **`FadeFromColor`** — see [gotchas § Map chrome vs floor transition](centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator) |
 | Exploration HUD | `ExplorationPresentationGate.AcquireHudSuppress` during transition; `MapView` hides via `FadeTransition` + `map-view--faded` |
 
 If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `ScreenFadePresenter` refs are assigned. Do not stack uGUI `Image` fades on the same HUD.
