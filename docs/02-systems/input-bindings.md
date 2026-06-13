@@ -27,7 +27,7 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
 | **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
-| **Party / pause menu** | `Tab` or `Esc` | Same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)): **Inventory**, **Equipment**, **Quit to title** (hub + exploration; confirm pane → `RequestQuitToTitle`, no inn save). **Skills** / **Tutorial codex** deferred ([guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)). `Esc` on exploration when map fullscreen exits fullscreen first. |
+| **Party / pause menu** | `Tab` or `Esc` | Same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)): **Inventory**, **Equipment**, **Quit to title** (hub + exploration; confirm pane → `RequestQuitToTitle`, no inn save). **Skills** / **Tutorial codex** deferred ([guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)). Exploration: `Esc` cancels autopilot / exits fullscreen map **first**; when pause shell is open, **Esc closes** the menu (`Exploration.Pause` stays enabled while menu open). Global hint on shell: `Esc Close` ([shared menu § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 
@@ -44,8 +44,9 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Set destination** | `LMB` on revealed walkable map cell | Pathfind + walk ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)) |
-| **Cancel autopilot** | `Esc`, any move/turn/interact, or `LMB` party cell | Immediate |
+| **Arm destination pick** | **Z** on fullscreen map | Enter cursor mode ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)) |
+| **Confirm destination** | **Z** or click revealed walkable cell | Pathfind + walk; expanded map only (side minimap pick deferred) |
+| **Cancel autopilot** | `Esc`, any move/turn/interact, or disengage pick (**X**) | Immediate; `Esc` also closes pause menu when shell open |
 
 ---
 

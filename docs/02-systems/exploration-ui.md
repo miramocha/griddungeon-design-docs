@@ -26,7 +26,7 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 
 ## Design note: partial map presenters (shipped)
 
-Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration map is **split across documents** ([#244](https://github.com/miramocha/griddungeon-game/pull/244)): `ExplorationMapCoordinator` + shared `MapGridPaintController` paint minimap and expanded surfaces built by `MapGridHostBuilder`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); **party strip** + `ExplorationPresentationGate` + `ExplorationHudReactivePresenter` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); **pause** shares the hub **party menu** shell (`PartyMenuOverlayView` — Inventory / Equipment / Quit on exploration). **Runtime event index:** [UI event contract](../04-dev/ui-event-contract.md). A custom HUD can reuse the same hooks without changing phase authority.
+Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). Exploration map is **split across documents** ([#244](https://github.com/miramocha/griddungeon-game/pull/244), autopilot [#248](https://github.com/miramocha/griddungeon-game/pull/248)): `ExplorationMapCoordinator` + shared `MapGridPaintController` paint minimap and expanded surfaces built by `MapGridHostBuilder`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94)); **party strip** + `ExplorationPresentationGate` + `ExplorationHudReactivePresenter` ([#36](https://github.com/miramocha/griddungeon-game/issues/36)); **pause** shares the hub **party menu** shell (`PartyMenuOverlayView` — Inventory / Equipment / Quit on exploration). **Runtime event index:** [UI event contract](../04-dev/ui-event-contract.md). A custom HUD can reuse the same hooks without changing phase authority.
 
 **Future map refactor (optional):** [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) — same runtime hooks, shared `MapGridPainter`; not required for a custom skin.
 
@@ -240,11 +240,11 @@ flowchart TB
 |---------------------|---------|--------|
 | W/S/A/D, Q/E, Interact | `ExplorationInputHandler` | `DungeonExplorer` step / turn / interact |
 | `M` | `MapInputHandler` | `ExplorationMapCoordinator.ToggleExpandedFromInput()` |
-| `Esc` | `MapInputHandler` | Exit expanded map, or toggle party/pause menu |
+| `Esc` | `MapInputHandler` | Cancel autopilot / exit expanded map first; **close** pause menu when open, else **open** pause menu |
 | `Tab` | `PartyMenuInputHandler` | Toggle same menu |
 | `Esc` (expanded map focused) | `ExpandedMapOverlayView` key callback | `ExitRequested` → coordinator closes expanded |
 
-When the menu is open, exploration movement actions are **unbound** so the party cannot walk under the overlay.
+When the menu is open, exploration movement actions are **disabled** (`SetPartyMenuActive`); **`Pause` stays enabled** so **Esc** dismisses the shell via `MapInputHandler`. Minimap **slide retracts** with the party floater (`ExplorationMapCoordinator` + `PartyMenuOverlayView.OpenStateChanged`).
 
 ---
 
@@ -258,7 +258,7 @@ When the menu is open, exploration movement actions are **unbound** so the party
 | `ExplorationHud` + `ExplorationMap` | UI Toolkit | Minimap gated on `GamePhase.Exploration`; expanded overlay sort **100**; party/pause menu on overlay `UIDocument` |
 | `DungeonExplorer` + `MapSystem` | Simulation | `ExplorationPhaseController` wires on enter, unwires on exit |
 
-The **`ExplorationHud` GameObject is not disabled** on Hub or Combat. Map visibility is **per-surface** (`ExplorationMapCoordinator.SyncMapChromeVisibility` → minimap `SlideTransition` + `map-minimap--retracted`; expanded `UniformScaleTransition`; pause overlay BEM classes), not by destroying `ExplorationHudView`. Floor transitions hide map chrome in sync with `ScreenFadePresenter` — [gotchas § Map chrome vs floor transition](../04-dev/centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator).
+The **`ExplorationHud` GameObject is not disabled** on Hub or Combat. Map visibility is **per-surface** (`ExplorationMapCoordinator.SyncMapChromeVisibility` → minimap `SlideTransition` + `map-minimap--retracted` when expanded, floor transition, or pause menu open; expanded `UniformScaleTransition`; pause overlay BEM classes), not by destroying `ExplorationHudView`. Floor transitions hide map chrome in sync with `ScreenFadePresenter` — [gotchas § Map chrome vs floor transition](../04-dev/centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator).
 
 ```mermaid
 stateDiagram-v2

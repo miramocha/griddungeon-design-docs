@@ -213,7 +213,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Fix (shipped — `ExplorationMapCoordinator`, `MinimapPanelView`, `FloorTransitionPresenter`):**
 
-1. **`MinimapPanelView.SyncMapChromeVisibility`** (via coordinator) — `VisualPresentationSync` gates on `map-minimap--retracted` + `IsSettling`; hub / non-exploration: `HideImmediate()`.
+1. **`ExplorationMapCoordinator.SyncMapChromeVisibility`** — `VisualPresentationSync` gates on `map-minimap--retracted` + `IsSettling`; hub / non-exploration: `HideImmediate()`. Also retract when **party/pause menu** is open (matches party floater collapse).
 2. **M-toggle** — expanded `UniformScaleTransition` / `ScaleInPresentationDriver`; minimap `SlideTransition.Hide()` while expanded open (MSK-style).
 3. **Stairs leave floor** — `AcquireHudSuppress()` then **`yield return FadeToColor()`** (not `SnapFadeOpaque`) so minimap retract and screen darken overlap. Skip duplicate intro `FadeToColor` in `RunFadeOnlyTransition` when routine already faded.
 4. **Land reveal** — `ReleaseExplorationChromeForReveal()` (`m_transitionInProgress = false`, `ResetHudSuppress`, `PresentationReleased`) **before** `FadeFromColor()` in `RevealFloorArtStep` so minimap slide-in runs with screen fade-in.

@@ -131,7 +131,7 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 
 ## Implementation (shipped)
 
-**Game repo:** `feature/expanded-map-autopilot` ([`MapPathfinder`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Simulators/MapPathfinder.cs), [`ExplorationPathGraph`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Map/ExplorationPathGraph.cs), [`AutopilotPathWalker`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Exploration/AutopilotPathWalker.cs), [`AutopilotController`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Exploration/AutopilotController.cs)).
+**Game repo:** merged [#248](https://github.com/miramocha/griddungeon-game/pull/248) ([`MapPathfinder`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Simulators/MapPathfinder.cs), [`ExplorationPathGraph`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Map/ExplorationPathGraph.cs), [`AutopilotPathWalker`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Exploration/AutopilotPathWalker.cs), [`AutopilotController`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Exploration/AutopilotController.cs)).
 
 **Developer deep dive:** [04 — Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
 
@@ -206,6 +206,10 @@ Edit Mode fixtures ([game `Assets/Tests/README.md`](https://github.com/miramocha
 | `ExplorationPathGraphTests` | `Map` | Unrevealed shortcut skipped, closed vs open door, B1F tutorial blocker + campaign flag |
 | `AutopilotPathWalkerTests` | `Exploration` | Step when aligned; shorter turn arc |
 | `AutopilotControllerTests` | `Exploration` | Select toggle, confirm → walk, combat suspend/resume, manual cancel |
+| `ExpandedMapDestinationSelectionTests` | `UI` | Expanded-map cursor move + confirm |
+| `ExplorationMapCoordinatorTests` | `UI` | M-toggle minimap retract; pause menu minimap retract |
+| `ExplorationInputActionsTests` | `UI` | `Pause` stays enabled while pause menu open (Esc dismiss) |
+| `HeldInputRepeatTests` | `UI` | Hold-repeat pulse / timer drivers |
 
 ---
 

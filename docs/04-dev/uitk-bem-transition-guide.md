@@ -303,7 +303,7 @@ Detached hosts (`panel == null`) use instant dismiss — see [gotchas § Edit Mo
 
 ### Manual (Play Mode)
 
-- **F2** exploration — minimap slide retract with stairs / HUD suppress ([gotchas § Map chrome vs floor transition](centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator)).
+- **F2** exploration — minimap slide retract with stairs / HUD suppress / **Esc pause menu** ([gotchas § Map chrome vs floor transition](centralized-ui-gotchas.md#map-chrome-vs-floor-transition-screen-fade-explorationmapcoordinator)).
 - Hub shop — wallet slide retract on context change.
 - Bottom-right — input hint slide on overlay open/close.
 

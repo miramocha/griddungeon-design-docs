@@ -417,7 +417,7 @@ CharacterDetail.Hide();
 
 **Publishers:** `ExplorationMapCoordinator.RefreshGlobalInputHint` / `ClearGlobalInputHint`. Party strip: `ExplorationHudView` → `ExpandedChanged`.
 
-**Visibility:** Coordinator `SyncMapChromeVisibility` → minimap slide retract when expanded opens or chrome suppressed; hub / non-exploration: `HideImmediate()`.
+**Visibility:** Coordinator `SyncMapChromeVisibility` → minimap slide retract when **expanded map** opens, **floor transition** / HUD suppress, or **party/pause menu** open (`PartyMenuOverlayView.OpenStateChanged`); hub / non-exploration: `HideImmediate()`. `Exploration.SetPartyMenuActive` keeps **`Pause` enabled** so `MapInputHandler` can dismiss the pause shell with **Esc** while movement actions stay off.
 
 ```csharp
 m_mapCoordinator.ToggleExpandedFromInput();
@@ -749,7 +749,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `CommandRailInfo` | Presenter ✅ (immediate root dismiss; copy block swaps animated) | `RailInfoCopyTransition` (slide+fade / fade) | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `MinimapPanelView` | Presenter ✅ | Slide retract (`map-minimap--retracted`) | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
 | `ExpandedMapOverlayView` | Presenter ✅ | `ScaleInPresentationDriver` + `UniformScaleTransition` | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
-| `ExplorationMapCoordinator` | Orchestration (events, M-toggle, hints) | Coordinates minimap slide + expanded scale | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
+| `ExplorationMapCoordinator` | Orchestration (events, M-toggle, hints, autopilot) | Coordinates minimap slide + expanded scale; pause-menu chrome | [#244](https://github.com/miramocha/griddungeon-game/pull/244), [#248](https://github.com/miramocha/griddungeon-game/pull/248) |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |
 
