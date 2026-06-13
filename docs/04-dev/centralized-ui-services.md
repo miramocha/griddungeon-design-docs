@@ -154,7 +154,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/CommandRailPresenter.cs` | `sortingOrder` **25** (phase) / **255** (party menu); context: `Hub` / `Combat` / `PartyMenu` / `Hidden` |
-| Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | `PanelHost`, `Body`, `SetPartyMenuRailVisible`, `SyncPhaseOwnership` |
+| Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | `PanelHost`, `Body`, `SwapPanelContent`, `RegisterPhasePanelRebuild`, `IsPanelContentSettling`, `SyncPhaseOwnership` |
 | Modal chrome helper | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared **sibling-chip disable** + panel BEM cleanup on the **same** `PanelHost` |
 | UXML / USS | `Assets/UI/Screens/Shared/CommandRail.uxml`, `CommandPanel.uss`, `RailMenu.uss` | `command-panel--disabled`, `command-panel--modal-open`, `command-panel--protocol-only` |
 
@@ -165,7 +165,21 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | Hub root | `HubRootMenuPanel.Populate` | Hub bind + `RestoreCommandRailPanel` after party menu |
 | Hub service (Buy/Sell/Back) | `HubHudServicePanelView` | Shop / guild / inn panels |
 | Combat commands | `CommandPanelView.EnsureBuilt` | Combat phase |
-| Party menu sections | `PartyMenuOverlayView.PopulateSectionRail` | Tab / Esc overlay open |
+| Party menu sections | `PartyMenuOverlayView.PopulateSectionRail` | Tab / Esc overlay open (`EnterPartyMenuRail` → `SwapPanelContent`) |
+
+#### Command rail panel content swap
+
+**Job:** Animate **panel host** changes (hub root ↔ service actions ↔ party section chips ↔ combat commands) without hard-cutting `CommandRail.PanelHost`. Copy in `CommandRailInfo` uses a separate helper (`RailInfoCopyTransition`).
+
+| API | When |
+|-----|------|
+| `CommandRail.SwapPanelContent(rebuild, onComplete?, gate?)` | Any dismiss → repopulate `PanelHost` → present on `CommandRail.Body` (200ms, `CommandRailEnterTransition`) |
+| `CommandRail.RegisterPhasePanelRebuild(phase, rebuild)` | Hub / Combat HUD register `BuildRootMenu` / `EnsureBuilt` once; `SyncPhaseOwnership` animates Hub↔Combat when rail stays visible |
+| `CommandRail.IsPanelContentSettling` | True during panel swap — use for deferring focus/`RefreshAll` and for blocker exemptions |
+| `CommandRail.RunWhenPanelContentReady` | Defer work until `!IsPanelContentSettling` |
+| `EnterPartyMenuRail` / `ExitPartyMenuRail` | Party menu wrappers (context flag + `SwapPanelContent`) |
+
+**Presentation gate trap:** Hub service swaps and party menu enter may pass `HubPresentationGate` into `SwapPanelContent` to block hub confirms during motion. Overlays that stay open during that swap (`PartyMenuOverlayView`) must **not** treat that lock as an external blocker in `CloseIfBlocked` / gate context — see [gotchas § Command rail panel content swap](centralized-ui-gotchas.md#command-rail-panel-content-swap--gate-self-lock-commandrailswappanelcontent).
 
 **Modal rail sibling disable**
 

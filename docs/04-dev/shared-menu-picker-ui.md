@@ -187,7 +187,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | Combat command bar | `CommandPanelView` | `CommandRail.PanelHost` — buttons built in code |
 | Hub root menu | `HubHudView` / `HubRootMenuFocus` | `CommandRail.PanelHost` via `CommandRailPanelBuilder` |
 | Hub service back/actions | `HubHudServicePanelView` | `CommandRail.PanelHost` (buttons); service copy via `CommandRailInfo` |
-| Party section rail | `PartyMenuOverlayView` → `PartyMenuShellToolkitView` | `CommandRail.PanelHost` on Tab open |
+| Party section rail | `PartyMenuOverlayView` → `PartyMenuShellToolkitView` | `CommandRail.PanelHost` on Tab open via `EnterPartyMenuRail` / `SwapPanelContent` — focus restored in `OnPartyMenuRailReady` after swap ([gotcha](centralized-ui-gotchas.md#command-rail-panel-content-swap--gate-self-lock-commandrailswappanelcontent)) |
 
 ### Consumers (horizontal)
 

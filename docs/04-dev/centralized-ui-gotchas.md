@@ -16,6 +16,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, **Wallet dual hide layer**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
+| Hub Tab party menu stuck / rail swap + presentation gate | **Command rail panel content swap** (below) |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 
 ---
@@ -306,6 +307,44 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 **Tests:** `CommandPanelModalSupportTests`, `HubHospitalServiceFocusTests`, `HubShopServiceFocusTests`.
 
 **Rule:** Any new hub service action that opens a rail-offset modal or floater pick with **two+ sibling chips** must use `SyncModalChipRail` (or `ApplyModalChipEnables` when selection is owned elsewhere). Document the consumer row in [shared menu § Modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+
+---
+
+## Command rail panel content swap — gate self-lock (`CommandRail.SwapPanelContent`)
+
+**Symptom:** Hub → **Tab** party menu — UI frozen (no W/S, dead clicks); hub rail also stuck after. Or F1↔F3 phase handoff loses focus / hub gate never unlocks.
+
+**Cause (layered — same class of bug as PopIn exit races, but on shared `command-rail-body`):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Self-lock via `PartyMenuGate`** | `EnterPartyMenuRail` passes `HubPresentationGate` into `SwapPanelContent` → gate **Acquire** at swap start. `PartyMenuOverlayView.Open()` sets `IsOpen = true`. `Update` → `CloseIfBlocked` → `BuildGateContext` treats hub lock as external → `PartyMenuGate.CanOpen` **false** → **immediate `Close()`** while enter swap still running. Enter + exit swaps fight; gate and `IsPanelContentSettling` can stay stuck. |
+| **Blocker does not exempt own transition** | Any overlay that stays **open** during a swap must not treat the **same** presentation gate used for that swap as a “blocked” signal in `CloseIfBlocked` / `CanOpen` polls. |
+| **Hub `ResetPresentation` cancels body tween** | `HubHudView.SyncPhaseVisibility` → `HubHudReactivePresenter.ResetPresentation` → `UiTransitionSession.Cancel(CommandRail.Body)` kills in-flight `CommandRailPanelTransition` during Hub↔Combat phase swap → close `onComplete` never runs → rebuild skipped, settling stuck. |
+| **`CloseServicePanelImmediate` during phase swap** | `ResetEntering` on `CommandRail.Body` mid Hub↔Combat handoff — same cancel class as above. |
+| **Combat setup before rebuild** | `CombatHudView.OnPhaseChanged` called `RefreshAll` while `IsPanelContentSettling` before `CommandPanelView.EnsureBuilt` ran in swap rebuild. |
+
+**Fix (shipped — `CommandRail`, `CommandRailPresenter`, `PartyMenuOverlayView`, `HubHudView`, `CombatHudView`):**
+
+1. **One API** — `CommandRail.SwapPanelContent(rebuild, onComplete?, gate?)` for hub service, party menu enter/exit, and phase handoff; `RegisterPhasePanelRebuild(phase, rebuild)` for Hub / Combat panel repopulate on `SyncPhaseOwnership`.
+2. **`IsPanelContentSettling`** — authoritative flag for **panel host** dismiss→rebuild→present (distinct from rail-root `ICentralizedUiSurface.IsSettling`). Facade also exposes `RunWhenPanelContentReady` / `AbortPanelContentSwap`.
+3. **Party menu** — `CloseIfBlocked` returns early when `IsPanelContentSettling`; `BuildGateContext` ignores hub presentation lock when `IsOpen && IsPanelContentSettling`; `OnPartyMenuRailReady` → `SyncSectionRailFocus` + `RestoreSectionFocus` after enter completes.
+4. **Hub phase sync** — `ResetPresentation(respectPanelContentSwap: true)` while settling; `CloseServicePanelStateOnly` instead of full `CloseServicePanelImmediate` during phase swap; abort swap when leaving hub (`AbortPanelContentSwap` before hub teardown).
+5. **Combat** — defer `FinishCombatEnter` (`EnsureBuilt` + `RefreshAll`) via `RunWhenPanelContentReady` when settling at phase entry.
+6. **Supersede** — starting a new `SwapPanelContent` while settling calls `AbortPanelContentSwap` and clears the stored swap gate (`ResetLocks`) so recovery is possible.
+
+**Rules for new rail panel swaps:**
+
+| Do | Don't |
+|----|--------|
+| Use `CommandRail.SwapPanelContent` for any **hub root ↔ service / party sections / phase** repopulate on the shared `PanelHost` | Call `CommandRailPanelTransition` on `CommandRail.Body` from phase HUDs (bypasses settling + gate bookkeeping) |
+| Exempt **self-induced** gate lock + `IsPanelContentSettling` in overlay blocker polls (`CloseIfBlocked`, gate context builders) | Pass `HubPresentationGate` into a swap and feed the same lock into `PartyMenuGate` without an exemption while the menu stays open |
+| Defer focus rebuild / `RefreshAll` until `!IsPanelContentSettling` or swap `onComplete` | `UiTransitionSession.Cancel(CommandRail.Body)` from hub reactive reset during an active panel swap |
+| Register phase rebuild once (`RegisterPhasePanelRebuild`) in phase HUD `OnEnable` / bind | Hard-cut `PanelHost` repopulate on Hub↔Combat while rail stays visible |
+
+**Tests:** `CommandRailPresenterTests` (`SwapPanelContent_SetsPanelContentSettlingUntilComplete`, `SyncPhaseOwnership_HubToCombat_RebuildsPanelBetweenCloseAndOpen`), `UiToolkitTweensTests.CommandRailPanelTransition_*`; manual **F1 Tab** party menu, **F1↔F3** command rail focus.
+
+**Cross-ref:** [centralized UI services § Command rail panel swap](centralized-ui-services.md#command-rail-panel-content-swap), [shared menu § Party section rail](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons), [UITK BEM transition guide § No hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ---
 
