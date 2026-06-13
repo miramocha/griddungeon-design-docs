@@ -1,12 +1,12 @@
 ﻿# Floor transition vignette
 
-**Status:** Locked for MVP1 ([ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md))  
+**Status:** Locked ([ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md))  
 **Implementation:** [game epic #114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118)); builds on [#102](https://github.com/miramocha/griddungeon-game/issues/102)  
 **Related:** [floor art FPV](floor-art-fpv.md), [game phase](game-phase.md), [hub and services](hub-and-services.md), [uvs phase presentation](uvs-phase-presentation.md)
 
 ## Summary
 
-When the party **changes exploration floor** (stairs, hub re-entry, campaign target) or **returns to hub** from exploration (gate `stairsUp`), MVP1 plays a short **loading-room style** beat: **black background**, **3D threshold prop** (door, hatch, closet), **Cinemachine** camera move, then reveals the destination. Floor data commits **during** the beat; macro phase stays **Exploration** for floor-to-floor moves and switches to **Hub** when leaving the stratum.
+When the party **changes exploration floor** (stairs, hub re-entry, campaign target) or **returns to hub** from exploration (gate `stairsUp`), the game plays a short **loading-room style** beat: **black background**, **3D threshold prop** (door, hatch, closet), **Cinemachine** camera move, then reveals the destination. Floor **map/foe commit** runs **after** the door vignette ends (`NotifyBeatEnd` or catalog `DurationMaxSeconds` timeout), on the **second fade to black** — then destination floor art loads under black before the final fade-in. Macro phase stays **Exploration** for floor-to-floor moves and switches to **Hub** when leaving the stratum.
 
 References: Resident Evil door transitions; *Labyrinth of Galleria* closet step-in on black.
 
@@ -14,13 +14,13 @@ References: Resident Evil door transitions; *Labyrinth of Galleria* closet step-
 
 ---
 
-## Triggers (MVP1)
+## Triggers
 
 | Trigger | Caller | Default beat |
 |---------|--------|----------------|
 | Stairs up / down (exploration floors) | `ExplorationPhaseController.TryChangeFloor` | `stairs_default` |
 | Exploration → **Hub** (gate `stairsUp`) | `ExplorationPhaseController.TryReturnToHub` | `hub_return_from_exploration` or fade fallback |
-| Hub → Enter Stratum | `HubController.TryLeaveHub` → exploration load | `hub_enter_stratum` or fade fallback |
+| Hub → Enter Stratum | `HubController.TryLeaveHub` → `ExplorationPhaseController.BeginHubEnterTransition` on exploration enter from Hub | `hub_enter_stratum` or fade fallback |
 | Campaign floor jump (same API) | `TryChangeFloor` | catalog resolve |
 
 Hub enter/leave use catalog destination key **`hub`** (no floor art load). Other scripted hub returns (story, wipe) may stay instant until wired to the same presenter.
@@ -37,15 +37,17 @@ sequenceDiagram
     participant Art as FloorArtPresenter
     participant Map as MapSystem and FoeSystem
 
-    EPC->>FTP: RunTransition(leave, enter, beatId, commit)
+    EPC->>FTP: RunTransition FloorTransitionRequest
     FTP->>Gate: Acquire, HUD suppress
-    Note over FTP: Snap black, spawn beat, CM brain on
-    FTP->>Art: UnloadFloorArt (await)
-    Note over FTP: Fade from black, door vignette
+    FTP->>Art: UnloadFloorArt await
+    Note over FTP: Fade to black or snap opaque
+    FTP->>FTP: Spawn beat, CM brain lock on
+    FTP->>FTP: Fade from black, door vignette
     FTP->>FTP: BeatEndFired
     Note over FTP: Fade to black, destroy beat
-    FTP->>Map: CommitFloorSession (map/foes, spawn per caller)
-    FTP->>Art: LoadFloorArt(enter) under black (await)
+    FTP->>Map: CommitFloorSession map and foes
+    Note over FTP: Spawn per caller in commit delegate
+    FTP->>Art: LoadFloorArt enter key under black
     Note over FTP: FPV rig attach, fade in to level
     FTP->>Gate: Release
     FTP->>EPC: OnFinished, wire bindings
@@ -89,16 +91,16 @@ flowchart TB
 | Field | Purpose |
 |-------|---------|
 | `beatId` | e.g. `stairs_default` |
-| `prefab` | Vignette root |
-| `durationMax` | Safety timeout if `BeatEndFired` never fires |
+| `BeatPrefab` | Vignette root |
+| `DurationMaxSeconds` | Safety timeout if `BeatEndFired` never fires |
 | `leaveFloorKey` / `enterFloorKey` | Optional filter; empty = wildcard |
 
 ### Beat signals (`FloorTransitionBeat`)
 
-| Signal | MVP1 presenter use |
-|--------|-------------------|
-| **`NotifyBeatEnd()`** | **Required** — ends door vignette; commit + floor art load run **after** this (or `durationMax` timeout) |
-| **`NotifyThreshold()`** | Optional mid-beat (SFX, door open); does **not** commit floor in current presenter |
+| Signal | Presenter use |
+|--------|----------------|
+| **`NotifyBeatEnd()`** | **Required** — ends door vignette; commit + floor art load run **after** this (or `DurationMaxSeconds` timeout) |
+| **`NotifyThreshold()`** | Optional mid-beat (SFX, door open); does **not** commit floor |
 | **`FloorTransitionBeatTimelineEnd`** | Optional — `PlayableDirector.stopped` → `NotifyBeatEnd()`; skips auto beat-end timer on `FloorTransitionBeat` |
 
 Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSeconds`, or Timeline via the helper above.
@@ -109,7 +111,7 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 
 | Element | Behavior |
 |---------|----------|
-| `DungeonView` / floor art | Hidden before unload; new art loaded before reveal |
+| `DungeonView` / floor art | Screen fade covers the leave-floor slice; **`DungeonView` stays active** during unload/load so `FloorArtPresenter` coroutines are not stopped. Hub destination hides `DungeonView` after a successful handoff. |
 | `MapView` | Fades out on leave (`FadeTransition` + HUD suppress); fades in with screen on reveal — [gotchas § Map panel fade](../04-dev/centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
 | Exploration HUD | Gated |
 | Input | Off (`ExplorationPresentationGate` + `InputRouter` explore map) |
@@ -117,11 +119,11 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 
 ---
 
-## Cinemachine (MVP1)
+## Cinemachine
 
 - Package: `com.unity.cinemachine` **3.x** (see game `Packages/manifest.json`).
 - **One** `CinemachineBrain` on main camera in bootstrap.
-- Transition vcams use **priority** over exploration follow (exploration may keep `ExplorationCameraRig` without CM migration in MVP1).
+- Transition vcams use **priority** over exploration follow (`ExplorationCameraRig` may stay off Cinemachine until a later migration).
 - **`ExplorationCameraSession.SetTransitionBrainLock`** keeps the brain enabled for the whole beat; do not disable mid-vignette from rig detach or bootstrap hooks.
 - Main camera stays on the scene root during beats (not parented to `PartyPose`) so hiding party visuals does not trigger “no cameras rendering”.
 
@@ -131,7 +133,7 @@ Auto-timed signals: `FloorTransitionBeat` `m_thresholdSeconds` / `m_beatEndSecon
 
 If catalog has no beat for the pair:
 
-1. Full-screen **fade to black** (~0.25 s).
+1. Full-screen **fade to black** (~**0.4** s half-duration default in `FloorTransitionPresenter`).
 2. Same unload → commit → load sequence **without** 3D vignette.
 3. Fade up.
 
@@ -139,7 +141,7 @@ Exploration must never soft-lock if art is missing.
 
 ---
 
-## MVP1 acceptance criteria
+## Acceptance criteria
 
 1. B1F↔B2F stairs: player sees **black + 3D threshold** beat; movement blocked until complete.
 2. Floor logic and FPV art match destination after beat; no duplicate `FloorArtRoot`.
@@ -153,8 +155,8 @@ Exploration must never soft-lock if art is missing.
 
 ### Automated
 
-- Edit Mode: catalog resolve, single-commit guard, threshold vs end-only policy.
-- Play Mode (when Editor closed or user runs): transition coroutine — enter → unload → load → exit ([#102](https://github.com/miramocha/griddungeon-game/issues/102) rewrite).
+- Edit Mode: `FloorTransitionCatalogResolveTests`, `FloorTransitionBeatSignalTests`, commit guard.
+- Play Mode: `FloorTransitionPlayModeTests` — fade-only unload/commit/load, hub destination, overlapping request reject ([#117](https://github.com/miramocha/griddungeon-game/issues/117)).
 
 ### Manual
 
@@ -172,13 +174,13 @@ Exploration must never soft-lock if art is missing.
 - [x] Presenter-owned `LoadFloorArt` / unload (no duplicate load on same transition)
 - [x] Content: `Assets/Scenes/Transitions/Prefabs/stairs_default.prefab` + catalog sync menu
 - [x] `NotifyBeatEnd` ends door vignette; commit + load after second fade (see [authoring guide](../04-dev/authoring-floor-transition-beats.md))
-- [ ] Play Mode automated transition test ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); manual QA per acceptance criteria above
+- [x] Play Mode smoke tests (`FloorTransitionPlayModeTests`, fade-only path)
+- [ ] Play Mode automated test with live beat prefab + Cinemachine ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); manual QA per acceptance criteria above
 
 ---
 
 ## Related
 
 - [Authoring floor transition beats](../04-dev/authoring-floor-transition-beats.md)
-- [Floor art FPV — transitions](floor-art-fpv.md#floor-transitions--mvp1-locked)
+- [Floor art FPV — transitions](floor-art-fpv.md#floor-transitions)
 - [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
-- [mvp1-spec](../archive/mvp1-spec.md)

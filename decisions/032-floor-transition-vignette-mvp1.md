@@ -6,7 +6,7 @@
 
 ## Context
 
-Floor changes (stairs, hub re-entry, campaign warp) today load map data and floor art **synchronously** in `ExplorationPhaseController.TryLoadTargetFloor` ([floor art FPV — MVP1 path](../docs/02-systems/floor-art-fpv.md#floor-transitions--mvp1-vs-planned-transition-scene)). That works but has no **presentation beat** — unlike EO / *Labyrinth of Galleria* loading-room moments (black void + threshold prop + short camera move).
+Floor changes (stairs, hub re-entry, campaign warp) previously loaded map data and floor art **synchronously** in `ExplorationPhaseController` without a presentation beat ([floor art FPV — transitions](../docs/02-systems/floor-art-fpv.md#floor-transitions)). That worked but had no **presentation beat** — unlike EO / *Labyrinth of Galleria* loading-room moments (black void + threshold prop + short camera move).
 
 `com.unity.cinemachine` is already in the game manifest; exploration FPV still uses `ExplorationCameraRig` (parent camera to party pivot). A dedicated **transition vignette** needs its own camera stack, not a new `GamePhase`.
 

@@ -9,15 +9,15 @@
 
 ## What you are authoring
 
-MVP1 uses one default beat, **`stairs_default`**: black void, a threshold door prop, and two **Cinemachine 3** cameras. `FloorTransitionPresenter` instantiates the prefab during floor changes; `FloorTransitionCatalog` maps **beat id** (and optional floor keys) → prefab + safety timeout.
+Shipped default beat: **`stairs_default`** — black void, a threshold door prop, and two **Cinemachine 3** cameras. `FloorTransitionPresenter` instantiates the prefab during floor changes; `FloorTransitionCatalog` maps **beat id** (and optional floor keys) → prefab + safety timeout.
 
-| Beat id | Typical trigger | MVP1 prefab |
-|---------|-----------------|-------------|
+| Beat id | Typical trigger | Prefab |
+|---------|-----------------|--------|
 | `stairs_default` | B1F↔B2F↔B3F stairs (`TryChangeFloor`) | `stairs_default.prefab` |
-| `hub_enter_stratum` | Hub → Enter Stratum 1 | Same prefab (catalog row) |
+| `hub_enter_stratum` | Hub → Enter Stratum 1 (`BeginHubEnterTransition`) | Same prefab (catalog row) |
 | `hub_return_from_exploration` | B1F gate `^` → hub | Same prefab (optional row) |
 
-Unique beats per floor pair are **post-MVP1**; override with catalog `leaveFloorKey` / `enterFloorKey` when needed.
+Unique beats per floor pair can be added later; override with catalog `leaveFloorKey` / `enterFloorKey` when needed.
 
 ---
 
@@ -40,10 +40,10 @@ Batch / CI (Editor closed):
 
 ```mermaid
 flowchart TB
-  root[Assets/Scenes/Transitions/]
+  root["Assets/Scenes/Transitions/"]
   root --> readme[README.md]
   root --> mats[Materials/]
-  mats --> void[TransitionVoid.mat]
+  mats --> voidMat[TransitionVoid.mat]
   mats --> doorMat[TransitionDoor.mat]
   root --> prefabs[Prefabs/]
   prefabs --> stairs[stairs_default.prefab]
@@ -61,20 +61,20 @@ Root GameObject must have **`FloorTransitionBeat`** (`GridDungeon.Runtime.Explor
 
 ```mermaid
 flowchart TB
-  root[stairs_default<br/>FloorTransitionBeat root]
-  root --> env[Environment/]
+  root["stairs_default<br/>FloorTransitionBeat root"]
+  root --> env["Environment/"]
   env --> backdrop[BlackBackdrop]
-  env --> light[KeyLight optional]
+  env --> light["KeyLight optional"]
   root --> props[Props/]
   props --> door[ThresholdDoor]
   root --> cams[Cameras/]
-  cams --> wide[CM_Wide CinemachineCamera]
-  cams --> thresh[CM_Threshold CinemachineCamera]
+  cams --> wide["CM_Wide CinemachineCamera"]
+  cams --> thresh["CM_Threshold CinemachineCamera"]
 ```
 
 | Rule | Why |
 |------|-----|
-| Prefab authored at origin | Presenter spawns at **`y = -100`** by default (`m_beatSpawnWorldY`) so beat + transition vcams stay under the MVP1 dungeon plane (`y = 0`) |
+| Prefab authored at origin | Presenter spawns at **`y = -100`** by default (`m_beatSpawnWorldY`) so beat + transition vcams stay under the exploration dungeon plane (`y = 0`) |
 | **No colliders** on backdrop / door primitives | Beat is presentation-only |
 | **Two+ `CinemachineCamera`** under root | Presenter sets priority **100+** on all child vcams |
 | Look target = door / threshold | Wide + close shots share one `TrackingTarget` |
@@ -97,7 +97,7 @@ Component on the prefab root:
 | **`NotifyThreshold()`** | Timeline Signal / animation event / auto timer |
 | **`NotifyBeatEnd()`** | **Ends the door vignette** — presenter waits for this before second fade |
 
-**MVP1 presenter timing (locked in code):** floor **commit + map load** run **after** `BeatEndFired` (or catalog `durationMax` timeout), **not** on `OnThreshold`.
+**Presenter timing (locked in code):** floor **commit + map load** run **after** `BeatEndFired` (or catalog `DurationMaxSeconds` timeout), **not** on `NotifyThreshold`.
 
 ### Timeline drives beat end (recommended)
 
@@ -167,15 +167,18 @@ sequenceDiagram
     participant F as ScreenFade
     participant B as Beat prefab
 
-    Note over P,F: Transition start — snap black (hub: hide DungeonView)
-    P->>B: Spawn beat early (y=-100); CM brain lock on
-    P->>P: Unload prior floor art (under black)
-    P->>F: Fade from black (door visible)
+    Note over P,F: Transition start, fade to black or snap opaque
+    P->>P: Unload prior floor art under black
+    P->>B: Spawn beat at y=-100
+    Note over B: CM brain lock on
+    P->>F: Fade from black, door visible
     B-->>P: BeatEndFired
     P->>F: Fade to black
-    P->>B: Destroy beat; brain lock off
-    P->>P: Commit (map/foes; hub also SpawnParty here)
-    P->>P: Load destination floor art (under black)
+    P->>B: Destroy beat
+    Note over P: Brain lock off
+    P->>P: Commit map and foes
+    Note over P: Hub spawns party in commit delegate
+    P->>P: Load destination floor art under black
     P->>P: Attach ExplorationCameraRig at spawn FPV
     P->>F: Fade in to exploration
 ```
@@ -197,7 +200,7 @@ Input and exploration HUD are suppressed for the whole transition (`ExplorationP
 5. If a new beat id is used from C#, update `ExplorationPhaseController` / hub paths to pass that `beatId` on `FloorTransitionRequest` (today stairs use `FloorTransitionBeatIds.StairsDefault` only).
 6. Manual QA (below).
 
-Post-MVP1: per-pair rows such as `leave=s1_B1F`, `enter=s1_B2F` without code changes, as long as the request still resolves the row (may require passing `beatId` + keys from caller).
+Later: per-pair rows such as `leave=s1_B1F`, `enter=s1_B2F` without code changes, as long as the request still resolves the row (may require passing `beatId` + keys from caller).
 
 ---
 
@@ -235,7 +238,7 @@ If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `
 | Symptom | Likely cause | Fix |
 |---------|----------------|-----|
 | Black screen, no door | Beat prefab null / missing from catalog | Create prefab + **Sync Default Beats** |
-| Door flashes, level never loads | `BeatEnd` never fires and `durationMax` too low | Raise **Duration Max**; fix Timeline / auto schedule |
+| Door flashes, level never loads | `BeatEnd` never fires and `DurationMaxSeconds` too low | Raise **Duration Max**; fix Timeline / auto schedule |
 | Stuck on door, old floor | Commit failed; check Console | Campaign gates (B1F `v` needs Act 3); save errors |
 | Fade invisible | `ScreenFade` unwired | **Create Dev Bootstrap** |
 | Door flashes during fade | Fade lerped from α0 while already black | Fixed in `ScreenFadePresenter` — update game repo if regressed |
@@ -250,6 +253,6 @@ If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `
 ## Related
 
 - [Floor transition (system)](../02-systems/floor-transition.md)
-- [Floor art FPV — transitions](../02-systems/floor-art-fpv.md#floor-transitions--mvp1-vs-planned-transition-scene)
+- [Floor art FPV — transitions](../02-systems/floor-art-fpv.md#floor-transitions)
 - [Hub and services](../02-systems/hub-and-services.md)
 - Game epic [#114](https://github.com/miramocha/griddungeon-game/issues/114) · prefab [#116](https://github.com/miramocha/griddungeon-game/issues/116)

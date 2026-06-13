@@ -141,11 +141,11 @@ sequenceDiagram
 - **Combat:** `CombatPhaseController` hides `DungeonView` (existing); floor art root hides with it.
 - **Alignment:** Art root at world origin `(0,0,0)`; same as Editor floor scenes.
 
-## Floor transitions — MVP1 locked
+## Floor transitions
 
 **Authority:** [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md) · [floor transition](floor-transition.md)
 
-MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cinemachine) for stairs and hub stratum entry. Floor art loads **only** through `FloorTransitionPresenter`, in order:
+Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemachine) for stairs and hub stratum entry. Floor art loads **only** through `FloorTransitionPresenter`, in order:
 
 1. Transition starts (`FloorTransitionPresenter`; input/HUD gated via `ExplorationPresentationGate`).
 2. `UnloadFloorArt()` for the leaving floor — await complete.
@@ -162,7 +162,7 @@ MVP1 ships a **floor transition vignette** (black void + 3D threshold prop + Cin
 |------|-----|
 | **Single owner** (`FloorTransitionPresenter`) per floor change | Avoid `LoadFloorArt` from both transition and `ExplorationPhaseController` on the same frame. |
 | **No overlapping additive loads** | Prevents stale `s1_B*n*F` scenes and wrong mounted `FloorArtRoot`. |
-| **Replace or rewrite** `FloorArtPresenterPlayModeTests` | Drive transition enter → load → exit, not raw double `LoadFloorArt` on one frame. |
+| **Play Mode tests** via `FloorTransitionPlayModeTests` | Transition enter → unload → commit → load; not raw double `LoadFloorArt` on one frame. |
 | **Fade-only fallback** if beat asset missing | Floor change must still complete. |
 
 ## Out of scope (this feature)
