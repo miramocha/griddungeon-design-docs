@@ -4,10 +4,43 @@
 
 Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action maps: `Exploration`, `Combat`, `UI`, `Map` ([ADR 012](../../decisions/012-unity-6-stack.md)). Runtime routing: `InputRouter` → handlers ([exploration UI](exploration-ui.md#input-routing), [game phase](game-phase.md#input-maps-per-phase)).
 
-## Design principles
+## Universal PC UI vocabulary
 
-- **Exploration:** grid actions on keyboard; no mouse movement in FPV.
-- **Combat:** **menu focus** on command bar (+ target list when targeting) — **arrows or `W`/`A`/`S`/`D`** move focus (WASD mirrors arrows; exploration map disabled in combat), **`Z`** confirm, **`X`** cancel/Back; **mouse** still one-click queue and LMB targets ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-05-23-wasd-menu-navigate)).
+**Authority:** [ADR 009 § Universal UI vocabulary (2026-06)](../../decisions/009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary). Hub, combat command UI, party menu, and tabbed pickers share one **menu vocabulary**. Phase sections below add detail; when a modal or overlay owns input, this table wins over exploration movement.
+
+| Role | Keyboard | Mouse | Input System (menu surfaces) |
+|------|----------|-------|------------------------------|
+| **Navigate / focus** | `W`/`A`/`S`/`D` + arrows | Hover + LMB on focusable control | `MenuNavigate` (2D vector) |
+| **Confirm** | `Z` (+ `Enter` alias) | LMB on focused or clicked control | `MenuConfirm` |
+| **Cancel / back** | `X` | RMB | `MenuCancel` |
+| **Tab cycle** | `Q` / `E` | LMB on tab chip | `*TabPrev` / `*TabNext` (scoped per overlay) |
+| **Menu / pause** | `Tab` / `Esc` | — | `PartyMenu` / `Pause` (phase-specific) |
+
+**Mouse parity:** UITK `Button` controls activate on **LMB** without an extra `Z`. Keyboard **`Z`** is the **focus-then-confirm** path on the same control. LMB on a combat command or valid target still **instant-queues** (no extra confirm) per [ADR 026](../../decisions/026-combat-menu-focus-navigation.md).
+
+### Overlay ownership
+
+When a **party menu**, **skill/item picker**, **hub service panel**, or other modal owns input:
+
+- Universal vocabulary applies (`MenuNavigate`, `MenuConfirm`, `MenuCancel`, scoped `Q`/`E` tab actions).
+- Exploration **turn** (`Q`/`E`) and **movement** (`W`/`A`/`S`/`D`) are **gated** — `InputRouter` enables tab actions only on the active pane and does not emit exploration turn while overlays are open ([party menu § Scope](#party-menu-tab), [skill picker § Scope](#skill-use-picker-modal)).
+
+### Exploration FPV exception
+
+With **no** overlay owning input, labyrinth FPV uses `W`/`A`/`S`/`D` and arrows for **grid displacement** (not menu focus), and **`Q`/`E`** for **90° turn** (not tab cycle). See [Exploration](#exploration) below. Map **autopilot destination pick** reuses universal navigate (`WASD` / arrows = cursor, `Z` / LMB = confirm, `X` = cancel pick).
+
+### Menu / pause (`Tab` / `Esc`) by phase
+
+| Phase | `Tab` | `Esc` |
+|-------|-------|-------|
+| **Hub** | Toggle party menu when safe | Toggle party menu when safe (same as `Tab`) |
+| **Exploration** | Toggle party / pause menu when safe | Priority stack: cancel autopilot → exit fullscreen map → close menu if open → open menu ([autopilot](#autopilot-mvp2), [map](#map-read-only)) |
+| **Combat** | Not party menu (legacy `CycleTarget` bind deferred) | **Pause** when pause UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)); **not** LIFO Back |
+
+### Design principles (phase summary)
+
+- **Exploration:** grid actions on keyboard; no mouse movement in FPV; exception table above when overlays closed.
+- **Combat:** instance of universal vocabulary on command bar + target list + pickers ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 - **Map:** mouse pan/zoom when map panel focused or fullscreen.
 - **Rebindable** in settings menu (MVP1: ship with defaults below; store overrides in player prefs).
 
@@ -218,9 +251,10 @@ Copy constants: `TabbedPickerRailHints` — full table in [shared menu & picker 
 
 | Action | Input |
 |--------|--------|
-| Navigate | Mouse, arrows, `W`/`A`/`S`/`D` (`UI.Navigate` + `Hub.MenuNavigate`) |
-| Confirm | `Z` |
-| Cancel / back | `X` (closes service panel; root menu unchanged) |
+| Navigate | Mouse, arrows, `W`/`A`/`S`/`D` (`Hub.MenuNavigate`) |
+| Confirm | `Z` or LMB on focused control |
+| Cancel / back | `X` or RMB (`Hub.MenuCancel`; closes service panel; root menu unchanged) |
+| Party menu | `Tab` or `Esc` when safe (same toggle as exploration) |
 | Assign party / skills | Mouse or keyboard focus at **Explorers Guild** |
 
 Presentation lock blocks navigate/confirm while hub reactive beats run ([hub-and-services](hub-and-services.md#service-ui-motion)).
@@ -237,7 +271,7 @@ Exploration
   MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
 
 Combat
-  MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X on MenuNavigate composite
+  MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X / RMB on MenuNavigate composite
   SkillPickerTabPrev, SkillPickerTabNext    # ADR 035 — Q / E (MVP1); L1 / R1 deferred; only while picker open
   InventoryBagTabPrev, InventoryBagTabNext  # ADR 036 — Q / E on Inventory pane OR member cycle on Equipment pane
   ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
@@ -248,6 +282,10 @@ Combat
 Map
   Pan, Zoom, RecenterParty
   SetAutopilotDestination   # MVP2 — LMB on revealed walkable cell
+
+Hub
+  MenuNavigate, MenuConfirm, MenuCancel   # Z / X / RMB; Tab + Esc → PartyMenu
+  PartyMenu, InventoryBagTabPrev, InventoryBagTabNext
 
 UI
   Navigate, Submit, Cancel, Point, Click

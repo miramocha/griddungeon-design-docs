@@ -23,6 +23,32 @@ Combat **player command UI** (planning, targeting, summon/per-slot control): sup
 
 **Skill use picker** ([ADR 035](035-skill-use-picker.md)): while modal open, **`Q`/`E`** = previous/next tab (not exploration turn). Gamepad **`L1`/`R1`** tab cycle **deferred** with general gamepad support.
 
+## Amendment (2026-06) — Universal UI vocabulary
+
+**Motivation:** Menu, picker, and hub input rules were spread across ADR 026, party-menu docs, and per-screen hints. One **layered** vocabulary reduces drift.
+
+**Decision:**
+
+1. **Menu surfaces** (hub, combat command UI, party menu, tabbed pickers) share one PC vocabulary — see [input-bindings.md § Universal PC UI vocabulary](../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary):
+
+   | Role | Keyboard | Mouse |
+   |------|----------|-------|
+   | Navigate / focus | `WASD` + arrows | Hover + LMB on control |
+   | Confirm | `Z` | LMB |
+   | Cancel / back | `X` | RMB (`MenuCancel`) |
+   | Tab cycle | `Q` / `E` | LMB on tab |
+   | Menu / pause | `Tab` / `Esc` | — |
+
+2. **Exploration FPV exception (unchanged):** with no overlay owning input, `WASD` = displacement, `Q`/`E` = turn — not tab cycle. Overlays gate exploration turn/movement maps.
+
+3. **Hub `Esc`:** binds to `PartyMenu` toggle (parity with `Tab`) when party menu is safe to open.
+
+4. **Combat `Esc`:** pause only when pause UI ships ([ADR 015](015-mvp1-combat.md)); never LIFO Back.
+
+5. **Agent rule:** `.cursor/rules/unity-input-vocabulary.mdc` — hint axis tokens and handler checklist.
+
+Exploration movement trial layout, map pan/zoom, and gamepad deferral unchanged.
+
 ## Related
 
 - [Input bindings](../docs/02-systems/input-bindings.md)

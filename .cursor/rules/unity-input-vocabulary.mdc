@@ -1,0 +1,44 @@
+---
+description: Universal PC UI input vocabulary — navigate, confirm, cancel, tab, menu; exploration FPV exception
+globs: "**/*.{cs,inputactions}"
+alwaysApply: false
+---
+
+# Universal PC UI input vocabulary
+
+**Authority:** [input-bindings.md § Universal PC UI vocabulary](../../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary), [ADR 009 amendment](../../decisions/009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary).
+
+Hub, combat command UI, party menu, and tabbed pickers share one vocabulary. When a modal/overlay owns input, this table wins over exploration movement.
+
+| Role | Keyboard | Mouse | Input System |
+|------|----------|-------|--------------|
+| Navigate / focus | `WASD` + arrows | Hover + LMB on control | `MenuNavigate` |
+| Confirm | `Z` (+ `Enter`) | LMB on control | `MenuConfirm` |
+| Cancel / back | `X` | RMB | `MenuCancel` |
+| Tab cycle | `Q` / `E` | LMB on tab chip | `*TabPrev` / `*TabNext` (scoped) |
+| Menu / pause | `Tab` / `Esc` | — | `PartyMenu` / `Pause` |
+
+**Mouse:** LMB on UITK `Button` = instant activate. `Z` = focus-then-confirm on same control. Combat LMB on command/target = instant queue (ADR 026).
+
+## Exploration FPV exception
+
+No overlay open: `WASD` = grid move, `Q`/`E` = turn — **not** tab cycle. `InputRouter` gates exploration turn/movement when party menu, pickers, or tab actions are active.
+
+## Handler checklist
+
+1. New menu surface → reuse `MenuNavigate` / `MenuConfirm` / `MenuCancel`; scope `Q`/`E` tab actions to overlay open only.
+2. Wire **RMB** on `MenuCancel` (Hub + Combat maps) — do not fork a separate cancel path.
+3. Hub **Tab** and **Esc** both toggle `PartyMenu` when safe.
+4. Combat **Esc** → pause only when pause UI ships — never LIFO Back.
+5. Global bind copy → `TabbedPickerRailHints` + `InputHints.Publish` — see `unity-global-input-hints.mdc`.
+
+## Hint axis tokens (`TabbedPickerRailHints`)
+
+| Navigator | Hint token |
+|-----------|------------|
+| 1D vertical rail/list | `W/S` (e.g. section rail, quit rows) |
+| 2D or full `MenuNavigate` | `WASD Navigate` or `WASD Target` / `WASD Member` |
+| Tabbed picker rows + tabs | `Q/E Tab` + `W/S Row` via `ForItemPickerRows` |
+| Map autopilot cursor | `WASD · Arrows Cursor` |
+
+Prefer **Navigate** over **Command** / **Menu** / **Action** on hub and combat hints when `MenuNavigate` applies.

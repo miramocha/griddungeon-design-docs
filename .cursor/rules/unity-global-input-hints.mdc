@@ -8,7 +8,7 @@ alwaysApply: true
 
 Grid Dungeon uses one **bottom-right** overlay (`InputHintPresenter`, `Assets/UI/Screens/Shared/InputHint.uxml`, `sortingOrder` **300**) for **input bind copy** — what the player can press **right now**.
 
-Design reference: [shared menu & picker UI § Global input hints](../../docs/04-dev/shared-menu-picker-ui.md#global-input-hints), [input bindings § Global input hints](../../docs/02-systems/input-bindings.md#global-input-hints).
+Design reference: [shared menu & picker UI § Global input hints](../../docs/04-dev/shared-menu-picker-ui.md#global-input-hints), [input bindings § Global input hints](../../docs/02-systems/input-bindings.md#global-input-hints), [universal PC UI vocabulary](../../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary) (`unity-input-vocabulary.mdc`).
 
 ## Global strip — input binds only
 
@@ -19,14 +19,14 @@ Design reference: [shared menu & picker UI § Global input hints](../../docs/04-
 Every bind segment in `TabbedPickerRailHints` (game repo: `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs`) uses this order:
 
 1. **Z and X** — confirm/cancel first (`Z Confirm · X Cancel`)
-2. **W/S and Q/E** — navigation axes next; **W/S before Q/E** when both apply (`W/S Command · Q/E Tab`)
+2. **W/S and Q/E** — navigation axes next; **W/S before Q/E** when both apply (`WASD Navigate · Q/E Tab` or `W/S Row · Q/E Tab`)
 3. **Other keys** — L, Esc, M, Click, … last (`L Log · Esc Pause`)
 
 Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint strings in views — add a constant or helper on `TabbedPickerRailHints`.
 
 | OK on global strip | Not on global strip |
 |--------------------|---------------------|
-| `Z Confirm · X Cancel · W/S Command · L Log` | Party cell, facing arrow, HP/MP, floor name |
+| `Z Confirm · X Cancel · WASD Navigate · L Log` | Party cell, facing arrow, HP/MP, floor name |
 | `Z Confirm · X Back · Q/E Tab · W/S Row` | Tutorial lore, quest text, warnings |
 | `Z Pick · X Back · Q/E Member · W/S Slots` | `north up`, map legend, focused slot names (`· Weapon`), confirm-target labels |
 
@@ -63,3 +63,4 @@ When a modal’s **only** footer text is bind copy (`Esc Resume`), prefer **glob
 3. Removing a legacy footer hint → delete UXML `Label` + USS; wire publisher + input-handler block while overlay open.
 4. PR review: if `InputHintPresenter` text is not a bind line, move status/tutorial to HUD labels or modal body — not the global strip.
 5. PR review: reject hint strings that reorder segments (e.g. `L Log` before `Z Confirm`) or duplicate bind footers on panels.
+6. **Navigate vs Command/Menu/Action** — use `WASD Navigate` (or `WASD Target` / `WASD Member`) when `MenuNavigate` applies; reserve `W/S` for 1D vertical rails only (`W/S Section`, `W/S Row`, `W/S Slots`). See `unity-input-vocabulary.mdc`.

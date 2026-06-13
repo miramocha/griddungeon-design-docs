@@ -1,6 +1,6 @@
 # Centralized UI services (UITK)
 
-How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD — global input hints, the shared party formation floater, screen fade, and similar `UIDocument` roots. Use this when adding a new cross-phase panel or when deciding whether chrome belongs in `ExplorationHud.uxml` vs its own scene object.
+How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD — global input hints, the shared party formation floater, screen fade, and similar `UIDocument` roots. Use this when adding a new cross-phase panel or when deciding whether chrome belongs on a **centralized service** `UIDocument` vs embedding in a phase HUD shell (exploration has **no** phase HUD UXML — see [exploration UI](../02-systems/exploration-ui.md)).
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — `Assets/Scripts/Runtime/UI/`, `Assets/Scripts/UI/Views/`, `Assets/UI/Screens/Shared/`.
 
@@ -10,7 +10,7 @@ How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD 
 
 ## Problem
 
-Phase HUDs (`ExplorationHud`, `CombatHud`, `HubHud`) own most screen chrome. Some UI must:
+Phase HUDs (`CombatHud`, `HubHud`) own most screen chrome; **`ExplorationHud` is orchestrator-only** (no `UIDocument`). Some UI must:
 
 - Appear in **more than one phase** (party strip in exploration and combat).
 - Sit **above** phase HUD without being torn down on phase exit.
@@ -226,7 +226,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 
 ### Global input hints — `InputHintPresenter` + `InputHints`
 
-**Job:** Bottom-right **input bind copy only** (`Z Confirm · X Cancel · W/S Command`). Not map legend, HP, quest text, or tutorial body copy.
+**Job:** Bottom-right **input bind copy only** (`Z Confirm · X Cancel · WASD Navigate`). Not map legend, HP, quest text, or tutorial body copy.
 
 | Type | Path | Notes |
 |------|------|-------|
@@ -424,7 +424,7 @@ m_mapCoordinator.ToggleExpandedFromInput();
 m_mapCoordinator.RefreshGlobalInputHint();
 ```
 
-Legacy `MapView` shim delegates to coordinator until scenes refresh. **Do not** embed map chrome in `ExplorationHud.uxml`.
+Legacy `MapView` shim delegates to coordinator until scenes refresh. **Do not** embed map chrome on a phase HUD `UIDocument` — map lives on `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)).
 
 ---
 
@@ -656,7 +656,7 @@ Every **centralized UI service** (`GameState` child with its own `UIDocument` li
 | Service | Why |
 |---------|-----|
 | `ScreenFadePresenter` | Beat-driven opaque/transparent; imperative `FadeOut`/`FadeIn` on `GameState.ScreenFade` — not authority-toggled chrome |
-| Phase HUDs (`HubHud`, `CombatHud`, `ExplorationHud`) | Not centralized services — phase-owned documents |
+| Phase HUDs (`HubHud`, `CombatHud`) | Not centralized services — phase-owned documents; exploration uses orchestrator + map/pause/floater docs |
 
 Passive copy rails (`CommandRailInfoPresenter`) should still implement the interface where visibility toggles exist; use immediate `Hide` when there is no settle animation.
 

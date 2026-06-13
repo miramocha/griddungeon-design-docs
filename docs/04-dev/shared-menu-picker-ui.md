@@ -279,11 +279,11 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 
 | Constant / helper | Copy |
 |-------------------|------|
-| `HubRoot` | Z Confirm · X Cancel · W/S Menu |
-| `HubService` | Z Confirm · X Back · W/S Action |
+| `HubRoot` | Z Confirm · X Cancel · WASD Navigate |
+| `HubService` | Z Confirm · X Back · WASD Navigate |
 | `CombatIdle` | Z Confirm · X Cancel · L Log · Esc Pause |
-| `CombatCommand` | Z Confirm · X Cancel · W/S Command · L Log · Esc Pause |
-| `CombatTarget` | Z Confirm · X Cancel · W/S Target · L Log |
+| `CombatCommand` | Z Confirm · X Cancel · WASD Navigate · L Log · Esc Pause |
+| `CombatTarget` | Z Confirm · X Cancel · WASD Target · L Log |
 | `LogModal` | X Close · L Close |
 | `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
 | `ExplorationPauseMenuShell` | Z Open · X Close · W/S Section · Esc Close |
@@ -291,7 +291,6 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
 | `PartyMenuShell` | Z Open · X Close · W/S Section |
 | `PartyQuitConfirm` | Z Confirm · X Back · W/S Row |
-| `HubService` | Z Confirm · X Back · W/S Action |
 | `HubHospitalPick` | Z Pick · X Back · WASD Member — hub hospital heal/revive on party floater |
 | `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
 | `PartyEquipmentEngage` | Z Engage · X Back · WASD Member |

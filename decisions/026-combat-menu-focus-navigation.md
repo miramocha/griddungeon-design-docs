@@ -8,7 +8,7 @@
 
 MVP1 combat shipped **direct** keyboard binds (`Z` = Attack, `X` = Guard, …) and **mouse** targeting ([#60](https://github.com/miramocha/griddungeon-game/issues/60)). That works on PC but does not scale to gamepad/console-style **focus + confirm** flows.
 
-Product direction: **cursor navigation** on the command bar (and target list during targeting), **`Z` confirm**, **`X` cancel/Back**, **`Esc` pause** (when pause UI exists). Mouse clicks stay **one-shot** (no extra confirm). Hub service UI is **out of scope** until [#36](https://github.com/miramocha/griddungeon-game/issues/36) ships; if hub lands in MVP1, use the same pattern in a follow-up doc amendment.
+Product direction: **cursor navigation** on the command bar (and target list during targeting), **`Z` confirm**, **`X` cancel/Back**, **`Esc` pause** (when pause UI exists). Mouse clicks stay **one-shot** (no extra confirm). Combat is an **instance** of the project-wide [Universal PC UI vocabulary](../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary) ([ADR 009 amendment](009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary)). Hub service UI is **out of scope** until [#36](https://github.com/miramocha/griddungeon-game/issues/36) ships; if hub lands in MVP1, use the same pattern in a follow-up doc amendment.
 
 **Not in scope:** [#44](https://github.com/miramocha/griddungeon-game/issues/44) — optional **round-end** confirm after all cores are assigned (separate from per-command focus).
 
