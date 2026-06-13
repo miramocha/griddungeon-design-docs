@@ -281,8 +281,8 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 |-------------------|------|
 | `HubRoot` | Z Confirm · X Cancel · WASD Navigate |
 | `HubService` | Z Confirm · X Back · WASD Navigate |
-| `CombatIdle` | Z Confirm · X Cancel · L Log · Esc Pause |
-| `CombatCommand` | Z Confirm · X Cancel · WASD Navigate · L Log · Esc Pause |
+| `CombatIdle` | Z Confirm · X Cancel · L Log |
+| `CombatCommand` | Z Confirm · X Cancel · WASD Navigate · L Log |
 | `CombatTarget` | Z Confirm · X Cancel · WASD Target · L Log |
 | `LogModal` | X Close · L Close |
 | `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
