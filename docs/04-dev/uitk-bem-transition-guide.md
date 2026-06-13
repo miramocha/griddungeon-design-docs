@@ -255,6 +255,7 @@ When the **animation target is the surface root**, public `IsShown` can mirror B
 | `SlideTransition` | `wallet-hud__panel--retracted` | `WalletHud.uss` | `false` | `true` | `WalletHudPresenter` |
 | `CollapseTransition` | `party-formation-floater--collapsed` | `PartyFormationFloater.uss` | `false` (+ picking) | `true` (+ picking) | `PartyFormationFloaterPresenter` |
 | `CommandRailEnterTransition` | per-panel `hiddenClass` | phase USS | `false` on enter complete | `true` on close complete | `CommandRailPresenter` |
+| `CommandRailPanelTransition` | — (orchestrates close → rebuild → open on body) | `CommandRail.uss` body | — | — | `CommandRail.SwapPanelContent`, hub service, party menu, phase handoff |
 | Map marker fade | `map-view__marker--fade-hidden` | `MapView.uss` | immediate on hide start | — | `MapMarkerVisibility` |
 
 Map marker row uses immediate class + opacity tween (separate DOTween target) — not `BemMotionCompletion` on shell position. See [gotchas § marker fade](centralized-ui-gotchas.md).
@@ -278,7 +279,7 @@ Map marker row uses immediate class + opacity tween (separate DOTween target) �
 
 | Fixture | Covers |
 |---------|--------|
-| `UiToolkitTweensTests` | `BemMotionCompletion_*`, `SlideTransition_*`, `FadeTransition_*`, `CollapseTransition_*` |
+| `UiToolkitTweensTests` | `BemMotionCompletion_*`, `SlideTransition_*`, `FadeTransition_*`, `CollapseTransition_*`, `CommandRailPanelTransition_*` |
 | `VisualPresentationSyncTests` | All four gate methods |
 | `InputHintPresenterTests` / `WalletHudPresenterTests` | Slide sync + retracted class |
 | `PartyFormationFloaterPresenterTests` | Collapse sync + rapid reopen |

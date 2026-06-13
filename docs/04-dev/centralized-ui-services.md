@@ -114,7 +114,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
-| **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `SetPartyMenuRailVisible` |
+| **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `EnterPartyMenuRail` / `ExitPartyMenuRail` (`sortingOrder` bump) |
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
@@ -720,7 +720,7 @@ See [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-show
 | `UiTransitionSession` | `Assets/Scripts/Runtime/UI/UiTransitionSession.cs` | Per-target generation; `Begin` bumps **before** kill; `KillWithoutCompleting` on detach |
 | `BemMotionCompletion` | `Assets/Scripts/Runtime/UI/BemMotionCompletion.cs` | Steady BEM **then** `ClearMotionStyles` on tween complete / reset — [implementation guide](uitk-bem-transition-guide.md#bemmotioncompletion) |
 | `VisualPresentationSync` | `Assets/Scripts/Runtime/UI/VisualPresentationSync.cs` | Presenter show/hide gates from steady hidden class + `IsSettling` — [implementation guide](uitk-bem-transition-guide.md#visualpresentationsync) |
-| Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition` |
+| Transition helpers | same folder + `MapViewPanelTransition` | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `CommandRailPanelTransition`, `RailInfoCopyTransition` |
 
 **Rules:** One duration source in C# constants. Toggle BEM modifiers for **steady** visibility; tween inline `style` during motion; `StyleKeyword.Null` on complete. Map marker opacity uses a **separate DOTween target** so step `Kill` does not cancel fade-in ([`MapMarkerVisibility`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/MapMarkerVisibility.cs)).
 

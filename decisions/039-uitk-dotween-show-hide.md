@@ -21,7 +21,7 @@ Centralized UITK overlays (PopIn pickers, party floater collapse, wallet/input-h
 | **USS + BEM modifiers** | Steady-state pixels (`--hidden`, `--collapsed`, `--entering`, `--retracted`, `--expanded`) and hover/focus micro-states |
 | **`UiToolkitTweens`** | DOTween on `VisualElement.style` (opacity, translate, scale, width/height) during motion |
 | **`UiTransitionSession`** | Per-element **generation**; bump before kill so superseded exit callbacks bail via `IsCurrent` |
-| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `RailInfoCopyTransition`, `MapViewPanelTransition` |
+| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `CommandRailPanelTransition`, `RailInfoCopyTransition`, `MapViewPanelTransition` |
 
 **Do not** add `transition-duration` on blocks that C# animates. **Do not** use `schedule.Execute` for dismiss timing on centralized overlays.
 
