@@ -152,8 +152,8 @@ sequenceDiagram
   GPC->>GPC: Validate(from, to)
   GPC->>Old: OnExit()
   GPC->>GPC: Current = Combat
-  GPC->>New: OnEnter()
   GPC->>GS: PhaseChanged
+  GPC->>New: OnEnter()
   GS->>IR: PhaseChanged
   GPC-->>Caller: true
 ```
@@ -359,7 +359,7 @@ sealed class GameState : MonoBehaviour
 }
 ```
 
-`TryTransitionTo` calls `OnExit` on the old controller, updates `Current`, calls `OnEnter` on the new controller, then raises `PhaseChanged` (forwarded by `GameState`). Boot uses `BeginAt(Hub)` so initial `OnEnter` runs without a transition event.
+`TryTransitionTo` calls `OnExit` on the old controller, updates `Current`, raises `PhaseChanged` (forwarded by `GameState`), then calls `OnEnter` on the new controller. Presentation subscribers (camera detach/attach, HUD visibility, `InputRouter`) run on `PhaseChanged` **before** phase `OnEnter` so the main camera is unparented from exploration FPV before combat enables the battle vcam. `BeginAt` uses the same order when the phase changes; same-phase `BeginAt` re-enters with `OnEnter` only (no `PhaseChanged`).
 
 ## Skill point allocation (UI gate)
 
