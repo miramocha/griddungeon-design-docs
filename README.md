@@ -97,6 +97,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [ADR 037 — Layered UITK panels](decisions/037-layered-uitk-panels.md) | Proposed | Split phase HUDs into smaller `UIDocument` panels + sort stack for HUD depth (draft) |
 | [ADR 038 — Centralized UI presentation lifecycle](decisions/038-centralized-ui-presentation-lifecycle.md) | Accepted | `ICentralizedUiSurface`, `Show`/`Hide`/`IsSettling`; internal `IPresentationDriver` |
 | [ADR 039 — UITK show/hide via DOTween](decisions/039-uitk-dotween-show-hide.md) | Accepted | `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS overlay transitions |
+| [ADR 040 — Floor exit topology graph](decisions/040-floor-exit-topology-graph.md) | Proposed | `FloorExitLink[]` replaces scalar stairs; Graph Toolkit stratum topology compile (editor-only) |
 
 ## Resolved
 

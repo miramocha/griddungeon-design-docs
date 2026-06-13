@@ -109,12 +109,13 @@ ExplorationPhaseController (party moved / interact)
 
 ### 4. Relationship to story VN graphs ([ADR 030](030-story-event-graph-authoring.md))
 
-| | **ADR 030 — Story event graph** | **ADR 031 — Floor event graph** |
-|--|--------------------------------|----------------------------------|
-| **Scope** | Steps inside one `storyEventId` | Which floor cell + when + which handler |
-| **Runtime consumer** | `StoryEventRunner` (step list) | `FloorEventEvaluator` + phase controllers |
-| **Typical branch** | Player choice, line order | Quest / flag gating, pin visibility |
-| **Editor** | Graph Toolkit or GraphView (TBD) | Graph Toolkit (this ADR) |
+| | **ADR 030 — Story event graph** | **ADR 031 — Floor event graph** | **ADR 040 — Exit topology graph** |
+|--|--------------------------------|----------------------------------|-----------------------------------|
+| **Scope** | Steps inside one `storyEventId` | Which floor cell + when + which handler | Which cells are exits + destination floor / hub |
+| **Runtime consumer** | `StoryEventRunner` (step list) | `FloorEventEvaluator` + phase controllers | `FloorExitResolver` + `ExplorationPhaseController` |
+| **Typical branch** | Player choice, line order | Quest / flag gating, pin visibility | Up/down pairing, hub return, side-dungeon exit |
+| **Editor** | Graph Toolkit or GraphView (TBD) | Graph Toolkit (ADR 031) | Graph Toolkit stratum topology (ADR 040) |
+| **Gating on compiled row** | N/A (story steps) | Yes — conditions on rules | **No** — routing only |
 
 A single **PlayStoryEvent** action node links the two: floor graph decides *when*; story graph (or linear YAML) decides *what lines play*.
 
@@ -146,6 +147,7 @@ A single **PlayStoryEvent** action node links the two: floor graph decides *when
 
 - [Unity Graph Toolkit — Introduction](https://docs.unity3d.com/Packages/com.unity.graphtoolkit@0.4/manual/introduction.html)
 - [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md)
+- [ADR 040 — Floor exit topology graph](040-floor-exit-topology-graph.md) (exit routing — orthogonal)
 - [ADR 028 — Story events (VN)](028-story-visual-novel-events.md)
 - [Floor level painter](../docs/02-systems/floor-level-painter.md)
 - [Story events](../docs/02-systems/story-events.md)

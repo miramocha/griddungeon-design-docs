@@ -31,7 +31,7 @@ Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_
 | `.` | Yes | Open floor |
 | `C` | No | **Chest** — `ChestItemId`; party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | `G` | Yes | **Gather** — `HasGatherNode`; MVP1 instant loot on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
-| `v`, `^`, `M`, `E` | Yes | **Role markers** — intro (`E`), gate (`M`), stairs up (`^`), stairs down (`v`); Apply scans the grid for these chars and writes `StratumFloor` entry/stairs coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). |
+| `v`, `^`, `M`, `E` | Yes | **Role markers** — intro (`E`), gate (`M`), exit up (`^`), exit down (`v`); Apply scans the grid and writes entry coords + **`FloorExitLink[]`** ([#107](https://github.com/miramocha/griddungeon-game/issues/107), [ADR 040](../../decisions/040-floor-exit-topology-graph.md)). **Multiple `^` / `v` per floor** allowed — one link row per marker cell. |
 
 **Walkability (target):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `S1B1FLayoutBuilder.IsWalkableSymbol` after [#105](https://github.com/miramocha/griddungeon-game/issues/105). Until that ships, B1F layout code may still treat `C` as walkable gather (legacy); painter palette and export ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) should follow this table.
 
@@ -45,6 +45,21 @@ Same as [dungeons — s1_B1F ASCII](../03-content/dungeons-and-encounters.md#s1_
 | **Anti-pattern** | Parallel pin coord store (e.g. `FloorPainterPinState`) — removed; grid is the only painter state for markers |
 
 When gate and hub stairs share a cell (canonical B1F), only `^` appears on the grid; Apply sets `partyEntryGate` to the `^` cell when `M` is absent.
+
+## Multi-exit markers and topology graph
+
+**Target model ([ADR 040](../../decisions/040-floor-exit-topology-graph.md)):** scalar `stairsUp` / `stairsDown` are replaced by **`FloorExitLink[]`** on each `StratumFloor`. Painter and optional Graph Toolkit topology compile into the same array.
+
+| Layer | Authority |
+|-------|-----------|
+| **Grid `^` / `v`** | **Where** each exit sits — multiple markers per floor |
+| **Painter Apply** | Emits one `FloorExitLink` per marker (`exitId`, `cell`, `direction`); may leave `target*` empty until topology compile |
+| **Stratum topology graph** (editor-only, [#253](https://github.com/miramocha/griddungeon-game/issues/253)) | Fills `targetFloorKey`, `targetSpawnCell`, `targetFacing`; validates paired up/down between floors — **no runtime graph** |
+| **`StratumFloor` asset** | Runtime reads `exitLinks[]` only |
+
+**Orthogonal:** quest / flag **gating** of pins and events is [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md) — not fields on exit links. Campaign **hub entry** spawn stays in per-stratum policy ([ADR 025](../../decisions/025-campaign-exploration-target.md)).
+
+**MVP1 migration:** S1 floors keep one `^` and one `v` each; migration ticket [#250](https://github.com/miramocha/griddungeon-game/issues/250) compiles today’s scalar coords into link rows before multi-exit painter UI ([#252](https://github.com/miramocha/griddungeon-game/issues/252)).
 
 ## Workflow
 
@@ -80,7 +95,10 @@ Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](
 
 **Post-MVP1 (idea):** quest- and flag-gated pins / triggers — compile from a Graph Toolkit floor graph to `StratumFloor` rules; see [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md). MVP1 ships static pins + C# triggers; gating graph is not required for [#109](https://github.com/miramocha/griddungeon-game/issues/109).
 
+**Exit topology (parallel track):** stratum **connectivity graph** compiles `FloorExitLink[]` — see [ADR 040](../../decisions/040-floor-exit-topology-graph.md) and [game #249](https://github.com/miramocha/griddungeon-game/issues/249). Distinct from ADR 031 event gating.
+
 ## Related
 
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
 - [05-class-design — `FloorPainterWindow`](05-class-design.md)
+- [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)

@@ -300,20 +300,25 @@ class StratumFloor : ScriptableObject
     FoeSpawnConfig[] foeSpawns;
     EncounterTable randomEncounters;
     float baseEncounterRate;
-    GridPosition stairsDown;      // next floor, same stratum
-    StairsUpLink[] stairsUpLinks; // gate + any same-stratum up links
+    FloorExitLink[] exitLinks;    // 0..N exits per floor — authoritative routing ([ADR 040](../../decisions/040-floor-exit-topology-graph.md))
     GridPosition partyEntryIntro; // Act 1 cold start (optional)
     GridPosition partyEntryGate; // hub re-entry / stratum gate
     TutorialBlocker[] tutorialBlockers; // cleared when s1_tutorial_dive_started
 }
 
-enum StairsUpTargetKind { SameStratumFloor, Hub }
+enum FloorExitDirection { Up, Down }   // grid markers ^ / v
 
-struct StairsUpLink
+enum FloorExitTargetKind { Hub, Floor }
+
+struct FloorExitLink
 {
+    string exitId;                // stable per floor — graph / painter authoring id
     GridPosition cell;
-    StairsUpTargetKind targetKind;
-    string targetFloorId;         // SameStratumFloor only, e.g. "B1F"
+    FloorExitDirection direction;
+    FloorExitTargetKind targetKind;
+    string targetFloorKey;        // e.g. "s1_B2F", "sd01_F1"; empty when Hub
+    GridPosition targetSpawnCell;
+    FacingDirection targetFacing;
 }
 
 struct TutorialBlocker
@@ -338,7 +343,7 @@ class StratumDefinition
 }
 ```
 
-**Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
+**Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../../decisions/040-floor-exit-topology-graph.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 

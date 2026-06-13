@@ -56,7 +56,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 
 - Keep **`S1ExplorationTarget`** + **`S1CampaignResolver`** names unless a rename ticket is explicitly scoped.
 - No new abstraction layer required for Stratum 1 vertical slice ([#15](https://github.com/miramocha/griddungeon-game/issues/15)).
-- Within-stratum stairs (e.g. B2F `stairsUp` → B1F) stay in `S1CampaignResolver`; B1F `stairsUp` → hub remains special-cased.
+- Within-stratum exits (e.g. B2F `^` → B1F) compile to **`FloorExitLink[]`** on floor assets ([ADR 040](040-floor-exit-topology-graph.md)); B1F gate `Up` → hub is a link with `targetKind = Hub`. Campaign resolver keeps **hub entry** spawn policy only.
 
 ## Consequences (when implemented)
 
@@ -69,13 +69,14 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 
 - [ ] Single registry on `GameState` vs inject policy per active stratum at hub leave.
 - [ ] Whether `ExplorationMapKind` (stratum vs side dungeon) lives on the DTO or parallel to `ExplorationStateSave` only ([ADR 022](022-side-dungeons-mvp3.md)).
-- [ ] Shared stair-pairing helper vs duplicated constants per stratum floor graph.
+- [ ] Shared stair-pairing helper vs duplicated constants per stratum floor graph — **superseded by [ADR 040](040-floor-exit-topology-graph.md) topology compile** when multi-exit ships.
 
 ## Related
 
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
 - [ADR 014 — MVP1 exploration & map](014-mvp1-exploration-map.md)
 - [ADR 022 — Side dungeons MVP3](022-side-dungeons-mvp3.md)
+- [ADR 040 — Floor exit topology graph](040-floor-exit-topology-graph.md)
 - [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md)
 - [Campaign S1 intro](../docs/03-content/campaign/s1-intro.md)
 - [Hub & services](../docs/02-systems/hub-and-services.md)

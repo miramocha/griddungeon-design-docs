@@ -105,7 +105,7 @@ Reuse the **StratumFloor** tile/FOE shape from [class design — floors](../05-c
 |-------|-------------------|
 | `stratumId` | Empty or sentinel; **`locationId`** is authoritative |
 | `partyEntryGate` | Hub re-entry spawn for that floor |
-| `stairsUpLinks` | **Hub only** — no inter-stratum targets |
+| `exitLinks` | **`Up` → Hub only** for surface exits — no inter-stratum targets ([ADR 040](../../decisions/040-floor-exit-topology-graph.md)) |
 | `hasWarpGate` | N/A — no hub warp gate |
 
 **Game repo path (draft):** `Assets/Content/SideDungeons/sd01_F1.asset`
@@ -134,5 +134,6 @@ Draft first side dungeon for vertical-slice testing. Rename theme when art/narra
 - [Hub & services](hub-and-services.md) — hub menu tree
 - [Game phase](game-phase.md) — transitions
 - [Dungeons & encounters](../03-content/dungeons-and-encounters.md) — stratum campaign
+- [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md) — `exitLinks[]` authoring
 - [Release scope](../00-release-scope.md) — MVP3 milestone
 - [04 — Tech notes](../04-tech-notes.md) — ContentDatabase / save keys
