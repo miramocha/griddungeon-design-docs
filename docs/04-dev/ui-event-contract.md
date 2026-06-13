@@ -278,7 +278,7 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 
 | Surface | Notes |
 |---------|--------|
-| Exploration combat log | No log mount in `ExplorationHud.uxml`; combat uses `CombatHudLogView` only |
+| Exploration combat log | No exploration HUD mount; combat uses `CombatHudLogView` only |
 | `PartyRuntime` events | Read slots directly; refresh on explorer step / phase change |
 | `IPartyRosterView` / party swap port | No single port — use events here + [custom party UI](custom-party-ui.md) |
 

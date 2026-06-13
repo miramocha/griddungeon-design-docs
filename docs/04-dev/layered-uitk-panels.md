@@ -21,7 +21,7 @@ See [centralized UI services](centralized-ui-services.md) for the full cross-pha
 
 ## What to split
 
-### Exploration (today: one `ExplorationHud` GO)
+### Exploration (orchestrator `ExplorationHud` GO — no phase HUD UXML)
 
 | Panel | Current owner | Notes |
 |-------|---------------|-------|

@@ -201,13 +201,13 @@ MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cel
 
 ## Exploration HUD (UI Toolkit)
 
-Shipped on **`ExplorationHud`** (`ExplorationHudView`) + sibling **`ExplorationMap`** (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, UXML element map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
+Shipped on **`ExplorationHud`** (`ExplorationHudView` — **no** `UIDocument`) + sibling **`ExplorationMap`** (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, document map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
-- `ExplorationHud.uxml` — `map-view-mount` only (map built in C# under mount). Integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
+- Map surfaces — C# `MapGridHostBuilder` per `UIDocument` under `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)); integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
 - `MapGridPaintController` — cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#244](https://github.com/miramocha/griddungeon-game/pull/244)).
 - Pause — `Esc` when map not fullscreen; quit confirm → `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
 - **Exploration log** — not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
-- **Layered panels (draft):** split monolith `ExplorationHud` / `CombatHud` into smaller `UIDocument` roots + `sortingOrder` stack — [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).
+- **Layered panels (draft):** exploration Tier 1 **shipped** (map + floater + pause as sibling docs); combat still monolithic — [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).
 
 ## Combat HUD (UI Toolkit)
 

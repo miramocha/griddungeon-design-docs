@@ -7,16 +7,16 @@
 
 ## Context
 
-MVP1 HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationHud`, `CombatHud`, `HubHud`, overlays), and **`sortingOrder`** for stack depth.
+MVP1 HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
 
-Within exploration and combat, **one monolithic `UIDocument` per phase** still hosts most chrome:
+Within exploration and combat, phase chrome splits across documents at different maturity:
 
-| Phase | Monolith | Logical chunks today |
-|-------|----------|----------------------|
-| Exploration | `ExplorationHud` | map panel, party strip, pause overlay |
-| Combat | `CombatHud` | command rail, enemy/party rosters, synchro, AGI strip, log, cloned pickers |
+| Phase | Orchestrator GO | Logical chunks today |
+|-------|-----------------|----------------------|
+| Exploration | `ExplorationHud` (**no** `UIDocument`) | **Shipped [#244](https://github.com/miramocha/griddungeon-game/pull/244):** `ExplorationMap` (minimap + expanded), `PartyFormationFloater`, `PartyMenuOverlay` |
+| Combat | `CombatHud` (monolith `UIDocument`) | command rail, enemy/party rosters, synchro, AGI strip, log, cloned pickers |
 
-`MapView` borrows the parent document via `BindToHud(mount, document)` rather than owning a panel. **Shipped [#244](https://github.com/miramocha/griddungeon-game/pull/244):** `ExplorationMapCoordinator` + per-surface `UIDocument`. Legacy `MapView` shim delegates until scenes refresh. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
+Legacy `MapView` shim delegates to `ExplorationMapCoordinator` until scenes refresh. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
 
 Product direction: HUD should feel **more dimensional** — layered plates, slide/tilt depth, independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
 

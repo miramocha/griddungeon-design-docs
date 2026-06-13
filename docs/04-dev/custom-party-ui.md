@@ -163,7 +163,7 @@ Enemy slots remain `combat-roster__slot*` in `CombatHud.uss` — built by `Comba
 
 ### Scene wiring
 
-Party strip is **not** embedded in `ExplorationHud.uxml`. Bootstrap creates `PartyFormationFloater` `GameObject` with `PartyFormationFloaterPresenter` (`GridDungeon → Scenes → Create Dev Bootstrap`).
+Party strip is **not** on `ExplorationHud` (orchestrator-only — no phase HUD UXML). Bootstrap creates `PartyFormationFloater` `GameObject` with `PartyFormationFloaterPresenter` (`GridDungeon → Scenes → Create Dev Bootstrap`).
 
 | API | Role |
 |-----|------|

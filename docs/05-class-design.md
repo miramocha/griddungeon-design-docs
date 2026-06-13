@@ -1142,7 +1142,7 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ### View controllers
 
-**Shipped exploration UI** (bind lifecycle, UXML mounts, input, map marker overlays, party strip): [exploration UI](02-systems/exploration-ui.md). Runtime events: [UI event contract](04-dev/ui-event-contract.md). Replace plates / picker: [custom party UI](04-dev/custom-party-ui.md), [custom skill picker UI](04-dev/custom-skill-picker-ui.md). Game repo: `ExplorationHudView`, `ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`, `Map*MarkersPresenter`, `PartyMenuOverlayView`, `PartyFormationFloaterPresenter` + `PartyFormationGridView`. Types below are the **target** full read-model sketch (not all shipped).
+**Shipped exploration UI** (orchestrator lifecycle, document map, input, map marker overlays, party strip): [exploration UI](02-systems/exploration-ui.md). Runtime events: [UI event contract](04-dev/ui-event-contract.md). Replace plates / picker: [custom party UI](04-dev/custom-party-ui.md), [custom skill picker UI](04-dev/custom-skill-picker-ui.md). Game repo: `ExplorationHudView`, `ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`, `Map*MarkersPresenter`, `PartyMenuOverlayView`, `PartyFormationFloaterPresenter` + `PartyFormationGridView`. Types below are the **target** full read-model sketch (not all shipped).
 
 ```csharp
 class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phase

@@ -8,21 +8,22 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 
 | Piece | Path |
 |-------|------|
-| Shell UXML | `Assets/UI/Screens/Exploration/ExplorationHud.uxml` |
-| Styles | `ExplorationHud.uss`, `MapView.uss`, `Shared/HudOverlay.uss` |
-| Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
+| Orchestrator (no UXML) | `Assets/Scripts/UI/Views/ExplorationHudView.cs` + `ExplorationPresentationGate` on same `GameObject` |
+| Party strip | `PartyFormationFloaterPresenter` / `PartyFormationFloater` facade ([centralized UI services](../04-dev/centralized-ui-services.md#party-formation-floater--partyformationfloaterpresenter--partyformationfloater)) |
 | Map coordinator | `Assets/Scripts/UI/Views/ExplorationMapCoordinator.cs` |
 | Map surfaces | `MinimapPanelView` (sort **0**), `ExpandedMapOverlayView` (sort **100**) — own `UIDocument` each |
+| Map styles | `MapView.uss`, `MinimapPanel.uss`, `ExpandedMapPanel.uss` |
 | Shared paint | `Assets/Scripts/UI/MapGridPaintController.cs`, `MapGridHostBuilder.cs` |
 | Map marker overlays | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapHubEntranceMarkerRules`, `MapGatherMarkerRules`, `MapGridMarkerAnimator` |
 | Party / pause menu | `Assets/Scripts/UI/Views/PartyMenuOverlayView.cs` (shared `PartyMenu.uxml`; Quit on hub + exploration) |
+| Global input hints | `InputHintPresenter` / `InputHints` facade (sort **300**) |
 | Grid paint helpers | `Assets/Scripts/UI/MapGridPainter.cs`, `MapGridStyleClasses.cs` |
 | Legacy shim | `MapView.cs` — obsolete delegate to coordinator; remove after scene migration |
 | Map overlay art catalog | `Assets/Scripts/UI/MapCellArtCatalog.cs`, `Assets/UI/Map/MapCellArtCatalog.asset`, `MapCellArtPsdSpriteSync` (Editor) |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs`, `ExplorationInputHandler.cs`, `MapInputHandler.cs` |
 | Scene wiring (Editor) | `DevBootstrapSceneCreator.cs`, `DevSceneComposition.WireExplorationHud` / `WireExplorationMap` |
 
----
+**Removed (post [#244](https://github.com/miramocha/griddungeon-game/pull/244)):** `ExplorationHud.uxml` / `ExplorationHud.uss` — there is **no** phase HUD `UIDocument`; map, party strip, pause, and hints each use their own `UIDocument` or facade.
 
 ## Design note: partial map presenters (shipped)
 
@@ -34,7 +35,7 @@ Combat HUD uses **reactive presenters** + `CombatPresentationGate` ([#35](https:
 
 ## Scene composition
 
-Dev bootstrap creates **`ExplorationHud`** (shell only) and sibling **`ExplorationMap`** (coordinator + two map `UIDocument` children):
+Dev bootstrap creates **`ExplorationHud`** (C# orchestrator only — **no** `UIDocument`), sibling **`ExplorationMap`** (coordinator + two map `UIDocument` children), and centralized **`PartyFormationFloater`** / **`PartyMenuOverlay`** / **`InputHint`** services:
 
 ```mermaid
 flowchart TB
@@ -46,8 +47,8 @@ flowchart TB
     end
 
     subgraph ExplorationHudGO["GameObject: ExplorationHud"]
-        DOC[UIDocument + PanelSettings]
         EHV[ExplorationHudView]
+        EPG[ExplorationPresentationGate]
     end
 
     subgraph ExplorationMapGO["GameObject: ExplorationMap"]
@@ -58,8 +59,12 @@ flowchart TB
         EMC --> EXP
     end
 
+    subgraph PartyFloaterGO["GameObject: PartyFormationFloater"]
+        PFF[PartyFormationFloaterPresenter sort 10]
+    end
+
     subgraph PartyMenuGO["GameObject: PartyMenuOverlay"]
-        PMO[PartyMenuOverlayView]
+        PMO[PartyMenuOverlayView sort 250]
     end
 
     subgraph World["GameObject: DungeonView"]
@@ -70,13 +75,15 @@ flowchart TB
 
     GB -->|Start: Bind| IR
     IR --> GS
-    EHV --> DOC
     EHV --> EMC
+    EHV --> PFF
+    EHV --> EPG
     EMC --> GS
     EMC --> EX
     EMC --> MS
     EMC --> MM
     EMC --> EXP
+    EMC --> PMO
     PMO --> GS
     IR --> EHV
     IR --> EMC
@@ -85,7 +92,8 @@ flowchart TB
 
 | Component | Serialized / wired to |
 |-----------|------------------------|
-| `ExplorationHudView` | `VisualTreeAsset` → `ExplorationHud.uxml`, `GameState`, `ExplorationMapCoordinator` |
+| `ExplorationHudView` | `GameState`, `ExplorationMapCoordinator`, `PartyFormationFloater` facade — **no** `VisualTreeAsset` |
+| `ExplorationPresentationGate` | Movement / floor-transition presentation lock for reactive HUD sync |
 | `ExplorationMapCoordinator` | `GameState`, `DungeonExplorer`, `MapSystem`, `MapCellArtCatalog`, `MinimapPanelView`, `ExpandedMapOverlayView`, `PartyMenuOverlayView` |
 | `MinimapPanelView` | Own `UIDocument`, `MinimapPanel.uss` + shared `MapView.uss`, `SlideTransition` (`map-minimap--retracted`) |
 | `ExpandedMapOverlayView` | Own `UIDocument`, `ExpandedMapPanel.uss` + shared `MapView.uss`, `UniformScaleTransition` (`map-expanded--hidden`) |
@@ -96,37 +104,34 @@ Regenerate scene refs: **GridDungeon → Scenes → Create Dev Bootstrap** (game
 
 ---
 
-## UXML load and mount lifecycle
+## Orchestrator lifecycle (no phase HUD UXML)
 
-`ExplorationHudView` clones **`ExplorationHud.uxml`** only (party-strip chrome). Map UI is **not** mounted on the HUD document — each map surface owns its own `UIDocument` under `ExplorationMap`.
+`ExplorationHudView` is a **MonoBehaviour orchestrator** — it does not clone UXML. On enable it wires `ExplorationHudReactivePresenter`, toggles **`PartyFormationFloater`** visibility (expanded map, floor transition, pause menu dock), and forwards refs to `InputRouter`. Map trees are built per surface under **`ExplorationMap`**:
 
 ```mermaid
 sequenceDiagram
     participant EHV as ExplorationHudView
-    participant DOC as UIDocument.rootVisualElement
-    participant UXML as ExplorationHud.uxml
+    participant PFF as PartyFormationFloater
     participant EMC as ExplorationMapCoordinator
     participant MM as MinimapPanelView
     participant EXP as ExpandedMapOverlayView
-    EHV->>DOC: Clear()
-    EHV->>UXML: CloneTree(host)
-    EHV->>DOC: Q("exploration-hud")
+    EHV->>PFF: SetVisible / ApplyPartyMenuFloaterDock
     EMC->>MM: EnsureOverlay() — MapGridHostBuilder
     EMC->>EXP: EnsureOverlay() on first expand
 ```
 
-Pause / party menu lives on sibling **`PartyMenuOverlay`** (`UIDocument` sort **250**).
+Pause / party menu lives on sibling **`PartyMenuOverlay`** (`UIDocument` sort **250**). Party strip uses **`PartyFormationFloater`** (`sortingOrder` **10**).
 
-### UXML element map
+### Document / presenter map (no `ExplorationHud` tree)
 
-| `name` (UXML) | Bound by | Notes |
-|---------------|----------|--------|
-| `exploration-hud` | `ExplorationHudView` | Root container — no map mount |
-| *(none in shell UXML)* | `PartyFormationFloaterPresenter` | Shared bottom party floater (2×4); `ExplorationHudView` + `PartyFormationFloater` facade; `ExplorationHudReactivePresenter` syncs via `PartyFormationExplorationSync` |
+| Surface | UXML / build | Owner |
+|---------|----------------|-------|
+| Minimap + expanded map | C# `MapGridHostBuilder` + `MapView.uss` per `UIDocument` | `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` |
+| Party strip (2×4) | `PartyFormationFloater.uxml` (`Shared/`) | `PartyFormationFloaterPresenter`; `ExplorationHudView` + `ExplorationHudReactivePresenter` sync HP/MP |
+| Pause / party menu | `PartyMenu.uxml` | `PartyMenuOverlayView` |
+| Input hints | `InputHint.uxml` | `InputHintPresenter` via `InputHints` facade |
 
 **Map trees:** built in C# per surface (`MapGridHostBuilder` → `map-view` grid + marker hosts). USS: shared `MapView.uss` + per-surface `MinimapPanel.uss` / `ExpandedMapPanel.uss`. Pause / quit UI is in shared **`PartyMenu.uxml`** (`party-menu-section-quit`, `party-menu-pane-quit`).
-
----
 
 ## View responsibilities and data sources
 
@@ -168,6 +173,7 @@ flowchart LR
 | `GameState.PhaseChanged` → Exploration | Restore party marker after combat ([#94](https://github.com/miramocha/griddungeon-game/pull/94)) |
 | Floor layout | `GameState.Content.GetFloor` + `MapSystem` visit/wall/feature state |
 | `ExplorationPresentationGate` / `FloorTransition` | `SyncMapChromeVisibility` — minimap slide retract; expanded closes immediately when chrome suppressed |
+| `PartyMenuOverlayView.OpenStateChanged` | Minimap retract while pause menu open (same chrome gate as floater dock) |
 | `ExpandedChanged` | `ExplorationHudView` hides party strip while expanded map open |
 
 Cell paint priority: [map-cell-art](map-cell-art.md), [mapping § Map cell art](mapping.md#map-cell-art-2d-schematic). Overlay layers: [§ Map marker overlays](#map-marker-overlays).
@@ -286,7 +292,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 
 ## Replacing exploration UI (checklist)
 
-1. **Shell:** Replace or extend `ExplorationHud.uxml` / `ExplorationHudView` (orchestrator only — map stays on `ExplorationMap`).
+1. **Orchestrator:** Extend `ExplorationHudView` / `ExplorationHudReactivePresenter` — do **not** add a phase HUD `UIDocument` for map or party strip; keep surfaces on `ExplorationMap` + centralized services.
 2. **Map:** Reuse `ExplorationMapCoordinator` + `MapGridPaintController`, or subscribe per [UI event contract § Exploration](../04-dev/ui-event-contract.md#exploration-phase) (see [§ ExplorationMapCoordinator](#explorationmapcoordinator-push-updates) for per-presenter effects).
 3. **Pause:** Extend `PartyMenu.uxml` sections or `PartyMenuOverlayView`; keep `MapInputHandler` + `InputRouter` party-menu wiring.
 4. **Input:** Keep `ExplorationInputHandler` / `MapInputHandler` contracts, or extend `InputRouter.EnableMapsForPhase` for new maps.
@@ -296,7 +302,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 
 For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) below.
 
-**Not wired (MVP1):** exploration **combat log** panel — `ExplorationHud.uxml` has no log mount; only combat uses `CombatHudLogView` ([#34](https://github.com/miramocha/griddungeon-game/issues/34)). Class-design `ExplorationHUD.Log` is target-only.
+**Not wired (MVP1):** exploration **combat log** panel — no exploration HUD mount; only combat uses `CombatHudLogView` ([#34](https://github.com/miramocha/griddungeon-game/issues/34)). Class-design `ExplorationHUD.Log` is target-only.
 
 ---
 
