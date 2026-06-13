@@ -143,7 +143,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | UXML / USS | `Assets/UI/Screens/Shared/CommandRailInfo.uxml`, `CommandRailInfo.uss` | `name="rail-info"`; header block `rail-info-header` (phase-agnostic) |
 | Bootstrap | `DevSceneComposition.WireCommandRailInfo` | Child of `GameState`; ref on `m_commandRailInfo` |
 
-**Publishers:** `HubHudView.RefreshCredits` (header title only), `HubHudServicePanelView.Populate`, `CommandPanelView.ShowForCombatant`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition).
+**Publishers:** `HubHudView.RefreshCredits` (header title only), `HubHudServicePanelView.Populate`, `CommandPanelView.ShowForCombatant`; visibility synced from `CommandRailPresenter.ApplyVisualContext` (hidden during exploration, party-menu rail, hub-leave transition). Copy swaps animate via `RailInfoCopyTransition` (header/service slide+fade 200ms; combat prompt fade 280ms).
 
 ---
 
@@ -738,7 +738,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `WalletHud` | Presenter + facade ✅ | Slide | [#215](https://github.com/miramocha/griddungeon-game/issues/215) |
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
 | `CommandRail` | Presenter + facade ✅ | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `CommandRailInfo` | Presenter ✅ (immediate dismiss) | — | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
+| `CommandRailInfo` | Presenter ✅ (immediate root dismiss; copy block swaps animated) | `RailInfoCopyTransition` (slide+fade / fade) | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `MapView` | Presenter ✅ (`FadePresentationDriver` + `MapViewPanelTransition`) | Opacity fade (280ms) + panel layout tween | [ADR 037](../../decisions/037-layered-uitk-panels.md) POC; [gotchas § Map panel fade](centralized-ui-gotchas.md#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |

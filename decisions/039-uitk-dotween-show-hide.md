@@ -21,7 +21,7 @@ Centralized UITK overlays (PopIn pickers, party floater collapse, wallet/input-h
 | **USS + BEM modifiers** | Steady-state pixels (`--hidden`, `--collapsed`, `--entering`, `--retracted`, `--expanded`) and hover/focus micro-states |
 | **`UiToolkitTweens`** | DOTween on `VisualElement.style` (opacity, translate, scale, width/height) during motion |
 | **`UiTransitionSession`** | Per-element **generation**; bump before kill so superseded exit callbacks bail via `IsCurrent` |
-| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `MapViewPanelTransition` |
+| **Transition helpers** | `PopInTransition`, `SlideTransition`, `CollapseTransition`, `FadeTransition`, `CommandRailEnterTransition`, `RailInfoCopyTransition`, `MapViewPanelTransition` |
 
 **Do not** add `transition-duration` on blocks that C# animates. **Do not** use `schedule.Execute` for dismiss timing on centralized overlays.
 
@@ -50,6 +50,8 @@ Durations live in **C# constants only** (e.g. `PopInTransition.DurationMs` = 420
 | Slide retract dismiss | Retracted BEM **then** clear inline translate/opacity on complete |
 | Slide retract present | Clear retracted BEM **then** clear inline on complete |
 | Command rail panel close | `hiddenClass` **then** clear inline motion on complete |
+| Rail info copy swap dismiss | `rail-info__*--faded` **true** after opacity tween completes |
+| Rail info copy swap present | Remove `rail-info__*--faded`, tween inline opacity/translate, clear inline on complete |
 
 Inline `style` drives motion; **`StyleKeyword.Null`** clears inline motion on complete.
 
