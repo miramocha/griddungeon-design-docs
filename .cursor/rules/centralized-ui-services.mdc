@@ -8,14 +8,15 @@ alwaysApply: false
 
 Cross-phase overlays (`InputHintPresenter`, `PartyFormationFloater`, `ItemListInventory`, `SkillUsePickerPresenter`, …) use **one scene `GameObject` + `UIDocument`** under `GameState`. Phase views **orchestrate** via static facades; they do **not** own duplicate picker trees.
 
-**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests). **Animation:** [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`.
+**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests). **Animation:** [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`. **No hard cuts:** [uitk-bem-transition-guide § No hard cuts](../../docs/04-dev/uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ## `ICentralizedUiSurface` — required
 
 Every centralized service (`GameState` child with its own `UIDocument` — see doc § Scene graph) **must** implement `ICentralizedUiSurface` on the presenter (directly or via `CentralizedUiPresentation` + internal `IPresentationDriver`).
 
 - Facades expose `RequestedVisible`, `IsShown`, `IsSettling` — not misleading `IsOpen` / context-as-visible.
-- `HideImmediate()` on phase exit, context swap, competing overlay.
+- **`Hide()`** — default player-visible dismiss (may settle).
+- **`HideImmediate()`** — ownership / lifecycle only: context swap on shared picker, `OnDisable`, competing overlay, already steady-hidden. **Not** mid-beat snap while chrome is on screen.
 - **Exception:** `ScreenFadePresenter` (imperative beat fade on `GameState.ScreenFade`).
 
 Epic: [game#206](https://github.com/miramocha/griddungeon-game/issues/206). New services: reject PRs without the interface.

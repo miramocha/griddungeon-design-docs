@@ -105,7 +105,7 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 **Fix pattern (shipped):** `ForceHideForContextSwitch` / `HideHubShopInternal(immediate: true)` / `ItemListPickerView.HideImmediate()` — skip exit animation, clear `IsSettling`, do not rely on deferred callbacks when **authority** changes (phase leave, context enum swap).
 
-**Rule:** Animated `Hide()` is for **player dismiss** within the same context. **System dismiss** (phase exit, service close, switch HubShop → PartyBag) uses **`HideImmediate()`**.
+**Rule:** Animated `Hide()` is for **player-visible dismiss** within the same context (including beat start). **`HideImmediate()`** is for **ownership / lifecycle** teardown when the next authority must not wait on exit callbacks — context enum swap on a shared picker, `OnDisable`, competing overlay handoff, or chrome already steady-hidden. Do **not** use `HideImmediate()` to dismiss chrome the player still sees (e.g. input hint during hub leave fade, wallet while shop panel is animating). See [UITK BEM transition guide § No hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ---
 
@@ -329,7 +329,31 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
 
-**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+**Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation) + [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+
+---
+
+## Input hint hard cut — hub → stratum (`InputHintPresenter` + `FloorTransitionPresenter`)
+
+**Symptom:** Global bind strip **snaps off** when leaving hub for stairs / Enter Stratum — no slide retract; strip may linger through first half of hub leave fade then vanish instantly.
+
+**Cause:**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Hint outlives hub chrome** | Hub leave hides `hub-hud__chrome` via USS; `InputHintPresenter` is a separate `UIDocument` (sort 300) — still visible until phase flip. |
+| **`HideImmediate` mid-beat** | `FloorTransitionPresenter` called `InputHint.HideImmediate()` at transition start → kills slide tween if hub already called `Clear`, or snaps without motion if strip still extended. |
+| **Late clear** | Waiting until `SetHubVisible(false)` / phase change to clear hint — desync from leave fade start. |
+
+**Fix (shipped):**
+
+1. **`HubHudView.OnEnterStratumClicked`** — `InputHints.Clear` when leave transition **starts** (slide retract with fade).
+2. **`FloorTransitionPresenter`** — `InputHint.Hide()` not `HideImmediate()` (animated dismiss; no-op if already clearing).
+3. **`MapView.OnFloorTransitionPresentationReleased`** — republish exploration copy (`Show()` slide in).
+
+**Rule:** Floor-transition and other Runtime beat code must not `HideImmediate()` player-visible centralized chrome. Coordinate with phase owners per [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
+
+**Tests:** `InputHintPresenterTests` (settle, rapid swap during hide); manual F1 → Enter Stratum.
 
 ---
 
@@ -375,7 +399,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 |-------|-----|
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
 | Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
-| BEM transition helpers (API, recipes, registry) | [uitk-bem-transition-guide.md](uitk-bem-transition-guide.md) |
+| BEM transition helpers (API, recipes, registry, **no hard cuts**) | [uitk-bem-transition-guide.md](uitk-bem-transition-guide.md) |
 | GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |

@@ -639,7 +639,7 @@ Every **centralized UI service** (`GameState` child with its own `UIDocument` li
 
 1. Inherit **`CentralizedUiPresenterBase`** on the presenter (satisfies `ICentralizedUiSurface`; base owns `CentralizedUiPresentation` + `IPresentationDriver` delegation).
 2. Expose **`RequestedVisible`**, **`IsShown`**, **`IsSettling`** on the static facade when one exists — not domain-only flags that imply visibility (`IsVisible`, `IsOpen`, context ≠ hidden).
-3. Route **phase exit**, **context enum swap**, and **competing overlay** teardown through **`HideImmediate()`**.
+3. Route **ownership / lifecycle** teardown through **`HideImmediate()`** — context enum swap on shared picker, `OnDisable`, competing overlay handoff, chrome already steady-hidden. **Player-visible dismiss** (beat start, service close within same phase) uses **`Hide()`** / facade `Clear`; see [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 4. Keep **visual driver names internal** — PopIn, slide, collapse, USS classes stay out of public facades.
 
 **Documented exceptions (no `ICentralizedUiSurface` required):**
@@ -665,8 +665,8 @@ Facades and presenters expose **intent and presentation state** — not PopIn, s
 | `IsShown` | Panel presented for current authority — stays **true through exit settle** until dismiss animation completes |
 | `IsSettling` | Animated dismiss (or chained dismiss) in flight after `Hide()` — `Show()` clears; use instead of legacy `IsClosing` |
 | `Show()` | Request on-screen presentation |
-| `Hide()` | Same-authority dismiss (may settle) |
-| `HideImmediate()` | Authority change — phase exit, context enum swap, competing overlay — cancel deferred callbacks |
+| `Hide()` | Same-authority dismiss (may settle) — **default for player-visible hide** |
+| `HideImmediate()` | Ownership / lifecycle — context swap on shared surface, `OnDisable`, competing overlay, already steady-hidden; **not** mid-beat snap while chrome is on screen |
 
 ```csharp
 // Shipped: GridDungeon.UI — ICentralizedUiSurface.cs (game#207)
@@ -688,11 +688,13 @@ public interface ICentralizedUiSurface
 
 | Call | When |
 |------|------|
-| `Hide()` | Player dismiss; same context authority |
-| `HideImmediate()` | Phase leave, `SetContext` swap, another overlay at same sort takes focus |
-| `SetContext(Hidden)` | System → `HideImmediate()` |
-| `SetContext(open)` | `HideImmediate()` if leaving another open context, then `Show()` |
+| `Hide()` | **Default** — player-visible dismiss; same context authority; beat start (`InputHints.Clear`, map fade dismiss) |
+| `HideImmediate()` | Ownership / lifecycle — `SetContext` swap on shared picker, `OnDisable`, competing overlay, already steady-hidden; **not** mid-beat snap while chrome is on screen |
+| `SetContext(Hidden)` | Shared picker authority off → `HideImmediate()` |
+| `SetContext(open)` | `HideImmediate()` if leaving another open context on same surface, then `Show()` |
 | Data refresh while settling | `Show` path — not refresh-only while `IsSettling` |
+
+See [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ### Animation stack (DOTween)
 

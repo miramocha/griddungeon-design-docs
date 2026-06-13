@@ -20,6 +20,45 @@ Two helpers prevent order drift and presenter skip bugs:
 
 `IsShown` stays **true through exit settle** ([ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md)). A presenter that only checks `IsShown` can skip re-show while `--retracted` / `--faded` / `--collapsed` is still on, or call `Show()` again while already steady-visible.
 
+## No hard cuts (player-visible show/hide)
+
+**Default:** If the player can see a UITK chrome surface (slide strip, map panel, pop-in modal, command-rail body), its show/hide must use the presentation driver — **`Show()` / `Hide()`** — not an instant teardown that skips the exit tween.
+
+| Player sees | Use | Avoid |
+|-------------|-----|--------|
+| Dismiss within same authority (close shop, leave service, floor beat starting) | `Hide()` / facade `Clear` | `HideImmediate()` mid-dismiss or mid-fade |
+| Reopen / republish copy while strip still expanded | `SetHint` / `Show()` + `VisualPresentationSync` | `display: none` on parent while child still extended |
+| Cross-fade with hub leave or `ScreenFadePresenter` | Phase owner **`Clear` at beat start** (sync with fade) | Second system caller `HideImmediate()` on same strip |
+
+### `HideImmediate()` — allowed only when
+
+1. **`OnDisable` / destroyed host** — no panel to animate.
+2. **Context enum swap on a shared surface** — one picker across `HubShop` / `PartyBag` / `CombatItem`; deferred exit callback must not fire after the next context owns the tree ([gotchas § context switches](centralized-ui-gotchas.md#context-switches-must-not-use-animated-hide)).
+3. **Competing overlay at the same sort** — authority handoff before the player could perceive exit motion.
+4. **Chrome already steady-hidden** — `HideImmediate()` when `RequestedVisible` is already false and dismiss is not in flight (idempotent teardown).
+5. **Fully occluded** — surface was never shown, or a full-screen fade already covers it **and** no overlapping chrome from the same family is still visible (e.g. do not snap input hint while hub leave fade is only half done).
+
+`HideImmediate()` is **not** a shortcut for “system dismiss” when the strip is still on screen. Prefer **`Hide()`** and coordinate **who** dismisses (one owner per beat).
+
+### One owner per beat
+
+Multi-step flows (hub → stratum, stairs vignette, service panel close):
+
+- **Start of player-visible beat** — phase owner calls animated dismiss (`InputHints.Clear`, `MapView` fade dismiss, hub leave fade + hint clear).
+- **Mid-beat cross-system code** (`FloorTransitionPresenter`, gates, phase `OnEnter`) — do **not** call `HideImmediate()` on chrome the player still sees; use `Hide()` or skip if the owner already cleared.
+- **End of beat** — `PresentationReleased` (or equivalent); underlying phase republishes with `Show()`.
+
+**Shipped example:** hub Enter Stratum — `HubHudView` clears input hint when leave transition starts; `FloorTransitionPresenter` uses `InputHint.Hide()` (not `HideImmediate`); `MapView.RefreshGlobalInputHint` on `PresentationReleased`.
+
+### Review smells (reject in PR)
+
+- `HideImmediate()` from Runtime beat code while phase HUD fade is in progress.
+- USS `display: none` on a parent **and** slide/fade on a child in the same frame (dual authority).
+- `SyncPresentation` `else` branch that applies `display: none` or steady hidden class **without** calling `Hide()` when the panel is still extended.
+- `CancelPendingDismiss` → `HideImmediate` on every reason clear (wallet/floater pattern: cancel only on activate/reopen).
+
+**Tests:** presenter settle tests (`Hide_EntersSettleWindowBeforeShownClears`, rapid swap during settle); `UiToolkitTweensTests` for transition helpers.
+
 ## Architecture
 
 ```mermaid
