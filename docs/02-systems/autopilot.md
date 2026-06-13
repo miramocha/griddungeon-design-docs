@@ -118,16 +118,94 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 
 ---
 
-## Implementation ownership
+## Implementation ownership (planned)
 
 | Piece | Owner |
 |-------|--------|
-| Path graph + A*/BFS | `AutopilotController` (Runtime) or Core helper fed by `MapReveal` snapshot |
+| Path graph + A*/BFS | Split across Core + Runtime — see **Implementation (shipped)** below |
 | Step commit + lerp | `DungeonExplorer` |
-| Map click → goal | `MapView` / exploration presenter → `AutopilotController` |
-| Overlay | `MapView` |
+| Map click → goal | `ExplorationMapCoordinator` → `AutopilotController` |
+| Overlay | `MapGridPaintController` (BEM path/cursor/destination classes) |
 
-Add class sketch to [05 — Class design MVP1](../05-class-design.md) when implementing.
+---
+
+## Implementation (shipped)
+
+**Game repo:** `feature/expanded-map-autopilot` ([`MapPathfinder`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Simulators/MapPathfinder.cs), [`ExplorationPathGraph`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Map/ExplorationPathGraph.cs), [`AutopilotPathWalker`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Exploration/AutopilotPathWalker.cs), [`AutopilotController`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Exploration/AutopilotController.cs)).
+
+**Developer deep dive:** [04 — Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
+
+### Type ownership
+
+| Type | Assembly | Responsibility |
+|------|----------|----------------|
+| **`MapPathfinder`** | `GridDungeon.Core` | Generic **A\*** on a cardinal grid: injectable node/edge predicates, Manhattan heuristic, uniform step cost, binary min-heap open set. No `MapSystem` / floor knowledge. |
+| **`ExplorationPathGraph`** | `GridDungeon.Runtime` | Builds exploration predicates from `MapSystem` + `StratumFloor` + campaign save (`S1ExplorationWalkability`, walls, doors) and calls `MapPathfinder.TryFindPath`. |
+| **`AutopilotPathWalker`** | `GridDungeon.Core` | Given a path + `pathIndex`, returns the next **turn** or **step** action (`AutopilotWalkerAction`) for `DungeonExplorer` — shortest arc (left vs right). |
+| **`AutopilotController`** | `GridDungeon.Runtime` | State machine (`Idle` → `Selecting` → `Walking` / `Suspended`), destination validation, pathfind orchestration, overlay events, combat suspend/resume, walker dispatch on animation complete. |
+
+UI wiring (not pathfinding): `ExplorationMapCoordinator` owns `AutopilotController`; `ExpandedMapDestinationSelection` handles expanded-map pointer + arrow cursor; `MapGridPaintController.SetAutopilotOverlay` paints path/cursor/destination.
+
+### A* algorithm (`MapPathfinder`)
+
+| Detail | Shipped behavior |
+|--------|------------------|
+| **Neighborhood** | 4 cardinal offsets only |
+| **Edge cost** | Uniform **1** per step (`gScore`) |
+| **Heuristic** | **Manhattan** distance to goal (`|Δx| + |Δy|`) — admissible on cardinal grid |
+| **Open set** | **Binary min-heap** keyed by `f = g + h`; tie-break by `h`, then `X`, then `Y` |
+| **Closed set** | `HashSet<GridPosition>`; stale heap entries skipped on pop |
+| **Predicates** | `Func<GridPosition, bool> isNodePassable`; `Func<GridPosition, GridPosition, bool> canTraverseEdge(from, to)` |
+| **Output** | `IReadOnlyList<GridPosition>` from **start** (index 0) through **goal** (last index), inclusive |
+| **Trivial path** | `start == goal` → single-cell path (destination pick rejects party cell before walk) |
+
+### Graph rules (`ExplorationPathGraph`)
+
+| Layer | Rule |
+|-------|------|
+| **Nodes** | `map.IsVisited(cell)` **and** `S1ExplorationWalkability.IsWalkable(floor, cell, campaign, floorKey)` (tutorial gates, campaign flags) |
+| **Edges** | Cardinal step only; reject if `StratumFloorLayout.IsSolidEdge(floor, from, side)` |
+| **Revealed walls** | Block when `map.GetWalls(from)` includes the step-facing `WallMask` |
+| **Doors** | **Closed** door on **either** endpoint blocks the edge (`FeatureType.Door` + `!IsInteracted`); opened door is passable |
+| **FOE / encounters** | Not in graph — routed cells may contain FOE icons; contact runs normal step pipeline |
+
+Same-level only; no stairs/jump-pad edges in the path graph (matches MVP2 spec).
+
+### Path index semantics (`AutopilotPathWalker` + `AutopilotController`)
+
+The path list is **inclusive** of start and goal. Walking does **not** re-path each step.
+
+| Moment | `pathIndex` | Meaning |
+|--------|-------------|---------|
+| After `TryConfirmDestination` | `1` when `path.Count > 1`, else `0` | Next cell to enter is `path[pathIndex]` (index `0` is current party cell at confirm time) |
+| Each `OnExplorerAnimationCompleted` while `Walking` | Increment when `m_explorer.Cell == path[pathIndex]` | Party has **arrived** on the indexed waypoint |
+| `GetNextAction(path, pathIndex, cell, facing)` | Reads `path[pathIndex]` | Returns `TurnLeft` / `TurnRight` / `StepForward` toward that cell, or `Done` if already there / invalid gap |
+| Walk complete | — | `pathIndex >= path.Count` **or** `m_explorer.Cell == m_savedDestination` → `Idle`, overlay cleared |
+
+Turns use `DungeonExplorer.TryTurnLeft` / `TryTurnRight`; steps use `TryStepForward`. `MovementAcceptance.Ignored` **cancels** autopilot (no toast yet).
+
+### Shipped UX vs MVP2 spec (deviations)
+
+| MVP2 spec | Shipped (expanded-map slice) |
+|-----------|------------------------------|
+| `LMB` destination on **side or fullscreen** map | **Expanded map only** — **Z** arms path mode (`TabbedPickerRailHints.ExplorationMapAutopilotSelect`); arrow keys move cursor; **Z Confirm** or **click** sets destination. Side minimap has no autopilot pick yet. |
+| Cancel on **combat** | **Suspend + resume** — `SuspendForCombat` saves destination; `TryResumeAfterCombat` re-paths from post-fight cell (or `Cancel` if unreachable / already at goal). FOE/random encounter still stops walk via combat entry. |
+| Stop toasts (`Arrived`, `Blocked`, …) | **Not shipped** — silent cancel or idle on complete |
+| Stop **before** interactable on path (not destination) | **Not shipped** — walker steps into chests / gather nodes unless movement is blocked |
+| **Avoid FOE cells** setting | **Not shipped** — shortest revealed path may cross FOE tiles |
+| Mid-walk **repath** when map changes | **Not shipped** — blocked next step cancels; no replan or message |
+| `AUTOPILOT` HUD label / pulse | Overlay classes on map cells only (`MapAutopilotCellClasses`) |
+
+### Automated tests
+
+Edit Mode fixtures ([game `Assets/Tests/README.md`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)):
+
+| Fixture | Domain | Covers |
+|---------|--------|--------|
+| `MapPathfinderTests` | `Map` | Open grid shortest path, wall detour, unreachable goal |
+| `ExplorationPathGraphTests` | `Map` | Unrevealed shortcut skipped, closed vs open door, B1F tutorial blocker + campaign flag |
+| `AutopilotPathWalkerTests` | `Exploration` | Step when aligned; shorter turn arc |
+| `AutopilotControllerTests` | `Exploration` | Select toggle, confirm → walk, combat suspend/resume, manual cancel |
 
 ---
 
@@ -144,6 +222,7 @@ Add class sketch to [05 — Class design MVP1](../05-class-design.md) when imple
 
 ## Related
 
+- [04 — Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md) — A*, graph rules, API, tests
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)
 - [02 — Mapping](mapping.md)
 - [Input bindings](input-bindings.md)

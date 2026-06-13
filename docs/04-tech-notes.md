@@ -148,10 +148,13 @@ Sprite checklist, composite wall rules (edge segments — no 16 autotiles), door
 
 ## Autopilot (MVP2)
 
-- `AutopilotController` — BFS/A* on **revealed walkable** cells for current `level`; emits next segment (turn + displacement); `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
-- `MapView` — `LMB` destination, path overlay, invalid-click feedback
-- Input: `MapSetAutopilotDestination`, `CancelAutopilot` (`Esc` + manual actions cancel)
-- Cancel on combat, hub, minigame, blocked path, FOE/encounter, or manual input
+- **`MapPathfinder`** (`GridDungeon.Core`) — generic **A\*** with Manhattan heuristic + binary heap; injectable node/edge predicates ([autopilot pathfinding](04-dev/autopilot-pathfinding.md))
+- **`ExplorationPathGraph`** (`GridDungeon.Runtime`) — revealed walkable graph (visited cells, layout walkability, walls, closed doors) → calls `MapPathfinder`
+- **`AutopilotPathWalker`** (`GridDungeon.Core`) — path index → next turn or step
+- **`AutopilotController`** — destination pick, walk state, combat **suspend/resume**, overlay events; `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
+- **UI:** `ExplorationMapCoordinator` + expanded map — **Z** arm path, arrows/click cursor, path overlay via `MapGridPaintController` (not side minimap pick yet)
+- **Layout validation** uses separate **`FloorLayoutConnectivity` BFS** on raw `StratumFloor` — not autopilot ([autopilot pathfinding § vs FloorLayoutConnectivity](04-dev/autopilot-pathfinding.md#vs-floorlayoutconnectivity-layout-bfs))
+- Cancel on manual input, blocked step, or unreachable resume; combat suspends with optional resume after fight
 
 ## Gathering & fishing (MVP2)
 
