@@ -13,7 +13,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | When | Action |
 |------|--------|
 | Hit a weird modal / picker bug | Search here before adding guards in phase HUDs |
-| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
+| Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, **Wallet dual hide layer**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
@@ -324,12 +324,48 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 **Fix (shipped — `SlideTransition`, `InputHintPresenter`, `WalletHudPresenter`):**
 
 1. **`SlideTransition`** — dismiss: `SetRetracted(true)` then `ClearMotionStyles`; present complete: `SetRetracted(false)` then clear inline.
-2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like `MapView` + `PartyFormationFloater`.
+2. **`SyncPresentation`** — gate on **`--retracted`** / `wallet-hud__panel--retracted` (visual), like `MapView` + `PartyFormationFloater`; hide: `ShouldCallHide` → `Hide()` only — **no** instant teardown in an `else` branch (see **Wallet dual hide layer** below).
 3. **`CommandRailEnterTransition.PlayClose`** — apply `hiddenClass` **before** `ClearMotionStyles` when panel close uses hidden BEM.
 
 **Tests:** `UiToolkitTweensTests` slide present/dismiss class tests, `InputHintPresenterTests`, `WalletHudPresenterTests`.
 
 **Prevent recurrence:** [UITK BEM transition guide](uitk-bem-transition-guide.md) — API + [transition recipe](uitk-bem-transition-guide.md#recipe-new-transition-helper) + [presenter sync recipe](uitk-bem-transition-guide.md#recipe-presenter-syncpresentation). ADR checklist: [039 §6](../../decisions/039-uitk-dotween-show-hide.md#6-shared-completion--presenter-sync-mandatory-for-new-bem-motion); agent rule: `uitk-bem-transition.mdc`.
+
+---
+
+## Wallet / slide strip — dual hide layer hard cut (`WalletHudPresenter`)
+
+**Symptom:** Credits wallet **snaps off** (hard cut) on shop close, party bag → Formation tab, or transient pulse end — while party floater / other chrome still animates out smoothly.
+
+**Cause (layered — same class of bug as map `display:none` + fade, but on slide retract):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Two visibility authorities** | Parent `wallet-hud--hidden` (`display: none`) **and** child `wallet-hud__panel--retracted` (translate + opacity). Slide tweens the panel; `PrepareHiddenVisual` / `SetRootVisible(false)` nukes the root **instantly** — player sees cut, not retract. |
+| **`SyncPresentation` else on hide** | When `!RequestedVisible` and `!ShouldCallHide` (steady retracted, not settling), an `else { PrepareHiddenVisual() }` applies `display: none` without running `SlideTransition.Dismiss`. |
+| **`CancelPendingDismiss` on deactivate** | `SetReason(..., false)` while dismiss is settling called `HideImmediate` → **snap**. Party floater only cancels on **activate** / redock (`ApplyHubHospitalFloaterDock(true)`), not every reason clear. |
+| **`CentralizedUiPresentation.Hide` early return** | `!IsShown && !IsSettling` skips driver dismiss while panel still extended — or pairs with forced teardown for a snap. `TryDismissVisuallyExtended` on slide driver runs dismiss from steady class. |
+| **Zero-length slide sample** | `translate: 0 -100%` with `layout.height == 0` → sampled end offset **0** → tween noop → retract class on complete = instant. Use `CreateSlide(..., fallbackRetractOffsetSign)` (-1 wallet up, +1 input hint down), same idea as `CollapseTransition.SampleCollapsedOffsetY`. |
+| **Show path un-hides root before slide** | `SetRootVisible(true)` before `ShouldCallShow` / `Show()` — root visible while presentation `IsShown` can lag; clearing reasons then hits early-return hide + callback hard cut. |
+
+**Reference (good):** `PartyFormationFloaterPresenter` — **one** steady class on the animation target (`party-formation-floater--collapsed`), `SyncPresentation` hide calls `Hide()` only when gated, **no** second `display: none` parent, `CancelPendingDismiss` only when **activating** / redocking.
+
+**Fix (shipped — `WalletHudPresenter`, `WalletHudView`, `WalletHud.uxml` / `.uss`, `SlideTransition`, `CentralizedUiPresentation`):**
+
+1. **Remove** `wallet-hud--hidden` — panel `wallet-hud__panel--retracted` + `SlideTransition` is the only show/hide authority.
+2. **`SyncPresentation`** — mirror floater: hide → `ShouldCallHide` → `m_presentation.Hide()` (no callback, no `else` teardown); show → `IsSteadyVisible` early-out, then `ShouldCallShow` → `Show()`.
+3. **`CancelPendingDismiss`** — call on `SetReason(..., true)` and `StartTransient` only; **not** on `SetReason(..., false)` while dismiss is settling.
+4. **`CreateSlide(..., fallbackRetractOffsetSign: -1)`** for wallet — non-zero retract distance when `%` layout sample fails.
+5. **Override `IsShown`** from `!IsPanelRetracted` (like `MapView` + faded class).
+6. **`CentralizedUiPresentation.TryDismissVisuallyExtended`** — slide dismiss when target is extended but lifecycle missed `Show()`.
+7. **Cold start / phase teardown** — `m_presentation.HideImmediate()` only; reserve `HideImmediate` for `OnDisable` and system dismiss, not player context close within the same phase.
+8. **Balance lerp** (`SyncBalance` / transient pulse) stays separate from chrome slide — do not conflate number snap on shop open with visibility hard cut.
+
+**Tests:** `WalletHudPresenterTests` — `Hide_EntersSettleWindowBeforeShownClears`, `SetReason_RapidSwapDuringHideSettle_CancelsDismissAndShowsAgain`, `SetReason_DeactivateAgainDuringHideSettle_DoesNotSnapRetract`, `ClearAllReasons_WhenAlreadyRetracted_DoesNotRecallHide`.
+
+**Rule for new slide strips:** Do **not** stack `display: none` (or `visibility: hidden`) on a parent **and** retract/fade on a child unless the parent toggle is **only** used after the child dismiss tween completes — and never in a `SyncPresentation` `else` branch. Prefer **`PartyFormationFloaterPresenter` / `InputHintPresenter`** sync shape: one animation target, `VisualPresentationSync`, optional `CancelPendingDismiss`. `InputHint` may still use a dismiss callback to clear label text — it does **not** add a root `display: none` layer.
+
+**Cross-ref:** [Slide retract dismiss order](#slide-retract-dismiss-order-slidetransition--input-hint--wallet), [Party floater collapse](#party-floater-collapse--double-slide-up-collapsetransition--partyformationfloater), [Map panel fade vs floor transition](#map-panel-fade-vs-floor-transition-screen-fade-mapview--fadetransition) (`CentralizedUiPresentation.Hide` early return).
 
 ---
 
