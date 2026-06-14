@@ -45,7 +45,7 @@ A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (
 | **Hub** | `Hub` | Page block when used | **Blocking** while open |
 | **Codex** | **Pause menu** (`Esc` — exploration / combat / hub) | Read-only replay of unlocked entries | Non-blocking navigation inside codex UI |
 
-**Post-MVP1** ships Act 1 exploration entries + B2F Protocol coach + **codex replay** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). **MVP1** uses VN + Protocol HUD gate only ([mvp1-spec §5](../../docs/archive/mvp1-spec.md#5-explicitly-deferred-not-blocking-mvp1)). Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
+**Later** ships Act 1 exploration entries + B2F Protocol coach + **codex replay** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). **Required slice** uses VN + Protocol HUD gate only ([release scope § Later](../00-release-scope.md#later)). Hub Act 2 guild hints **cut** unless playtest fails ([ADR 029 § stakeholder](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)).
 
 Early MVP: one simple **tutorial panel** layout (screen block + optional still / short clip) — not separate toast vs VN chrome stacks.
 
@@ -232,5 +232,5 @@ Deferred: map (`M`) coach, shared panel UXML with story layer, authoring format 
 - [S1 guided tutorials (content)](../03-content/campaign/s1-guided-tutorials.md)
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [Story events](story-events.md)
-- [mvp1-spec §1](../archive/mvp1-spec.md#1-player-facing-loop-mvp1)
+- [01 — Core loop](../01-core-loop.md)
 - [05 — class design § CombatEntryContext](../05-class-design.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via `CombatTutorialHudRules`

@@ -1,4 +1,4 @@
-﻿# MVP1 enemy roster (Stratum 1)
+﻿# Stratum 1 enemy roster
 
 **Tracking:** [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) · **Implementation:** [game #12](https://github.com/miramocha/griddungeon-game/issues/12) (`ContentDatabase` + `EnemyDefinition` / `EncounterGroup` SOs)
 
@@ -10,7 +10,7 @@
 | Campaign acts, save flags, tutorial FOE rules | [campaign/s1-intro](campaign/s1-intro.md) · [foe-encounters — tutorial](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker) |
 | **This file** | Locked enemy IDs, stats stubs, skills, encounter groups, FOE ↔ group mapping |
 
-Tuning numbers may move in data ([mvp1-spec §6](../archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)); **IDs and group compositions are locked** for MVP1.
+Tuning numbers may move in data ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); **IDs and group compositions are locked** for the required slice.
 
 ---
 
@@ -153,6 +153,6 @@ Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeo
 
 ## Related
 
-- [mvp1-spec — combat content](../archive/mvp1-spec.md#combat-adr-015)
+- [release scope — required slice](../00-release-scope.md#required-first-playable)
 - [combat scene — enemy slots](../02-systems/combat-scene.md)
 - [synchro — S1 first FOE](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)

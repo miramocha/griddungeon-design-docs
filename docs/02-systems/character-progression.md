@@ -56,11 +56,11 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 ### MVP1 equipment (locked)
 
-Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([mvp1-spec](../archive/mvp1-spec.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked).
+Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([release scope](00-release-scope.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked).
 
 **Display names** use municipal-underworks flavor (contract crew gear); **`equipId` strings stay locked** for saves and ContentDatabase.
 
-**Stat bonuses** add to `CharacterBaseStats` on equip (`Hp`, `Mp`, `Str`, `Tec`, `Agi`, `Vit`, `Luc`). **Resist bonuses** use the `StatusResistBonuses` fields on `EquipmentDefinition` (0 = none). **Shop buy** prices are tuning stubs ([mvp1-spec §6](../archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)); sell ≈ **50%** of buy unless noted in data.
+**Stat bonuses** add to `CharacterBaseStats` on equip (`Hp`, `Mp`, `Str`, `Tec`, `Agi`, `Vit`, `Luc`). **Resist bonuses** use the `StatusResistBonuses` fields on `EquipmentDefinition` (0 = none). **Shop buy** prices are tuning stubs ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); sell ≈ **50%** of buy unless noted in data.
 
 | `equipId` | Slot | Display name | `weaponType` | `allowedClassIds` | Stat bonus | Resist bonus | Shop buy | MVP1 source |
 |-----------|------|--------------|--------------|---------------------|------------|--------------|----------|-------------|

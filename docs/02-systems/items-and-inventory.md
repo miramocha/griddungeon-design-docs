@@ -56,7 +56,7 @@ Shop/hospital/identify copy uses the **display label** via `Mvp1HubConstants.Cur
 
 ## Bag model (MVP1)
 
-- **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([mvp1-spec §6](../archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)); tune in data, not code forks.
+- **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); tune in data, not code forks.
 - Each slot holds **at most one** of:
   - **Empty**
   - **Consumable stack** — one `itemId`, quantity ≤ `ItemDefinition.maxStack`

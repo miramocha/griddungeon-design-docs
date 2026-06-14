@@ -35,10 +35,10 @@ Exploration camera follows the **party on the grid**; identity and dialogue rema
 
 - **Manual map drawing tools** (walls, icons, notes, eraser)
 - Action combat, QTEs, or real-time party control in battles
-- Full 3D hub walk (MVP1: menu hub; [menu-driven camera pan](02-systems/hub-and-services.md#hub-environment-presentation) is **post-MVP1**)
+- Full 3D hub walk (required slice: menu hub; [menu-driven camera pan](02-systems/hub-and-services.md#hub-environment-presentation) is **later**)
 - **Boost/Break** — out of scope; [Synchro Protocol](02-systems/synchro-protocol.md) covers team burst
 - Subclass systems until core loop is proven
-- **Dungeon gather / fishing minigames** — **MVP2** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))
+- **Dungeon gather / fishing minigames** — **optional** ([gathering & fishing](02-systems/gathering-and-fishing.md), [release scope](00-release-scope.md))
 - Per-character burst gauges (using **team Synchro Charge** instead — see [synchro-protocol](02-systems/synchro-protocol.md))
 - Navigator leveling, equipment, or aura tiers ([navigator](02-systems/navigator.md) is unlock-only)
 
@@ -57,15 +57,15 @@ Exploration camera follows the **party on the grid**; identity and dialogue rema
 
 **One line:** A guild-licensed crew maps a living **undercity** beneath a familiar metropolis — concrete, water, and things that were never meant to stay down there.
 
-**Municipal underworks (MVP1 art direction):** Modern, grounded, **not sci-fi**. Strata read as **infrastructure + neglect** (maintenance tunnels, flood channels, sealed transit) rather than castle fantasy or cyberpunk. FOE and place names stay urban (`alley_stalker`, `gutter_crow`, **Flooded Underpass**). Hub **guild** = city **contract crew**, not medieval order.
+**Municipal underworks (launch art direction):** Modern, grounded, **not sci-fi**. Strata read as **infrastructure + neglect** (maintenance tunnels, flood channels, sealed transit) rather than castle fantasy or cyberpunk. FOE and place names stay urban (`alley_stalker`, `gutter_crow`, **Flooded Underpass**). Hub **guild** = city **contract crew**, not medieval order.
 
 **Yggdrasil-like labyrinth** structure stays: one gate, many strata, ecology shifts per depth ([dungeons](03-content/dungeons-and-encounters.md)).
 
 **UI:** Warm charcoal panels, off-white type, **amber-gold** accents (Synchro / active turn) — schematic map like a **transit or architectural plan**, not neon HUD ([map cell art](02-systems/map-cell-art.md#visual-tone-municipal-underworks)).
 
-## Success criteria (MVP1)
+## Success criteria (required slice)
 
-See [archive/mvp1-spec.md](archive/mvp1-spec.md) for full checklist. Prototype bar:
+See [release scope](00-release-scope.md) and the [project board](https://github.com/users/miramocha/projects/3). Prototype bar:
 
 - [ ] Explore a test floor in FPV; **map auto-reveals** floor and walls on bump
 - [ ] **FOE** appears on map when visible; combat on contact

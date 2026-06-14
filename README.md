@@ -15,22 +15,23 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Dev / integrator** — [04-dev/](docs/04-dev/README.md) (e.g. [UI event contract](docs/04-dev/ui-event-contract.md), [shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md), [custom skill picker UI](docs/04-dev/custom-skill-picker-ui.md), [custom party UI](docs/04-dev/custom-party-ui.md))
 - **Decisions** — ADRs when we lock a design choice
 - **Refs** — visual / UX scratchpads (screenshots, links; not spec authority)
-- **Release scope** — [MVP1, MVP2 & MVP3](docs/00-release-scope.md) · **[MVP1 spec](docs/archive/mvp1-spec.md)** (implementation checklist)
+- **Release scope** — [Required, optional & later](docs/00-release-scope.md) · [project board](https://github.com/users/miramocha/projects/3) (`required` / `optional` labels)
 
-## Release milestones
+## Release scope
 
-| Milestone | Focus |
-|-----------|--------|
-| **MVP1** | Hub loop, explore, FOE, AGI combat, Synchro Protocol, auto-map |
-| **MVP2** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join, autopilot |
-| **MVP3** | Hub Side expedition → non-strata side dungeons ([ADR 022](decisions/022-side-dungeons-mvp3.md)) |
+| Tier | Focus |
+|------|--------|
+| **Required** | Hub loop, explore, FOE, AGI combat, Synchro Protocol, auto-map |
+| **Optional** | Gather/fish minigames, synthesis, FOE combat patrol + mid-battle join, autopilot, side dungeons |
+| **Later** | Guided coach codex, gamepad, full ailment roster, 3D hub |
+
+See [00 — Release scope](docs/00-release-scope.md) and the [project board](https://github.com/users/miramocha/projects/3).
 
 ## Document index
 
 | Doc | Status | Summary |
 |-----|--------|---------|
-| [MVP1 spec](docs/archive/mvp1-spec.md) | Active | MVP1 checklist + locked rules |
-| [00 — Release scope](docs/00-release-scope.md) | Draft | MVP1, MVP2, MVP3, later |
+| [00 — Release scope](docs/00-release-scope.md) | Active | Required, optional, later |
 | [00 — Vision](docs/00-vision.md) | Draft | EO-first pillars, inspirations |
 | [00 — Game references](docs/00-game-references.md) | Draft | EO + Mary Skelter, etc. — future design reference |
 | [01 — Core loop](docs/01-core-loop.md) | Draft | Guild hub ↔ stratum loop |
@@ -57,21 +58,21 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
 | [02 — UVS phase & presentation](docs/02-systems/uvs-phase-presentation.md) | Draft | Optional Visual Scripting hooks: `GameState`, movement, gates, examples |
-| [05 — Class design MVP1](docs/05-class-design.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
+| [05 — Class design](docs/05-class-design.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
-| [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | MVP2 | Dungeon minigames; materials |
-| [02 — Autopilot](docs/02-systems/autopilot.md) | MVP2 | Pathfind to discovered tile on map |
-| [02 — Side dungeons](docs/02-systems/side-dungeons.md) | MVP3 | Hub menu → non-strata grid maps |
-| [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; B1F–B3F MVP1 layouts |
-| [03 — MVP1 enemy roster](docs/03-content/enemy-roster.md) | Draft | S1 enemy stats/skills, encounter groups, FOE mapping ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2)) |
-| [03 — MVP1 class skills](docs/03-content/class-skills.md) | Locked | 3 skills × 6 classes; deploy + summon script IDs ([#3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
+| [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | Optional | Dungeon minigames; materials |
+| [02 — Autopilot](docs/02-systems/autopilot.md) | Optional | Pathfind to discovered tile on map |
+| [02 — Side dungeons](docs/02-systems/side-dungeons.md) | Optional | Hub menu → non-strata grid maps |
+| [03 — Dungeons & encounters](docs/03-content/dungeons-and-encounters.md) | Draft | Strata, FOE tables; S1 B1F–B3F |
+| [03 — Stratum 1 enemy roster](docs/03-content/enemy-roster.md) | Draft | S1 enemy stats/skills, encounter groups, FOE mapping ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2)) |
+| [03 — Launch class skills](docs/03-content/class-skills.md) | Locked | 3 skills × 6 classes; deploy + summon script IDs ([#3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Map layer, FOE tick |
 | [ADR 001 — Grid movement](decisions/001-grid-movement.md) | Accepted | Step lerp, hold-to-repeat, strafe, turn rules |
 | [ADR 002 — Mapping model](decisions/002-mapping-model.md) | Accepted | Auto-reveal; drawing tools out of scope |
 | [ADR 003 — FOE step patrol](decisions/003-foe-step-patrol.md) | Accepted | FOEs advance on party steps |
 | [ADR 004 — Auxiliary slots](decisions/004-auxiliary-slots.md) | Accepted | +1 summon/guest per row |
-| [ADR 005 — FOE combat patrol](decisions/005-foe-combat-patrol.md) | Deferred | 1 FOE cell / combat round (**MVP2**) |
+| [ADR 005 — FOE combat patrol](decisions/005-foe-combat-patrol.md) | Deferred | 1 FOE cell / combat round (**optional**) |
 | [ADR 006 — Team burst bar](decisions/006-union-team-bar.md) | Accepted | Synchro Charge mechanics |
 | [ADR 020 — Team burst naming](decisions/020-team-burst-naming.md) | Accepted | Retire “Union”; use Synchro Protocol |
 | [ADR 007 — Navigator role](decisions/007-navigator-role.md) | Accepted | Off-formation; runs Protocol |
@@ -113,28 +114,25 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 - **Multiplayer:** Out of scope
 - **Boost/Break:** Out of scope — Synchro Protocol covers team burst ([ADR 008](decisions/008-campaign-defaults.md))
 - **Input:** PC defaults ([input bindings](docs/02-systems/input-bindings.md), [ADR 009](decisions/009-input-bindings-pc.md))
-- **FOE mid-battle join:** MVP2 with combat patrol ([ADR 005](decisions/005-foe-combat-patrol.md), [010](decisions/010-chain-foe-battle.md)); **off in MVP1**
+- **FOE mid-battle join:** Optional with combat patrol ([ADR 005](decisions/005-foe-combat-patrol.md), [010](decisions/010-chain-foe-battle.md)); **off in required slice**
 - **FOE flee:** Escapable; success → **1 cell back**; **disabled** if wall behind ([ADR 011](decisions/011-foe-flee-retreat.md))
 - **Skill points:** Spend on class trees in hub or labyrinth when safe — not combat / VN / cutscene ([ADR 034](decisions/034-skill-point-allocation-outside-combat.md))
 
-## MVP2 (scoped)
+## Optional (scoped)
 
 - [Gathering & fishing minigames](docs/02-systems/gathering-and-fishing.md) — chop/mine/forage + fish nodes in labyrinth; feeds synthesis
 - Hub **synthesis** + gather quests ([release scope](docs/00-release-scope.md))
 - [FOE combat patrol](decisions/005-foe-combat-patrol.md) + [mid-battle join](decisions/010-chain-foe-battle.md)
 - [Autopilot](docs/02-systems/autopilot.md) — pathfind to discovered tiles; no map drawing ([ADR 021](decisions/021-autopilot-mvp2.md))
-- Optional: [cinematic QTE skills](docs/02-systems/combat-presentation.md)
-
-## MVP3 (scoped)
-
 - [Side dungeons](docs/02-systems/side-dungeons.md) — hub **Side expedition** → full grid explore + combat outside strata ([ADR 022](decisions/022-side-dungeons-mvp3.md))
+- Optional: [cinematic QTE skills](docs/02-systems/combat-presentation.md)
 
 ## Open questions
 
-- MVP1 **structure** locked — [mvp1-spec](docs/archive/mvp1-spec.md), [ADR 014](decisions/014-mvp1-exploration-map.md), [ADR 015](decisions/015-mvp1-combat.md)
+- Required **structure** locked — [release scope](docs/00-release-scope.md), [ADR 014](decisions/014-mvp1-exploration-map.md), [ADR 015](decisions/015-mvp1-combat.md)
 - **Map during combat** — show persistent schematic for incoming FOE threat vs `M` toggle only? [mapping § Consider / explore](docs/02-systems/mapping.md#consider--explore--map-during-combat) (ties to [ADR 005](decisions/005-foe-combat-patrol.md))
 - **Navigator 3D presence** — bottom-right model in exploration + combat; Protocol Deploy → aux slot, Transform → core slot transition — [navigator § Consider / explore](docs/02-systems/navigator.md#consider--explore--navigator-3d-presence)
-- Remaining work: **content** (floors, enemies, skills), **tuning numbers**, MVP2 features
+- Remaining work: **content** (floors, enemies, skills), **tuning numbers**, optional features
 
 ## Naming
 
