@@ -2,7 +2,7 @@
 
 Exploration alternates with a **fixed hub** at the labyrinth entrance — not an open overworld. EO's town loop: prepare, dive one stratum, return before overextending.
 
-## Hub locations (launch)
+## Hub locations (launch slice)
 
 | Service | Function |
 |---------|----------|
@@ -10,8 +10,8 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit — **2D portrait roster** in UI ([navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)); **not** the labyrinth bottom-right 3D rig ([navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
-| **Inn / Camp desk** | Save game (**primary save point** — (launch) has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
-| **Quest counter** | Accept kill/gather/floor reach quests (optional (launch)) |
+| **Inn / Camp desk** | Save game (**primary save point** — Launch has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
+| **Quest counter** | Accept kill/gather/floor reach quests (optional at launch) |
 | **Synthesis** (**Optional**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
 | **Side expedition** (**Optional**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
 
@@ -21,14 +21,14 @@ No real-time hub walking — **menu tree stays the interaction model**. A **sing
 
 Hub menus use the same **reactive, blocking** bar as combat and exploration ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
 
-| Event | UI reaction (launch) | Blocks until done |
+| Event | UI reaction at launch | Blocks until done |
 |-------|-------------------|-------------------|
 | Open / close service screen | Panel **fade/slide** | No — navigation only |
 | Inn save | Brief **confirm flash** + text | Yes — before another service action |
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
 | Shop buy / sell | **Credits** balance + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
 | Guild assign party / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
-| Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional (launch) |
+| Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional at launch |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
 | Return to hub (exploration gate `stairsUp`) | **Floor transition** fade/vignette via `TryReturnToHub` ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until hub phase ready |
 | Leave hub → stratum | **Floor transition vignette** or fade fallback ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until exploration phase ready |
@@ -53,7 +53,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 
 | Topic | Decision |
 |-------|----------|
-| **When focus → pan ships** | **Later** — (launch) hub is menus + services; camera pan is the first hub presentation pass after (launch) |
+| **When focus → pan ships** | **Later** — at launch hub is menus + services; camera pan is the first hub presentation pass after launch |
 | **Town layout** | **One environment** from the first hub visit (S1 Act 2) — same guild-town scene throughout; services unlock via menu, not by swapping hub maps |
 | **Layout** | **Full-screen** 3D backdrop with **UI Toolkit overlay** on top (not split-pane) |
 | **Sub-menus** | **No camera pans** inside service screens (shop tabs, guild skill tree, hospital actions, etc.) — panning applies only to the **root hub menu** |
@@ -62,7 +62,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 | **Locked / unavailable root rows** | **No pan** — focus on a greyed-out service does not move the camera (avoids teasing buildings the player cannot use yet) |
 | **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth  plaza camera pose |
 | **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
-| **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than (launch)** (author with later hub presentation or polish pass) |
+| **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than launch** (author with later hub presentation or polish pass) |
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
 | **Camera stack** | **Cinemachine 3** virtual cameras + session `CinemachineBrain` — **not** DOTween on a manual camera rig ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)) |
 
@@ -166,11 +166,11 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
-- Example: Stratum 1 "Fallen District" — floors B1F–B5F (launch): B1F–B3F + boss on B3F).
+- Example: Stratum 1 "Fallen District" — floors B1F–B5F At launch: B1F–B3F + boss on B3F).
 - **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F gate; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
 - **First-floor gate `stairsUp`:** → **hub** only (all strata).
 
-## Quests (optional (launch))
+## Quests (optional at launch)
 
 | Type | Objective | Example reward |
 |------|-----------|----------------|

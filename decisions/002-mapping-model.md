@@ -56,7 +56,7 @@ Painter replaces hand-editing huge tile arrays in the Inspector and replaces **M
 1. **`MapSystem`** holds revealed state (`Visited`, `WallMask`, features, `FoeIcons`) � unchanged authority.
 2. **`MapView`** (UI Toolkit) draws the chart from `IReadOnlyFloorMapState` + floor style from `ContentDatabase` / `ExplorationFloor`:
    - **Cells/edges:** floor tiles and wall segments revealed so far (fog hides unrevealed).
-   - **Party / FOE:** icons at grid `(x, y, level)` � UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) � (launch) shows party�s **current `level`**).
+   - **Party / FOE:** icons at grid `(x, y, level)` � UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) � at launch, map shows party�s **current `level`**).
 3. **Refresh on dirty:** rebuild or patch the 2D view when reveal changes, party moves, or FOE updates � **no** minimap `RenderTexture` in the main path.
 4. **Pan/zoom** on the map `VisualElement` ([ADR 014](014-mvp1-exploration-map.md)).
 
@@ -84,4 +84,4 @@ If used: `MapProxy` layer, FPV excludes it; same grid alignment rules as before.
 - [Mapping system](../docs/02-systems/mapping.md)
 - [02 � Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [ADR 019 � Floor verticality](019-floor-verticality.md)
-- [(launch) spec](../docs/00-release-scope.md)
+- [release scope](../docs/00-release-scope.md)

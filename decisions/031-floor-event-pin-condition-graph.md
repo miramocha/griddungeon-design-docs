@@ -1,6 +1,6 @@
 # ADR 031 — Floor Event & Pin Condition Graph (Graph Toolkit)
 
-**Status:** Proposed (idea — does not block (launch))  
+**Status:** Proposed (idea — does not block launch)  
 **Date:** 2026-05-28  
 **Follows:** [ADR 002](002-mapping-model.md) (floor painter / `ExplorationFloor`) · [ADR 028](028-story-visual-novel-events.md) · [ADR 030](030-story-event-graph-authoring.md)  
 **Tracks:** [game #109](https://github.com/miramocha/griddungeon-game/issues/109) (Event cells `!` + `storyEventId` on floor assets)
@@ -13,7 +13,7 @@ Exploration content is authored as **grid pins** — story **Event** cells (`!`)
 - A shortcut door stays blocked until a key item flag is set.
 - A repeat gather node stays depleted after first use (idempotent flag).
 
-**(launch) today:** triggers are wired in C# phase controllers (`ExplorationPhaseController` → `StoryEventRunner.Play(storyEventId)` on hard-coded cells) while floor layout lives in assets ([#109](https://github.com/miramocha/griddungeon-game/issues/109) will move Event metadata onto `ExplorationFloor`).
+**Launch today:** triggers are wired in C# phase controllers (`ExplorationPhaseController` → `StoryEventRunner.Play(storyEventId)` on hard-coded cells) while floor layout lives in assets ([#109](https://github.com/miramocha/griddungeon-game/issues/109) will move Event metadata onto `ExplorationFloor`).
 
 **Design need:** designers and narrative should express **“this pin / event only when …”** without a programmer edit per beat, and without fragile duplicated flag checks scattered across controllers.
 
@@ -38,7 +38,7 @@ Unity’s **Visual Novel Director** sample (bundled with Graph Toolkit) demonstr
 
 ##### Warning
 
-Graph Toolkit is **experimental** — not verified for production. Treat package pin and API churn as risk; (launch) shipping path stays **hand-authored assets + C# triggers** ([#109](https://github.com/miramocha/griddungeon-game/issues/109), [#87](https://github.com/miramocha/griddungeon-game/issues/87)).
+Graph Toolkit is **experimental** — not verified for production. Treat package pin and API churn as risk; at launch shipping path stays **hand-authored assets + C# triggers** ([#109](https://github.com/miramocha/griddungeon-game/issues/109), [#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
 ## Decision (proposed)
 
@@ -123,7 +123,7 @@ A single **PlayStoryEvent** action node links the two: floor graph decides *when
 
 | Phase | Deliverable |
 |-------|-------------|
-| **(launch) ([#109](https://github.com/miramocha/griddungeon-game/issues/109))** | Event cells + `storyEventId` on `ExplorationFloor`; **static** pins; C# triggers for S1 beats |
+| **Launch ([#109](https://github.com/miramocha/griddungeon-game/issues/109))** | Event cells + `storyEventId` on `ExplorationFloor`; **static** pins; C# triggers for S1 beats |
 | **Later — data** | `FloorEventRule` schema + `FloorEventEvaluator` in Core; hand-authored rules on floor assets (no graph UI yet) |
 | **Later — editor** | Graph Toolkit project + compile to floor rules; migrate S1 optional / gated beats off hard-coded cells |
 | **Later** | Shared Graph Toolkit shell with [ADR 030](030-story-event-graph-authoring.md); subgraph library for common S1/S2 conditions |

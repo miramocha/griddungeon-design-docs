@@ -14,7 +14,7 @@ Floor changes (stairs, hub re-entry, campaign warp) previously loaded map data a
 
 ## Decision
 
-### 1. (launch) ships a floor transition vignette
+### 1. Launch ships a floor transition vignette
 
 | Topic | Launch |
 |-------|------|

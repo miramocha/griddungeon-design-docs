@@ -12,7 +12,7 @@ How **rail menus**, **item list pickers**, and **skill use pickers** share UITK 
 
 ## Overview — three families, one focus stack
 
-Grid Dungeon does **not** use one mega-widget for every menu. (launch) has three **families** that **compose** shared primitives:
+Grid Dungeon does **not** use one mega-widget for every menu. at launch has three **families** that **compose** shared primitives:
 
 | Family | Primary types | Orientation | Typical use |
 |--------|---------------|-------------|-------------|
@@ -536,7 +536,7 @@ flowchart LR
 | `TabbedPicker.uss` shell | `CreateRowElement` inline in view (name, cost, disabled reason) |
 | `MenuFocusNavigator` on rows | `ISkillUsePickerView` / `ITabbedRowPickerKeyboardView` ports (shared keyboard contract — [#232](https://github.com/miramocha/griddungeon-game/issues/232); replaces deleted `ICombatSkillPickerKeyboardView` / `ICombatItemPickerKeyboardView`) |
 
-**Not** using `ItemListPickerView` today — skill rows have a different column layout (MP cost, disabled reason) and a Runtime presentation type owned by ADR 035. A future refactor could introduce a generic `TabbedListPickerView<TRow>` or a row-builder delegate; (launch) keeps **`SkillUsePickerToolkitView`** separate to avoid coupling item economy to combat skill catalog.
+**Not** using `ItemListPickerView` today — skill rows have a different column layout (MP cost, disabled reason) and a Runtime presentation type owned by ADR 035. A future refactor could introduce a generic `TabbedListPickerView<TRow>` or a row-builder delegate; Launch keeps **`SkillUsePickerToolkitView`** separate to avoid coupling item economy to combat skill catalog.
 
 ### UXML
 
@@ -609,7 +609,7 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 **Single-screen-only (rare):**
 
 1. Build `ItemListPickerPresentationModel` (or use `ItemListPickerPresentationBuilder.FromCategoryTabs`).
-2. Prefer a new centralized service `UIDocument` if a second screen will need the same chrome within (launch).
+2. Prefer a new centralized service `UIDocument` if a second screen will need the same chrome within the launch slice.
 3. `new ItemListPickerView(root)` (or custom `ItemListPickerLayout` if element names differ).
 4. Wire keyboard: Q/E → `SelectNextTab` / `SelectPreviousTab`; WASD → `RowNavigator` or `MoveRowFocus*`; Z/X → confirm/cancel on `RowNavigator`.
 5. Import styles: `TabbedPicker.uss`, `WindowedList.uss`, `ItemListRow.uss`.

@@ -37,7 +37,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `unity-csharp-comments.mdc` | Comment style |
 | `unity-common-pitfalls.mdc` | Unity gotchas |
 | `unity-ui-toolkit.mdc` | UI Toolkit bindings |
-| `architecture-design-principles.mdc` | **Design-docs only** — maps principles → (launch) architecture types |
+| `architecture-design-principles.mdc` | **Design-docs only** — maps principles → at launch architecture types |
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 | `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
 | `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before commit |

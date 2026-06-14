@@ -42,7 +42,7 @@ With **no** overlay owning input, labyrinth FPV uses `W`/`A`/`S`/`D` and arrows 
 - **Exploration:** grid actions on keyboard; no mouse movement in FPV; exception table above when overlays closed.
 - **Combat:** instance of universal vocabulary on command bar + target list + pickers ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 - **Map:** mouse pan/zoom when map panel focused or fullscreen.
-- **Rebindable** in settings menu (launch): ship with defaults below; store overrides in player prefs).
+- **Rebindable** in settings menu At launch: ship with defaults below; store overrides in player prefs).
 
 ---
 
@@ -142,7 +142,7 @@ After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/
 |--------|-------|-------|
 | **Pick target** | LMB on valid slot | Instant confirm ([#60](https://github.com/miramocha/griddungeon-game/issues/60), keyboard [#70](https://github.com/miramocha/griddungeon-game/issues/70)) |
 
-### AGI turn phase (default (launch))
+### AGI turn phase (default at launch)
 
 Living cores already queued during planning — **no** per-core command bar on AGI slots. **Summon** and legacy per-slot control use the same **focus + `Z` / `X`** model ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md), [ADR 016](../../decisions/016-summon-control-mvp1.md)).
 
@@ -154,7 +154,7 @@ Optional **confirm all assignments** before AGI playback — [#44](https://githu
 
 When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)) — after **Skill** on the command bar (shipped [#138](https://github.com/miramocha/griddungeon-game/issues/138)) or **Use skill** in field UI ([#140](https://github.com/miramocha/griddungeon-game/issues/140) deferred):
 
-| Action | Keyboard (launch) | Notes |
+| Action | Keyboard at launch | Notes |
 |--------|-----------------|-------|
 | **Previous tab** | **`Q`** | Cycles visible tabs (wrap); default tab **All** |
 | **Next tab** | **`E`** | |
@@ -163,7 +163,7 @@ When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-p
 | **Cancel picker** | `X` | Close modal; no command queued |
 | **Pick tab (optional)** | LMB on tab | Same tabs as Q/E cycle |
 
-**Deferred:** gamepad — **`L1`/`R1`** tab cycle and shoulder/d-pad row nav when platform gamepad support ships ([ADR 009](../../decisions/009-input-bindings-pc.md)); not required for picker (launch).
+**Deferred:** gamepad — **`L1`/`R1`** tab cycle and shoulder/d-pad row nav when platform gamepad support ships ([ADR 009](../../decisions/009-input-bindings-pc.md)); not required for picker at launch.
 
 **Scope:** `InputRouter` enables **`SkillPickerTabPrev` / `SkillPickerTabNext`** only while the picker is open. **`Q`/`E`** must **not** emit exploration turn events during this overlay (combat has no exploration map; field picker runs under pause/party modal with movement already blocked).
 
@@ -173,7 +173,7 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 #### Shell (always while menu open)
 
-| Action | Keyboard (launch) | Notes |
+| Action | Keyboard at launch | Notes |
 |--------|-----------------|-------|
 | **Open / close menu** | **`Tab`** | Toggle |
 | **Open active pane** | **`Z`** | Shows Inventory or Equipment body (section nav stays visible) |
@@ -185,7 +185,7 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 #### Inventory pane (when section = Inventory)
 
-| Action | Keyboard (launch) | Notes |
+| Action | Keyboard at launch | Notes |
 |--------|-----------------|-------|
 | **Previous category tab** | **`Q`** | Cycles **All** / Consumables / Equipment (Materials MVP2); default **All** |
 | **Next category tab** | **`E`** | |
@@ -195,7 +195,7 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 #### Equipment pane (when section = Equipment)
 
-| Action | Keyboard (launch) | Notes |
+| Action | Keyboard at launch | Notes |
 |--------|-----------------|-------|
 | **Previous member** | **`Q`** | Active party cores only (wrap); updates **member tab** strip |
 | **Next member** | **`E`** | |
@@ -272,7 +272,7 @@ Exploration
 
 Combat
   MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X / RMB on MenuNavigate composite
-  SkillPickerTabPrev, SkillPickerTabNext    # ADR 035 — Q / E (launch); L1 / R1 deferred; only while picker open
+  SkillPickerTabPrev, SkillPickerTabNext    # ADR 035 — Q / E at launch; L1 / R1 deferred; only while picker open
   InventoryBagTabPrev, InventoryBagTabNext  # ADR 036 — Q / E on Inventory pane OR member cycle on Equipment pane
   ProtocolMenu, ConfirmProtocol           # legacy names; map to focus confirm when implemented
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
@@ -299,12 +299,12 @@ Ship PC first. Later: left stick = forward/back strafe optional; right stick dis
 
 ---
 
-## (launch) checklist
+## launch checklist
 
 - [ ] `Exploration` map with defaults above
 - [ ] `Combat` map + mouse target raycast
 - [ ] `Map` pan/zoom on panel
-- [ ] Rebind screen (optional (launch) — can ship fixed defaults)
+- [ ] Rebind screen (optional at launch — can ship fixed defaults)
 
 ## Related docs
 

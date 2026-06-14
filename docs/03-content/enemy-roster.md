@@ -6,7 +6,7 @@
 
 | Topic | Doc |
 |-------|-----|
-| Floor grids, FOE YAML, per-floor random weights | [archive — (launch) layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md) |
+| Floor grids, FOE YAML, per-floor random weights | [archive — S1 layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md) |
 | Campaign acts, save flags, tutorial FOE rules | [campaign/s1-intro](campaign/s1-intro.md) · [foe-encounters — tutorial](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker) |
 | **This file** | Locked enemy IDs, stats stubs, skills, encounter groups, FOE ↔ group mapping |
 
@@ -45,7 +45,7 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling at launch). **ATK** 
 
 ## Enemy skill stubs
 
-Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` (launch): weighted random or cycle — implementation in game #12).
+Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` At launch: weighted random or cycle — implementation in game #12).
 
 | Skill ID | `descriptionEn` | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
 |----------|-----------------|------|---------|------|----|----------------|--------|---------------|---------|
@@ -111,7 +111,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 |-------|-------------------|------------|-------|
 | `s1_B1F` | Act 1: **off** (`rate 0`). Act 3: `grp_b1_chaff_hound` / `grp_b1_chaff_mite` @ **0.05** | **None** | FOE teaching starts B2F |
 | `s1_B2F` | `grp_b2_chaff` / `grp_b2_shackle_rat` / `grp_b2_venom_slime` @ **0.10** | **`foe_alley_stalker`** → `grp_alley_stalker_tutorial` | Patrol `(12,11)` loop; B3F blocked until tutorial flag |
-| `s1_B3F` | `grp_b3_mix_hounds` / `grp_b3_rubble_pair` / `grp_b3_control` @ **0.12** | **`foe_s1_warden`** → `grp_s1_warden` | Boss `(10,16)`; (launch) win condition |
+| `s1_B3F` | `grp_b3_mix_hounds` / `grp_b3_rubble_pair` / `grp_b3_control` @ **0.12** | **`foe_s1_warden`** → `grp_s1_warden` | Boss `(10,16)`; required-slice win condition |
 
 **FOE entity IDs** (map / save keys — not enemy definition IDs):
 

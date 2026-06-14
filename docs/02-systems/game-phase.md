@@ -2,7 +2,7 @@
 
 Macro runtime modes at launch. **Locked:** pure C# orchestration ([ADR 017](../../decisions/017-game-phase-controller.md)). Unity Visual Scripting state graphs are **not** used for phase authority at launch.
 
-## Design goals (launch)
+## Design goals at launch
 
 These goals drive the split between **macro phases** (this doc), **assemblies** ([class design](../05-class-design.md)), and **combat rounds** ([combat](combat.md)).
 
@@ -160,7 +160,7 @@ sequenceDiagram
 
 ## Who requests transitions
 
-| Trigger | Requested phase | Caller | Game repo (launch) |
+| Trigger | Requested phase | Caller | Game repo at launch |
 |---------|-----------------|--------|------------------|
 | **New game** (S1 Act 1) | Exploration | Bootstrap ? `s1_B1F` intro spawn ([campaign S1 intro](../03-content/campaign/s1-intro.md)) | Planned � dev boot uses `BeginAt(Hub)` |
 | Player leaves inn / enters stratum | Exploration | `HubController.LeaveHub` � S1: **B1F gate**; S2+: warp gate if `UnlockedWarpGateStrata` | `LeaveHub` ? `RequestTransition(Exploration)`; hub UI stub |
@@ -246,7 +246,7 @@ sequenceDiagram
         CC->>Protocol: TryUseProtocolSkill via SubmitPlayerAction
       else player core
         CC->>CC: Wait SubmitPlayerAction
-      else (launch) summon
+      else at launch summon
         CC->>CC: ResolveSummonTurn
       else enemy
         CC->>CC: Run AI
@@ -285,7 +285,7 @@ Target behaviour at launch. **Game repo status** (aligned with `griddungeon-game
 
 ### Hub `OnEnter`
 
-- Show hub UI (menu tree (launch))
+- Show hub UI (menu tree at launch)
 - `InputRouter` ? `UI` only (via `PhaseChanged`, not called from phase controller)
 - `SaveSystem` ready for inn save
 - **If `from == Exploration`** (return from labyrinth, ADR 008): `FoeSystem.ResetActiveExplorationFloors`; `SaveSystem.ClearExplorationState`
@@ -385,7 +385,7 @@ Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(Gam
 
 ## Dev bootstrap HUD (UI Toolkit)
 
-(launch) acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon ? Scenes ? Create Dev Bootstrap** in the game repo � run after clone).
+at launch acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon ? Scenes ? Create Dev Bootstrap** in the game repo � run after clone).
 
 | Piece | Location | Role |
 |-------|----------|------|
@@ -401,7 +401,7 @@ Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(Gam
 
 **Play-mode loop:** F1 Hub ? F2 Exploration ? F3 Combat ? F4 flee (? Exploration) ? F1 Hub.
 
-**Save / campaign QA:** Use **Save Editor** for `s1_*` flags and drift vs on-disk save; **B2F complete + inn save** sets `s1_first_foe_tutorial_complete` and writes the inn snapshot (B3F stairs). `GridDungeon ? Save ? Log (launch) save path` only logs the JSON path.
+**Save / campaign QA:** Use **Save Editor** for `s1_*` flags and drift vs on-disk save; **B2F complete + inn save** sets `s1_first_foe_tutorial_complete` and writes the inn snapshot (B3F stairs). `GridDungeon ? Save ? Log at launch save path` only logs the JSON path.
 
 **F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_medic` (AGI 9, **Skill** = ally heal `dev_field_patch`) + `dev_slime` (AGI 5) � for turn-order strip and ally-target keyboard QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue; **player command** turns highlight the acting core on the **party roster**, not the AGI strip ([combat.md](combat.md#turn-order-strip-agi-queue-ui)).
 

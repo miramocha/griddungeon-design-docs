@@ -30,7 +30,7 @@ Order at **end of combat round** (after last AGI turn):
 
 ```
 1. Regen / MP regen (buffs) — heal before DoT for readability
-2. Poison / Burn DoT — HP loss; **can reduce to 0** (launch): Poison only; Burn MVP2)
+2. Poison / Burn DoT — HP loss; **can reduce to 0** At launch: Poison only; Burn MVP2)
 3. Decrement durations on all buffs, debuffs, ailments
 4. Remove expired instances
 5. FOE patrol / mid-battle join (if enabled)
@@ -105,7 +105,7 @@ Death is a **state**, not a cleansable ailment. Guests/summons leave combat on K
 
 EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 
-### Party & enemy stats (launch)
+### Party & enemy stats at launch
 
 | ID | Name | Effect (example tuning) | Duration |
 |----|------|-------------------------|----------|
@@ -122,7 +122,7 @@ EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 
 **Stacking rule (same ID):** if target already has `offense_up`, reapply → **refresh duration**, do not add a second stack. Different IDs (Offense Up + Defense Up) **stack**.
 
-**Up + Down on same axis:** net to **neutral** (cancel) or stronger magnitude wins — **(launch): cancel to neutral** when opposite applied.
+**Up + Down on same axis:** net to **neutral** (cancel) or stronger magnitude wins — **At launch: cancel to neutral** when opposite applied.
 
 ### Elemental resistance mods (optional)
 
@@ -131,7 +131,7 @@ EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 | `fire_res_up` / `fire_res_down` | ±25% fire damage taken |
 | `ice_res_up`, `volt_res_up`, … | Per element |
 
-(launch) combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
+launch combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
 
 ---
 

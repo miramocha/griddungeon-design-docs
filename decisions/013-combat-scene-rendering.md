@@ -27,7 +27,7 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 
 `CombatEntryContext` carries `floorId`, `biome`, `encounterType` (random / FOE / boss), optional `foeId` → selects `BattleBackground` asset.
 
-## Rejected (for (launch))
+## Rejected (for launch)
 
 | Option | Why |
 |--------|-----|

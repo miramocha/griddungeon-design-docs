@@ -80,7 +80,7 @@ pack   = (x << 16) | (y & 0xFFFF)
 unpack = x from high 16, y from low 16; reject if bit 31 set
 ```
 
-Supports grid coordinates up to **65535** per axis (far beyond (launch) floor sizes).
+Supports grid coordinates up to **65535** per axis (far beyond launch floor sizes).
 
 ### Wall pack
 
@@ -98,7 +98,7 @@ pack   = tag | ((x & 0xFF) << 16) | ((y & 0xFF) << 8) | ((int)mask & 0xFF)
 unpack = require tag; x,y from bytes; mask from low byte
 ```
 
-**(launch) limit:** wall packs assume **x,y = 255** per floor (`FloorMapStateCodec.MaxWallPackExtent`; `IsGridPackable` / `LoadFloor` log error if exceeded). (launch) floors are 20�20 � safe. Visited-only packs still use 16-bit y for headroom.
+**Launch limit:** wall packs assume **x,y = 255** per floor (`FloorMapStateCodec.MaxWallPackExtent`; `IsGridPackable` / `LoadFloor` log error if exceeded). launch floors are 20�20 � safe. Visited-only packs still use 16-bit y for headroom.
 
 **Why the tag?** An earlier layout OR'd `mask << 24` into the same word as `x << 16`, which corrupted coordinates on unpack. Tag + fixed byte lanes avoids overlap.
 
@@ -154,6 +154,6 @@ Category: **Map** (see [Assets/Tests/README.md](https://github.com/miramocha/gri
 
 - [Mapping](mapping.md) � player-facing reveal rules and UI
 - [ADR 002 � Mapping model](../../decisions/002-mapping-model.md) � auto-reveal, no drawing
-- [ADR 014 � (launch) exploration map](../../decisions/014-mvp1-exploration-map.md) � bump, perimeter, persist
+- [ADR 014 � launch exploration map](../../decisions/014-mvp1-exploration-map.md) � bump, perimeter, persist
 - [05 � class design � Map data](../05-class-design.md#map-data-model) � type sketches
 - [04 � Tech notes � Map system](../04-tech-notes.md#map-system) � module overview

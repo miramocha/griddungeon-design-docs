@@ -1,6 +1,6 @@
 ﻿# ADR 035 — Skill use picker (modal + tabs)
 
-**Status:** Accepted (launch)  
+**Status:** Accepted (required slice)  
 **Date:** 2026-05-30  
 **Related:** [ADR 026](026-combat-menu-focus-navigation.md) (focus + Z/X), [ADR 034](034-skill-point-allocation-outside-combat.md) (skill **trees** — separate UI), [ADR 016](016-summon-control-mvp1.md) (summon kits)
 
@@ -10,7 +10,7 @@ Combat **Skill** today queues the first `AllocatedSkillId` only — no list or c
 
 **Skill trees** (spending skill points on class nodes) are a **different** screen — do not merge with this picker.
 
-## Decision (launch)
+## Decision
 
 ### 1. Swappable UI (presentation port)
 
@@ -41,11 +41,11 @@ Picker shows **horizontal tabs**. **Default selected tab: `All`** — lists ever
 
 **Switching tabs** filters the list; selection + confirm applies the highlighted skill. Disabled rows (MP, bind, context) stay visible on every tab with a short disabled reason.
 
-**Row chrome (launch), [#149](https://github.com/miramocha/griddungeon-game/issues/149)):** each row shows **display name** + **MP cost label** (`CostLabel`, catalog-formatted). **Mechanical description** (`descriptionEn` from content) appears in a **detail panel** for the **focused** row only — not as a subtitle on every row. Description text is **authored** on `SkillDefinition`; do not auto-build it from `SkillData` stats. Copy rules: [mvp1-class-skills](../docs/03-content/class-skills.md).
+**Row chrome at launch, [#149](https://github.com/miramocha/griddungeon-game/issues/149)):** each row shows **display name** + **MP cost label** (`CostLabel`, catalog-formatted). **Mechanical description** (`descriptionEn` from content) appears in a **detail panel** for the **focused** row only — not as a subtitle on every row. Description text is **authored** on `SkillDefinition`; do not auto-build it from `SkillData` stats. Copy rules: [class-skills](../docs/03-content/class-skills.md).
 
-**Tab navigation (launch) — keyboard):** while the picker is open, cycle visible tabs (wrap at ends):
+**Tab navigation at launch — keyboard):** while the picker is open, cycle visible tabs (wrap at ends):
 
-| Action | Keyboard (launch) | Notes |
+| Action | Keyboard at launch | Notes |
 |--------|-----------------|-------|
 | **Previous tab** | **`Q`** | Does not fire exploration **turn left** — picker owns input scope |
 | **Next tab** | **`E`** | Does not fire exploration **turn right** |
@@ -53,7 +53,7 @@ Picker shows **horizontal tabs**. **Default selected tab: `All`** — lists ever
 
 Row list within the active tab still uses **arrows / `W`/`A`/`S`/`D`** + **`Z`** confirm / **`X`** cancel ([ADR 026](026-combat-menu-focus-navigation.md)). **`InputRouter`** (or picker host) enables **`SkillPickerTabPrev` / `SkillPickerTabNext`** only while `ISkillUsePickerView.IsOpen`; bind **`Q`/`E`** on Combat (and Field UI scope later).
 
-**Deferred (not (launch)):** gamepad tab cycle — **`L1`** / **`R1`** when [ADR 009](009-input-bindings-pc.md) gamepad support ships; reserve action names in the action map, no implementation required for picker (launch).
+**Deferred (later):** gamepad tab cycle — **`L1`** / **`R1`** when [ADR 009](009-input-bindings-pc.md) gamepad support ships; reserve action names in the action map, no implementation required for picker at launch.
 
 **Grouping authority:** `SkillPickerCatalog` in Core returns `SkillPickerPresentationModel` with `Tabs[]` each holding `Rows[]`. UI only renders tabs and rows — no duplicate filter logic in UITK.
 
@@ -89,8 +89,8 @@ While picker open: command-bar confirm blocked (same class of gate as targeting 
 ## Consequences
 
 - **Game:** `ISkillUsePickerView`, coordinator, UITK modal with tab strip + list + detail panel; combat host replaces `ResolvePrimarySkillId` shortcut
-- **Content:** `SkillDefinition.useContexts` (Combat / Field flags); `skillType` already on SO — drives non-All tabs; `descriptionEn` on all (launch) skills ([mvp1-class-skills](../docs/03-content/class-skills.md))
-- **Docs:** [mvp1-class-skills](../docs/03-content/class-skills.md) Type column = tab mapping; pause menu label **Skill trees** (ADR 034) vs **Use skill** for field picker
+- **Content:** `SkillDefinition.useContexts` (Combat / Field flags); `skillType` already on SO — drives non-All tabs; `descriptionEn` on all at launch skills ([class-skills](../docs/03-content/class-skills.md))
+- **Docs:** [class-skills](../docs/03-content/class-skills.md) Type column = tab mapping; pause menu label **Skill trees** (ADR 034) vs **Use skill** for field picker
 - **Input:** `SkillPickerTabPrev` / `SkillPickerTabNext` on Combat (+ Field scope); **`Q`/`E`** only at launch — see [input bindings § Skill use picker](../docs/02-systems/input-bindings.md#skill-use-picker-modal). Gamepad **`L1`/`R1`** deferred.
 - **Tests:** Core `SkillPickerCatalogTests` (All vs Physical tab counts, empty tab omission); Runtime coordinator + `NullSkillUsePicker`; UI tab wrap with Q/E (no gamepad tests at launch)
 

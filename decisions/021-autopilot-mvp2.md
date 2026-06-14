@@ -9,7 +9,7 @@
 
 Etrian Odyssey **auto-walk** follows **player-drawn paths** on the map. Grid Dungeon has **auto-reveal, read-only map** — no drawing ([ADR 002](002-mapping-model.md)). Players still need to **skip manual stepping** when crossing areas they already explored (hub return, gather routes, backtracking).
 
-(launch): **manual** grid steps + hold-to-repeat only ([ADR 001](001-grid-movement.md)).
+At launch: **manual** grid steps + hold-to-repeat only ([ADR 001](001-grid-movement.md)).
 
 ## Decision
 
@@ -28,7 +28,7 @@ Etrian Odyssey **auto-walk** follows **player-drawn paths** on the map. Grid Dun
 | EO-style drawn paths | Conflicts with ADR 002 |
 | Teleport to revealed cell | Removes FOE/encounter tension on the route |
 | Route through unrevealed cells | Not “explored before”; breaks map-as-knowledge |
-| (launch) autopilot | Scope creep; tutorial needs deliberate movement |
+| Launch autopilot | Scope creep; tutorial needs deliberate movement |
 | Blind forward march toggle | Does not solve backtracking; goal is pathfind to known tiles |
 
 ## Consequences
@@ -42,5 +42,5 @@ Etrian Odyssey **auto-walk** follows **player-drawn paths** on the map. Grid Dun
 - [Autopilot (optional)](../docs/02-systems/autopilot.md)
 - [ADR 001 — Grid movement](001-grid-movement.md)
 - [ADR 002 — Mapping model](002-mapping-model.md)
-- [ADR 014 — (launch) exploration map](014-mvp1-exploration-map.md)
+- [ADR 014 — launch exploration map](014-mvp1-exploration-map.md)
 - [Release scope](../docs/00-release-scope.md)

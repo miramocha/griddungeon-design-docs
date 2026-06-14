@@ -14,14 +14,14 @@ The EO-style loop uses **strata** as the main campaign vertical slice ([dungeons
 3. **Save / map keys** � composite key `{locationId}_{floorId}` (e.g. `sd01_F1`), distinct from stratum keys (`s1_B1F`). `ExplorationStateSave` records `ExplorationMapKind` + `locationId` + `floorId`.
 4. **Exit target** � in-dungeon `stairsUp` / exit features return to **Hub only** (no `PreviousStratumDeepest`).
 5. **Unlock** � quest / story flag / milestone; **not** `HubSaveData.UnlockedWarpGateStrata` (stratum warp gates only).
-6. **Authoring** � reuse floor tile/FOE/encounter data shape from `ExplorationFloor`; optional may add `ExplorationMapKind` or `SideDungeonDefinition` in `ContentDatabase` without changing (launch) locked IDs.
+6. **Authoring** � reuse floor tile/FOE/encounter data shape from `ExplorationFloor`; optional may add `ExplorationMapKind` or `SideDungeonDefinition` in `ContentDatabase` without changing at launch locked IDs.
 7. **FOE / map persistence** � same as labyrinth: map reveal persists; FOEs respawn on hub return + re-entry ([ADR 008](008-campaign-defaults.md)).
 
 ## Consequences
 
 - [Side dungeons](../docs/02-systems/side-dungeons.md) is the rules authority.
 - [Hub & services](../docs/02-systems/hub-and-services.md), [game phase](../docs/02-systems/game-phase.md), [01 � Core loop](../docs/01-core-loop.md) gain optional cross-links.
-- [05 � class design](../docs/05-class-design.md) appendix sketches API/save only � (launch) implementation unchanged.
+- [05 � class design](../docs/05-class-design.md) appendix sketches API/save only � Launch implementation unchanged.
 - `griddungeon-game`: implement in optional milestone after MVP2 material loop.
 
 ## Related

@@ -2,11 +2,11 @@
 
 **System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed) · **Graph authoring (follow-up):** [030](../../decisions/030-story-event-graph-authoring.md) · **Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87)
 
-Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-game` → `Assets/Content/StoryEvents/<storyEventId>.asset` (regen menu: **GridDungeon → Content → Ensure (launch) S1 Story Events**). Edit drafts here first, then menu/assets. Later: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
+Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-game` → `Assets/Content/StoryEvents/<storyEventId>.asset` (regen menu: **GridDungeon → Content → Ensure MVP1 S1 Story Events**). Edit drafts here first, then menu/assets. Later: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
 
-**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — player is the Navigator (**first person** on `navigator:guild_handler` steps); **`npc:*` may speak to the Navigator** when a beat needs it; **no `core:` speakers**. **Act 1 solo**, then **sideline** with crew after hub recruit; *Amnesia*-style **blank state**; no Synchro / Protocol until unlock beat. **(launch) table below:** Navigator-only drafts until NPC lines are authored.
+**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — player is the Navigator (**first person** on `navigator:guild_handler` steps); **`npc:*` may speak to the Navigator** when a beat needs it; **no `core:` speakers**. **Act 1 solo**, then **sideline** with crew after hub recruit; *Amnesia*-style **blank state**; no Synchro / Protocol until unlock beat. **Launch table below:** Navigator-only drafts until NPC lines are authored.
 
-## Stratum 1 (launch)
+## Stratum 1 at launch
 
 | storyEventId | once | Prerequisite | Trigger | Copy |
 |--------------|------|--------------|---------|------|

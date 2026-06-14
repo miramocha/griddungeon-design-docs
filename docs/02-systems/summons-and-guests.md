@@ -28,17 +28,17 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 | Property | Rule |
 |----------|------|
-| **Source** | **Summoner class** deploy skills (launch)+); later **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
+| **Source** | **Summoner class** deploy skills later); later **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
-| **Commands (launch)** | **Player-controlled** — Attack / Guard + summon `skillIds`; queued in **command planning** with cores, then executed on AGI slot ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Commands** | **Player-controlled** — Attack / Guard + summon `skillIds`; queued in **command planning** with cores, then executed on AGI slot ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Commands (later)** | Optional **stance hybrid** (AI picks from kit) |
 | **AGI** | Summon has own AGI; enters turn queue; **waits for player** like core |
 | **XP** | No XP to summons |
 | **Death** | Disappears; no hospital revive |
 | **Between fights** | Does not persist unless skill says otherwise (buff before next fight — rare) |
 
-**Stacking:** One summon per aux slot. **`deploy_scout_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/class-skills.md#locked-implementation-rules)).
+**Stacking:** One summon per aux slot. **`deploy_scout_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([class-skills](../03-content/class-skills.md#locked-implementation-rules)).
 
 ### Navigator sortie (Protocol Deploy — later)
 
@@ -55,7 +55,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 Does **not** violate “Navigator fills aux slot” — the **summon** occupies the slot; Navigator identity stays in the off-formation strip ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 
-### (launch) summon kit (`scout_drone`)
+### Launch summon kit (`scout_drone`)
 
 Player picks the drone’s command during **command planning** (after cores, before “Party commands locked — executing AGI queue”). Same round as first deploy: drone is **not** in planning until the **next** round. Data on `SummonDefinition`:
 
@@ -71,7 +71,7 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 |---------|------|
 | **Attack** | Standard melee/ranged attack action |
 | **Guard** | Self guard |
-| **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([mvp1-class-skills](../03-content/class-skills.md#summon-kit-scout_drone)) |
+| **`volt_burst`** | `SkillDefinition` — Elemental, SingleEnemy ([class-skills](../03-content/class-skills.md#summon-kit-scout_drone)) |
 
 **UI during planning:** aux portrait in party roster (front/back slot); highlight when `CommandTarget`; command panel Attack / Guard / Skill (summon kit). **UI during AGI:** strip highlight on acting aux; command panel **disabled** — playback only.
 
@@ -108,7 +108,7 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 | Phase | Scope |
 |-------|--------|
 | **Launch** | Aux slots + one test summon — **player-controlled** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
-| **(launch)+** | One scripted **guest** on a quest fight |
+| **later** | One scripted **guest** on a quest fight |
 | **Later** | Multiple summon skills, enemy summons, guest roster |
 
 ## Related docs
@@ -116,5 +116,5 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 004 — Auxiliary slots](../../decisions/004-auxiliary-slots.md)
-- [ADR 016 — Summon control (launch)](../../decisions/016-summon-control-mvp1.md)
+- [ADR 016 — Summon control](../../decisions/016-summon-control-mvp1.md)
 - [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)

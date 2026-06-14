@@ -102,7 +102,7 @@ Exploration steps do **not** charge Synchro.
 | **Aux** | Do not participate at launch |
 | **Skill list** | Navigator kit + guild-unlocked common Protocols |
 
-### Timing — core turn action (launch)
+### Timing — core turn action at launch
 
 When **Synchro Charge** is **100%**, a **core member** on their AGI turn may use **Protocol** (`CombatCommand.Protocol`) instead of attack/guard/skill/item:
 
@@ -169,9 +169,9 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 
 **Implementation (game — open):**
 
-- [ ] S1 gate (launch): crisis AOE → VN unlock → Protocol-only HUD → `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#87](https://github.com/miramocha/griddungeon-game/issues/87), [#35](https://github.com/miramocha/griddungeon-game/issues/35); coach UI [#88](https://github.com/miramocha/griddungeon-game/issues/88) later — [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
+- [ ] S1 gate At launch: crisis AOE → VN unlock → Protocol-only HUD → `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#87](https://github.com/miramocha/griddungeon-game/issues/87), [#35](https://github.com/miramocha/griddungeon-game/issues/35); coach UI [#88](https://github.com/miramocha/griddungeon-game/issues/88) later — [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
 
-## Not in scope (launch)
+## Not in scope at launch
 
 - Per-character Synchro gauges
 - Aux in Protocol skills

@@ -1,11 +1,11 @@
 ﻿# ADR 017 — Game Phase Controller (C#)
 
-**Status:** Accepted (launch)  
+**Status:** Accepted (required slice)  
 **Date:** 2026-05-21
 
 ## Context
 
-(launch) alternates between **hub**, **exploration**, and **combat** ([release scope](../docs/00-release-scope.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
+Launch flow alternates between **hub**, **exploration**, and **combat** ([release scope](../docs/00-release-scope.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
 
 Requirements:
 
@@ -14,7 +14,7 @@ Requirements:
 - **Clear Enter/Exit** hooks for input maps, scene visibility, and event subscriptions
 - **Single responsibility** — phase orchestration separate from combat round logic
 
-## Decision (launch)
+## Decision
 
 1. **Macro game flow is pure C#** — `GamePhaseController` + three `IPhaseController` implementations. **No UVS state graph** as source of truth at launch.
 2. **`GamePhase` enum** lives in `GridDungeon.Core`: `Hub`, `Exploration`, `Combat`.
@@ -74,5 +74,5 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 - [UVS — phase & presentation hooks](../docs/02-systems/uvs-phase-presentation.md)
 - [05 — class design](../docs/05-class-design.md)
 - [04 — Tech notes](../docs/04-tech-notes.md)
-- [(launch) spec](../docs/00-release-scope.md)
+- [release scope](../docs/00-release-scope.md)
 - [Combat](../docs/02-systems/combat.md) — combat round vs game phase terminology

@@ -83,7 +83,7 @@ While a **blocking** combat hint is active:
 
 **Unlock rule:** completing (or fully paging through) an in-world tutorial adds `tutorialEntryId` to save (`unlockedCodexTutorialIds` or equivalent). Codex does **not** re-run `set_campaign_flag` / `start_guided_protocol`.
 
-**Story events vs codex:** Navigator **story** scenes ([ADR 028](028-story-visual-novel-events.md)) may optionally add a codex entry later — **not required at launch S1 unlock/outro**. (launch) codex content = **guided tutorial entries** from [s1-guided-tutorials](../docs/03-content/campaign/s1-guided-tutorials.md).
+**Story events vs codex:** Navigator **story** scenes ([ADR 028](028-story-visual-novel-events.md)) may optionally add a codex entry later — **not required at launch S1 unlock/outro**. launch codex content = **guided tutorial entries** from [s1-guided-tutorials](../docs/03-content/campaign/s1-guided-tutorials.md).
 
 **Hub Act 2:** guild / Enter Stratum coach hints **cut at launch** unless playtest fails ([stakeholder](#stakeholder-decisions-2026-05-23)).
 
@@ -92,7 +92,7 @@ While a **blocking** combat hint is active:
 | Field | Notes |
 |-------|-------|
 | `tutorialEntryId` | Stable id (may equal `hintId`); codex row key |
-| `pages[]` | Ordered `{ textKey, imageId? }` per page — **`videoId` reserved**; (launch) **stills only** |
+| `pages[]` | Ordered `{ textKey, imageId? }` per page — **`videoId` reserved**; **stills only** at launch |
 | `mode` | `exploration` \| `combat` \| `hub` \| `codex_only` (later) |
 | `codexCategory` | e.g. `basics`, `combat`, `synchro` — for menu grouping |
 
@@ -130,7 +130,7 @@ Content authority: [s1-guided-tutorials.md](../docs/03-content/campaign/s1-guide
 
 **Once-seen (in-world):** on complete, add `tutorialEntryId` to codex unlock list **and** set campaign flags when the beat gates progression (`s1_intro_movement_complete`, etc.). Do not rely on codex alone for gating.
 
-### 10. Highlight target ids (launch) — combat coach)
+### 10. Highlight target ids at launch — combat coach)
 
 Stable string ids consumed by `GuidedTutorialView` — see [guided-tutorial § highlights](../docs/02-systems/guided-tutorial.md#highlight-targets-mvp1).
 
@@ -150,7 +150,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **(launch) — S1 teach (shipped path)** | Story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` Protocol-only gate ([#35](https://github.com/miramocha/griddungeon-game/issues/35)); campaign rules unchanged |
+| **Launch — S1 teach (shipped path)** | Story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` Protocol-only gate ([#35](https://github.com/miramocha/griddungeon-game/issues/35)); campaign rules unchanged |
 | **Later — S1 Act 1** | Paginated tutorial entries per [s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f); unlock codex rows on complete ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | **Later — S1 B2F** | `s1_combat_guided_protocol` coach after `s1_synchro_protocol_unlock` (in addition to HUD gate) |
 | **Later — Codex UI** | Read-only replay — **Pause menu** row (`Esc`; exploration, combat, hub) |
@@ -190,7 +190,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 |-------|----------|
 | Act 1 presentation | **Paginated screen block** — text + **still** per page (no video at launch) |
 | Codex placement | **Pause menu** — `Esc` from exploration, combat, or hub ([input bindings](../docs/02-systems/input-bindings.md)) |
-| (launch) media | **Stills only** — schema may reserve `videoId` for later |
+| launch media | **Stills only** — schema may reserve `videoId` for later |
 | Act 1 G + C | **One** entry `s1_explore_route_features` (signage + gather); not separate codex rows |
 | Shared panel UXML | **Undecided** — implement `GuidedTutorialView` first ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); revisit sharing with `StoryEventView` ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) |
 | Act 1 input | **Blocking** while block is open (flip pages, then dismiss) |
@@ -198,7 +198,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | Codex | Unlock on complete / full read; **no** re-apply of combat gates or flags on replay |
 | Hub Act 2 hints | **Cut at launch** unless playtest fails |
 | Combat Protocol coach | **Blocking** + command gate; may use same page block for copy + HUD pulse |
-| **(launch) full coach + codex** | **Deferred** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); (launch) relies on VN + `CombatTutorialHudRules` only ([release scope § Later](../docs/00-release-scope.md#later)) |
+| **Launch full coach + codex** | **Deferred** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); launch relies on VN + `CombatTutorialHudRules` only ([release scope § Later](../docs/00-release-scope.md#later)) |
 | Progression storage | **Campaign flags** for gates + **codex unlock list** for replay index |
 | Story vs guided | **S1 unlock/outro** remain **story events** ([ADR 028](028-story-visual-novel-events.md)); Act 1 movement + Protocol coach = **guided** |
 

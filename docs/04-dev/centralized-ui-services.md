@@ -107,7 +107,7 @@ flowchart LR
 
 ---
 
-## `sortingOrder` stack (launch)
+## `sortingOrder` stack at launch
 
 Lower draws first. Values are **convention** — keep new panels in the gaps or extend upward.
 
@@ -733,7 +733,7 @@ public interface ICentralizedUiSurface
 
 Drivers are **internal** to `GridDungeon.Runtime.UI`; facades and presenters expose only `ICentralizedUiSurface` vocabulary.
 
-### Service migration status (launch)
+### Service migration status at launch
 
 Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/issues/207)–[#217](https://github.com/miramocha/griddungeon-game/issues/217) implementation. Open tracker: [game#206](https://github.com/miramocha/griddungeon-game/issues/206).
 

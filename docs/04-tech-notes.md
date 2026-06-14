@@ -15,7 +15,7 @@
 | Input | Input System � `Exploration`, `Combat`, `Map`, `UI` action maps; rebindable player prefs when settings ship |
 | Runtime animation | **DOTween** (Demigiant) � exploration step lerp, UI, camera punch, Fixed-skill VFX timing |
 | Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
-| Save | `JsonUtility` or custom serializer (launch); ScriptableObjects for content DB |
+| Save | `JsonUtility` or custom serializer at launch; ScriptableObjects for content DB |
 
 Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`).
 
@@ -57,7 +57,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 
 ### UI reactivity
 
-**Hub, exploration, and combat** HUDs share the same (launch) bar: when game state changes, the UI **animates or pulses** so cause ? effect is obvious. Static swaps alone are not enough.
+**Hub, exploration, and combat** HUDs share the same launch bar: when game state changes, the UI **animates or pulses** so cause ? effect is obvious. Static swaps alone are not enough.
 
 | Principle | Rule |
 |-----------|------|
@@ -68,7 +68,7 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 | **Duration** | Typical UI feedback **0.1�0.4s**; Synchro meter fill and HP drops may use **0.2�0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
 | **Cleanup** | `Kill` / complete tweens on `OnDisable`, phase exit, and combat end (see [Animation](#animation-dotween--timeline) above). |
 
-**(launch) checklists by phase:**
+**launch checklists by phase:**
 
 | Phase | Doc |
 |-------|-----|
@@ -171,7 +171,7 @@ Sprite checklist, composite wall rules (edge segments � no 16 autotiles), door
 - `OnFoeFleeSuccess()` ? set party exploration pos to retreat cell
 - **Optional later:** `TickCombatRound()` + `TryJoinOneFoe()` ([ADR 005](../decisions/005-foe-combat-patrol.md), [ADR 010](../decisions/010-chain-foe-battle.md)); flag-gated
 
-(launch): step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
+At launch: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
 
 ## Combat
 
@@ -187,7 +187,7 @@ Sprite checklist, composite wall rules (edge segments � no 16 autotiles), door
 - `PartyRuntime.ActiveNavigatorId`; `UnlockedNavigatorIds` (flags from strata/quests/events)
 - `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
 - Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
-- **Explore:** bottom-right **3D presence** in exploration + combat; Protocol Deploy/Transform transition model into aux / core slot rigs � [navigator � Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence) (launch) still portrait strip)
+- **Explore:** bottom-right **3D presence** in exploration + combat; Protocol Deploy/Transform transition model into aux / core slot rigs � [navigator � Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence) at launch still portrait strip)
 
 ## Synchro Protocol (team bar)
 
@@ -248,7 +248,7 @@ command-rail | center column (log-preview ? enemy ? arena-spacer ? synchro) + Pa
 - `Fixed` � VFX at slots; optional subtle zoom to primary target, then reset
 - `Cinematic` / `CinematicQTE` � `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
 - `CinematicQTE` � `QTEController` tiers ? damage bonus; skill always resolves base on miss/skip
-- (launch): all skills `Fixed`; cinematic + QTE stubbed
+- At launch: all skills `Fixed`; cinematic + QTE stubbed
 - MVP2: 1� `CinematicQTE` party skill + 1� boss `Cinematic` sample
 
 ## Grid / content
@@ -311,7 +311,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions � [navigator � Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence); optional Tier 2 under [ADR 037](../decisions/037-layered-uitk-panels.md)
 - [ ] **Layered UITK panels:** exploration + combat HUD split into panel components � [ADR 037](../decisions/037-layered-uitk-panels.md) (draft epic)
 - [ ] Default `stepsPerMove` per stratum (tune 2�5 in data)
-- [ ] **Floor level painter** ? `ExplorationFloor` export � [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; (launch) floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
+- [ ] **Floor level painter** ? `ExplorationFloor` export � [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; launch floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)
 
 ## Related docs

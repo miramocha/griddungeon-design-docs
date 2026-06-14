@@ -6,7 +6,7 @@
 
 ## Context
 
-(launch) combat shipped **direct** keyboard binds (`Z` = Attack, `X` = Guard, …) and **mouse** targeting ([#60](https://github.com/miramocha/griddungeon-game/issues/60)). That works on PC but does not scale to gamepad/console-style **focus + confirm** flows.
+launch combat shipped **direct** keyboard binds (`Z` = Attack, `X` = Guard, …) and **mouse** targeting ([#60](https://github.com/miramocha/griddungeon-game/issues/60)). That works on PC but does not scale to gamepad/console-style **focus + confirm** flows.
 
 Product direction: **cursor navigation** on the command bar (and target list during targeting), **`Z` confirm**, **`X` cancel/Back**, **`Esc` pause** (when pause UI exists). Mouse clicks stay **one-shot** (no extra confirm). Combat is an **instance** of the project-wide [Universal PC UI vocabulary](../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary) ([ADR 009 amendment](009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary)). Hub service UI is **out of scope** until [#36](https://github.com/miramocha/griddungeon-game/issues/36) ships; if hub lands at launch, use the same pattern in a follow-up doc amendment.
 
@@ -60,7 +60,7 @@ After **Attack** or single-target **Skill** requires a target:
 
 ### Summon / per-slot player turns
 
-Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player control ([ADR 016](016-summon-control-mvp1.md)). **Skill use picker** ([ADR 035](035-skill-use-picker.md)): row list uses this navigator; **tab cycle** uses **`Q`/`E`** (launch); gamepad **`L1`/`R1`** deferred. Item sub-menu deferred.
+Same **focus + `Z` / `X`** pattern for summon and any legacy per-slot player control ([ADR 016](016-summon-control-mvp1.md)). **Skill use picker** ([ADR 035](035-skill-use-picker.md)): row list uses this navigator; **tab cycle** uses **`Q`/`E`** at launch; gamepad **`L1`/`R1`** deferred. Item sub-menu deferred.
 
 ### Implementation notes
 
@@ -104,5 +104,5 @@ Hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), 
 - [Input bindings — Combat](../docs/02-systems/input-bindings.md#combat)
 - [Combat — Command planning](../docs/02-systems/combat.md#command-planning--back)
 - [ADR 009 — PC input](009-input-bindings-pc.md) (exploration unchanged)
-- [ADR 015 — (launch) combat](015-mvp1-combat.md)
+- [ADR 015 — launch combat](015-mvp1-combat.md)
 - Implementation: [game #67](https://github.com/miramocha/griddungeon-game/issues/67) (epic — HUD hint labels, summon control deferred), [#68](https://github.com/miramocha/griddungeon-game/issues/68) (navigator), [#69](https://github.com/miramocha/griddungeon-game/issues/69) (command bar), [#70](https://github.com/miramocha/griddungeon-game/issues/70) (targeting Path B), [#80](https://github.com/miramocha/griddungeon-game/issues/80) (WASD on `MenuNavigate`)

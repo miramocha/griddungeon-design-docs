@@ -10,7 +10,7 @@
 
 ## Context
 
-(launch) `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#floors--stratum)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
+at launch `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#floors--stratum)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
 
 **Problems:**
 
@@ -52,7 +52,7 @@ FloorExitLink[] exitLinks;   // 0..N per floor; authoritative routing
 
 **Rule:** **No gating fields** on `FloorExitLink`. Visibility, tutorial blocks, and quest locks stay in campaign policy ([ADR 025](025-campaign-exploration-target.md)), floor-event rules ([ADR 031](031-floor-event-pin-condition-graph.md)), or walkability / blocker tiles — not on the link row.
 
-**(launch) parity:** S1 B1F/B2F/B3F compile to the same behaviour as today — typically one `Down` and one or more `Up` links per floor — but data is **`exitLinks[]`** ([#250](https://github.com/miramocha/griddungeon-game/issues/250)).
+**Launch parity:** S1 B1F/B2F/B3F compile to the same behaviour as today — typically one `Down` and one or more `Up` links per floor — but data is **`exitLinks[]`** ([#250](https://github.com/miramocha/griddungeon-game/issues/250)).
 
 ### 2. Runtime resolution (Core + Runtime)
 
@@ -92,7 +92,7 @@ flowchart TB
 
 **Rule:** **No graph interpreter in player builds.** Compiled `exitLinks[]` on `Assets/Content/Floors/` (and side-dungeon assets) is the runtime authority — same pattern as [ADR 031](031-floor-event-pin-condition-graph.md) floor-event compile and [ADR 030](030-story-event-graph-authoring.md) story steps.
 
-**(launch) path:** hand migration + floor painter multi-marker export ([#250](https://github.com/miramocha/griddungeon-game/issues/250), [#252](https://github.com/miramocha/griddungeon-game/issues/252)) **without** requiring the graph UI. Graph editor ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) follows once the link schema is stable.
+**launch path:** hand migration + floor painter multi-marker export ([#250](https://github.com/miramocha/griddungeon-game/issues/250), [#252](https://github.com/miramocha/griddungeon-game/issues/252)) **without** requiring the graph UI. Graph editor ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) follows once the link schema is stable.
 
 ### 4. Floor painter integration
 

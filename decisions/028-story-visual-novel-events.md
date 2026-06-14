@@ -49,7 +49,7 @@ While a story event runs:
 
 ### 3. Step model (content schema)
 
-Minimum step kinds for **(launch) + S1 tutorial**:
+Minimum step kinds for **Launch + S1 tutorial**:
 
 | Step kind | Purpose |
 |-----------|---------|
@@ -105,7 +105,7 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 
 | Milestone | UI | Notes |
 |-----------|-----|--------|
-| **(launch) (S1 unlock)** | **Click-through block** — full-screen panel, text, click or **Z** to advance/dismiss each step | No portraits required yet; same `StoryEventRunner` step pipeline |
+| **Launch (S1 unlock)** | **Click-through block** — full-screen panel, text, click or **Z** to advance/dismiss each step | No portraits required yet; same `StoryEventRunner` step pipeline |
 | **Next** | Full VN layout (`StoryEvent.uxml`): portraits, name plate, line advance | Portrait **emotion** swaps supported in schema; **low art priority** |
 | **Later** | Skip, auto-advance, back — **VN controls deferred** | No skip on tutorial at launch |
 
@@ -145,8 +145,8 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 | Milestone | Deliverable |
 |-----------|-------------|
 | **Launch** | Runner + click-through view; **`s1_b1f_gate_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
-| **(launch) schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
-| **(launch) content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
+| **Launch schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
+| **Launch content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
 | **Deferred** | Authoring format (YAML vs SO); hub/explore content beyond S1 |
 | **Later** | Full VN portraits; Act 1 beats; skip/auto; exploration tile events; hub Navigator unlock scenes |
 
@@ -182,7 +182,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 |-------|----------|
 | Phase B trigger | **2 core turns** OR **FOE at HP floor** — first wins |
 | Scene timing | After triggering action UI beat completes |
-| (launch) UI | Click-through full-screen block (text + dismiss); full VN chrome later |
+| Launch UI | Click-through full-screen block (text + dismiss); full VN chrome later |
 | Skip | None at launch; controls later |
 | Combat backdrop | Arena visible; UI retract **TBD** |
 | Speakers (S1) | Navigator only; no core dialogue (custom party) |
@@ -203,7 +203,7 @@ Resolve UI retract before **Accepted** (implementation may proceed on [#87](http
 
 ## Related
 
-- [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md) — follow-up; graph UI compiles to step list; does not block (launch)
+- [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md) — follow-up; graph UI compiles to step list; does not block launch
 - [ADR 029 — Guided tutorial (HUD coaching)](029-guided-tutorial.md) — orthogonal; `start_guided_protocol` handoff
 - [Story events (system doc)](../docs/02-systems/story-events.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)

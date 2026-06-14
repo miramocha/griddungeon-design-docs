@@ -23,7 +23,7 @@ Need a party-wide burst/coordination mechanic distinct from per-character MP ski
 | Option | Why |
 |--------|-----|
 | Six personal burst gauges | Higher UI/UX cost; user asked for team bar |
-| Burst only at round start (EO-style) | (launch) uses mid-queue on a core turn when bar is full |
+| Burst only at round start (EO-style) | Launch uses mid-queue on a core turn when bar is full |
 | Exploration charging | Keeps tension inside fights |
 
 ## Consequences

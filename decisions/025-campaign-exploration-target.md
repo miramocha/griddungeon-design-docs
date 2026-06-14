@@ -6,7 +6,7 @@
 
 ## Context
 
-(launch) exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
+at launch exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
 
 Macro flow already anticipates **different hub → exploration rules per stratum**:
 
@@ -21,7 +21,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 
 ### 1. Neutral spawn DTO (Core)
 
-| Today (launch) | Target |
+| Today at launch | Target |
 |--------------|--------|
 | `S1ExplorationTarget` | Rename or alias to **`ExplorationTarget`** in `GridDungeon.Core` — same fields, no S1-specific members. |
 
@@ -46,13 +46,13 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 - `CanAscendToHub` (surface exit — S1 gate only today)
 - Walkability / encounter-rate overrides (today: `S1ExplorationWalkability` + resolver helpers)
 
-(launch) may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
+at launch may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
 
 ### 4. Optional interface (defer)
 
-Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed registry) **only when** two or more policies exist and tests need swapping — YAGNI for S1-only (launch).
+Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed registry) **only when** two or more policies exist and tests need swapping — YAGNI for S1-only at launch.
 
-## (launch) (unchanged)
+## at launch (unchanged)
 
 - Keep **`S1ExplorationTarget`** + **`S1CampaignResolver`** names unless a rename ticket is explicitly scoped.
 - No new abstraction layer required for Stratum 1 vertical slice ([#15](https://github.com/miramocha/griddungeon-game/issues/15)).
@@ -74,7 +74,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 ## Related
 
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
-- [ADR 014 — (launch) exploration & map](014-mvp1-exploration-map.md)
+- [ADR 014 — launch exploration & map](014-mvp1-exploration-map.md)
 - [ADR 022 — Side dungeons MVP3](022-side-dungeons-mvp3.md)
 - [ADR 040 — Floor exit topology graph](040-floor-exit-topology-graph.md)
 - [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md)

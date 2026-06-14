@@ -1,6 +1,6 @@
 # Narrative POV — Navigator, blank state
 
-**Status:** Locked (launch) S1)  
+**Status:** Locked (S1 launch)  
 **Applies to:** [story events](story-events.md), [guided tutorial](guided-tutorial.md), hub copy, future Navigator unlock scenes  
 **Reference tone:** *Amnesia*-style blank state — the player **is** the active Navigator; they **do not** know their role, past, or full toolkit at new game.
 
@@ -36,7 +36,7 @@ At **new game** the Navigator:
 
 **Avoid in early scenes:** “As your Sortie Lead…”, “I always give +5% Synchro…”, “Remember your Protocol kit”, lore that assumes prior campaigns.
 
-**Reveal pacing (S1 (launch)):**
+**Reveal pacing (S1 launch):**
 
 | Beat | Navigator knows (fiction) | Systems unlocked |
 |------|---------------------------|------------------|
@@ -65,7 +65,7 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 
 ### Story VN speakers
 
-| Speaker | (launch) S1 | Notes |
+| Speaker | S1 launch | Notes |
 |---------|---------|--------|
 | **`navigator:guild_handler`** | **Yes** — default voice for player | First person; blank-state safe |
 | **`npc:*`** | **When the beat needs it** | Guild clerk, topside handler, etc. — stable ids, not `core:<characterId>` |
@@ -87,7 +87,7 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 2. Check row against **Reveal pacing** table above.
 3. Import to game `Assets/Content/StoryEvents/` when implementation syncs ([#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
-Game copy should match design drafts; re-running **Ensure (launch) S1 Story Events** overwrites hand edits — prefer updating drafts first, then menu/assets.
+Game copy should match design drafts; re-running **Ensure MVP1 S1 Story Events** overwrites hand edits — prefer updating drafts first, then menu/assets.
 
 ---
 

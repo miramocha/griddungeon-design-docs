@@ -54,7 +54,7 @@ Shop/hospital/identify copy uses the **display label** via `Mvp1HubConstants.Cur
 
 ---
 
-## Bag model (launch)
+## Bag model
 
 - **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); tune in data, not code forks.
 - Each slot holds **at most one** of:
@@ -105,7 +105,7 @@ sealed class EquipmentLoadout
 }
 ```
 
-**(launch) equip reference model:**
+**Launch equip reference model:**
 
 | Source | On loadout |
 |--------|----------------|
@@ -127,9 +127,9 @@ Stat and resist bonuses: full table in [character progression § launch equipmen
 | **Identified** | `EquipmentDefinition.displayName` | Buy/sell as normal |
 | **Unidentified** | `???` (optional slot hint: Weapon / Head / … from `EquipSlot` only) | **Identify** service — Credits sink; sets `IsIdentified = true` |
 
-**(launch) content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#launch-equipment-locked)). Shop purchases are **identified** on buy.
+**Launch content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#launch-equipment-locked)). Shop purchases are **identified** on buy.
 
-**Codex / analyze skills:** later; (launch) identify at shop only.
+**Codex / analyze skills:** later; Identify at launch at shop only.
 
 ---
 
@@ -137,13 +137,13 @@ Stat and resist bonuses: full table in [character progression § launch equipmen
 
 Locked `itemId` strings — [05 § content IDs](../05-class-design.md#content-ids-locked):
 
-| `itemId` | (launch) use context |
+| `itemId` | Launch use context |
 |----------|------------------|
 | `patch_kit` | Combat + field — `HealHp` |
 | `stim_draft` | Combat + field — `HealMp` |
 | `trauma_kit` | Combat + field — full HP (`HealHp` high power) |
 | `return_thread` | **Field only** — retreat to hub ([dungeon navigation](../02-dungeon-navigation.md)) |
-| `analysis_glass` | Combat — weakness reveal (optional (launch) ship) |
+| `analysis_glass` | Combat — weakness reveal (optional at launch ship) |
 
 `ItemDefinition` (Runtime SO): `itemId`, `displayName`, `ItemEffectType`, `power`, `maxStack`, **`useContexts`** (Combat / Field flags — mirror skill pattern).
 
@@ -179,7 +179,7 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 
 ---
 
-## Party menu shell (launch)
+## Party menu shell
 
 **`Tab`** opens the party menu when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md) §5).
 
@@ -200,7 +200,7 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 
 ---
 
-## Bag UI — Inventory pane category tabs (launch)
+## Bag UI — Inventory pane category tabs at launch
 
 Party menu section **Inventory** uses **horizontal category tabs**, same interaction model as the skill use picker ([ADR 035](../../decisions/035-skill-use-picker.md)).
 
@@ -235,7 +235,7 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 
 ---
 
-## Equipment pane (launch)
+## Equipment pane
 
 **Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Center panel is shared **`CharacterDetailView`** (`PartyEquipDisplay`): stats + five worn rows. **Q/E** / **W/S** move floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot is currently a **no-op** (inline bag picker removed; separate picker window + `PartyEquipmentApply` path is follow-up). Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
 
@@ -280,7 +280,7 @@ Combat picker uses the shared tabbed shell with **Immediate** row focus + `Z`/`X
 | Shop identify | Flips instance flag | `PartyInventory`, `Hub.Credits` |
 | Battle victory | `LootTable` → stacks / instances / credits | `PartyInventory`, `Hub.Credits`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
 | Chest interact | `ChestItemId` | `PartyInventory` |
-| Gather node | Material or consumable (launch) stub: consumable) | `PartyInventory` |
+| Gather node | Material or consumable at launch stub: consumable) | `PartyInventory` |
 | Party menu equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
 
 **Tutorial FOE:** `grp_alley_stalker_tutorial` — no standard farmable loot/XP per [#31](https://github.com/miramocha/griddungeon-game/issues/31).

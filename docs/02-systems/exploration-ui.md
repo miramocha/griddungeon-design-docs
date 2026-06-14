@@ -2,7 +2,7 @@
 
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, party menu / pause overlay, party strip floater) without re-tracing the scene graph.
 
-**Related:** [mapping — Map UI](mapping.md#map-ui) (player-facing behavior), [game phase](game-phase.md) (macro phases + input maps), [input bindings](input-bindings.md), [map cell art](map-cell-art.md), [ADR 014 — (launch) exploration map](../../decisions/014-mvp1-exploration-map.md). **Integrator:** [UI event contract](../04-dev/ui-event-contract.md), [custom party UI](../04-dev/custom-party-ui.md).
+**Related:** [mapping — Map UI](mapping.md#map-ui) (player-facing behavior), [game phase](game-phase.md) (macro phases + input maps), [input bindings](input-bindings.md), [map cell art](map-cell-art.md), [ADR 014 — launch exploration map](../../decisions/014-mvp1-exploration-map.md). **Integrator:** [UI event contract](../04-dev/ui-event-contract.md), [custom party UI](../04-dev/custom-party-ui.md).
 
 **Game repo entry points:**
 
@@ -302,7 +302,7 @@ Phase **logic** stays in `ExplorationPhaseController` ([game phase](game-phase.m
 
 For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix — future map read-model refactor](#appendix--future-map-read-model-refactor) below.
 
-**Not wired (launch):** exploration **combat log** panel — no exploration HUD mount; only combat uses `CombatHudLogView` ([#34](https://github.com/miramocha/griddungeon-game/issues/34)). Class-design `ExplorationHUD.Log` is target-only.
+**Not wired At launch:** exploration **combat log** panel — no exploration HUD mount; only combat uses `CombatHudLogView` ([#34](https://github.com/miramocha/griddungeon-game/issues/34)). Class-design `ExplorationHUD.Log` is target-only.
 
 ---
 
@@ -327,7 +327,7 @@ For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix 
 
 **Rules unchanged:** `ExplorationPhaseController`, `MapSystem`, `InputRouter` handlers; presenters never call `TryStepForward` or reveal calculators. Map input still goes through `ExplorationMapCoordinator` (`ToggleExpandedFromInput`, hint publish).
 
-**Gate policy:** (launch) — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+**Gate policy:** at launch — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
 Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design.md#ui-layer).
 
@@ -342,4 +342,4 @@ Type names and combat mirror table: [05 — Class design § UI layer](../05-clas
 - [Map cell art](map-cell-art.md) — glyphs, USS, sprite target
 - [04 — Tech notes § Exploration HUD](../04-tech-notes.md#exploration-hud-ui-toolkit) — short index
 - [05 — class design § UI layer](../05-class-design.md#ui-layer) — target types vs shipped names
-- [ADR 014 — (launch) exploration map](../../decisions/014-mvp1-exploration-map.md)
+- [ADR 014 — launch exploration map](../../decisions/014-mvp1-exploration-map.md)

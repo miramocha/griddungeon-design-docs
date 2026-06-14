@@ -15,7 +15,7 @@
 
 Exploration uses **core 6 only** as one grid anchor. Navigator and aux are **not** on the grid blob. Aux exists **in combat UI only**.
 
-Bench: recruit additional characters at guild; swap only at hub (launch).
+Bench: recruit additional characters at guild; swap only at hub at launch.
 
 ## Class roster (modern guild)
 
@@ -33,11 +33,11 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 | **Saboteur** | `saboteur` | Front | Control | Bind, bonus vs disabled targets | Dark Hunter |
 | **Overdriver** | `overdriver` | Front | Glass cannon | Charge attacks, self-buff surges | Ronin |
 
-**(launch) roster:** Vanguard, Breaker, Medic, **Summoner**, Marksman, Tactician (six core slots).
+**Launch roster:** Vanguard, Breaker, Medic, **Summoner**, Marksman, Tactician (six core slots).
 
 **Later unlock:** Elementalist, Saboteur, Overdriver.
 
-**Note:** (launch) has no **Elementalist** — fire/ice/volt specialist joins later; Summoner covers weak ranged bolts + summons only.
+**Note:** Launch has no **Elementalist** — fire/ice/volt specialist joins later; Summoner covers weak ranged bolts + summons only.
 
 ## Summon skills — Summoner only
 
@@ -56,7 +56,7 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 
 ## Navigator
 
-See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (launch).
+See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** at launch.
 
 ## Protocol skills (Synchro)
 
@@ -70,7 +70,7 @@ Coordinated team skills via [Synchro Charge](synchro-protocol.md); **Navigator e
 - Summon skills target **aux front** or **aux back** per definition.
 - No multiclass at launch.
 
-**(launch) kits:** 3 skills per core class (IDs, targeting, Fixed presentation) — [launch class skills](../03-content/class-skills.md).
+**Launch kits:** 3 skills per core class (IDs, targeting, Fixed presentation) — [launch class skills](../03-content/class-skills.md).
 
 See [character progression](character-progression.md).
 
@@ -83,7 +83,7 @@ See [character progression](character-progression.md).
 ## Guild recruitment
 
 - Create custom characters or use **premade** guild roster (EO gimmick optional).
-- Class unlocked as player progresses stratum (launch): all **six (launch) classes** available day one; Elementalist / Saboteur / Overdriver later).
+- Class unlocked as player progresses stratum At launch: all **six launch classes** available day one; Elementalist / Saboteur / Overdriver later).
 
 ## Death
 

@@ -140,7 +140,7 @@ Between unlock VN and Protocol resolve — **authority:** [guided-tutorial § co
 
 Summary: Synchro at **100%**; pulse **Protocol**; other commands disabled; player still confirms **`protocol_strike`**; no skip until resolve.
 
-### Story events (launch)
+### Story events at launch
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
@@ -204,7 +204,7 @@ Example index row:
 
 ## Localization
 
-**Recommendation (for schema, even in click-block (launch)):**
+**Recommendation (for schema, even in click-block launch UI):**
 
 | Field | Use |
 |-------|-----|
@@ -221,7 +221,7 @@ At runtime: resolve `textKey` from localization table; if missing and `textEn` p
 |--------|---------|
 | Advance / dismiss step | **Z** (same as combat confirm) **or** click on story panel |
 | Back | Not at launch tutorial |
-| Skip | Disabled (launch) |
+| Skip | Disabled at launch |
 
 Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Story** action map optional later.
 
@@ -258,7 +258,7 @@ Separate from VN step graphs ([ADR 030](../../decisions/030-story-event-graph-au
 
 Designers author **one graph per `storyEventId`** (nodes = steps, edges = branches/choices). An Editor compile step exports the **same** `StoryEventDefinition` step array `StoryEventRunner` already runs — runtime does not interpret the graph in builds.
 
-| Concern | (launch) ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) | Later ([ADR 030](../../decisions/030-story-event-graph-authoring.md)) |
+| Concern | Launch ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) | Later ([ADR 030](../../decisions/030-story-event-graph-authoring.md)) |
 |---------|------|-------------|
 | Branching in play | Linear S1 only | `choice` + flag branches |
 | Authoring UI | Hand YAML / SO | GraphView editor + compile |

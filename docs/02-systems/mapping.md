@@ -24,7 +24,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 - Grid 1:1 with dungeon cells at the party�s current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle later optional.
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
-- **Combat (launch):** Map **not** in the default combat layout; **`M`** toggles read-only floor map ([game phase](game-phase.md), [input bindings](input-bindings.md)). See [� Consider / explore � map during combat](#consider--explore--map-during-combat).
+- **Combat At launch:** Map **not** in the default combat layout; **`M`** toggles read-only floor map ([game phase](game-phase.md), [input bindings](input-bindings.md)). See [� Consider / explore � map during combat](#consider--explore--map-during-combat).
 
 ### Map UI motion
 
@@ -32,15 +32,15 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 
 **Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapGridPaintController`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94), [#244](https://github.com/miramocha/griddungeon-game/pull/244)). Full read-model + `ExplorationMapPresenter` refactor: [exploration UI appendix](exploration-ui.md#appendix--future-map-read-model-refactor).
 
-| Event | UI reaction (launch) | Blocks until done |
+| Event | UI reaction at launch | Blocks until done |
 |-------|-------------------|-------------------|
 | Floor / wall revealed | Cell or edge **fade/stamp in** on map panel | Yes � with step beat |
 | Door / stairs discovered | Icon **pop-in** on tile | Yes � with interact beat |
 | FOE enters sight | FOE marker **fade in** on map | Yes � before next step if revealed mid-step |
 | FOE patrol step | Marker **slides** to new cell | No � ambient; must not block player input |
 | Party moves | Party arrow **slides** to new cell; optional facing tick | Yes � with step lerp |
-| Chest (launch) | Chest overlay **flash** + loot toast � opened from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes � before next interact |
-| Gather (launch) | Gather overlay **flash** + loot toast | Yes � before next interact |
+| Chest at launch | Chest overlay **flash** + loot toast � opened from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes � before next interact |
+| Gather at launch | Gather overlay **flash** + loot toast | Yes � before next interact |
 | Open fullscreen map (`M`) | Panel **scale/fade** open | No � overlay only |
 
 ## Auto-reveal rules
@@ -52,12 +52,12 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
 | **Chest** | Party **Interact** on adjacent walkable cell **facing** impassable chest tile � loot once; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
-| **Gather** | Gather node **overlay when visited**; (launch) instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **Gather** | Gather node **overlay when visited**; instant loot at launch ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Fish** | Fish nodes (**Optional**) |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
 | **Traps** (optional) | Party **triggers** trap on cell (mark for repeat visits) |
 
-(launch) minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
+at launch minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
 
 ## Fog of war
 
@@ -71,7 +71,7 @@ On party wipe: **keep revealed map** for that floor (unchanged). Optional hard m
 
 ## Consider / explore � map during combat
 
-**Status:** Not locked � (launch) ships **toggle-only** (`M`); showing the map **by default** during fights is under evaluation.
+**Status:** Not locked � Launch ships **toggle-only** (`M`); showing the map **by default** during fights is under evaluation.
 
 ### Why explore this
 
@@ -89,7 +89,7 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 |--------|------|------|
 | **A � Persistent side map** (exploration-style panel) | Always-on FOE icons and party anchor; strongest threat read | Shrinks combat command/arena space; FPV is already hidden � panel may feel disconnected from the arena |
 | **B � Compact tactical strip** | Small schematic + party/FOE dots only | Extra layout + art; may duplicate arena focus |
-| **C � `M` toggle only (current (launch))** | Clean combat HUD; no layout cost | Easy to forget; no ambient �incoming FOE� read |
+| **C � `M` toggle only (current launch)** | Clean combat HUD; no layout cost | Easy to forget; no ambient �incoming FOE� read |
 | **D � Threat ping only** | Badge/icon when a FOE is within N cells of anchor | Minimal chrome; weak for route and flee planning |
 
 ### Implementation notes (if we adopt A or B)
@@ -131,6 +131,6 @@ Locked **cell stack**, **composite walls** (edge segments + alcove � not 16 au
 - [Exploration UI](exploration-ui.md) � HUD composition and bind lifecycle
 - [Combat scene](combat-scene.md) � [Game phase](game-phase.md)
 - [ADR 002 � Mapping model](../../decisions/002-mapping-model.md)
-- [ADR 005 � FOE combat patrol](../../decisions/005-foe-combat-patrol.md) � [ADR 014 � (launch) exploration map](../../decisions/014-mvp1-exploration-map.md)
+- [ADR 005 � FOE combat patrol](../../decisions/005-foe-combat-patrol.md) � [ADR 014 � launch exploration map](../../decisions/014-mvp1-exploration-map.md)
 - [ADR 019 � Floor verticality](../../decisions/019-floor-verticality.md)
 - [04 � Tech notes](../04-tech-notes.md)

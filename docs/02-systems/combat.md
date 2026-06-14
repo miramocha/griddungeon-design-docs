@@ -9,7 +9,7 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 ```
 [ Navigator — off formation; Synchro Protocol + passives only ]
 
-[ Enemies — up to 6 targets, front + back rows (**≤3** per row, (launch)) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
+[ Enemies — up to 6 targets, front + back rows (**≤3** per row, launch) ([ADR 015](../../decisions/015-mvp1-combat.md)) ]
 
 [ Core front ×3 ] [ Aux front ×1 ]   summon or guest
 [ Core back  ×3 ] [ Aux back  ×1 ]   summon or guest
@@ -19,9 +19,9 @@ Encounters **transition** from exploration FPV to a **battle arena** (fixed stra
 - **Aux (0–2):** optional [summon or guest](summons-and-guests.md) per row.
 - **Melee** without pierce targets **front row** (core + aux front) before back.
 - **Ranged / spells** — per skill targeting rules.
-- **Row collapse (locked (launch)):** when a front-row enemy dies, survivors **shift forward** (EO-style). Back-row-only remaining enemies become valid **melee** targets without pierce.
-- **AllEnemies** skills hit **occupied enemy slots** only; pierce/back flags per skill ([mvp1-class-skills](../03-content/class-skills.md)).
-- **Status inflict:** resolve **damage first**, then roll bind/ailment if target still alive ([mvp1-class-skills § Locked](../03-content/class-skills.md#locked-implementation-rules)).
+- **Row collapse (locked at launch):** when a front-row enemy dies, survivors **shift forward** (EO-style). Back-row-only remaining enemies become valid **melee** targets without pierce.
+- **AllEnemies** skills hit **occupied enemy slots** only; pierce/back flags per skill ([class-skills](../03-content/class-skills.md)).
+- **Status inflict:** resolve **damage first**, then roll bind/ailment if target still alive ([class-skills § Locked](../03-content/class-skills.md#locked-implementation-rules)).
 
 ## Turn structure — AGI order (EO-style)
 
@@ -48,7 +48,7 @@ FOE grid movement during battle ([ADR 005](../../decisions/005-foe-combat-patrol
 
 During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) or **LMB** (mouse) and writes to `PartyCommandBatch`. Per-command focus navigation is [ADR 026](../../decisions/026-combat-menu-focus-navigation.md). Optional **round-end** confirm after all cores are assigned is [#44](https://github.com/miramocha/griddungeon-game/issues/44) (separate).
 
-| Player need | (launch) spec | Status |
+| Player need | release scope | Status |
 |-------------|-----------|--------|
 | Step back one **mistaken** pick | **`X`** or **Back button** → LIFO remove last queued command; highlight returns to that core | [game #61](https://github.com/miramocha/griddungeon-game/issues/61) — rebind per ADR 026 |
 | Jump to an earlier core without stepping back through picks | Roster LMB re-select that core, then re-pick | Roster re-select **not wired** ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) — **no** roster keyboard |
@@ -87,7 +87,7 @@ After **Attack** or a **single-target** skill during command planning ([#60](htt
 
 ## Commands (summon / guest)
 
-| Unit | (launch) control |
+| Unit | Launch control |
 |------|----------------|
 | **Summon** | **Player-controlled** — Attack / Guard + `SummonDefinition.skillIds`; queued in **command planning** before AGI ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Guest** | Player guests without `actionScript` → same planning batch; **NPC guest** with script = AI on AGI turn |
@@ -97,7 +97,7 @@ After **Attack** or a **single-target** skill during command planning ([#60](htt
 
 - Attack, skill, debuff, buff allies, **summon adds** (may fill enemy aux or extra slots), flee (rare).
 
-## Damage pipeline (launch)
+## Damage pipeline
 
 Locked at launch ([ADR 015](../../decisions/015-mvp1-combat.md)). Tune constants in data; structure unchanged.
 
@@ -127,7 +127,7 @@ roll on-hit status inflicts
 
 Full rules: **[combat status & buffs](combat-status-and-buffs.md)**.
 
-### Flee success (launch)
+### Flee success at launch
 
 Resolved on the **acting core’s AGI turn** when `CombatCommand.Flee` was queued during planning ([game #66](https://github.com/miramocha/griddungeon-game/pull/66)).
 
@@ -162,7 +162,7 @@ roll ≤ successPercent → flee succeeds (subject to BattleState.FleeEnabled / 
 
 ## FOE patrol & mid-battle join (optional)
 
-**Not (launch)** ([ADR 015](../../decisions/015-mvp1-combat.md)). When [ADR 005](../../decisions/005-foe-combat-patrol.md) enabled on floor:
+**Later** ([ADR 015](../../decisions/015-mvp1-combat.md)). When [ADR 005](../../decisions/005-foe-combat-patrol.md) enabled on floor:
 
 - Party frozen on fight-start cell; each **combat round** FOEs move **1 cell** on patrol.
 - FOE on party cell → **[mid-battle join](chain-foe-battle.md)** ([ADR 010](../../decisions/010-chain-foe-battle.md)): **one FOE per round** joins current fight; first turn **next combat round**.
@@ -213,7 +213,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 **Blocking:** `CombatPresentationGate` — AGI playback waits until `CombatHudReactivePresenter` finishes mandatory beats ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
 
-| Event | UI reaction (launch) | Blocks until done |
+| Event | UI reaction at launch | Blocks until done |
 |-------|-------------------|-------------------|
 | Turn advances | AI/auto: turn strip handoff to `Current`. **Player command:** acting highlight on **party roster** slot, not strip | Yes — next AGI turn / command |
 | Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; optional floating number near slot | Yes — next action on that beat |
@@ -241,7 +241,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | **Right rail** | `turn-order-strip` | **Vertical** flat AGI queue — [§ Turn order strip](#turn-order-strip-agi-queue-ui) |
 | **Center** | `combat-hud__arena-spacer` | Transparent flex-grow; no opaque full-width HUD panel |
 
-**Locked UX (unchanged from (launch) skeleton):** core command turns highlight the **party roster** slot, not the AGI strip; reactive beats and `CombatPresentationGate` pacing unchanged ([#35](https://github.com/miramocha/griddungeon-game/issues/35)).
+**Locked UX (unchanged from launch skeleton):** core command turns highlight the **party roster** slot, not the AGI strip; reactive beats and `CombatPresentationGate` pacing unchanged ([#35](https://github.com/miramocha/griddungeon-game/issues/35)).
 
 **UXML / USS:** `CombatHud.uxml`, `CombatHud.uss` — hooks in [04-tech-notes § Combat HUD](../04-tech-notes.md#combat-hud-ui-toolkit).
 
@@ -270,7 +270,7 @@ Combat must show a **vertical strip** on the **right rail** (top → bottom = so
 
 **Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design.md#view-controllers)).
 
-**Visual rules (launch):**
+**Visual rules At launch:**
 
 - **Current actor (auto / AI turn):** turn strip shows strong highlight (frame glow / scale) with **animated handoff** when the queue advances; strip does not scroll away from active slot during the turn.
 - **Player command phase (core turn):** strong highlight on the **acting core’s party roster slot** (formation row), **not** on the strip — strip stays informational only while the player picks Attack / Guard / Skill / etc. (#34 skeleton; full handoff beats in [combat presentation](combat-presentation.md)).
@@ -304,9 +304,9 @@ Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — 
 
 Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards **centered** in the row (flex `justify-content: center` on `combat-roster__slots`).
 
-**Roster vitals (launch):** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
+**Roster vitals At launch:** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
 
-**(launch) implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**Launch implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

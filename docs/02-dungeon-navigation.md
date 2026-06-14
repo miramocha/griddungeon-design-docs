@@ -10,7 +10,7 @@
 
 | Property | Value |
 |----------|-------|
-| Logic grid | **1 cell** = one walkable tile in `ExplorationFloor` (indices 0…19 per axis on (launch) floors) |
+| Logic grid | **1 cell** = one walkable tile in `ExplorationFloor` (indices 0…19 per axis on launch floors) |
 | World scale (FPV) | **`10` Unity units** per logic cell on XZ (`ExplorationGridMetrics.WorldUnitsPerCell`); see [floor art FPV](02-systems/floor-art-fpv.md#summary) |
 | Coordinates | `(x, y, level)` + `facing` (N/E/S/W) — `level` is walkable height band in the floor ([ADR 019](../decisions/019-floor-verticality.md)) |
 | Stratum floors | `B1F`, `B2F`, … per stratum (dungeon floor id, not height `level`) |
@@ -30,7 +30,7 @@ Exploration keeps **two layers**: grid state (rules, map, FOEs, encounters) and 
 
 `PartyPose` is a **scene object name** for the pose root, not a separate game type. If `m_poseRoot` is unset, the explorer falls back to its own `Transform`.
 
-**Grid → world (launch)**
+**Grid → world**
 
 | Grid | World (Unity) |
 |------|----------------|
@@ -46,7 +46,7 @@ world.x = origin.x + cell.X * WorldUnitsPerCell
 world.z = origin.z + cell.Y * WorldUnitsPerCell
 ```
 
-(launch) default: `WorldUnitsPerCell = 10`, `origin = (0, 0, 0)` → cell `(3, 4)` is world `(30, 0, 40)`. Movement step distance is **10** units per forward/strafe cell ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md) — Normal **0.32s** `OutQuad` step lerp).
+launch default: `WorldUnitsPerCell = 10`, `origin = (0, 0, 0)` → cell `(3, 4)` is world `(30, 0, 40)`. Movement step distance is **10** units per forward/strafe cell ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md) — Normal **0.32s** `OutQuad` step lerp).
 
 **Facing → rotation**
 
@@ -122,7 +122,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 ## Interactables
 
 - Doors, keys, one-way passages
-- Chests (**(launch)**); gather / fish nodes (**optional** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
+- Chests (**launch**); gather / fish nodes (**optional** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
 - **Stairs down (`v`)** — next floor in the **same stratum** (paired `stairsUp` on floor below).
 - **Stairs up (`^`) on first floor of stratum (gate)** — not the same as mid-stratum stairs:
   - → **Hub** only (Exploration → Hub phase; EO “return to camp”).

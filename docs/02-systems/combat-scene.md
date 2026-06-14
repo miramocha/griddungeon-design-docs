@@ -73,8 +73,8 @@ Combat UI and rules use **front/back rows** (like the party). The arena is **not
 
 | Mode | When | Notes |
 |------|------|-------|
-| **Sprite stack** | (launch) default | 2D/2.5D billboard or layered sprite (EO HD style) |
-| **3D model** | (launch)+ optional | Model on slot; idle + hit reacts |
+| **Sprite stack** | launch default | 2D/2.5D billboard or layered sprite (EO HD style) |
+| **3D model** | later optional | Model on slot; idle + hit reacts |
 | **Hybrid** | Bosses | 3D body + 2D VFX overlay |
 
 Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([combat presentation](combat-presentation.md)).
@@ -83,7 +83,7 @@ Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([co
 
 - **Primary:** UI portraits + HP/MP/status (readable AGI play).
 - **Optional:** Low-poly 3D party silhouettes on near plane or omitted at launch.
-- **Navigator:** (launch) portrait strip off formation ([navigator](navigator.md)). **Explore:** bottom-right 3D model; Protocol Deploy/Transform may transition that model into aux / core slot rigs — [navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence).
+- **Navigator:** launch portrait strip off formation ([navigator](navigator.md)). **Explore:** bottom-right 3D model; Protocol Deploy/Transform may transition that model into aux / core slot rigs — [navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence).
 
 ---
 
@@ -139,7 +139,7 @@ Deferred unless a future **“immersive combat”** experiment flag is approved.
 | **Cinematic QTE** | Full-stage Timeline; backdrop can dim UI edges |
 | **FOE mid-battle join** | Spawn into slot; no FPV FOE walk-in |
 | **Summons** | Aux slot in UI + optional sprite on party side of stage |
-| **Map** | (launch): `M` toggles read-only floor map (exploration data), not live arena — persistent map during fight **not locked** ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
+| **Map** | At launch: `M` toggles read-only floor map (exploration data), not live arena — persistent map during fight **not locked** ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
 
 ---
 
@@ -171,7 +171,7 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 - `CombatEntryContext` → `ResolveBackground()`, `SpawnEncounter(EncounterGroup)`
 - `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
 - Additive scene `CombatArena` or enabled root under `GameRoot`
-- (launch): one biome backdrop + sprite enemies on 6 slots
+- At launch: one biome backdrop + sprite enemies on 6 slots
 
 ---
 

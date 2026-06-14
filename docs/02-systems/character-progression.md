@@ -1,6 +1,6 @@
 ﻿# Character Progression
 
-## Stats (launch)
+## Stats at launch
 
 | Stat | Affects |
 |------|---------|
@@ -35,7 +35,7 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 **Allowed:** **Hub** (Explorers Guild) and **Exploration** (e.g. `Tab` party menu, exploration pause overlay) — same tree UI and rules in both places. Level-ups during a fight apply **after** the battle ends; the player may spend new points on the next safe screen without returning to hub.
 
-**UI entry points (launch):**
+**UI entry points At launch:**
 
 | Location | How |
 |----------|-----|
@@ -70,7 +70,7 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 | `leather_boots` | Legs | Channel Waders | — | *(empty)* | +2 VIT, +1 AGI | — | 80 | Shop (day one) |
 | `scout_charm` | Accessory | Utility Charm | — | *(empty)* | +2 LUC | Poison +5% | 100 | Shop (day one); optional B1F chest loot |
 
-**Shop stock (launch):** all five rows above in `ShopService` day-one inventory (identified on purchase). No synthesis recipes at launch.
+**Shop stock At launch:** all five rows above in `ShopService` day-one inventory (identified on purchase). No synthesis recipes at launch.
 
 **Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only at launch.
 

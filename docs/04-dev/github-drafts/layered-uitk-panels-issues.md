@@ -158,7 +158,7 @@ Authority: [ADR 026](https://github.com/miramocha/griddungeon-design-docs/blob/m
 
 ## Non-goals
 
-- Gamepad rebinding (PC (launch))
+- Gamepad rebinding (PC launch)
 ```
 
 ---

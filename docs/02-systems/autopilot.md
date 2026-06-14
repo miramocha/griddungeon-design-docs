@@ -15,7 +15,7 @@
 | **No map drawing** | Destination pick + path overlay; no player-authored lines ([ADR 002](../../decisions/002-mapping-model.md)) |
 | **Same step rules** | Each step on the path is a normal party step (FOE patrol, encounters, reveal) |
 | **Fair stops** | Combat, blocked path, or cancel � not silent teleport |
-| **(launch) unchanged** | Manual grid + hold-to-repeat only ([ADR 001](../../decisions/001-grid-movement.md)) |
+| **Launch unchanged** | Manual grid + hold-to-repeat only ([ADR 001](../../decisions/001-grid-movement.md)) |
 
 ---
 

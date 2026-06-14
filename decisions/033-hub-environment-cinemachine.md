@@ -8,7 +8,7 @@
 
 ## Context
 
-Later hub presentation reframes a **full-screen 3D guild-town** when the player focuses rows on the **root** hub menu ([hub environment](../docs/02-systems/hub-and-services.md#hub-environment-presentation)). (launch) ships menus and services only; this ADR locks **how** pans run when the hub environment epic wires focus → camera.
+Later hub presentation reframes a **full-screen 3D guild-town** when the player focuses rows on the **root** hub menu ([hub environment](../docs/02-systems/hub-and-services.md#hub-environment-presentation)). Launch ships menus and services only; this ADR locks **how** pans run when the hub environment epic wires focus → camera.
 
 `com.unity.cinemachine` **3.x** is already in the game manifest and used for **floor transition** vignettes ([ADR 032](032-floor-transition-vignette-mvp1.md)). Exploration FPV still uses `ExplorationCameraRig` with the brain **off** during normal play. Hub pans are **ambient, debounced, non-blocking** — not skill cinematics ([ADR 027](027-combat-cinematic-timeline-events.md)) and not floor commits.
 

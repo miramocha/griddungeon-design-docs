@@ -6,7 +6,7 @@
 
 ## Context
 
-(launch) team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). We want a high-tech / JRPG label that fits the **Navigator** commander fantasy.
+Launch team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). We want a high-tech / JRPG label that fits the **Navigator** commander fantasy.
 
 ## Shortlist (evaluated)
 
@@ -29,7 +29,7 @@
 | **Content ID prefix** | `protocol_` |
 | **C# module folder / root type** | `Protocol` (`ProtocolSystem`, `ProtocolResolver`, …) |
 | **C# / save field names** | **`SynchroBar`**, **`SynchroBarDelta`** — **no rename** to `SynchroCharge` at launch; maps to Synchro Charge in docs ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md)) |
-| **(launch) skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
+| **Launch skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
 
 Presentation:
 

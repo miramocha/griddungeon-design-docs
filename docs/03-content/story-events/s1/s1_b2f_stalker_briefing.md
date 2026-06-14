@@ -1,6 +1,6 @@
 # Draft — `s1_b2f_stalker_briefing`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b2f_stalker_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; (launch) = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b2f_stalker_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; Launch = click-through block.
 
 **When:** **Exploration Act 3** — party on the sideline enters the authored **Event** cell on `s1_B2F` `(7, 11)` (west-loop approach, before the tutorial fight).
 

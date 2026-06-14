@@ -51,7 +51,7 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 **Launch:** no guided entries — guild UI + service motion only ([ADR 029](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
 
-**Navigator framing (S1 copy pass):** (launch) presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
+**Navigator framing (S1 copy pass):** Launch presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
 
 ---
 
@@ -108,7 +108,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 
 ---
 
-## Implementation checklist (launch)
+## Implementation checklist at launch
 
 - [ ] `GuidedTutorialDefinition` content for table above
 - [ ] Act 1 triggers on `s1_B1F` intro mode (spawn, bump, cells G/C/^)

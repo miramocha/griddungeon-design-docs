@@ -8,11 +8,11 @@
 
 ## Context
 
-(launch) needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
+at launch needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
 
 Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#content-ids-locked), [character progression § launch equipment](../docs/02-systems/character-progression.md#launch-equipment-locked)).
 
-## Decision (launch)
+## Decision
 
 ### 1. Two containers + hub Credits
 
@@ -48,7 +48,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 | **Runtime** | `ItemDefinition` / `EquipmentDefinition` SOs, `ContentDatabase`, `ShopService`, coordinators |
 | **UI** | `PartyMenuShell`, `IInventoryBagView`, `IPartyEquipmentView` — **no** stack or equip rules in views |
 
-### 5. Party menu shell (required (launch))
+### 5. Party menu shell (required at launch)
 
 **`Tab`** opens a **party menu overlay** in **hub** and **exploration** when safe ([ADR 034](034-skill-point-allocation-outside-combat.md)) — not combat.
 
@@ -68,7 +68,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 
 **Game issues:** shell [#166](https://github.com/miramocha/griddungeon-game/issues/166) · equipment pane [#167](https://github.com/miramocha/griddungeon-game/issues/167) · stats/equip rules [#155](https://github.com/miramocha/griddungeon-game/issues/155).
 
-### 6. Inventory pane — category tabs (required (launch))
+### 6. Inventory pane — category tabs (required at launch)
 
 Party menu section **Inventory** shows horizontal category tabs — **same rules as ADR 035**:
 
@@ -84,7 +84,7 @@ Party menu section **Inventory** shows horizontal category tabs — **same rules
 - **Z** on equipment bag rows in Inventory pane: **does not equip** in v1 — equip via **Equipment** pane (§7).
 - **Combat `Item` command:** consumable **row list** only — **no** bag tab strip ([ADR 026](026-combat-menu-focus-navigation.md)).
 
-### 7. Equipment pane — worn loadout (required (launch))
+### 7. Equipment pane — worn loadout (required at launch)
 
 **Members:** **active party cores only** — occupied `PartyRuntime` core slots (up to 6). **Q/E** cycles prev/next member (wrap). Not full guild bench.
 
@@ -111,7 +111,7 @@ On load, map legacy `GatheredItemIds` → `PartyInventory` stacks (e.g. `patch_k
 - Separate material pouch asset — one `PartyInventory`, kind per slot (MVP2 materials tab).
 - `ItemCategory` on every `ItemDefinition` — slot kind is enough for tabs.
 - Full tabbed bag inside combat Item picker — combat uses filtered consumable list only.
-- Codex-driven identify as (launch) blocker — shop identify sufficient.
+- Codex-driven identify as at launch blocker — shop identify sufficient.
 
 ## Consequences
 

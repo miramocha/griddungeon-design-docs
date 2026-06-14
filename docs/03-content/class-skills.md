@@ -10,10 +10,10 @@
 | Rule | Detail |
 |------|--------|
 | **ID format** | `{class_id}_{snake_name}` — stable in `SkillDefinition.skillId` and save data |
-| **Presentation** | **Fixed** for every (launch) class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
+| **Presentation** | **Fixed** for every launch class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
 | **Deploy** | **Summoner only** — `deploy_scout_drone` per [ADR 016](../../decisions/016-summon-control-mvp1.md); targets **aux back** |
 | **Summon turns** | **Player-controlled** — minimal kit on `SummonDefinition` ([summons & guests](../02-systems/summons-and-guests.md)) |
-| **Tree (launch)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Tree** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
 | **Numbers** | `mpCost`, `powerByRank[]`, inflict `%` — **tuning** in data; structure locked |
 | **Descriptions** | `descriptionEn` on every `SkillDefinition` — **mechanical summary only**, no exact MP/power/% in prose ([game #149](https://github.com/miramocha/griddungeon-game/issues/149)) |
@@ -77,7 +77,7 @@
 | Node | `skill_id` | Role in kit |
 |------|------------|-------------|
 | 1 | `medic_heal` | Primary HP restore |
-| 2 | `medic_purify` | Cleanse (launch) ailments ([status subset](../02-systems/combat-status-and-buffs.md)) |
+| 2 | `medic_purify` | Cleanse launch ailments ([status subset](../02-systems/combat-status-and-buffs.md)) |
 | 3 | `medic_revive` | Post-fight recovery enabler (downed → fighting) |
 
 ### Summoner (`summoner`)
@@ -85,7 +85,7 @@
 | Node | `skill_id` | Role in kit |
 |------|------------|-------------|
 | 1 | `summoner_volt_bolt` | Personal ranged volt (no Elementalist at launch) |
-| 2 | `deploy_scout_drone` | **Only** (launch) aux deploy — aux **back**, `scout_drone` |
+| 2 | `deploy_scout_drone` | **Only** launch aux deploy — aux **back**, `scout_drone` |
 | 3 | `summoner_focus` | Self buff before deploy / bolt spam |
 
 **Deploy skill data:**

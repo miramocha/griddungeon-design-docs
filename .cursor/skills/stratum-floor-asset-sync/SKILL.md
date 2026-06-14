@@ -13,13 +13,13 @@ description: >-
 
 - After changing `S1B1FLayoutBuilder` / `S1_B1F_ROWS` in Python
 - `s1_B1F.asset` walkability stale vs builder (Play Mode shows wrong walls)
-- User asks to update floor **asset metadata** without running **GridDungeon → Content → Apply s1_B1F (launch) layout**
+- User asks to update floor **asset metadata** without running **GridDungeon → Content → Apply s1_B1F MVP1 layout**
 
-**Prefer Floor Painter** when authoring layout in the Editor: **GridDungeon → Content → Floor Painter** → **Apply** writes tiles and marker coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). **(launch) S1 layouts are draft** — serialized `s1_B*n*F.asset` is runtime authority until lock ([archive](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md)).
+**Prefer Floor Painter** when authoring layout in the Editor: **GridDungeon → Content → Floor Painter** → **Apply** writes tiles and marker coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). **Launch S1 layouts are draft** — serialized `s1_B*n*F.asset` is runtime authority until lock ([archive](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md)).
 
-**Create Dev Bootstrap** does **not** call Apply s1_B1F (launch) layout — it only registers floors if missing ([#107](https://github.com/miramocha/griddungeon-game/issues/107)).
+**Create Dev Bootstrap** does **not** call Apply s1_B1F MVP1 layout — it only registers floors if missing ([#107](https://github.com/miramocha/griddungeon-game/issues/107)).
 
-**Scope (launch):** `Assets/Content/Floors/s1_B1F.asset` only. B2F/B3F: Floor Painter Apply or **Apply s1_B*n*F (launch) layout** menu.
+**Scope At launch:** `Assets/Content/Floors/s1_B1F.asset` only. B2F/B3F: Floor Painter Apply or **Apply s1_B*n*F MVP1 layout** menu.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ python Tools/sync_b1f_asset_tiles.py
 | Step | Action |
 |------|--------|
 | Git | Commit `S1B1FLayoutBuilder.cs`, `Tools/layout_grid_check.py`, `s1_B1F.asset` together |
-| Unity | Let Editor reimport asset; optional: **Apply s1_B1F (launch) layout** only when intentionally resetting to builder |
+| Unity | Let Editor reimport asset; optional: **Apply s1_B1F MVP1 layout** only when intentionally resetting to builder |
 | 3D art | Re-run **Populate Wall Blocks** on `s1_B1F.unity` if wall mesh layout changed |
 | Tests | User runs **Test Runner → Map → `S1B1FLayoutTests`** |
 
@@ -58,7 +58,7 @@ python Tools/sync_b1f_asset_tiles.py
 | Tool | Use |
 |------|-----|
 | **Floor Painter → Apply** | Painted grid → asset (markers + tiles) |
-| **Apply s1_B1F (launch) layout** | Overwrites asset from `S1B1FLayoutBuilder` — destructive reset |
+| **Apply s1_B1F MVP1 layout** | Overwrites asset from `S1B1FLayoutBuilder` — destructive reset |
 
 ## Related
 

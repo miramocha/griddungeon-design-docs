@@ -75,7 +75,7 @@ enum BattleResult    { Victory, Wipe, Flee }
 // Status categories � mirrors StatusDefinition.category
 enum StatusCategory  { Control, BindLimb, DoT, StatBuff, StatDebuff, BattleMod }
 
-// Skill presentation � (launch) only uses Fixed
+// Skill presentation � at launch only uses Fixed
 enum SkillPresentation { Fixed, Cinematic, CinematicQTE }
 ```
 
@@ -125,7 +125,7 @@ class SkillDefinition : ScriptableObject
 {
     string skillId;
     string displayName;
-    string descriptionEn;         // mechanical summary for picker detail / tooltips � no exact MP/power/% in prose ([mvp1-class-skills](03-content/class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
+    string descriptionEn;         // mechanical summary for picker detail / tooltips � no exact MP/power/% in prose ([class-skills](03-content/class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
     SkillType skillType;
     DamageElement element;
     BodyPart bodyPartTag;         // which bind blocks this skill
@@ -343,7 +343,7 @@ class StratumDefinition
 }
 ```
 
-**Authoring rules:** [dungeons � warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 � exit links](../../decisions/040-floor-exit-topology-graph.md). (launch): only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
+**Authoring rules:** [dungeons � warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 � exit links](../../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 
@@ -801,7 +801,7 @@ class EncounterTrigger
 
 class GatherInteractor
 {
-    // TryInteract on gather node � instant loot (launch), no minigame)
+    // TryInteract on gather node � instant loot at launch, no minigame)
     bool TryGather(GridPosition cell, FloorMapState map, PartyRuntime party);
 }
 ```
@@ -1084,7 +1084,7 @@ class SaveSystem : MonoBehaviour
 
 ## UI layer
 
-Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (launch):** combat � `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration � **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes � UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md). **Integrator / external HUD:** [UI event contract](04-dev/ui-event-contract.md) (runtime events + examples).
+Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD At launch:** combat � `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration � **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes � UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md). **Integrator / external HUD:** [UI event contract](04-dev/ui-event-contract.md) (runtime events + examples).
 
 ### Input routing
 
@@ -1170,7 +1170,7 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
     EnemySlotsView     EnemySlots;
 }
 
-// GridDungeon.Editor.Save � (launch) save / campaign dev tooling (PR #84)
+// GridDungeon.Editor.Save � at launch save / campaign dev tooling (PR #84)
 class GridDungeonSaveEditorWindow : EditorWindow  // GridDungeon ? Tools ? Save Editor
 class SaveEditorModel / SaveEditorPanel           // Play: in-memory flags + drift vs disk; Edit: Reload / Write JSON
 class CampaignFlagCatalog                       // Editor descriptors ? CampaignFlagId (Core)
@@ -1241,7 +1241,7 @@ class EnemySlotsView : MonoBehaviour
     void ShowStatusIcons(int slotIndex, IReadOnlyList<StatusInstance> statuses);
 }
 
-// CombatScenePresenter (arena rig) � GetEnemySlotAnchor(slotIndex) for spawn + VFX; (launch) HUD uses CombatRosterView two-row bind
+// CombatScenePresenter (arena rig) � GetEnemySlotAnchor(slotIndex) for spawn + VFX; at launch HUD uses CombatRosterView two-row bind
 ```
 
 ---
@@ -1401,7 +1401,7 @@ struct ExplorationStateSave
 // SaveGame � optional additions (draft)
 [Serializable] class SaveGame
 {
-    // ... existing (launch) fields ...
+    // ... existing at launch fields ...
     string[] UnlockedSideDungeonIds;  // e.g. "sd01"
 }
 
@@ -1424,9 +1424,9 @@ struct ExplorationStateSave
 - [Stratum 1 enemy roster](03-content/enemy-roster.md) � locked S1 enemies, groups, skill stubs
 - [04 � Tech notes](04-tech-notes.md) � engine stack, high-level module map, save format
 - [release scope](00-release-scope.md) � systems checklist
-- [ADR 014 � (launch) exploration & map](../decisions/014-mvp1-exploration-map.md)
-- [ADR 015 � (launch) combat](../decisions/015-mvp1-combat.md)
-- [ADR 016 � Summon control (launch)](../decisions/016-summon-control-mvp1.md)
+- [ADR 014 � launch exploration & map](../decisions/014-mvp1-exploration-map.md)
+- [ADR 015 � launch combat](../decisions/015-mvp1-combat.md)
+- [ADR 016 � Summon control](../decisions/016-summon-control-mvp1.md)
 - [ADR 017 � Game phase controller](../decisions/017-game-phase-controller.md)
 - [Game phase](02-systems/game-phase.md)
 - [Combat](02-systems/combat.md)

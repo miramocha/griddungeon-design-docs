@@ -1,7 +1,7 @@
-# (launch) — Stratum 1 floor layouts (draft archive)
+# Launch — Stratum 1 floor layouts (draft archive)
 
 **Status:** **Draft — not locked** (archived 2026-06-14)  
-**Supersedes:** detailed per-floor ASCII blockouts that lived in [dungeons — (launch) §](../03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f)
+**Supersedes:** detailed per-floor ASCII blockouts that lived in [dungeons — launch §](../03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f)
 
 Use this file as **design reference** while grids, spawns, and exit topology are iterated in **Floor Painter** and `Assets/Content/Floors/s1_B*n*F.asset`. Do **not** treat coordinates or ASCII rows as shipping authority until a layout lock ticket closes.
 
@@ -185,7 +185,7 @@ noFlee: true
 
 ---
 
-## Export checklist (draft — do not close (launch) on this alone)
+## Export checklist (draft — do not close the launch slice on this alone)
 
 - [ ] `s1_B1F.asset` — grid, intro + gate, `exitLinks[]`, Act 1/3 blockers
 - [ ] `s1_B2F.asset` — patrol path matches `foe_alley_stalker`

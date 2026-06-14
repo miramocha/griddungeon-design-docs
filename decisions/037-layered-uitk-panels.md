@@ -7,7 +7,7 @@
 
 ## Context
 
-(launch) HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
+at launch HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
 
 Within exploration and combat, phase chrome splits across documents at different maturity:
 

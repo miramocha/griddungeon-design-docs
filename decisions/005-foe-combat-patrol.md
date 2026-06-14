@@ -25,7 +25,7 @@ Exploration patrol ([ADR 003](003-foe-step-patrol.md)) advances FOEs on **party 
 2. **When:** At **end of each combat round** — after every living combatant has acted once, before the next round’s queue is built.
 3. **Movement:** Each living FOE on the current floor advances **1 cell** along its patrol path (same path data as exploration).
 4. **Party position:** Frozen on the exploration cell where combat started; does not move on grid during fight.
-5. **Map:** FOE icons update on map panel when visible — **whether the map stays on screen during combat** is not locked (launch): `M` toggle only); see [mapping § Consider / explore](../docs/02-systems/mapping.md#consider--explore--map-during-combat).
+5. **Map:** FOE icons update on map panel when visible — **whether the map stays on screen during combat** is not locked At launch: `M` toggle only); see [mapping § Consider / explore](../docs/02-systems/mapping.md#consider--explore--map-during-combat).
 6. **Mid-battle join:** If FOE on party cell and not in encounter → **one FOE joins** per round ([ADR 010](010-chain-foe-battle.md)).
 
 ### End of combat round order

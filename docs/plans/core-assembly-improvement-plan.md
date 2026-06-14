@@ -47,7 +47,7 @@
 
 ---
 
-## Phase 0 — Now (launch), single project)
+## Phase 0 — Now (launch slice, single project)
 
 **Intent:** Strengthen boundaries in place; zero new repos or packages.
 
@@ -96,7 +96,7 @@
 
 ---
 
-## Phase 1 — Hardening (before (launch) ship or during combat/map polish)
+## Phase 1 — Hardening (before launch ship or during combat/map polish)
 
 **Intent:** Make Core easier to audit and split later, without packaging.
 
@@ -254,6 +254,6 @@ GridDungeon.Core   →  (none)
 
 ### Links
 
-- Implementation tree: [05-class-design § (launch) folder tree](../05-class-design.md)
+- Implementation tree: [05-class-design § folder tree](../05-class-design.md)
 - Phase ownership: [game-phase.md](../02-systems/game-phase.md)
 - ADR 017 (phase controller): [017-game-phase-controller](../../decisions/017-game-phase-controller.md)

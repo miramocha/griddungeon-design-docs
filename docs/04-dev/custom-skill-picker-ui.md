@@ -60,7 +60,7 @@ Path: `Assets/Scripts/UI/Views/ITabbedRowPickerKeyboardView.cs`
 
 Replaces the deleted per-picker interfaces `ICombatSkillPickerKeyboardView` and `ICombatItemPickerKeyboardView` ([#232](https://github.com/miramocha/griddungeon-game/issues/232)). Implement on the same class as the view (or a wrapper). `CombatInputHandler` calls these only while `ICombatSkillPickerHost.IsOpen`:
 
-| Method | (launch) input |
+| Method | Launch input |
 |--------|------------|
 | `MoveRowFocusNext` / `MoveRowFocusPrevious` | Arrows / WASD (`MenuNavigate`) |
 | `ConfirmFocused` | Z / Enter (`MenuConfirm`) |
@@ -186,9 +186,9 @@ Built only by `SkillPickerCatalog` in Core. Read-only at the view boundary.
 | `SkillPickerTabModel` | `TabId`, `Label`, `Rows[]` |
 | `SkillPickerRowModel` | `SkillId`, `DisplayName`, `DescriptionEn`, `CostLabel`, `MpCost`, `SkillType`, `IsEnabled`, `DisabledReason` |
 
-Copy authority: [mvp1-class-skills](../03-content/class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
+Copy authority: [class-skills](../03-content/class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
 
-Tab rules (launch):
+Tab rules At launch:
 
 - **All** tab always present (may have 0 rows).
 - Type tabs (`physical`, `elemental`, `heal`, …) only when that type has ≥1 row in this pick.

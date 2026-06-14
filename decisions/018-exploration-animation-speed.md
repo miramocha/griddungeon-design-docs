@@ -36,7 +36,7 @@ Bump animation total = 2 × bump segment. Turn lerp ≈ 81% of Normal step lerp 
 | **Turn** | `OutQuad` | Unchanged |
 | **Bump out / in** | `OutQuad` / `InQuad` | Unchanged |
 
-**Amendment (2026-05-26):** (launch) exploration world scale is **10 Unity units per logic cell** (`ExplorationGridMetrics.WorldUnitsPerCell`). Normal **step** duration increases **0.28 s → 0.32 s** so perceived walk pace stays similar; step tween uses **OutQuad** instead of linear. Other presets’ step durations scale by the same ratio (~8/7); turn/bump timings unchanged until `ExplorationAnimationDurations` ships in Core.
+**Amendment (2026-05-26):** at launch exploration world scale is **10 Unity units per logic cell** (`ExplorationGridMetrics.WorldUnitsPerCell`). Normal **step** duration increases **0.28 s → 0.32 s** so perceived walk pace stays similar; step tween uses **OutQuad** instead of linear. Other presets’ step durations scale by the same ratio (~8/7); turn/bump timings unchanged until `ExplorationAnimationDurations` ships in Core.
 
 ## Rejected
 
