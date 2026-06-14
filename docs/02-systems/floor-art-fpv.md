@@ -116,7 +116,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 | (Future) `FloorArtKeyCellMarker` | Scripted pins — manual art |
 | (Future) Gather / stairs pins | Separate auto-fill passes |
 
-**Implementation note:** Skip for `X` can use campaign constants where they exist (e.g. `S1CampaignResolver.B1FTutorialBlockerCell`) **and** treat any authored tile that maps from symbol `X` in layout builders as skipped when a symbol lookup is available; otherwise maintain a small static skip list per floor until painter [#75](https://github.com/miramocha/griddungeon-game/issues/75) stores symbol on `FloorTileData`.
+**Implementation note:** Skip for `X` can use campaign constants where they exist (e.g. `S1CampaignResolver.B1FBlockerCell`) **and** treat any authored tile that maps from symbol `X` in layout builders as skipped when a symbol lookup is available; otherwise maintain a small static skip list per floor until painter [#75](https://github.com/miramocha/griddungeon-game/issues/75) stores symbol on `FloorTileData`.
 
 ## Runtime — Load authored art
 
