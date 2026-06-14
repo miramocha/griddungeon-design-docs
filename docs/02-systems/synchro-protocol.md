@@ -43,7 +43,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 | **Crisis → guided Protocol** | **100%** after unlock VN | No gain until unlock | **Guided** `protocol_strike` only | — |
 | **After tutorial complete** | Normal | Normal | Normal | **100%** on hub exit |
 
-**First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([campaign S1](../03-content/campaign/s1-intro.md) · [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
+**First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([campaign S1](../03-content/campaign/s1-intro.md) · [archive — B2F (draft)](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
 1. **Act 3 path** — block B3F until `s1_first_foe_tutorial_complete`.
 2. **`noFlee: true`** — cannot skip the lesson.

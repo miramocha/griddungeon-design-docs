@@ -38,4 +38,4 @@ Speaker: **`navigator:guild_handler`** only.
 - [narrative POV](../../02-systems/narrative-pov.md)
 - [Act 1 guided movement](../../campaign/s1-guided-tutorials.md#act-1--movement-b1f)
 - [s1-intro § Act 1](../../campaign/s1-intro.md#three-acts-same-s1_b1f-map)
-- [dungeons — s1_B1F Event cell](../dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)
+- [archive — s1_B1F Event cell (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)

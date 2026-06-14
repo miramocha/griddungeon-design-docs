@@ -72,7 +72,7 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 
 **Shop stock (MVP1):** all five rows above in `ShopService` day-one inventory (identified on purchase). No synthesis recipes in MVP1.
 
-**Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only for MVP1.
+**Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only for MVP1.
 
 **Implementation:** `EquipmentDefinition` ScriptableObjects under `Assets/Content/Equipment/`; lookup via `ContentDatabase.GetEquipment(equipId)` ([05 — Class design](../05-class-design.md)). Runtime flow: [items & inventory](items-and-inventory.md).
 

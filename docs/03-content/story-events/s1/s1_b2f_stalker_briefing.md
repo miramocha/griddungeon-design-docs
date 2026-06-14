@@ -38,6 +38,6 @@ Speaker: **`navigator:guild_handler`** only.
 - [narrative POV](../../02-systems/narrative-pov.md)
 - [s1_b1f_gate_briefing](s1_b1f_gate_briefing.md) — Act 1 Event cell before first hub
 - [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
-- [dungeons — s1_B2F Event cell](../dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
+- [archive — s1_B2F Event cell (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
 - [s1_synchro_protocol_unlock](s1_synchro_protocol_unlock.md)
 - [s1_tutorial_hub_return](s1_tutorial_hub_return.md)

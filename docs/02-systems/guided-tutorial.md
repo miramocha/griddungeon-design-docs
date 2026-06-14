@@ -154,7 +154,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 
 ## Exploration guided tutorial (S1 — Act 1 movement)
 
-**Map:** `s1_B1F` Act 1 — no enemies, blockers funnel **E** → gate **^** ([dungeons § B1F](../03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)).
+**Map:** `s1_B1F` Act 1 — no enemies, blockers funnel **E** → gate **^** ([archive § B1F (draft)](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)).
 
 | Principle | Detail |
 |-----------|--------|

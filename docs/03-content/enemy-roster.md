@@ -6,7 +6,7 @@
 
 | Topic | Doc |
 |-------|-----|
-| Floor grids, FOE YAML, per-floor random weights | [dungeons — MVP1 §](dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f) |
+| Floor grids, FOE YAML, per-floor random weights | [archive — MVP1 layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md) |
 | Campaign acts, save flags, tutorial FOE rules | [campaign/s1-intro](campaign/s1-intro.md) · [foe-encounters — tutorial](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker) |
 | **This file** | Locked enemy IDs, stats stubs, skills, encounter groups, FOE ↔ group mapping |
 
@@ -81,7 +81,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 | `grp_b1_chaff_hound` | `stray_hound`, `stray_hound` | — | 60 |
 | `grp_b1_chaff_mite` | `rust_mite`, `rust_mite` | — | 40 |
 
-`baseEncounterRate: 0.05` — see [B1F §](dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate).
+`baseEncounterRate: 0.05` — see [archive B1F (draft)](../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate).
 
 ### Random — `s1_B2F`
 
@@ -91,7 +91,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 | `grp_b2_shackle_rat` | `shackle_rat` | `scrapling` | 35 | `bind_arm` |
 | `grp_b2_venom_slime` | `venom_slime` | — | 30 | `poison` |
 
-`baseEncounterRate: 0.10` — [B2F §](dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe).
+`baseEncounterRate: 0.10` — [archive B2F (draft)](../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe).
 
 ### Random — `s1_B3F`
 
@@ -101,7 +101,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 | `grp_b3_rubble_pair` | `rubble_guard`, `scrapling` | — | 35 | Bruiser + swarm |
 | `grp_b3_control` | `shackle_rat` | `venom_slime` | 20 | Bind + poison mix |
 
-`baseEncounterRate: 0.12` — [B3F §](dungeons-and-encounters.md#s1_b3f--flooded-underpass-stratum-boss).
+`baseEncounterRate: 0.12` — [archive B3F (draft)](../archive/mvp1-s1-floor-layouts-draft.md#s1_b3f--flooded-underpass-stratum-boss).
 
 ---
 
@@ -132,7 +132,7 @@ Author under `Assets/Content/Enemies/` and `Assets/Content/Encounters/` per [05 
 | `SkillDefinition` | 8 | `enemy_attack` + 7 `atk_*` (class skills are separate — [design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
 | `EncounterGroup` | 11 | All rows in [encounter groups](#encounter-groups) |
 
-Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeons YAML](dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f). `EncounterGroup.tutorialUnbeatable` must be honored in combat ([foe-encounters](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)).
+Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeons YAML](../archive/mvp1-s1-floor-layouts-draft.md). `EncounterGroup.tutorialUnbeatable` must be honored in combat ([foe-encounters](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)).
 
 **Already aligned in game (verify when landing SOs):** `S1B2FLayoutBuilder` random table uses `grp_b2_*` weights 35/35/30; tutorial FOE uses `grp_alley_stalker_tutorial`.
 

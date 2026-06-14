@@ -4,7 +4,7 @@
 
 **System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted)  
 **Campaign acts & flags:** [s1-intro.md](s1-intro.md)  
-**Floor layout:** [dungeons — s1_B1F](../dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)  
+**Floor layout:** [archive — s1_B1F (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)  
 **Combat + VN sequence:** [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 
 Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** in MVP1). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).

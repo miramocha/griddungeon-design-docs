@@ -88,7 +88,7 @@ Random encounters: flee succeeds but party **stays on fight anchor**. FOE contac
 
 ### Tutorial FOE (S1 — `foe_alley_stalker`)
 
-Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1](../03-content/campaign/s1-intro.md), [synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe), [dungeons — B2F](../03-content/dungeons-and-encounters.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)):
+Scripted first FOE on `s1_B2F` — not a normal kill-to-win fight ([campaign S1](../03-content/campaign/s1-intro.md), [synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe), [archive — B2F (draft)](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)):
 
 | Rule | Detail |
 |------|--------|
