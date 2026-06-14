@@ -1,4 +1,4 @@
-# Floor level painter (Unity Editor)
+# Floor level painter / Floor Editor (Unity Editor)
 
 **Status:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)  
 **Authority:** [ADR 002 — floor level painter](../decisions/002-mapping-model.md#authoring--floor-level-painter-primary)
@@ -9,7 +9,7 @@ Design-time tool only. Players never draw on the map ([ADR 002](../decisions/002
 
 Paint launch dungeon floors in Unity and export **`ExplorationFloor`** assets.
 
-**Layout authority (2026-06):** **Draft — not locked.** During iteration, serialized `Assets/Content/Floors/s1_B*n*F.asset` (Floor Painter **Apply** / import) is runtime truth. Design ASCII lives in [archive — at launch S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). `S1B*FLayoutBuilder` is dev reset only — not spec authority.
+**Layout authority (2026-06):** **Draft — not locked.** During iteration, serialized `Assets/Content/Floors/s1_B*n*F.asset` (Floor Editor **Save** / Load) is runtime truth. Design ASCII lives in [archive — at launch S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). `S1B*FLayoutBuilder` is dev reset only — not spec authority.
 
 ## Coordinate system
 
@@ -55,7 +55,7 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 | Layer | Authority |
 |-------|-----------|
 | **Grid `^` / `v`** | **Where** each exit sits — multiple markers per floor |
-| **Painter Apply** | Emits one `FloorExitLink` per marker (`exitId`, `cell`, `direction`); may leave `target*` empty until topology compile |
+| **Painter Save** | Emits one `FloorExitLink` per binding (`exitId`, `cell`, `direction`, full `target*`) from **Select** cell inspector or paint markers |
 | **Floor Connector** (editor-only, [#253](https://github.com/miramocha/griddungeon-game/issues/253), [ADR 041](../../decisions/041-floor-connector-toolkit-wiring.md)) | **Compile** replaces full `exitLinks[]` per `locationId` (cells + targets) — **no runtime graph** |
 | **`ExplorationFloor` asset** | Runtime reads `exitLinks[]` only |
 
@@ -65,15 +65,14 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 
 ## Workflow
 
-1. **GridDungeon ? Content ? Floor Painter** (UI Toolkit) — paint layout ([#76](https://github.com/miramocha/griddungeon-game/issues/76), [#107](https://github.com/miramocha/griddungeon-game/issues/107)).
-2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v` on cells) ? **Apply** to `Assets/Content/Floors/s1_B*n*F.asset` ([#77](https://github.com/miramocha/griddungeon-game/issues/77)).
-3. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` ? **Floor Art Grid ? Populate Wall Blocks** ? save scene ([floor-art-fpv.md](floor-art-fpv.md)).
-4. **Validate** paths in-editor ([#78](https://github.com/miramocha/griddungeon-game/issues/78)) — parity with `layout_grid_check.py` presets.
-5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Apply during Play Mode** refreshes runtime walkability via Floor Painter sync; exit/re-enter Play Mode after Edit Mode Apply.
+1. **GridDungeon → Content → Floor Editor** (UI Toolkit) — **Paint** mode for layout; **Select** mode for per-cell exit targets (Hub / floor key, spawn, facing — ExitEdge parity).
+2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v`) or Select mode → **Save** to `Assets/Content/Floors/s1_B*n*F.asset`.
+3. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
+4. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
 
-**Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon ? Content ? Apply s1_B*n*F MVP1 layout** (`ExplorationFloorDevMenu`) — destructive to painted layouts.
+**Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon → Content → Apply s1_B*n*F MVP1 layout** (`ExplorationFloorDevMenu`) — destructive to painted layouts.
 
-Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) on `S1B*FLayoutBuilder` rows — not the day-to-day authoring path.
+Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (CI / regression — not in Floor Editor window).
 
 ## Not the same as
 
