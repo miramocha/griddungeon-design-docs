@@ -61,7 +61,7 @@ Add new checks in `default_checks()` when locking new campaign geometry.
 
 ## C# parity
 
-Edit Mode uses `FloorLayoutConnectivity` in `Assets/Scripts/Runtime/Map/` — same 4-neighbor BFS on `StratumFloor` tiles. **Floor Painter → Validate** is floor-agnostic (grid size, marker walkability, optional custom path). Locked s1_B*n*F regressions stay in this script and `S1B*FLayoutTests` — not in the painter UI.
+Edit Mode uses `FloorLayoutConnectivity` in `Assets/Scripts/Runtime/Map/` — delegates to `MapPathfinder` on `StratumFloor` tiles (reachability matches this script's BFS). **Floor Painter → Validate** is floor-agnostic (grid size, marker walkability, optional custom path). Locked s1_B*n*F regressions stay in this script and `S1B*FLayoutTests` — not in the painter UI.
 
 ## Related
 

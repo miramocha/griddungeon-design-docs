@@ -195,16 +195,16 @@ Category filter: `Map` or `Exploration` per `TestCategories.cs`.
 
 ---
 
-## vs `FloorLayoutConnectivity` (layout BFS)
+## vs `FloorLayoutConnectivity` (layout connectivity)
 
 | | **`MapPathfinder` + `ExplorationPathGraph`** | **`FloorLayoutConnectivity`** |
 |---|---------------------------------------------|------------------------------|
 | **Purpose** | Player autopilot on **saved exploration** state | **Authoring validation** — “can the player reach stairs?” on raw `StratumFloor` |
 | **Assembly** | Core + Runtime | Runtime (`Assets/Scripts/Runtime/Map/FloorLayoutConnectivity.cs`) |
-| **Algorithm** | A* (Manhattan, heap) | BFS queue |
+| **Algorithm** | A* (Manhattan, heap) | Delegates to **`MapPathfinder`** (same A* on unit-cost layout tiles) |
 | **Walkability** | Visited + `S1ExplorationWalkability` + reveal walls/doors | `StratumFloorLayout.IsWalkable` (+ optional `extraWalkable` cells) |
 | **Walls / doors** | Revealed `WallMask`, closed doors in save | Layout tiles only (no fog) |
-| **Tests** | `MapPathfinderTests`, `ExplorationPathGraphTests` | `S1B1FLayoutTests`, `S1B2FLayoutTests`, `S1B3FLayoutTests`; `Tools/layout_grid_check.py` |
+| **Tests** | `MapPathfinderTests`, `ExplorationPathGraphTests` | `S1B1FLayoutTests`, `S1B2FLayoutTests`, `S1B3FLayoutTests`; `Tools/layout_grid_check.py` (Python BFS for script-only parity) |
 
 Use **FloorLayoutConnectivity** when validating floor painter output; use **ExplorationPathGraph** for anything that depends on what the party has already mapped.
 

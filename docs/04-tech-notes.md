@@ -153,7 +153,7 @@ Sprite checklist, composite wall rules (edge segments — no 16 autotiles), door
 - **`AutopilotPathWalker`** (`GridDungeon.Core`) — path index → next turn or step
 - **`AutopilotController`** — destination pick, walk state, combat **suspend/resume**, overlay events; `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
 - **UI:** `ExplorationMapCoordinator` + expanded map — **Z** arm path, arrows/click cursor, path overlay via `MapGridPaintController` (not side minimap pick yet)
-- **Layout validation** uses separate **`FloorLayoutConnectivity` BFS** on raw `StratumFloor` — not autopilot ([autopilot pathfinding § vs FloorLayoutConnectivity](04-dev/autopilot-pathfinding.md#vs-floorlayoutconnectivity-layout-bfs))
+- **Layout validation** uses **`FloorLayoutConnectivity`** on raw `StratumFloor` (delegates to `MapPathfinder`; not autopilot fog/walls) ([autopilot pathfinding — vs FloorLayoutConnectivity](04-dev/autopilot-pathfinding.md#vs-floorlayoutconnectivity-layout-connectivity))
 - Cancel on manual input, blocked step, or unreachable resume; combat suspends with optional resume after fight
 
 ## Gathering & fishing (MVP2)
