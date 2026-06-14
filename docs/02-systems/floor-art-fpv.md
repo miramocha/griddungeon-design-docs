@@ -7,18 +7,18 @@
 
 ## Summary
 
-Artists author **3D corridor props** on the same **20×20** grid as exploration logic (`StratumFloor`). **`FloorArtGrid`** (Editor) aligns overlays and snap to `ExplorationWorldSpace.CellCornerToWorld` (10 u/cell). This spec adds:
+Artists author **3D corridor props** on the same **20×20** grid as exploration logic (`ExplorationFloor`). **`FloorArtGrid`** (Editor) aligns overlays and snap to `ExplorationWorldSpace.CellCornerToWorld` (10 u/cell). This spec adds:
 
 1. **Populate** — inspector list of wall/block prefabs + button to place one random full-cell prop on each **non-walkable** logic cell (with skips).
-2. **Runtime presentation** — load the authored floor art scene (or prefab) during exploration so Play Mode shows the same meshes artists built (not per-cell spawn from `StratumFloor` in v1).
+2. **Runtime presentation** — load the authored floor art scene (or prefab) during exploration so Play Mode shows the same meshes artists built (not per-cell spawn from `ExplorationFloor` in v1).
 
-Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** only ([ADR 002](../../decisions/002-mapping-model.md)).
+Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core** only ([ADR 002](../../decisions/002-mapping-model.md)).
 
 ## Context
 
 | Layer | Authority | Presentation |
 |-------|-----------|----------------|
-| Grid rules | `StratumFloor` SO, layout builders | — |
+| Grid rules | `ExplorationFloor` SO, layout builders | — |
 | 2D map HUD | `MapSystem` + `MapView` | Sprites / composite walls ([#38](https://github.com/miramocha/griddungeon-game/issues/38)) |
 | FPV dungeon | Same walkability as SO | `Assets/Scenes/Floors/{floorKey}.unity` under `FloorArtRoot/Props` |
 
@@ -32,7 +32,7 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 
 | Topic | Decision |
 |-------|----------|
-| Target cells | `IsWalkable == false` on assigned `StratumFloor` |
+| Target cells | `IsWalkable == false` on assigned `ExplorationFloor` |
 | Skip | Layout symbol **`X`** (story / tutorial blocker cells) — hand-place art later |
 | Prefab model | **One full-cell** block per targeted cell |
 | Position | **Cell center** — `FloorArtGrid.GridToCellCenterWorld(x, y)` (center-pivoted prefab) |
@@ -52,7 +52,7 @@ Logic, collision, map reveal, and encounters remain **`StratumFloor` + Core** on
 | Topic | Decision |
 |-------|----------|
 | Wall blocks (`#`) | Unchanged — [#102](https://github.com/miramocha/griddungeon-game/issues/102) **Populate Wall Blocks** |
-| Target cells | `IsWalkable == true` on assigned `StratumFloor` |
+| Target cells | `IsWalkable == true` on assigned `ExplorationFloor` |
 | Classification | 4-bit cardinal mask: which N/E/S/W neighbors are walkable |
 | Kinds | `HallwayStraight` (two opposite walkable neighbors), `HallwayCorner` (two adjacent), `FloorDefault` (0, 1, 3, or 4 walkable neighbors — open room, dead-end, T, cross until dedicated art) |
 | Position | **Cell center** — `GridToCellCenterWorld` (center-pivoted prefab, 10 u/cell) |
@@ -75,7 +75,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 
 ### Editor workflow (v1.5)
 
-1. Assign `StratumFloor`; enable **Show Walkable** + **Show Blocked** overlays.
+1. Assign `ExplorationFloor`; enable **Show Walkable** + **Show Blocked** overlays.
 2. **Clear Generated Props** (when re-running either pass).
 3. **Populate Wall Blocks** — `#` cells (unchanged).
 4. **Populate Walkable Tiles** — `.` corridor / room cells.
@@ -86,7 +86,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 | Topic | Decision |
 |-------|----------|
 | Source | **Authored floor art** the artist built in Editor (scene or exported prefab) |
-| Not in v1 | `DungeonView` spawning wall prefabs per cell from `StratumFloor` at runtime |
+| Not in v1 | `DungeonView` spawning wall prefabs per cell from `ExplorationFloor` at runtime |
 | Load trigger | When `ExplorationPhaseController` activates a floor matching `floorKey` |
 | Unload | Previous floor art instance unloaded/hidden on floor change or leaving exploration |
 | Catalog | `FloorArtCatalog` (or similar) SO: `floorKey` → scene asset **or** `FloorArtRoot` prefab |
@@ -99,7 +99,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 ## Editor — Populate workflow
 
 1. Open floor art scene (e.g. `Assets/Scenes/Floors/s1_B1F.unity`).
-2. Assign `StratumFloor` on **Floor Art Grid**; enable **Show Blocked Overlay** to verify alignment.
+2. Assign `ExplorationFloor` on **Floor Art Grid**; enable **Show Blocked Overlay** to verify alignment.
 3. Assign **Wall Block Prefabs** list on `FloorArtGrid`.
 4. Click **Populate Wall Blocks** (name TBD).
 5. Tool iterates `x ∈ [0, width)`, `y ∈ [0, height)`; for each cell:
@@ -127,7 +127,7 @@ sequenceDiagram
     participant DV as DungeonView
     participant Scene as Floor art scene/prefab
 
-    EPC->>EPC: Load StratumFloor (logic)
+    EPC->>EPC: Load ExplorationFloor (logic)
     EPC->>Cat: Resolve(floorKey)
     alt art registered
         Cat->>DV: LoadFloorArt(scene or prefab)
@@ -172,7 +172,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 | Modular N/E/S/W wall pieces from `WallMask` | FPV v2 or shared with map art rules |
 | Auto-place gather, doors, stairs meshes | Follow-up populate modes (gather skipped in [#172](https://github.com/miramocha/griddungeon-game/issues/172)) |
 | `DungeonView.RenderCell` blobber / per-cell swaps | Optional later |
-| Replacing `StratumFloor` collision from meshes | Never — logic SO only |
+| Replacing `ExplorationFloor` collision from meshes | Never — logic SO only |
 
 ## Implementation checklist (game repo)
 
@@ -206,7 +206,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 2. Second **Populate** removes only generated props, not hand-placed props without the marker.
 3. Play Mode on B1F after art is registered: player sees authored wall meshes; movement/collision unchanged from SO.
 4. Switching floors unloads prior art; no duplicate roots.
-5. No new logic in player assemblies that mutates `StratumFloor` tiles.
+5. No new logic in player assemblies that mutates `ExplorationFloor` tiles.
 
 ## Test plan
 

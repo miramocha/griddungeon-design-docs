@@ -1,7 +1,7 @@
 ---
 name: stratum-floor-layout-check
 description: >-
-  Validates Grid Dungeon authored StratumFloor ASCII layouts (row width,
+  Validates Grid Dungeon authored ExplorationFloor ASCII layouts (row width,
   walkability BFS, Act 1 funnel and tutorial gates) using Tools/layout_grid_check.py.
   Use when editing S1B1FLayoutBuilder, floor layout ASCII in design-docs, debugging
   path bypasses to stairsDown, or before committing map layout changes.
@@ -23,7 +23,7 @@ description: >-
 | Grid | 20×20 |
 | Row order in code | **North-up** — `k_RowsNorthUp[0]` = y=19, last row = y=0 (south) |
 | Cell lookup | `row = GRID - 1 - y`, then `rows[row][x]` |
-| Tile index | `x + y * width` (matches `StratumFloorLayout.ToIndex`) |
+| Tile index | `x + y * width` (matches `ExplorationFloorLayout.ToIndex`) |
 | Impassable symbols | `#` (wall), `X` (tutorial blocker until campaign opens cell) |
 | Authoritative markers | C# constants (`StairsUp`, `StairsDown`, spawns) — `v`/`^`/`M` in ASCII are visual hints only |
 
@@ -61,7 +61,7 @@ Add new checks in `default_checks()` when locking new campaign geometry.
 
 ## C# parity
 
-Edit Mode uses `FloorLayoutConnectivity` in `Assets/Scripts/Runtime/Map/` — delegates to `MapPathfinder` on `StratumFloor` tiles (reachability matches this script's BFS). **Floor Painter → Validate** is floor-agnostic (grid size, marker walkability, optional custom path). Locked s1_B*n*F regressions stay in this script and `S1B*FLayoutTests` — not in the painter UI.
+Edit Mode uses `FloorLayoutConnectivity` in `Assets/Scripts/Runtime/Map/` — delegates to `MapPathfinder` on `ExplorationFloor` tiles (reachability matches this script's BFS). **Floor Painter → Validate** is floor-agnostic (grid size, marker walkability, optional custom path). Locked s1_B*n*F regressions stay in this script and `S1B*FLayoutTests` — not in the painter UI.
 
 ## Related
 

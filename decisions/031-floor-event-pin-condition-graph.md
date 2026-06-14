@@ -2,18 +2,18 @@
 
 **Status:** Proposed (idea — does not block MVP1)  
 **Date:** 2026-05-28  
-**Follows:** [ADR 002](002-mapping-model.md) (floor painter / `StratumFloor`) · [ADR 028](028-story-visual-novel-events.md) · [ADR 030](030-story-event-graph-authoring.md)  
+**Follows:** [ADR 002](002-mapping-model.md) (floor painter / `ExplorationFloor`) · [ADR 028](028-story-visual-novel-events.md) · [ADR 030](030-story-event-graph-authoring.md)  
 **Tracks:** [game #109](https://github.com/miramocha/griddungeon-game/issues/109) (Event cells `!` + `storyEventId` on floor assets)
 
 ## Context
 
-Exploration content is authored as **grid pins** — story **Event** cells (`!`), role markers (`E` / `M` / `^` / `v`), gather (`G`), chests (`C`), FOE spawns, and similar features on `StratumFloor` ([floor level painter](../docs/02-systems/floor-level-painter.md)). **When** a pin exists on the map, **whether** the player can interact with it, and **what** runs on trigger should often depend on **campaign progress** — for example:
+Exploration content is authored as **grid pins** — story **Event** cells (`!`), role markers (`E` / `M` / `^` / `v`), gather (`G`), chests (`C`), FOE spawns, and similar features on `ExplorationFloor` ([floor level painter](../docs/02-systems/floor-level-painter.md)). **When** a pin exists on the map, **whether** the player can interact with it, and **what** runs on trigger should often depend on **campaign progress** — for example:
 
 - A lore `!` cell does not appear (or does not fire) until a hub quest is turned in.
 - A shortcut door stays blocked until a key item flag is set.
 - A repeat gather node stays depleted after first use (idempotent flag).
 
-**MVP1 today:** triggers are wired in C# phase controllers (`ExplorationPhaseController` → `StoryEventRunner.Play(storyEventId)` on hard-coded cells) while floor layout lives in assets ([#109](https://github.com/miramocha/griddungeon-game/issues/109) will move Event metadata onto `StratumFloor`).
+**MVP1 today:** triggers are wired in C# phase controllers (`ExplorationPhaseController` → `StoryEventRunner.Play(storyEventId)` on hard-coded cells) while floor layout lives in assets ([#109](https://github.com/miramocha/griddungeon-game/issues/109) will move Event metadata onto `ExplorationFloor`).
 
 **Design need:** designers and narrative should express **“this pin / event only when …”** without a programmer edit per beat, and without fragile duplicated flag checks scattered across controllers.
 
@@ -29,7 +29,7 @@ Relevant Graph Toolkit properties for Grid Dungeon:
 |------------------------|---------------------|
 | Editor graph UI + standard manipulators | **Floor event graph** per floor or stratum — designers place logic without custom GraphView boilerplate |
 | Blackboard variables | Bind **campaign flag ids** / quest ids for condition nodes (authoring labels, not live save mutation in Editor) |
-| Compile to runtime model | Editor pipeline → `StratumFloor` event rows + Core `FloorEventRule` DTOs |
+| Compile to runtime model | Editor pipeline → `ExplorationFloor` event rows + Core `FloorEventRule` DTOs |
 | Subgraphs | Reuse “quest complete?” / “Act 3?” condition clusters across floors |
 
 Unity’s **Visual Novel Director** sample (bundled with Graph Toolkit) demonstrates **graph → compiled runtime model** — analogous to our `StoryEventRunner` consuming compiled steps, not the graph asset.
@@ -46,7 +46,7 @@ Graph Toolkit is **experimental** — not verified for production. Treat package
 
 | Layer | Question | Authoring | Runtime owner |
 |-------|----------|-----------|----------------|
-| **Layout** | Where on the grid? | Floor painter grid char / pin (`!`, `G`, …) → `StratumFloor` tiles & coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)) | `DungeonExplorer` walkability; map auto-reveal |
+| **Layout** | Where on the grid? | Floor painter grid char / pin (`!`, `G`, …) → `ExplorationFloor` tiles & coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)) | `DungeonExplorer` walkability; map auto-reveal |
 | **Rules** | When visible / interactable / what fires? | **Floor event graph** (Graph Toolkit) → **compiled** rules on floor asset | **Core** `FloorEventEvaluator` + Runtime `ExplorationPhaseController` dispatch |
 
 **Rule:** No graph interpreter in player builds. Compiled output is versioned in `Assets/Content/Floors/` (and tests use the same DTOs).
@@ -104,7 +104,7 @@ ExplorationPhaseController (party moved / interact)
 | Option | Why |
 |--------|-----|
 | Graph Toolkit (or UVS) **runtime** graph execution | Untestable, hard to diff, conflicts with [ADR 017](017-game-phase-controller.md) C# authority |
-| **Parallel pin store** outside grid | Already rejected ([#107](https://github.com/miramocha/griddungeon-game/issues/107)) — grid + `StratumFloor` remain source of truth for *where* |
+| **Parallel pin store** outside grid | Already rejected ([#107](https://github.com/miramocha/griddungeon-game/issues/107)) — grid + `ExplorationFloor` remain source of truth for *where* |
 | Quest logic only in Exploration C# | Does not scale; duplicates [story-events](../docs/02-systems/story-events.md) flag patterns |
 
 ### 4. Relationship to story VN graphs ([ADR 030](030-story-event-graph-authoring.md))
@@ -123,7 +123,7 @@ A single **PlayStoryEvent** action node links the two: floor graph decides *when
 
 | Phase | Deliverable |
 |-------|-------------|
-| **MVP1 ([#109](https://github.com/miramocha/griddungeon-game/issues/109))** | Event cells + `storyEventId` on `StratumFloor`; **static** pins; C# triggers for S1 beats |
+| **MVP1 ([#109](https://github.com/miramocha/griddungeon-game/issues/109))** | Event cells + `storyEventId` on `ExplorationFloor`; **static** pins; C# triggers for S1 beats |
 | **Post-MVP1 — data** | `FloorEventRule` schema + `FloorEventEvaluator` in Core; hand-authored rules on floor assets (no graph UI yet) |
 | **Post-MVP1 — editor** | Graph Toolkit project + compile to floor rules; migrate S1 optional / gated beats off hard-coded cells |
 | **Later** | Shared Graph Toolkit shell with [ADR 030](030-story-event-graph-authoring.md); subgraph library for common S1/S2 conditions |
@@ -137,7 +137,7 @@ A single **PlayStoryEvent** action node links the two: floor graph decides *when
 
 ## Open questions
 
-1. **Graph granularity** — one graph asset per `StratumFloor` vs one campaign graph with floor subgraphs.
+1. **Graph granularity** — one graph asset per `ExplorationFloor` vs one campaign graph with floor subgraphs.
 2. **Visibility vs removal** — gated pins: omit from map entirely vs show “?” / blocked icon (EO-style unreached content).
 3. **Quest model** — reuse `CampaignSaveData` flags only vs introduce `QuestState` rows referenced by condition nodes.
 4. **Editor unification** — single Graph Toolkit app with two node palettes (floor vs story) vs two packages/windows.

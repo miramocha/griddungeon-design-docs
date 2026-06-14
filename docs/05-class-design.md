@@ -1,19 +1,19 @@
-﻿# Class Design — MVP1
+# Class Design � MVP1
 
-Concrete classes, interfaces, and enums for the MVP1 implementation. Derived from [tech notes](04-tech-notes.md), [MVP1 spec](archive/mvp1-spec.md), [ADR 014–016](../decisions/), and all locked system docs.
+Concrete classes, interfaces, and enums for the MVP1 implementation. Derived from [tech notes](04-tech-notes.md), [MVP1 spec](archive/mvp1-spec.md), [ADR 014�016](../decisions/), and all locked system docs.
 
-> **Status:** design draft — structure locked for MVP1; **game phase flow locked** ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md)); other naming open for bikeshedding before first `.cs` files commit.
+> **Status:** design draft � structure locked for MVP1; **game phase flow locked** ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md)); other naming open for bikeshedding before first `.cs` files commit.
 
 ---
 
-## MVP1 architecture — design goals
+## MVP1 architecture � design goals
 
 | Goal | How architecture supports it |
 |------|--------------------------------|
 | **Test damage + AGI without Unity** | `GridDungeon.Core` simulators + `GridDungeon.Tests` (mostly Core; Runtime when wiring needs it) |
-| **Hub ↔ explore ↔ combat loop** | `GamePhaseController` + three `IPhaseController`s ([game phase](02-systems/game-phase.md)) |
+| **Hub ? explore ? combat loop** | `GamePhaseController` + three `IPhaseController`s ([game phase](02-systems/game-phase.md)) |
 | **Spec-locked combat** | `CombatController` + `TurnQueue` + `EndOfRoundPipeline`; combat sub-phases not on `GamePhase` |
-| **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, …) at simulator boundaries |
+| **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, �) at simulator boundaries |
 | **FOE + map + flee rules** | `ExplorationPhaseController` wires explorer events; `RetreatCellCalculator` + `FoeFleeRetreatPlacement` in Core |
 | **Phase vs presentation** | C# owns transitions; optional UVS later listens to `PhaseChanged` only ([ADR 017](../decisions/017-game-phase-controller.md)) |
 
@@ -41,12 +41,12 @@ flowchart BT
 
 ```
 GridDungeon.Core       (pure C#, no UnityEngine)
-    ↑
+    ?
 GridDungeon.Runtime    (MonoBehaviours, ScriptableObjects)
-    ↑
+    ?
 GridDungeon.UI         (UI Toolkit views, input handlers)
 
-GridDungeon.Tests      (NUnit, references Core + Runtime; domain folders — game repo Assets/Tests/README.md)
+GridDungeon.Tests      (NUnit, references Core + Runtime; domain folders � game repo Assets/Tests/README.md)
 ```
 
 | Assembly | `asmdef` path | Notes |
@@ -72,10 +72,10 @@ enum DamageElement   { None, Slash, Pierce, Fire, Ice, Volt }
 enum BodyPart        { None, Head, Arm, Leg }
 enum BattleResult    { Victory, Wipe, Flee }
 
-// Status categories — mirrors StatusDefinition.category
+// Status categories � mirrors StatusDefinition.category
 enum StatusCategory  { Control, BindLimb, DoT, StatBuff, StatDebuff, BattleMod }
 
-// Skill presentation — MVP1 only uses Fixed
+// Skill presentation � MVP1 only uses Fixed
 enum SkillPresentation { Fixed, Cinematic, CinematicQTE }
 ```
 
@@ -88,7 +88,7 @@ readonly struct CellEdge     { GridPosition Cell; FacingDirection Side; }
 
 ---
 
-## Data layer — ScriptableObject definitions (Runtime)
+## Data layer � ScriptableObject definitions (Runtime)
 
 All read-only at runtime. Created in the Unity editor and referenced by `ContentDatabase`.
 
@@ -113,7 +113,7 @@ class SkillNodeDefinition
 {
     string skillId;
     int maxRank;
-    string[] prerequisiteSkillIds; // must be ≥1 to unlock this node
+    string[] prerequisiteSkillIds; // must be =1 to unlock this node
 }
 ```
 
@@ -125,7 +125,7 @@ class SkillDefinition : ScriptableObject
 {
     string skillId;
     string displayName;
-    string descriptionEn;         // mechanical summary for picker detail / tooltips — no exact MP/power/% in prose ([mvp1-class-skills](03-content/class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
+    string descriptionEn;         // mechanical summary for picker detail / tooltips � no exact MP/power/% in prose ([mvp1-class-skills](03-content/class-skills.md), [game #149](https://github.com/miramocha/griddungeon-game/issues/149))
     SkillType skillType;
     DamageElement element;
     BodyPart bodyPartTag;         // which bind blocks this skill
@@ -136,8 +136,8 @@ class SkillDefinition : ScriptableObject
     string cinematicAssetId;      // when presentation != Fixed; Timeline prefab ref ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
     StatusInflict? inflictStatus; // optional on-hit status
     string summonDefinitionId;    // set if skillType == Deploy
-    // SkillUseContext flags (Combat / Field) — ADR 035; picker tabs: default All + SkillType ([ADR 035](../decisions/035-skill-use-picker.md))
-    // CinematicQTE: qteBonus multipliers on skill or linked SO — prompt timing on Timeline markers only
+    // SkillUseContext flags (Combat / Field) � ADR 035; picker tabs: default All + SkillType ([ADR 035](../decisions/035-skill-use-picker.md))
+    // CinematicQTE: qteBonus multipliers on skill or linked SO � prompt timing on Timeline markers only
 }
 
 struct TargetingRule
@@ -167,7 +167,7 @@ class StatusDefinition : ScriptableObject
 
 ### Equipment & items
 
-**Runtime behavior:** [items & inventory](02-systems/items-and-inventory.md) · [ADR 036](../decisions/036-party-inventory-model.md).
+**Runtime behavior:** [items & inventory](02-systems/items-and-inventory.md) � [ADR 036](../decisions/036-party-inventory-model.md).
 
 ```csharp
 // Assets/Content/Equipment/
@@ -231,8 +231,8 @@ struct LootEntry  { string itemId; float dropChance; int minQty; int maxQty; }
 class EncounterGroup : ScriptableObject
 {
     string groupId;
-    EnemySlotConfig[] frontRow;  // ≤3 enemy slots
-    EnemySlotConfig[] backRow;   // ≤3 enemy slots
+    EnemySlotConfig[] frontRow;  // =3 enemy slots
+    EnemySlotConfig[] backRow;   // =3 enemy slots
     BattleBackgroundId background;
     bool tutorialUnbeatable;     // enemies cannot die; HP floor at 1
     bool noFlee;
@@ -260,7 +260,7 @@ class ProtocolSkillDefinition : ScriptableObject
 {
     string protocolSkillId;
     string displayName;
-    ProtocolEffectType effectType;   // DamageAllEnemies, HealAllAllies, …
+    ProtocolEffectType effectType;   // DamageAllEnemies, HealAllAllies, �
     float power;
     int participantCount;         // how many core must be alive to activate
     string presentationId;
@@ -286,13 +286,13 @@ class SummonDefinition : ScriptableObject
 struct SummonAction { string skillId; TargetKind targetPreference; }
 ```
 
-### Floors & stratum
+### Floors & exploration
 
 ```csharp
-// Assets/Content/Dungeons/
-class StratumFloor : ScriptableObject
+// Assets/Content/Floors/
+class ExplorationFloor : ScriptableObject
 {
-    string stratumId;             // "s1"
+    string locationId;            // "s1", "sd01", � � location-neutral ([ADR 040](../../decisions/040-floor-exit-topology-graph.md))
     string floorId;               // "B1F"
     int gridWidth;
     int gridHeight;
@@ -300,7 +300,7 @@ class StratumFloor : ScriptableObject
     FoeSpawnConfig[] foeSpawns;
     EncounterTable randomEncounters;
     float baseEncounterRate;
-    FloorExitLink[] exitLinks;    // 0..N exits per floor — authoritative routing ([ADR 040](../../decisions/040-floor-exit-topology-graph.md))
+    FloorExitLink[] exitLinks;    // 0..N exits per floor � authoritative routing ([ADR 040](../../decisions/040-floor-exit-topology-graph.md))
     GridPosition partyEntryIntro; // Act 1 cold start (optional)
     GridPosition partyEntryGate; // hub re-entry / stratum gate
     TutorialBlocker[] tutorialBlockers; // cleared when s1_tutorial_dive_started
@@ -312,7 +312,7 @@ enum FloorExitTargetKind { Hub, Floor }
 
 struct FloorExitLink
 {
-    string exitId;                // stable per floor — graph / painter authoring id
+    string exitId;                // stable per floor � graph / painter authoring id
     GridPosition cell;
     FloorExitDirection direction;
     FloorExitTargetKind targetKind;
@@ -343,11 +343,11 @@ class StratumDefinition
 }
 ```
 
-**Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../../decisions/040-floor-exit-topology-graph.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
+**Authoring rules:** [dungeons � warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 � exit links](../../decisions/040-floor-exit-topology-graph.md). MVP1: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
 ---
 
-## Core layer — models & simulators (pure C#)
+## Core layer � models & simulators (pure C#)
 
 No `UnityEngine` dependency. Lives in `GridDungeon.Core`.
 
@@ -429,7 +429,7 @@ class RoundSnapshot
 
 ### Core content DTOs (no Unity)
 
-Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase` maps SO → DTO when loading content or starting battle. **Simulators and tests use only these types.**
+Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase` maps SO ? DTO when loading content or starting battle. **Simulators and tests use only these types.**
 
 ```csharp
 readonly record struct SkillData(
@@ -491,15 +491,15 @@ static class StatusSystem
     static bool IsBlocked(Combatant actor, SkillData skill);
 }
 
-static class InventoryRules { /* TryAdd, TryEquip, bag-full — ADR 036 */ }
+static class InventoryRules { /* TryAdd, TryEquip, bag-full � ADR 036 */ }
 static class InventoryBagCatalog { /* tab filter for party bag UI */ }
-static class EquipmentStatAggregator { /* worn bonuses → CombatantStats */ }
+static class EquipmentStatAggregator { /* worn bonuses ? CombatantStats */ }
 
 static class ValidTargetCalculator
 {
     static IReadOnlyList<Combatant> GetValidTargets(
         BattleState state, TargetingRule rule, bool actorTargetsEnemies);
-    // Front-row preference for melee; CanTargetBack / Pierce per skill — [#56](https://github.com/miramocha/griddungeon-game/issues/56) row-collapse follow-up
+    // Front-row preference for melee; CanTargetBack / Pierce per skill � [#56](https://github.com/miramocha/griddungeon-game/issues/56) row-collapse follow-up
 }
 
 static class CombatTargeting
@@ -523,7 +523,7 @@ static class RetreatCellCalculator
 
 static class FoeFleeRetreatPlacement
 {
-    // Post-combat grid cell after flee — FOE contact only (ADR 011)
+    // Post-combat grid cell after flee � FOE contact only (ADR 011)
     static bool TryResolvePostFleeCell(BattleResult result, CombatEntryContext entry,
         GridPosition partyCell, FloorCollisionQuery isWalkable, out GridPosition placementCell);
 }
@@ -586,7 +586,7 @@ class FoeInstance
 {
     HubSaveData Hub;
     CharacterSaveData[] Party;     // 6 characters; each row includes EquipmentLoadout
-    PartyInventory Inventory;      // fixed bag slots — ADR 036
+    PartyInventory Inventory;      // fixed bag slots � ADR 036
     string ActiveNavigatorId;
     float SynchroBar;
     Dictionary<string, FloorMapStateSave> Maps;   // key: "s1_B1F"
@@ -611,11 +611,11 @@ class FoeInstance
 
 ---
 
-## Runtime layer — MonoBehaviours & managers
+## Runtime layer � MonoBehaviours & managers
 
 Lives in `GridDungeon.Runtime`. One `MonoBehaviour` per system responsibility.
 
-### Game phase (macro flow) — [ADR 017](../decisions/017-game-phase-controller.md)
+### Game phase (macro flow) � [ADR 017](../decisions/017-game-phase-controller.md)
 
 Pure C# phase orchestration. **Not** Unity Visual Scripting. See [game phase](02-systems/game-phase.md) for diagrams and Enter/Exit rules.
 
@@ -623,7 +623,7 @@ Pure C# phase orchestration. **Not** Unity Visual Scripting. See [game phase](02
 // Core/Enums/GamePhase.cs
 enum GamePhase { Hub, Exploration, Combat }
 
-// Runtime/Game/GamePhaseController.cs — plain C# (not MonoBehaviour)
+// Runtime/Game/GamePhaseController.cs � plain C# (not MonoBehaviour)
 sealed class GamePhaseController
 {
     GamePhase Current { get; private set; }
@@ -643,7 +643,7 @@ interface IPhaseController
 sealed class HubPhaseController : IPhaseController
 {
     HubController Hub;
-    // OnEnter(from): hub UI; if from == Exploration → FOE reset (ADR 008), ClearExplorationState
+    // OnEnter(from): hub UI; if from == Exploration ? FOE reset (ADR 008), ClearExplorationState
     // OnExit: hide hub UI
 }
 
@@ -702,24 +702,24 @@ sealed class GameState : MonoBehaviour
 }
 ```
 
-**Transition callers (examples):** `HubController.LeaveHub` → Exploration; `FoeSystem.OnFoeContact` / `EncounterTrigger` → Combat; `CombatController.OnBattleEnded` → Exploration; wipe flow → Hub + load save.
+**Transition callers (examples):** `HubController.LeaveHub` ? Exploration; `FoeSystem.OnFoeContact` / `EncounterTrigger` ? Combat; `CombatController.OnBattleEnded` ? Exploration; wipe flow ? Hub + load save.
 
 ### Exploration
 
 ```csharp
 class DungeonExplorer : MonoBehaviour
 {
-    [SerializeField] Transform m_poseRoot; // scene "PartyPose"; grid → world — see dungeon navigation § Party pose
+    [SerializeField] Transform m_poseRoot; // scene "PartyPose"; grid ? world � see dungeon navigation � Party pose
 
     GridPosition Cell    { get; private set; }
     FacingDirection Facing { get; private set; }
 
-    // Called by ExplorationInputHandler (hold IsPressed; repeat after lerp — ADR 001)
+    // Called by ExplorationInputHandler (hold IsPressed; repeat after lerp � ADR 001)
     void TryStepForward();   // WASD displacement
     void TryStepBack();
     void TryStrafeLeft();
     void TryStrafeRight();
-    void TryTurnLeft();      // A/D — hold repeat after turn lerp; no step events
+    void TryTurnLeft();      // A/D � hold repeat after turn lerp; no step events
     void TryTurnRight();
     void TryInteract();
     void StopMovement();     // kill tweens on combat exit
@@ -739,7 +739,7 @@ enum ExplorationAnimationSpeed { Slow, Normal, Fast, VeryFast }
 static class ExplorationAnimationDurations
 {
     static (float step, float turn, float bumpSegment) Get(ExplorationAnimationSpeed speed);
-    // Normal: 0.32s / 0.26s / 0.10s — see ADR 018
+    // Normal: 0.32s / 0.26s / 0.10s � see ADR 018
 }
 
 class DungeonView : MonoBehaviour
@@ -787,7 +787,7 @@ class FoeSystem : MonoBehaviour
 
     event Action<FoePatrolMove> OnFoePatrolMoved;   // map FOE marker slide
     event Action OnFoePresenceChanged;            // marker layer refresh
-    // FOE contact → combat: ExplorationPhaseController (no public OnFoeContact today)
+    // FOE contact ? combat: ExplorationPhaseController (no public OnFoeContact today)
     // Target / deferred: event Action<FoeInstance> OnFoeContact; OnFoeVisible;
 }
 
@@ -801,7 +801,7 @@ class EncounterTrigger
 
 class GatherInteractor
 {
-    // TryInteract on gather node — instant loot (MVP1, no minigame)
+    // TryInteract on gather node � instant loot (MVP1, no minigame)
     bool TryGather(GridPosition cell, FloorMapState map, PartyRuntime party);
 }
 ```
@@ -859,7 +859,7 @@ class ProtocolSystem : MonoBehaviour
     // Core turn when Synchro Charge == 1: CombatCommand.Protocol + skill id
     bool TryUseProtocolSkill(string protocolSkillId, out ProtocolSkillData skill);
 
-    void SpendBar();   // → 0 after Protocol use
+    void SpendBar();   // ? 0 after Protocol use
 }
 ```
 
@@ -878,9 +878,9 @@ class CombatController : MonoBehaviour
     bool IsCommandPlanning { get; }
     Combatant? CommandTarget { get; }
     void SubmitPlayerAction(CombatAction action);   // queues during CommandPlanning
-    void SelectCommandTarget(Combatant core);       // roster re-select — #58 follow-up
+    void SelectCommandTarget(Combatant core);       // roster re-select � #58 follow-up
     bool CanStepBackCommandPlanning { get; }
-    void StepBackCommandPlanning();              // R / Esc — Back (LIFO) — game #61
+    void StepBackCommandPlanning();              // R / Esc � Back (LIFO) � game #61
     void SubmitFlee();
 
     // Events + command methods for HUD: 04-dev/ui-event-contract.md (keep in sync with game repo)
@@ -888,12 +888,12 @@ class CombatController : MonoBehaviour
 
 enum CombatPhase { Idle, CommandPlanning, TurnPhase, EndOfRound }
 
-class PartyCommandBatch   // Core — queued commands keyed by combatant id
+class PartyCommandBatch   // Core � queued commands keyed by combatant id
 {
     void Assign(Combatant core, CombatAction action);
-    void Remove(string combatantId);   // StepBackCommandPlanning pop — game #61
+    void Remove(string combatantId);   // StepBackCommandPlanning pop � game #61
     bool TryGet(string combatantId, out CombatAction action);
-    // AllLivingCoresAssigned, FirstUnassigned, …
+    // AllLivingCoresAssigned, FirstUnassigned, �
 }
 
 // Protocol: CombatCommand.Protocol + SkillId (protocol_strike / protocol_mend) on core turn when Synchro == 1
@@ -907,12 +907,12 @@ class CombatEntryContext
     FacingDirection PartyFacing;
     bool NoFlee;
     bool IsFoeContactFight => Foe != null;
-    // FOE contact + successful flee → party steps back one cell (ADR 011); random fights stay put
+    // FOE contact + successful flee ? party steps back one cell (ADR 011); random fights stay put
     bool ShouldMovePartyToRetreatCell(BattleResult result);
 }
 // S1 tutorial FOE: identify by EncounterGroupId (grp_alley_stalker_tutorial) via CombatTutorialHudRules.IsS1FirstFoeTutorial.
 // Floor spawn flag: FoeSpawnConfig.TutorialFirstFoe. Content: EncounterGroup.tutorialUnbeatable, NoFlee on entry.
-// Deprecated sketch: enum TutorialCombatKind on CombatEntryContext — do not add.
+// Deprecated sketch: enum TutorialCombatKind on CombatEntryContext � do not add.
 
 class CombatAction
 {
@@ -977,7 +977,7 @@ class HubController : MonoBehaviour
 
     void EnterHub();
     void LeaveHub(string destStratumId, string destFloorId);
-    // MVP3 — see § MVP3 side dungeons sketch
+    // MVP3 � see � MVP3 side dungeons sketch
     void EnterSideDungeon(string locationId, string floorId);
 }
 
@@ -1008,7 +1008,7 @@ class GuildService
     IReadOnlyList<Combatant> Roster { get; }
     void CreateCharacter(string name, string classId, string portraitId);
     void AssignToParty(string characterId, int coreSlot);
-    /// <summary>Hub or exploration party menu — [ADR 034](../decisions/034-skill-point-allocation-outside-combat.md).</summary>
+    /// <summary>Hub or exploration party menu � [ADR 034](../decisions/034-skill-point-allocation-outside-combat.md).</summary>
     void AllocateSkillPoint(string characterId, string skillId);
 }
 
@@ -1041,7 +1041,7 @@ class ContentDatabase : ScriptableObject
     // Runtime SO lookup (editor assets)
     EnemyDefinition      GetEnemy(string id);
     EncounterGroup       GetEncounterGroup(string id);
-    StratumFloor         GetFloor(string stratumId, string floorId);
+    ExplorationFloor         GetFloor(string locationId, string floorId);
     SkillDefinition      GetSkill(string id);
     ClassDefinition      GetClass(string classId);
     StatusDefinition     GetStatus(string statusId);
@@ -1084,12 +1084,12 @@ class SaveSystem : MonoBehaviour
 
 ## UI layer
 
-Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** combat — `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration — **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes — UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md). **Integrator / external HUD:** [UI event contract](04-dev/ui-event-contract.md) (runtime events + examples).
+Lives in `GridDungeon.UI`. UI Toolkit documents + C# controllers. **Reactive HUD (MVP1):** combat � `CombatHudReactivePresenter` + `CombatPresentationGate` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); exploration � **map marker overlay presenters** + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90)); hub service motion still target. See [tech notes � UI reactivity](04-tech-notes.md#ui-reactivity), [combat](02-systems/combat.md#ui-motion--feedback), [mapping](02-systems/mapping.md#map-ui-motion), [exploration UI](02-systems/exploration-ui.md). **Integrator / external HUD:** [UI event contract](04-dev/ui-event-contract.md) (runtime events + examples).
 
 ### Input routing
 
 ```csharp
-// GridDungeon.UI — subscribes to GameState.PhaseChanged on enable
+// GridDungeon.UI � subscribes to GameState.PhaseChanged on enable
 class InputRouter : MonoBehaviour
 {
     void Bind(GameState gameState);  // PhaseChanged += OnPhaseChanged
@@ -1097,7 +1097,7 @@ class InputRouter : MonoBehaviour
     // Enables/disables Input System maps: Exploration, Combat, Map, UI
 }
 
-// Stateless handlers — convert raw actions to system calls
+// Stateless handlers � convert raw actions to system calls
 class ExplorationInputHandler
 {
     void OnMoveForward(); void OnMoveBack();
@@ -1109,7 +1109,7 @@ class ExplorationInputHandler
 
 class CombatInputHandler
 {
-    void OnCommand(int slot);    // Z/X/C/V/B → Attack/Guard/Skill/Item/Flee
+    void OnCommand(int slot);    // Z/X/C/V/B ? Attack/Guard/Skill/Item/Flee
     void OnProtocolMenu();       // U when Synchro == 100% on core turn
     void OnSelectTarget(string combatantId);
     void OnConfirm(); void OnCancel();
@@ -1129,21 +1129,21 @@ UI Toolkit panel for **issue #1** macro-phase smoke test. Not shipped in product
 
 | Asset / type | Path |
 |--------------|------|
-| `GamePhaseDevHud.uxml`, `GamePhaseDevHud.uss` | `Assets/UI/Screens/Dev/` (BEM: `game-phase-dev`, `game-phase-dev__button`, …) |
-| `GamePhaseDevHudView` | `Assets/Scripts/UI/Dev/` — `[RequireComponent(typeof(UIDocument))]` |
+| `GamePhaseDevHud.uxml`, `GamePhaseDevHud.uss` | `Assets/UI/Screens/Dev/` (BEM: `game-phase-dev`, `game-phase-dev__button`, �) |
+| `GamePhaseDevHudView` | `Assets/Scripts/UI/Dev/` � `[RequireComponent(typeof(UIDocument))]` |
 
 ```csharp
-// GridDungeon.UI.Dev — DevBootstrap scene only
+// GridDungeon.UI.Dev � DevBootstrap scene only
 class GamePhaseDevHudView : MonoBehaviour
 {
     GameState       GameState;       // serialized
     CombatController Combat;        // serialized
     // OnEnable: Q<> cached labels/buttons; PhaseChanged += Refresh
-    // Buttons / F1–F4 → RequestTransition / RequestCombat / EndBattle(Flee)
+    // Buttons / F1�F4 ? RequestTransition / RequestCombat / EndBattle(Flee)
 }
 ```
 
-Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.unity`, not in git — regenerate after clone).
+Scene menu: **GridDungeon ? Scenes ? Create Dev Bootstrap** (`DevBootstrap.unity`, not in git � regenerate after clone).
 
 ### View controllers
 
@@ -1155,14 +1155,14 @@ class ExplorationHUD : MonoBehaviour  // root VisualElement for exploration phas
     DungeonView       DungeonView;
     MapView           Map;
     PartyStripView    PartyStrip;   // shipped: PartyFormationFloater + PartyFormationGridView
-    // CombatLogView Log — deferred (no exploration log UXML wired; combat uses CombatHudLogView)
+    // CombatLogView Log � deferred (no exploration log UXML wired; combat uses CombatHudLogView)
 }
 
 class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
 {
     TurnOrderStripView TurnOrder;
     PartyRowsView      PartyRows;    // shipped: CombatRosterView front/back in CombatHudView
-    CommandPanelView   Commands;     // Skill → CombatSkillPickerHost (ADR 035)
+    CommandPanelView   Commands;     // Skill ? CombatSkillPickerHost (ADR 035)
     TargetSelectorView Targets;
     NavigatorView      Navigator;
     SynchroBarView       SynchroBar;
@@ -1170,22 +1170,22 @@ class CombatHUD : MonoBehaviour       // root VisualElement for combat phase
     EnemySlotsView     EnemySlots;
 }
 
-// GridDungeon.Editor.Save — MVP1 save / campaign dev tooling (PR #84)
-class GridDungeonSaveEditorWindow : EditorWindow  // GridDungeon → Tools → Save Editor
+// GridDungeon.Editor.Save � MVP1 save / campaign dev tooling (PR #84)
+class GridDungeonSaveEditorWindow : EditorWindow  // GridDungeon ? Tools ? Save Editor
 class SaveEditorModel / SaveEditorPanel           // Play: in-memory flags + drift vs disk; Edit: Reload / Write JSON
-class CampaignFlagCatalog                       // Editor descriptors ↔ CampaignFlagId (Core)
+class CampaignFlagCatalog                       // Editor descriptors ? CampaignFlagId (Core)
 
-// GridDungeon.Editor — floor level painter → StratumFloor.asset (ADR 002, #107)
+// GridDungeon.Editor � floor level painter ? ExplorationFloor.asset (ADR 002, #107)
 class FloorPainterWindow : EditorWindow       // thin shell; UI Toolkit CreateGUI
-class FloorPainterPanel : VisualElement         // palette, Apply, StratumFloor ObjectField
+class FloorPainterPanel : VisualElement         // palette, Apply, ExplorationFloor ObjectField
 class FloorPainterGridElement : VisualElement   // per-cell paint + undo
 class FloorPainterGridModel                     // session grid (north-up storage, y=0 south)
-class FloorPainterMarkerResolver                // scan E/M/^/v → entry/stairs Vector2Int
-class FloorPainterExport                        // BuildTiles + TryApplyToStratumFloor
+class FloorPainterMarkerResolver                // scan E/M/^/v ? entry/stairs Vector2Int
+class FloorPainterExport                        // BuildTiles + TryApplyToExplorationFloor
 
 class MapView : MonoBehaviour
 {
-    // 2D schematic from StratumFloor + IReadOnlyFloorMapState (ADR 002); not minimap RT
+    // 2D schematic from ExplorationFloor + IReadOnlyFloorMapState (ADR 002); not minimap RT
     // Fullscreen overlay; input passes through to ExplorationInputHandler (ADR 014)
     void Show(); void Hide();
     void RenderFloor(IReadOnlyFloorMapState state, GridPosition partyCell, FacingDirection facing);
@@ -1199,7 +1199,7 @@ class PartyStripView : MonoBehaviour
     void Refresh();
 }
 
-// Horizontal AGI queue strip; rules in combat.md § Turn order strip.
+// Horizontal AGI queue strip; rules in combat.md � Turn order strip.
 class TurnOrderStripView : MonoBehaviour
 {
     void Bind(TurnQueue queue);   // TurnQueue.Ordered + Current
@@ -1212,7 +1212,7 @@ class CommandPanelView : MonoBehaviour
     event Action<CombatAction> OnActionSelected;
 }
 
-// Player pick for Attack / single-target skills — shipped in CombatHudView + CombatRosterView ([#60](https://github.com/miramocha/griddungeon-game/issues/60)).
+// Player pick for Attack / single-target skills � shipped in CombatHudView + CombatRosterView ([#60](https://github.com/miramocha/griddungeon-game/issues/60)).
 // Optional dedicated TargetSelectorView not used in MVP1; highlights + LMB on roster slots.
 
 class SynchroBarView : MonoBehaviour
@@ -1241,7 +1241,7 @@ class EnemySlotsView : MonoBehaviour
     void ShowStatusIcons(int slotIndex, IReadOnlyList<StatusInstance> statuses);
 }
 
-// CombatScenePresenter (arena rig) — GetEnemySlotAnchor(slotIndex) for spawn + VFX; MVP1 HUD uses CombatRosterView two-row bind
+// CombatScenePresenter (arena rig) � GetEnemySlotAnchor(slotIndex) for spawn + VFX; MVP1 HUD uses CombatRosterView two-row bind
 ```
 
 ---
@@ -1258,7 +1258,7 @@ interface IReadOnlyFloorMapState
     bool TryGetFoeIcon(GridPosition cell, out string foeId);
 }
 
-// IPhaseController — defined under Game phase above; OnEnter(from) / OnExit(to)
+// IPhaseController � defined under Game phase above; OnEnter(from) / OnExit(to)
 ```
 
 ### CombatantFactory (Runtime)
@@ -1277,64 +1277,64 @@ static class CombatantFactory
 
 ```
 Assets/
-├── Scripts/
-│   ├── Core/                     GridDungeon.Core.asmdef
-│   │   ├── Models/               Combatant.cs, BattleState.cs, FoeInstance.cs, FloorMapState.cs, ...
-│   │   ├── Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
-│   │   ├── Campaign/             S1CampaignResolver.cs, CombatTutorialHudRules.cs, …
-│   │   ├── Simulators/           DamageCalculator.cs, ValidTargetCalculator.cs, CombatTargeting.cs,
-│   │   │                         InventoryRules.cs, InventoryBagCatalog.cs, EquipmentStatAggregator.cs,
-│   │   │                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs,
-│   │   │                         FoeFleeRetreatPlacement.cs, TurnQueueBuilder.cs, ...
-│   │   ├── SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...
-│   │   └── Enums/                GamePhase.cs, CombatantKind.cs, ...
-│   ├── Runtime/                  GridDungeon.Runtime.asmdef
-│   │   ├── Game/                 GameState.cs, GamePhaseController.cs,
-│   │   │                         HubPhaseController.cs, ExplorationPhaseController.cs,
-│   │   │                         CombatPhaseController.cs, IPhaseController.cs
-│   │   ├── Exploration/          DungeonExplorer.cs, DungeonView.cs, FoeSystem.cs,
-│   │   │                         EncounterTrigger.cs, GatherInteractor.cs
-│   │   ├── Map/                  MapSystem.cs
-│   │   ├── Combat/               CombatController.cs, CombatPresentationGate.cs, CombatScenePresenter.cs, …
-│   │   ├── Party/                PartyRuntime.cs, CombatantFactory.cs, NavigatorRuntime.cs, AuraSystem.cs
-│   │   ├── Protocol/             ProtocolSystem.cs
-│   │   ├── Hub/                  HubController.cs, InnService.cs, HospitalService.cs, ...
-│   │   ├── Codex/                CodexSystem.cs
-│   │   ├── Content/              ContentDatabase.cs
-│   │   └── Save/                 SaveSystem.cs
-│   └── UI/                       GridDungeon.UI.asmdef
-│       ├── Dev/                  GamePhaseDevHudView.cs (dev bootstrap only)
-│       ├── Game/                 GameBootstrap.cs
-│       ├── Input/                InputRouter.cs, ExplorationInputHandler.cs, ...
-│       └── Views/                ExplorationHudView, ExplorationMapCoordinator, CombatHudView, CombatHudReactivePresenter, …
-│       │                         MapPartyMarkerPresenter, MapFoeMarkersPresenter, MapGatherMarkersPresenter, …
-├── UI/
-│   ├── Settings/                 GamePanelSettings.asset (shared UIDocument panel)
-│   ├── Themes/                   Theme StyleSheets (optional)
-│   └── Screens/
-│       └── Dev/                  GamePhaseDevHud.uxml, GamePhaseDevHud.uss
-├── Content/
-│   ├── Classes/                  *.asset (ClassDefinition SOs)
-│   ├── Skills/                   *.asset (SkillDefinition SOs)
-│   ├── Status/                   *.asset (StatusDefinition SOs)
-│   ├── Equipment/                *.asset (EquipmentDefinition SOs)
-│   ├── Items/                    *.asset (ItemDefinition SOs)
-│   ├── Enemies/                  *.asset (EnemyDefinition SOs)
-│   ├── Encounters/               *.asset (EncounterGroup SOs)
-│   ├── Navigators/               *.asset (NavigatorDefinition SOs)
-│   ├── ProtocolSkills/           *.asset (ProtocolSkillDefinition SOs)
-│   ├── Summons/                  *.asset (SummonDefinition SOs)
-│   └── Dungeons/
-│       └── Stratum01/            B1F.asset, B2F.asset, B3F.asset
-├── Tests/                        GridDungeon.Tests.asmdef (see game repo Assets/Tests/README.md)
-│   ├── TestCategories.cs
-│   ├── Combat/
-│   ├── Exploration/
-│   ├── Foe/
-│   ├── Map/
-│   └── GameFlow/
-└── Plugins/
-    └── Demigiant/DOTween/        (Asset Store import — required, see tech notes)
++-- Scripts/
+�   +-- Core/                     GridDungeon.Core.asmdef
+�   �   +-- Models/               Combatant.cs, BattleState.cs, FoeInstance.cs, FloorMapState.cs, ...
+�   �   +-- Content/              SkillData.cs, StatusData.cs, EnemyData.cs, NavigatorData.cs, ...
+�   �   +-- Campaign/             S1CampaignResolver.cs, CombatTutorialHudRules.cs, �
+�   �   +-- Simulators/           DamageCalculator.cs, ValidTargetCalculator.cs, CombatTargeting.cs,
+�   �   �                         InventoryRules.cs, InventoryBagCatalog.cs, EquipmentStatAggregator.cs,
+�   �   �                         FleeCalculator.cs, ActionResolver.cs, RetreatCellCalculator.cs,
+�   �   �                         FoeFleeRetreatPlacement.cs, TurnQueueBuilder.cs, ...
+�   �   +-- SaveData/             SaveGame.cs, FloorMapStateSave.cs, ...
+�   �   +-- Enums/                GamePhase.cs, CombatantKind.cs, ...
+�   +-- Runtime/                  GridDungeon.Runtime.asmdef
+�   �   +-- Game/                 GameState.cs, GamePhaseController.cs,
+�   �   �                         HubPhaseController.cs, ExplorationPhaseController.cs,
+�   �   �                         CombatPhaseController.cs, IPhaseController.cs
+�   �   +-- Exploration/          DungeonExplorer.cs, DungeonView.cs, FoeSystem.cs,
+�   �   �                         EncounterTrigger.cs, GatherInteractor.cs
+�   �   +-- Map/                  MapSystem.cs
+�   �   +-- Combat/               CombatController.cs, CombatPresentationGate.cs, CombatScenePresenter.cs, �
+�   �   +-- Party/                PartyRuntime.cs, CombatantFactory.cs, NavigatorRuntime.cs, AuraSystem.cs
+�   �   +-- Protocol/             ProtocolSystem.cs
+�   �   +-- Hub/                  HubController.cs, InnService.cs, HospitalService.cs, ...
+�   �   +-- Codex/                CodexSystem.cs
+�   �   +-- Content/              ContentDatabase.cs
+�   �   +-- Save/                 SaveSystem.cs
+�   +-- UI/                       GridDungeon.UI.asmdef
+�       +-- Dev/                  GamePhaseDevHudView.cs (dev bootstrap only)
+�       +-- Game/                 GameBootstrap.cs
+�       +-- Input/                InputRouter.cs, ExplorationInputHandler.cs, ...
+�       +-- Views/                ExplorationHudView, ExplorationMapCoordinator, CombatHudView, CombatHudReactivePresenter, �
+�       �                         MapPartyMarkerPresenter, MapFoeMarkersPresenter, MapGatherMarkersPresenter, �
++-- UI/
+�   +-- Settings/                 GamePanelSettings.asset (shared UIDocument panel)
+�   +-- Themes/                   Theme StyleSheets (optional)
+�   +-- Screens/
+�       +-- Dev/                  GamePhaseDevHud.uxml, GamePhaseDevHud.uss
++-- Content/
+�   +-- Classes/                  *.asset (ClassDefinition SOs)
+�   +-- Skills/                   *.asset (SkillDefinition SOs)
+�   +-- Status/                   *.asset (StatusDefinition SOs)
+�   +-- Equipment/                *.asset (EquipmentDefinition SOs)
+�   +-- Items/                    *.asset (ItemDefinition SOs)
+�   +-- Enemies/                  *.asset (EnemyDefinition SOs)
+�   +-- Encounters/               *.asset (EncounterGroup SOs)
+�   +-- Navigators/               *.asset (NavigatorDefinition SOs)
+�   +-- ProtocolSkills/           *.asset (ProtocolSkillDefinition SOs)
+�   +-- Summons/                  *.asset (SummonDefinition SOs)
+�   +-- Dungeons/
+�       +-- Stratum01/            B1F.asset, B2F.asset, B3F.asset
++-- Tests/                        GridDungeon.Tests.asmdef (see game repo Assets/Tests/README.md)
+�   +-- TestCategories.cs
+�   +-- Combat/
+�   +-- Exploration/
+�   +-- Foe/
+�   +-- Map/
+�   +-- GameFlow/
++-- Plugins/
+    +-- Demigiant/DOTween/        (Asset Store import � required, see tech notes)
 ```
 
 ---
@@ -1348,15 +1348,15 @@ These string IDs must be stable across code and SO assets.
 | Type | ID | Notes |
 |------|----|-------|
 | Class | `vanguard`, `breaker`, `medic`, `summoner`, `marksman`, `tactician` | Day-one roster |
-| Navigator | `guild_handler` | Sortie Lead; day one; aura: `synchroGainBonus = 0.05` — [navigator](02-systems/navigator.md) |
-| Protocol skill | `protocol_strike`, `protocol_mend` | Damage all enemies / heal all living core — [synchro-protocol](02-systems/synchro-protocol.md) |
+| Navigator | `guild_handler` | Sortie Lead; day one; aura: `synchroGainBonus = 0.05` � [navigator](02-systems/navigator.md) |
+| Protocol skill | `protocol_strike`, `protocol_mend` | Damage all enemies / heal all living core � [synchro-protocol](02-systems/synchro-protocol.md) |
 | Summon | `scout_drone` | Summoner-only; 3 rounds; **player-controlled** kit |
-| Summon deploy skill | `deploy_scout_drone` | Summoner tree only; `SkillType.Deploy` → `scout_drone`, aux back ([ADR 016](../decisions/016-summon-control-mvp1.md)) |
-| Summon skill | `volt_burst` | On `scout_drone` summon kit only — not on Summoner class tree |
+| Summon deploy skill | `deploy_scout_drone` | Summoner tree only; `SkillType.Deploy` ? `scout_drone`, aux back ([ADR 016](../decisions/016-summon-control-mvp1.md)) |
+| Summon skill | `volt_burst` | On `scout_drone` summon kit only � not on Summoner class tree |
 | Stratum | `s1` | Stratum 1 |
 | Floors | `s1_B1F`, `s1_B2F`, `s1_B3F` | Save/map keys |
 | Items | `patch_kit`, `stim_draft`, `trauma_kit`, `return_thread`, `analysis_glass` | Starter consumables |
-| Equipment | `guild_shortsword`, `leather_coif`, `leather_jacket`, `leather_boots`, `scout_charm` | MVP1 shop slice — [progression § MVP1 equipment](02-systems/character-progression.md#mvp1-equipment-locked) |
+| Equipment | `guild_shortsword`, `leather_coif`, `leather_jacket`, `leather_boots`, `scout_charm` | MVP1 shop slice � [progression � MVP1 equipment](02-systems/character-progression.md#mvp1-equipment-locked) |
 | Status | `poison`, `sleep`, `panic`, `bind_head`, `bind_arm` | MVP1 subset |
 | Stat mods | `offense_up`, `offense_down`, `defense_up`, `defense_down`, `magic_up`, `magic_down`, `speed_up`, `speed_down`, `blind`, `regen` | |
 | Enemy | `stray_hound`, `rust_mite`, `gutter_crow`, `scrapling`, `shackle_rat`, `venom_slime`, `alley_thug`, `rubble_guard`, `s1_warden` | [mvp1-enemy-roster](03-content/enemy-roster.md) |
@@ -1364,7 +1364,7 @@ These string IDs must be stable across code and SO assets.
 | Encounter group | `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden`, `grp_b1_chaff_hound`, `grp_b1_chaff_mite`, `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime`, `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | Slot layouts in roster doc |
 | FOE entity | `foe_alley_stalker`, `foe_s1_warden` | Map keys; not `EnemyDefinition` ids |
 
-### Class skills (3 per class — locked)
+### Class skills (3 per class � locked)
 
 | Class | `skill_id` | `skill_id` | `skill_id` |
 |-------|------------|------------|------------|
@@ -1377,11 +1377,11 @@ These string IDs must be stable across code and SO assets.
 
 All class skills: **`presentation: Fixed`** ([combat presentation](02-systems/combat-presentation.md)).
 
-**MVP3 side dungeon IDs (draft, not MVP1):** `sd01`, floors `sd01_F1`, `sd01_F2` — [side dungeons](02-systems/side-dungeons.md).
+**MVP3 side dungeon IDs (draft, not MVP1):** `sd01`, floors `sd01_F1`, `sd01_F2` � [side dungeons](02-systems/side-dungeons.md).
 
 ---
 
-## MVP3 — side dungeons (sketch)
+## MVP3 � side dungeons (sketch)
 
 **Authority:** [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md). Does **not** change MVP1 locked content IDs above.
 
@@ -1398,7 +1398,7 @@ struct ExplorationStateSave
     FacingDirection Facing;
 }
 
-// SaveGame — MVP3 additions (draft)
+// SaveGame � MVP3 additions (draft)
 [Serializable] class SaveGame
 {
     // ... existing MVP1 fields ...
@@ -1412,22 +1412,22 @@ struct ExplorationStateSave
 
 | API | Caller | Phase |
 |-----|--------|-------|
-| `LeaveHub(stratumId, floorId)` | Hub **Enter Stratum** | → Exploration (stratum rules) |
-| `EnterSideDungeon(locationId, floorId)` | Hub **Side expedition** | → Exploration (side rules; exit → hub only) |
+| `LeaveHub(stratumId, floorId)` | Hub **Enter Stratum** | ? Exploration (stratum rules) |
+| `EnterSideDungeon(locationId, floorId)` | Hub **Side expedition** | ? Exploration (side rules; exit ? hub only) |
 
-`ContentDatabase.GetFloor` may resolve by composite key or `(MapKind, locationId, floorId)` — implementation detail for MVP3.
+`ContentDatabase.GetFloor` may resolve by composite key or `(MapKind, locationId, floorId)` � implementation detail for MVP3.
 
 ---
 
 ## Related docs
 
-- [MVP1 enemy roster](03-content/enemy-roster.md) — locked S1 enemies, groups, skill stubs
-- [04 — Tech notes](04-tech-notes.md) — engine stack, high-level module map, save format
-- [MVP1 spec](archive/mvp1-spec.md) — systems checklist
-- [ADR 014 — MVP1 exploration & map](../decisions/014-mvp1-exploration-map.md)
-- [ADR 015 — MVP1 combat](../decisions/015-mvp1-combat.md)
-- [ADR 016 — Summon control MVP1](../decisions/016-summon-control-mvp1.md)
-- [ADR 017 — Game phase controller](../decisions/017-game-phase-controller.md)
+- [MVP1 enemy roster](03-content/enemy-roster.md) � locked S1 enemies, groups, skill stubs
+- [04 � Tech notes](04-tech-notes.md) � engine stack, high-level module map, save format
+- [MVP1 spec](archive/mvp1-spec.md) � systems checklist
+- [ADR 014 � MVP1 exploration & map](../decisions/014-mvp1-exploration-map.md)
+- [ADR 015 � MVP1 combat](../decisions/015-mvp1-combat.md)
+- [ADR 016 � Summon control MVP1](../decisions/016-summon-control-mvp1.md)
+- [ADR 017 � Game phase controller](../decisions/017-game-phase-controller.md)
 - [Game phase](02-systems/game-phase.md)
 - [Combat](02-systems/combat.md)
 - [Combat status & buffs](02-systems/combat-status-and-buffs.md)
@@ -1436,6 +1436,6 @@ struct ExplorationStateSave
 - [Character progression](02-systems/character-progression.md)
 - [FOE encounters](02-systems/foe-encounters.md)
 - [Side dungeons (MVP3)](02-systems/side-dungeons.md)
-- [ADR 022 — Side dungeons MVP3](../decisions/022-side-dungeons-mvp3.md)
+- [ADR 022 � Side dungeons MVP3](../decisions/022-side-dungeons-mvp3.md)
 - [Navigator](02-systems/navigator.md)
 - [Synchro Protocol](02-systems/synchro-protocol.md)

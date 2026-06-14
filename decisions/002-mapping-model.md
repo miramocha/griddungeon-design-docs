@@ -1,11 +1,11 @@
-ï»¿# ADR 002 â€” Mapping Model
+# ADR 002 — Mapping Model
 
 **Status:** Accepted (amended 2026-05-21)  
 **Aligns with:** *Etrian Odyssey* presentation; **without** manual drawing tools
 
 ## Context
 
-EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for this project â€” mapping must be fully driven by exploration events.
+EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for this project — mapping must be fully driven by exploration events.
 
 ## Decision
 
@@ -13,7 +13,7 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 2. **Auto-chart walls** when party bumps a blocked side or when wall edges are revealed entering a cell (implementation detail in tech notes).
 3. **Auto-chart doors, stairs, chests, gather nodes** on interact/use.
 4. **FOE icons** auto-placed when visible; position updates on step-patrol ([ADR 003](003-foe-step-patrol.md)).
-5. **Map UI is read-only** â€” pan/zoom only; no toolbar.
+5. **Map UI is read-only** — pan/zoom only; no toolbar.
 6. **Map persists** on party wipe for that stratum.
 
 ## Rejected / out of scope
@@ -24,49 +24,49 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 | Bump-assist one-click stamp | Was a drawing aid; redundant with auto-wall on bump |
 | Free-text map notes | Annotation tool; cut with drawing scope |
 | Full floor reveal on entry | No fog tension |
-| **Minimap camera â†’ `RenderTexture` as primary HUD** | Superseded by floor painter + 2D map ([amendment 2026-05-21](#technical-notes-unity--authoring--runtime-map)) |
+| **Minimap camera ? `RenderTexture` as primary HUD** | Superseded by floor painter + 2D map ([amendment 2026-05-21](#technical-notes-unity--authoring--runtime-map)) |
 
 ## Consequences
 
 - Save stores `revealedMapLayer` per floor (bitmasks + feature flags), not player strokes
 - No map tool tutorial; tutorial teaches **reading** map + FOE icons
 - EO "mapping as skill" shifts to **pathfinding / FOE routing** rather than pen accuracy
-- **Floor layout** is authored in a **level painter** â†’ `StratumFloor` assets; runtime HUD is **2D** from data + reveal state
+- **Floor layout** is authored in a **level painter** ? `ExplorationFloor` assets; runtime HUD is **2D** from data + reveal state
 - **FPV dungeon scenes** remain separate presentation; they do not feed the player map texture
 
-## Technical notes (Unity) â€” authoring & runtime map
+## Technical notes (Unity) — authoring & runtime map
 
-**Goal:** EO-style auto-map in the HUD â€” schematic 2D chart, not a render of the FPV corridor.
+**Goal:** EO-style auto-map in the HUD — schematic 2D chart, not a render of the FPV corridor.
 
-### Authoring â€” floor level painter (primary)
+### Authoring — floor level painter (primary)
 
 | Piece | Rule |
 |-------|------|
-| **Tool** | Unity **Editor** floor painter (custom window) â€” design-time only; not player-facing |
-| **Output** | `StratumFloor` ScriptableObject per floor (`gridWidth`/`gridHeight`, tiles, **edge walls**, features, FOE spawns, patrol paths) |
-| **Preview** | 2D grid canvas inside the painter (walkable, walls, icons) â€” **single source of truth** for layout QA |
+| **Tool** | Unity **Editor** floor painter (custom window) — design-time only; not player-facing |
+| **Output** | `ExplorationFloor` ScriptableObject per floor (`gridWidth`/`gridHeight`, tiles, **edge walls**, features, FOE spawns, patrol paths) |
+| **Preview** | 2D grid canvas inside the painter (walkable, walls, icons) — **single source of truth** for layout QA |
 | **FPV scene** | Optional separate scene/prefab for corridor art; aligned to the same grid, **not** baked into the HUD map |
 
 Painter replaces hand-editing huge tile arrays in the Inspector and replaces **MapProxy + minimap camera** as the main authoring/preview path.
 
-**MVP1:** one test floor may be filled manually in a `StratumFloor` asset until the painter ships; runtime still uses **2D `MapView`**, not RT.
+**MVP1:** one test floor may be filled manually in a `ExplorationFloor` asset until the painter ships; runtime still uses **2D `MapView`**, not RT.
 
-### Runtime â€” 2D map HUD (primary)
+### Runtime — 2D map HUD (primary)
 
-1. **`MapSystem`** holds revealed state (`Visited`, `WallMask`, features, `FoeIcons`) â€” unchanged authority.
-2. **`MapView`** (UI Toolkit) draws the chart from `IReadOnlyFloorMapState` + floor style from `ContentDatabase` / `StratumFloor`:
+1. **`MapSystem`** holds revealed state (`Visited`, `WallMask`, features, `FoeIcons`) — unchanged authority.
+2. **`MapView`** (UI Toolkit) draws the chart from `IReadOnlyFloorMapState` + floor style from `ContentDatabase` / `ExplorationFloor`:
    - **Cells/edges:** floor tiles and wall segments revealed so far (fog hides unrevealed).
-   - **Party / FOE:** icons at grid `(x, y, level)` â€” UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) â€” MVP1 shows partyâ€™s **current `level`**).
-3. **Refresh on dirty:** rebuild or patch the 2D view when reveal changes, party moves, or FOE updates â€” **no** minimap `RenderTexture` in the main path.
+   - **Party / FOE:** icons at grid `(x, y, level)` — UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) — MVP1 shows party’s **current `level`**).
+3. **Refresh on dirty:** rebuild or patch the 2D view when reveal changes, party moves, or FOE updates — **no** minimap `RenderTexture` in the main path.
 4. **Pan/zoom** on the map `VisualElement` ([ADR 014](014-mvp1-exploration-map.md)).
 
-Implementation options (either is fine): per-cell `VisualElement` grid, or one `Texture2D` blit from a cell atlas â€” pick per perf/style in the game repo.
+Implementation options (either is fine): per-cell `VisualElement` grid, or one `Texture2D` blit from a cell atlas — pick per perf/style in the game repo.
 
 ### Collision alignment
 
-Walkability and wall blocking use the **same `StratumFloor` data** the painter writes (`DungeonExplorer` â†’ `IsWalkable` / edge query) â€” not mesh colliders, not the 2D HUD ([dungeon navigation](../docs/02-dungeon-navigation.md)).
+Walkability and wall blocking use the **same `ExplorationFloor` data** the painter writes (`DungeonExplorer` ? `IsWalkable` / edge query) — not mesh colliders, not the 2D HUD ([dungeon navigation](../docs/02-dungeon-navigation.md)).
 
-### Deferred â€” MapProxy + minimap camera (optional)
+### Deferred — MapProxy + minimap camera (optional)
 
 Orthographic camera rendering **`MapProxy`** cubes into a `RenderTexture` for the HUD is **deferred / debug-only**:
 
@@ -77,11 +77,11 @@ If used: `MapProxy` layer, FPV excludes it; same grid alignment rules as before.
 
 ### Authority (unchanged)
 
-`MapRevealCalculator` + `MapSystem` own reveal rules and save data. Painter and `MapView` are **authoring / presentation** only â€” see [04 â€” Tech notes Â§ Map system](../docs/04-tech-notes.md#map-system).
+`MapRevealCalculator` + `MapSystem` own reveal rules and save data. Painter and `MapView` are **authoring / presentation** only — see [04 — Tech notes § Map system](../docs/04-tech-notes.md#map-system).
 
 ## Related
 
 - [Mapping system](../docs/02-systems/mapping.md)
-- [02 â€” Dungeon navigation](../docs/02-dungeon-navigation.md)
-- [ADR 019 â€” Floor verticality](019-floor-verticality.md)
+- [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
+- [ADR 019 — Floor verticality](019-floor-verticality.md)
 - [MVP1 spec](../docs/archive/mvp1-spec.md)

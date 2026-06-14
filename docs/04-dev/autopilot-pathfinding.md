@@ -29,7 +29,7 @@ flowchart TB
 
   subgraph data [Map + floor state]
     MS[MapSystem]
-    SF[StratumFloor]
+    SF[ExplorationFloor]
     CS[CampaignSaveData]
   end
 
@@ -81,7 +81,7 @@ public static bool TryFindPath(
 ```csharp
 public static bool TryFindPath(
     MapSystem map,
-    StratumFloor floor,
+    ExplorationFloor floor,
     CampaignSaveData campaign,
     string floorKey,
     GridPosition start,
@@ -152,7 +152,7 @@ OnExplorerAnimationCompleted:
 ### New edge rule (e.g. one-way tile, hazard avoidance)
 
 1. Add logic to `ExplorationPathGraph.CanTraverseEdge` (or a dedicated helper it calls).
-2. Add an `ExplorationPathGraphTests` case with a small `StratumFloor` + `MapSystem` fixture.
+2. Add an `ExplorationPathGraphTests` case with a small `ExplorationFloor` + `MapSystem` fixture.
 3. If the rule is **floor-authoring only** (no save/reveal), consider whether `FloorLayoutConnectivity` should mirror it for painter validation — autopilot still uses `ExplorationPathGraph` at runtime.
 
 Do **not** embed `MapSystem` checks inside `MapPathfinder`; keep Core generic.
@@ -199,10 +199,10 @@ Category filter: `Map` or `Exploration` per `TestCategories.cs`.
 
 | | **`MapPathfinder` + `ExplorationPathGraph`** | **`FloorLayoutConnectivity`** |
 |---|---------------------------------------------|------------------------------|
-| **Purpose** | Player autopilot on **saved exploration** state | **Authoring validation** — “can the player reach stairs?” on raw `StratumFloor` |
+| **Purpose** | Player autopilot on **saved exploration** state | **Authoring validation** — “can the player reach stairs?” on raw `ExplorationFloor` |
 | **Assembly** | Core + Runtime | Runtime (`Assets/Scripts/Runtime/Map/FloorLayoutConnectivity.cs`) |
 | **Algorithm** | A* (Manhattan, heap) | Delegates to **`MapPathfinder`** (same A* on unit-cost layout tiles) |
-| **Walkability** | Visited + `S1ExplorationWalkability` + reveal walls/doors | `StratumFloorLayout.IsWalkable` (+ optional `extraWalkable` cells) |
+| **Walkability** | Visited + `S1ExplorationWalkability` + reveal walls/doors | `ExplorationFloorLayout.IsWalkable` (+ optional `extraWalkable` cells) |
 | **Walls / doors** | Revealed `WallMask`, closed doors in save | Layout tiles only (no fog) |
 | **Tests** | `MapPathfinderTests`, `ExplorationPathGraphTests` | `S1B1FLayoutTests`, `S1B2FLayoutTests`, `S1B3FLayoutTests`; `Tools/layout_grid_check.py` (Python BFS for script-only parity) |
 

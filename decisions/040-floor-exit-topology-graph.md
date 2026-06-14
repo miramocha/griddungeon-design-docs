@@ -3,14 +3,14 @@
 **Status:** Proposed  
 **Date:** 2026-06-13  
 **Tracks:** [design-docs #35](https://github.com/miramocha/griddungeon-design-docs/issues/35) · [game #249](https://github.com/miramocha/griddungeon-game/issues/249) (epic) · [#250](https://github.com/miramocha/griddungeon-game/issues/250) (data model) · [#252](https://github.com/miramocha/griddungeon-game/issues/252) (painter) · [#253](https://github.com/miramocha/griddungeon-game/issues/253) (Graph Toolkit editor)  
-**Follows:** [ADR 002](002-mapping-model.md) (floor painter / `StratumFloor`) · [ADR 025](025-campaign-exploration-target.md) (campaign policy) · [ADR 022](022-side-dungeons-mvp3.md) (side dungeons)  
+**Follows:** [ADR 002](002-mapping-model.md) (floor painter / `ExplorationFloor`) · [ADR 025](025-campaign-exploration-target.md) (campaign policy) · [ADR 022](022-side-dungeons-mvp3.md) (side dungeons)  
 **Orthogonal:** [ADR 031](031-floor-event-pin-condition-graph.md) (floor event / pin **gating** — not exit routing)
 
 > **Numbering note:** Issue #35 originally scoped “ADR 038” before [ADR 038 — Centralized UI presentation lifecycle](038-centralized-ui-presentation-lifecycle.md) shipped. Floor exit topology is **ADR 040**.
 
 ## Context
 
-MVP1 `StratumFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#floors--stratum)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
+MVP1 `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#floors--stratum)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
 
 **Problems:**
 
@@ -29,7 +29,7 @@ MVP1 `StratumFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `St
 
 ### 1. Replace scalar stairs with `FloorExitLink[]`
 
-Remove from `StratumFloor`:
+Remove from `ExplorationFloor`:
 
 - `stairsUp` / `stairsDown` scalars
 - `StairsUpLink[]` / `StairsUpTargetKind`
@@ -73,10 +73,10 @@ Author **inter-floor connectivity** in a **stratum topology graph** (Unity Graph
 flowchart TB
   subgraph editor [Editor only]
     GT[Stratum topology graph]
-    GT -->|compile| Links[FloorExitLink rows on each StratumFloor]
+    GT -->|compile| Links[FloorExitLink rows on each ExplorationFloor]
   end
   subgraph runtime [Player build]
-    SF[StratumFloor.exitLinks]
+    SF[ExplorationFloor.exitLinks]
     SF --> Resolver[FloorExitResolver]
     Resolver --> EPC[ExplorationPhaseController]
   end
@@ -85,7 +85,7 @@ flowchart TB
 
 | Graph Toolkit provides | How we use it |
 |------------------------|---------------|
-| Floor nodes (`s1_B1F`, `s1_B2F`, …) | One node per `StratumFloor` in a stratum (or side `locationId`) |
+| Floor nodes (`s1_B1F`, `s1_B2F`, …) | One node per `ExplorationFloor` in a stratum (or side `locationId`) |
 | Exit edge (`^` / `v`, `exitId`) | Binds source cell + direction → target floor key + spawn cell + facing |
 | Compile hook | Writes / validates `exitLinks[]` on floor assets; CI diff-friendly |
 | Subgraphs | Reuse “hub return gate” pattern across strata |
