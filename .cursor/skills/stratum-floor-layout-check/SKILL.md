@@ -3,7 +3,7 @@ name: stratum-floor-layout-check
 description: >-
   Validates Grid Dungeon authored ExplorationFloor ASCII layouts (row width,
   walkability BFS, Act 1 funnel and tutorial gates) using Tools/layout_grid_check.py.
-  Use when editing S1B1FLayoutBuilder, floor layout ASCII in design-docs, debugging
+  Use when editing S1B1FLayoutBuilder, draft floor ASCII in design-docs archive, debugging
   path bypasses to stairsDown, or before committing map layout changes.
 ---
 
@@ -11,7 +11,7 @@ description: >-
 
 ## When to use
 
-- Editing `S1B1FLayoutBuilder.k_RowsNorthUp` or MVP1 ASCII in [dungeons-and-encounters.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/dungeons-and-encounters.md)
+- Editing `S1B1FLayoutBuilder.k_RowsNorthUp`, MVP1 ASCII in [archive draft layouts](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md), or painted grids in game assets (**layouts not locked**)
 - User reports reaching `stairsDown` / `v` without passing tutorial blocker `(10, 13)`
 - Before `sync_b1f_asset_tiles` or Unity **Apply s1_B1F MVP1 layout**
 - After layout patch — confirm Edit Mode `S1B1FLayoutTests` and this script agree
@@ -67,4 +67,4 @@ Edit Mode uses `FloorLayoutConnectivity` in `Assets/Scripts/Runtime/Map/` — de
 
 - Asset sync: skill **stratum-floor-asset-sync**
 - Scripts: [Tools/README.md](../../Tools/README.md)
-- Design ASCII: [dungeons — s1_B1F](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/dungeons-and-encounters.md#s1_b1f--outskirts-gate-intro--gate)
+- Design ASCII: [archive — s1_B1F (draft)](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)

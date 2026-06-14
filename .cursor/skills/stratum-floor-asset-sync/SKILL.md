@@ -15,7 +15,7 @@ description: >-
 - `s1_B1F.asset` walkability stale vs builder (Play Mode shows wrong walls)
 - User asks to update floor **asset metadata** without running **GridDungeon → Content → Apply s1_B1F MVP1 layout**
 
-**Prefer Floor Painter** when authoring layout in the Editor: **GridDungeon → Content → Floor Painter** → **Apply** writes tiles and marker coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). Use this Python sync when the **builder rows** are the source of truth (C# + `layout_grid_check.py`).
+**Prefer Floor Painter** when authoring layout in the Editor: **GridDungeon → Content → Floor Painter** → **Apply** writes tiles and marker coords ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). **MVP1 S1 layouts are draft** — serialized `s1_B*n*F.asset` is runtime authority until lock ([archive](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md)).
 
 **Create Dev Bootstrap** does **not** call Apply s1_B1F MVP1 layout — it only registers floors if missing ([#107](https://github.com/miramocha/griddungeon-game/issues/107)).
 
