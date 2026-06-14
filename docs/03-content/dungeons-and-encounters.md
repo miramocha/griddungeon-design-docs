@@ -1,14 +1,14 @@
-ï»¿# Dungeons & Encounters
+# Dungeons & Encounters
 
-Content structured like **Etrian Odyssey strata** â€” themed zones with multiple floors, FOE placements, and floor gimmicks.
+Content structured like **Etrian Odyssey strata** — themed zones with multiple floors, FOE placements, and floor gimmicks.
 
-**Non-strata maps (MVP3):** optional **side dungeons** (`sd01`, â€¦) â€” full grid explore + combat, hub **Side expedition** menu only. Not part of stratum progression â€” [side dungeons](../02-systems/side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md).
+**Non-strata maps (MVP3):** optional **side dungeons** (`sd01`, …) — full grid explore + combat, hub **Side expedition** menu only. Not part of stratum progression — [side dungeons](../02-systems/side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md).
 
 ## Stratum structure
 
 ```
-Stratum 1: Fallen District (B1Fâ€“B5F full arc; **MVP1: B1Fâ€“B3F** + boss on B3F) â†’ Stratum boss
-Stratum 2: Sand Ruins (B6Fâ€“B10F) â†’ â€¦
+Stratum 1: Fallen District (B1F–B5F full arc; **MVP1: B1F–B3F** + boss on B3F) ? Stratum boss
+Stratum 2: Sand Ruins (B6F–B10F) ? …
 ```
 
 Each floor data file:
@@ -20,61 +20,61 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 ## Floor design principles (EO)
 
-1. **Looping paths** â€” shortcuts behind keys/FOE gates reward map literacy.
-2. **FOE as puzzles** â€” block shortest route until party ready or map route around patrol.
-3. **Gather / fish nodes** â€” **MVP2** minigames â†’ materials for synthesis ([gathering & fishing](../02-systems/gathering-and-fishing.md)).
-4. **Safe-ish rooms** â€” lower encounter rate (not always zero).
-5. **Landmarks** â€” unique art/audio cue; auto-mapped when visited.
+1. **Looping paths** — shortcuts behind keys/FOE gates reward map literacy.
+2. **FOE as puzzles** — block shortest route until party ready or map route around patrol.
+3. **Gather / fish nodes** — **MVP2** minigames ? materials for synthesis ([gathering & fishing](../02-systems/gathering-and-fishing.md)).
+4. **Safe-ish rooms** — lower encounter rate (not always zero).
+5. **Landmarks** — unique art/audio cue; auto-mapped when visited.
 
 ## Example: Stratum 1 arc
 
 | Floor | Theme | FOE teaching | Gimmick |
 |-------|-------|--------------|---------|
-| B1F | Outskirts gate | None on B1F; FOE from B2F | S1 intro: blocked path â†’ hub; shared map Acts 1 & 3 |
+| B1F | Outskirts gate | None on B1F; FOE from B2F | S1 intro: blocked path ? hub; shared map Acts 1 & 3 |
 | B2F | Collapsed avenues | 2 FOEs, green tier; 1 step-patrol (`stepsPerMove: 4`) | Key door loop |
 | B3F | Flooded underpass | Yellow-tier patrol FOE, narrower paths | Damage floor tiles (post-MVP1) |
 | B4F | Ruined plaza | Red-tier FOE guards chest | **MVP2:** salvage pile + flooded cistern |
 | B5F | Civic fortress | Stratum boss FOE | Boss room, stairs to Stratum 2 |
 
-**MVP1 vertical slice** stops at **B3F** with the stratum boss and win condition ([mvp1-spec Â§3](../archive/mvp1-spec.md#3-content-slice-stratum-1-mvp1)). B4Fâ€“B5F stay in the full-game arc table above; do not block MVP1 on them. Authoritative MVP1 layouts: [Â§ MVP1 â€” Stratum 1 (B1Fâ€“B3F)](#mvp1--stratum-1-b1fb3f).
+**MVP1 vertical slice** stops at **B3F** with the stratum boss and win condition ([mvp1-spec §3](../archive/mvp1-spec.md#3-content-slice-stratum-1-mvp1)). B4F–B5F stay in the full-game arc table above; do not block MVP1 on them. Authoritative MVP1 layouts: [§ MVP1 — Stratum 1 (B1F–B3F)](#mvp1--stratum-1-b1fb3f).
 
 ---
 
-## MVP1 â€” Stratum 1 (B1Fâ€“B3F)
+## MVP1 — Stratum 1 (B1F–B3F)
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design.md#mvp1-content-ids-locked) (save/map/FOE state)  
-**Grid:** **20Ã—20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) â€” no jump pads in MVP1 slice)  
-**Implementation:** hand-fill `StratumFloor` ScriptableObjects until the floor painter ships ([ADR 002](../../decisions/002-mapping-model.md)); game path `Assets/Content/Floors/s1_B1F.asset` etc. ([04 â€” Tech notes](../04-tech-notes.md#map-system))
+**Grid:** **20×20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) — no jump pads in MVP1 slice)  
+**Implementation:** hand-fill `ExplorationFloor` ScriptableObjects until the floor painter ships ([ADR 002](../../decisions/002-mapping-model.md)); game path `Assets/Content/Floors/s1_B1F.asset` etc. ([04 — Tech notes](../04-tech-notes.md#map-system))
 
 ### Stratum entry & warp gates (locked)
 
-| Stratum | **Warp gate on floor** | **Hub â†’ labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
+| Stratum | **Warp gate on floor** | **Hub ? labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
 |---------|------------------------|----------------------|----------------|---------------------------|
-| **`s1` (MVP1)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** â†’ **B1F gate** (stratum beginning) | Act 2 party ready (`s1_party_ready`) â€” not a warp-gate tile | â†’ **Hub** |
-| **`s2`+** | Yes â€” authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked â†’ warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | â†’ **Hub** |
+| **`s1` (MVP1)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** ? **B1F gate** (stratum beginning) | Act 2 party ready (`s1_party_ready`) — not a warp-gate tile | ? **Hub** |
+| **`s2`+** | Yes — authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked ? warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | ? **Hub** |
 
-**Rule:** every hub dive starts at the stratum **beginning** (gate or warp gate on entrance floor). No resume at deepest floor, no gate stairs to a prior stratumâ€™s depth.
+**Rule:** every hub dive starts at the stratum **beginning** (gate or warp gate on entrance floor). No resume at deepest floor, no gate stairs to a prior stratum’s depth.
 
 **Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
 
-**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 â€” Class design](../05-class-design.md#floors--stratum)).
+**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 — Class design](../05-class-design.md#floors--stratum)).
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace gate stairs.
 
 ### Stratum 1 campaign intro
 
-**Authority:** [campaign/s1-intro.md](campaign/s1-intro.md) â€” three acts, save flags, entry rules, progression gates. This file owns **grids and FOE placement** only.
+**Authority:** [campaign/s1-intro.md](campaign/s1-intro.md) — three acts, save flags, entry rules, progression gates. This file owns **grids and FOE placement** only.
 
-Summary: Act 1 movement on `s1_B1F` (no combat) â†’ hub party setup â†’ Act 3 from **B1F gate** â†’ B2F tutorial FOE â†’ B3F boss.
+Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from **B1F gate** ? B2F tutorial FOE ? B3F boss.
 
 ### MVP1 floor summary
 
 | Floor ID | Theme | Spawns | Stairs (gate / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
-| `s1_B1F` | Outskirts gate | Intro `(4,2)` / gate `(10,11)` | Gate `^` â†’ **hub**; `v` `(10,17)` â†’ B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** â€” `grp_b1_chaff_*` |
-| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` â€” **same stratum only** | **1** â€” `foe_alley_stalker` â†’ `grp_alley_stalker_tutorial` | **0.10** â€” `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
-| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** â€” `foe_s1_warden` â†’ `grp_s1_warden` | **0.12** â€” `grp_b3_mix_hounds` / `rubble_pair` / `control` |
+| `s1_B1F` | Outskirts gate | Intro `(4,2)` / gate `(10,11)` | Gate `^` ? **hub**; `v` `(10,17)` ? B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** — `grp_b1_chaff_*` |
+| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** — `foe_alley_stalker` ? `grp_alley_stalker_tutorial` | **0.10** — `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
+| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** — `foe_s1_warden` ? `grp_s1_warden` | **0.12** — `grp_b3_mix_hounds` / `rubble_pair` / `control` |
 
 **Win condition (MVP1):** defeat `foe_s1_warden` on B3F. **Stratum 2** warp-gate hub entry is out of MVP1 scope.
 
@@ -82,37 +82,37 @@ Summary: Act 1 movement on `s1_B1F` (no combat) â†’ hub party setup â†’ Act 3 fr
 
 | Symbol | Meaning | Runtime map ([map-cell-art](../02-systems/map-cell-art.md)) |
 |--------|---------|--------------------------------------------------------------|
-| `#` | Non-walkable (perimeter / room wall) | Solid block Â· `map-view__cell--wall` |
-| `.` | Walkable floor | Floor `Â·` when revealed |
-| `E` | Intro spawn â€” Act 1 only (`partyEntryIntro`) | Spawn only â€” not a map icon |
+| `#` | Non-walkable (perimeter / room wall) | Solid block · `map-view__cell--wall` |
+| `.` | Walkable floor | Floor `·` when revealed |
+| `E` | Intro spawn — Act 1 only (`partyEntryIntro`) | Spawn only — not a map icon |
 | `M` | Gate landing fiction `(10, 10)`; hub spawn at `^` `(10, 11)` (`partyEntryGate`) | `M` not a map icon |
-| `^` | `stairsUp` â€” gate: â†’ **hub** (all strata) | Stairs up icon / `^` |
-| `v` | `stairsDown` â€” next floor **in same stratum** | Stairs down icon / `v` |
+| `^` | `stairsUp` — gate: ? **hub** (all strata) | Stairs up icon / `^` |
+| `v` | `stairsDown` — next floor **in same stratum** | Stairs down icon / `v` |
 | `F` | FOE spawn | FOE marker when in LOS |
-| `!` | **Event** tile â€” story script on enter ([story events Â§ S1](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; MVP1 S1 B2F tutorial briefing |
-| `C` | **Chest** â€” **non-walkable**; loot via **Interact** from adjacent cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)); `ChestItemId` on tile | Solid block when visited; chest **overlay** when wired ([#38](https://github.com/miramocha/griddungeon-game/issues/38)) |
-| `G` | **Gather** â€” walkable; instant loot on interact ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Gather **overlay** when cell visited (`MapGatherMarkersPresenter`) |
+| `!` | **Event** tile — story script on enter ([story events § S1](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; MVP1 S1 B2F tutorial briefing |
+| `C` | **Chest** — **non-walkable**; loot via **Interact** from adjacent cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)); `ChestItemId` on tile | Solid block when visited; chest **overlay** when wired ([#38](https://github.com/miramocha/griddungeon-game/issues/38)) |
+| `G` | **Gather** — walkable; instant loot on interact ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Gather **overlay** when cell visited (`MapGatherMarkersPresenter`) |
 | `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
-| `X` | Blocked passage (Act 1 â€” opens Act 3) | Solid/gate tint â€” not edge wall |
+| `X` | Blocked passage (Act 1 — opens Act 3) | Solid/gate tint — not edge wall |
 
-**Coordinates:** `(x, y)` with **x** westâ†’east `0â€¦19`, **y** southâ†’north `0â€¦19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
+**Coordinates:** `(x, y)` with **x** west?east `0…19`, **y** south?north `0…19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
 
-Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only â€” runtime paints **0â€“4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell â†’ alcove fill (`â–ˆ` glyph today), still walkable â€” distinct from impassable `#`.
+Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only — runtime paints **0–4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell ? alcove fill (`¦` glyph today), still walkable — distinct from impassable `#`.
 
 ### MVP1 enemy & encounter IDs (locked names)
 
-**Stats, skills, group slot layouts, FOE mapping:** [enemy-roster.md](enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 â€” Class design](../05-class-design.md#mvp1-content-ids-locked).
+**Stats, skills, group slot layouts, FOE mapping:** [enemy-roster.md](enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 — Class design](../05-class-design.md#mvp1-content-ids-locked).
 
 | Enemy ID | Role | MVP1 status teaching |
 |----------|------|----------------------|
-| `stray_hound` | Chaff melee | â€” |
-| `rust_mite` | Chaff weak | â€” |
-| `gutter_crow` | Chaff flyer | â€” |
-| `scrapling` | Chaff swarm | â€” |
+| `stray_hound` | Chaff melee | — |
+| `rust_mite` | Chaff weak | — |
+| `gutter_crow` | Chaff flyer | — |
+| `scrapling` | Chaff swarm | — |
 | `shackle_rat` | Control | `bind_arm` |
 | `venom_slime` | DoT | `poison` |
-| `alley_thug` | Mid bruiser | â€” |
-| `rubble_guard` | FOE escort | â€” |
+| `alley_thug` | Mid bruiser | — |
+| `rubble_guard` | FOE escort | — |
 | `s1_warden` | **Stratum boss** | `bind_head`, `poison` (immune; scripted opens in fight) |
 
 **Encounter groups** (full compositions in roster doc):
@@ -124,18 +124,18 @@ Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate ti
 | `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime` | B2F random |
 | `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | B3F random |
 
-### `s1_B1F` â€” Outskirts gate (intro + gate)
+### `s1_B1F` — Outskirts gate (intro + gate)
 
-**One asset, two modes.** Act 1 uses a **blocked subgraph** to the camp gate; Act 3 opens the full floor and enables `v` â†’ B2F.
+**One asset, two modes.** Act 1 uses a **blocked subgraph** to the camp gate; Act 3 opens the full floor and enables `v` ? B2F.
 
 | Field | Act 1 (movement) | Act 3 (tutorial dive) |
 |-------|------------------|------------------------|
-| `partyEntryIntro` | `(4, 2)`, facing **N** | â€” |
-| `partyEntryGate` | â€” | `(10, 11)` at gate `^`, facing **N** (hub **Enter Stratum 1**) |
+| `partyEntryIntro` | `(4, 2)`, facing **N** | — |
+| `partyEntryGate` | — | `(10, 11)` at gate `^`, facing **N** (hub **Enter Stratum 1**) |
 | `baseEncounterRate` | `0` | `0.05` |
 | `foeSpawns` | `[]` | `[]` (FOE from B2F) |
-| `stairsUp` (gate `^`) | â†’ **Hub** | â†’ **Hub** |
-| `stairsDown` `v` | **Blocked** (`X` / door flag) | Open â†’ `s1_B2F` `(10, 2)` |
+| `stairsUp` (gate `^`) | ? **Hub** | ? **Hub** |
+| `stairsDown` `v` | **Blocked** (`X` / door flag) | Open ? `s1_B2F` `(10, 2)` |
 | Tutorial blockers `D`/`X` | **Closed** east/north shortcuts | **Open** |
 
 **Random encounters (Act 3 only):**
@@ -147,7 +147,7 @@ entries:
   - { groupId: grp_b1_chaff_mite,   weight: 40 }
 ```
 
-**ASCII (20Ã—20)** â€” `X` = blocked until Act 3; intro path E â†’ ^ at gate; north cap at `(9â€“11, 17â€“18)` blocks west bypass to `v`:
+**ASCII (20×20)** — `X` = blocked until Act 3; intro path E ? ^ at gate; north cap at `(9–11, 17–18)` blocks west bypass to `v`:
 
 ```
 ####################
@@ -171,18 +171,18 @@ entries:
 ####################
 ```
 
-- **E** `(4, 2)` â€” Act 1 intro spawn; funnel north/east to gate.
-- **`!` `(10, 9)`** â€” gate camp threshold + Act 1 Event cell: **`s1_b1f_gate_briefing`** before first hub ([story events Â§ Act 1](../../02-systems/story-events.md#act-1--first-hub-b1f)); pair with **^** `(10, 11)` â†’ hub.
-- **v** `(10, 17)` â€” to B2F; blocked in Act 1.
-- **X** â€” tutorial blockers on shortcuts to `v` and wide loops.
+- **E** `(4, 2)` — Act 1 intro spawn; funnel north/east to gate.
+- **`!` `(10, 9)`** — gate camp threshold + Act 1 Event cell: **`s1_b1f_gate_briefing`** before first hub ([story events § Act 1](../../02-systems/story-events.md#act-1--first-hub-b1f)); pair with **^** `(10, 11)` ? hub.
+- **v** `(10, 17)` — to B2F; blocked in Act 1.
+- **X** — tutorial blockers on shortcuts to `v` and wide loops.
 
-**Act 1 beats:** move from **E** â†’ bump walls on side alcoves â†’ **G** / **C** on route â†’ **`!` gate briefing VN** â†’ **^** â†’ hub (sets `s1_intro_movement_complete`) â€” [guided hints](campaign/s1-guided-tutorials.md#act-1--movement-b1f) + [gate briefing](story-events/s1/s1_b1f_gate_briefing.md).
+**Act 1 beats:** move from **E** ? bump walls on side alcoves ? **G** / **C** on route ? **`!` gate briefing VN** ? **^** ? hub (sets `s1_intro_movement_complete`) — [guided hints](campaign/s1-guided-tutorials.md#act-1--movement-b1f) + [gate briefing](story-events/s1/s1_b1f_gate_briefing.md).
 
-**Act 3 beats:** hub party ready â†’ spawn **M** â†’ clear blockers â†’ optional B1F chaff fights â†’ **v** â†’ B2F FOE tutorial ([`s1_B2F`](#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
+**Act 3 beats:** hub party ready ? spawn **M** ? clear blockers ? optional B1F chaff fights ? **v** ? B2F FOE tutorial ([`s1_B2F`](#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
 ---
 
-### `s1_B2F` â€” Collapsed avenues (bind / poison + patrol FOE)
+### `s1_B2F` — Collapsed avenues (bind / poison + patrol FOE)
 
 **Goals:** first **bind** and **poison** random fights; one **step-patrol** FOE ([ADR 003](../../decisions/003-foe-step-patrol.md)); simple **loop** so map literacy matters.
 
@@ -193,7 +193,7 @@ entries:
 | `stairsUp` | `(10, 2)` |
 | `stairsDown` | `(10, 15)` |
 
-**FOE (required) â€” Synchro tutorial (unbeatable, mid-fight unlock):**
+**FOE (required) — Synchro tutorial (unbeatable, mid-fight unlock):**
 
 ```yaml
 foeId: foe_alley_stalker
@@ -205,16 +205,16 @@ encounterGroup: grp_alley_stalker_tutorial   # tutorial variant; enemies tutoria
 tutorialFirstFoe: true
 noFlee: true
 encounterTags: [tutorial_synchro, unbeatable]
-synchroUnlockTrigger: after_core_turns_2      # or on_first_party_damage â€” tune in data
+synchroUnlockTrigger: after_core_turns_2      # or on_first_party_damage — tune in data
 ```
 
-- **Approach (exploration):** **Event** cell **`!` at `(7, 11)`** on west loop â†’ **`s1_b2f_stalker_briefing`** VN â†’ `start_combat` (`grp_alley_stalker_tutorial`). Main path before scripted **hub** return ([story events Â§ S1 flow](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)).
-- **Unbeatable:** FOE cannot die until **`protocol_strike`** finisher ([synchro Â§ S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
-- **Crisis:** trigger (2 core turns OR FOE at HP floor) â†’ FOE **scripted AOE** â†’ all living core **HP = 1** â†’ unlock VN â†’ guided Protocol â†’ FOE **kill** â†’ **hub warp** (same doc).
+- **Approach (exploration):** **Event** cell **`!` at `(7, 11)`** on west loop ? **`s1_b2f_stalker_briefing`** VN ? `start_combat` (`grp_alley_stalker_tutorial`). Main path before scripted **hub** return ([story events § S1 flow](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)).
+- **Unbeatable:** FOE cannot die until **`protocol_strike`** finisher ([synchro § S1 gating](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)).
+- **Crisis:** trigger (2 core turns OR FOE at HP floor) ? FOE **scripted AOE** ? all living core **HP = 1** ? unlock VN ? guided Protocol ? FOE **kill** ? **hub warp** (same doc).
 - **Progression:** path to `s1_B3F` blocked until `s1_first_foe_tutorial_complete`.
 - Prior combats (B1F random): Synchro still locked.
 
-Patrol blocks the **shortcut** from east loop to north stairs until the party times a gap or fights. Main safe route: west loop `(4â€“6, *)` â†’ north â†’ east only after FOE clears.
+Patrol blocks the **shortcut** from east loop to north stairs until the party times a gap or fights. Main safe route: west loop `(4–6, *)` ? north ? east only after FOE clears.
 
 **Random encounters (bind / poison teaching):**
 
@@ -225,7 +225,7 @@ entries:
   - { groupId: grp_b2_venom_slime, weight: 30 }  # venom_slime
 ```
 
-**ASCII (20Ã—20):**
+**ASCII (20×20):**
 
 ```
 ####################
@@ -251,11 +251,11 @@ entries:
 ####################
 ```
 
-`^` and `v` share column **10** at `(10, 2)` / `(10, 15)` (ASCII `^`/`v` on those rows are visual; constants are authoritative). Entry from B1F lands on **^** at `(10, 2)`. **`!` `(7, 11)`** â€” tutorial Event cell (west loop); fires before hub warp arc. East loop `(12â€“14, 10â€“13)` intersects FOE patrol.
+`^` and `v` share column **10** at `(10, 2)` / `(10, 15)` (ASCII `^`/`v` on those rows are visual; constants are authoritative). Entry from B1F lands on **^** at `(10, 2)`. **`!` `(7, 11)`** — tutorial Event cell (west loop); fires before hub warp arc. East loop `(12–14, 10–13)` intersects FOE patrol.
 
 ---
 
-### `s1_B3F` â€” Flooded underpass (stratum boss)
+### `s1_B3F` — Flooded underpass (stratum boss)
 
 **Goals:** MVP1 **win** fight; boss room telegraph; narrower paths; no damage-floor tiles (post-MVP1 gimmick from full-game B3F row).
 
@@ -264,7 +264,7 @@ entries:
 | `baseEncounterRate` | `0.12` |
 | `partyEntryPoint` | `(10, 2)`, facing **N** |
 | `stairsUp` | `(10, 2)` |
-| `stairsDown` | â€” (slice end; placeholder wall north of boss) |
+| `stairsDown` | — (slice end; placeholder wall north of boss) |
 
 **Boss FOE:**
 
@@ -278,7 +278,7 @@ encounterGroup: grp_s1_warden
 noFlee: true
 ```
 
-Boss room: cells `(8â€“12, 15â€“18)` with single **south** entrance at `(10, 14)` â€” party sees room on map before commit. Optional pre-boss **C** at `(4, 10)` (reward, not gating).
+Boss room: cells `(8–12, 15–18)` with single **south** entrance at `(10, 14)` — party sees room on map before commit. Optional pre-boss **C** at `(4, 10)` (reward, not gating).
 
 **Random encounters:**
 
@@ -289,7 +289,7 @@ entries:
   - { groupId: grp_b3_control,     weight: 20 }  # shackle_rat | venom_slime
 ```
 
-**ASCII (20Ã—20):**
+**ASCII (20×20):**
 
 ```
 ####################
@@ -314,20 +314,20 @@ entries:
 #........#.........#
 ```
 
-Boss **F** at `(10, 16)`; approach corridor `(10, 3â€“14)` is width-1 with wall cheeks â€” teaches FOE routing from B2F. Entry from B2F: **`^` at `(10, 2)`** (pair with B2F `v` at `(10, 15)`).
+Boss **F** at `(10, 16)`; approach corridor `(10, 3–14)` is width-1 with wall cheeks — teaches FOE routing from B2F. Entry from B2F: **`^` at `(10, 2)`** (pair with B2F `v` at `(10, 15)`).
 
-**Post-boss (MVP1):** set stratum-1-cleared flag; return via gate **stairs up** â†’ hub or **Return thread**. Do not require `stairsDown` on B3F for MVP1 completion.
+**Post-boss (MVP1):** set stratum-1-cleared flag; return via gate **stairs up** ? hub or **Return thread**. Do not require `stairsDown` on B3F for MVP1 completion.
 
 ---
 
-### MVP1 `StratumFloor` export checklist
+### MVP1 `ExplorationFloor` export checklist
 
-- [ ] `s1_B1F.asset` â€” grid 20Ã—20, intro + gate spawns, gate `stairsUp`â†’hub, tutorial blockers, Act 1/3 flags
-- [ ] `s1_B2F.asset` â€” patrol path indices match `foe_alley_stalker` YAML
-- [ ] `s1_B3F.asset` â€” boss `noFlee` on encounter group / fight tag
+- [ ] `s1_B1F.asset` — grid 20×20, intro + gate spawns, gate `stairsUp`?hub, tutorial blockers, Act 1/3 flags
+- [ ] `s1_B2F.asset` — patrol path indices match `foe_alley_stalker` YAML
+- [ ] `s1_B3F.asset` — boss `noFlee` on encounter group / fight tag
 - [ ] `EncounterGroup` + `EnemyDefinition` SOs per [mvp1-enemy-roster](enemy-roster.md) ([game #12](https://github.com/miramocha/griddungeon-game/issues/12))
-- [ ] Playtest: B1F tutorial â‰¤ 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1â€“3 attempts at level 5â€“8
-- [ ] `foe_alley_stalker`: crisis AOE, VN unlock, guided `protocol_strike`, FOE kill, hub warp â€” B3F block until `s1_first_foe_tutorial_complete`
+- [ ] Playtest: B1F tutorial = 8 min; B2F FOE gap or fight; B3F boss wipe rate target 1–3 attempts at level 5–8
+- [ ] `foe_alley_stalker`: crisis AOE, VN unlock, guided `protocol_strike`, FOE kill, hub warp — B3F block until `s1_first_foe_tutorial_complete`
 
 ---
 
@@ -336,7 +336,7 @@ Boss **F** at `(10, 16)`; approach corridor `(10, 3â€“14)` is width-1 with wall 
 | Type | Trigger | Design notes |
 |------|---------|--------------|
 | **Random** | Per-step roll | Table per floor; no FOE sprite |
-| **FOE** | Grid entity contact | Authored position; patrol path optional; flee â†’ 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
+| **FOE** | Grid entity contact | Authored position; patrol path optional; flee ? 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
 | **Boss FOE** | Unique spawn | Stratum gate; higher rewards |
 | **Event** | Tile script | Story fight, no flee |
 
@@ -378,8 +378,8 @@ entries:
 | Type | EO parallel | Scope |
 |------|-------------|-------|
 | Damage tile | Broken glass, exposed rebar | Post-MVP1 |
-| Gather / mine / forage | Chopping/mining â€” **minigame** | **MVP2** |
-| Fish | Pond/stream â€” **fishing minigame** | **MVP2** |
+| Gather / mine / forage | Chopping/mining — **minigame** | **MVP2** |
+| Fish | Pond/stream — **fishing minigame** | **MVP2** |
 | Chest | Loot; auto-marks on map when opened | MVP1 |
 
 Gather and fish nodes **respawn on hub return**; depleted during one dive. Details: [gathering & fishing](../02-systems/gathering-and-fishing.md).
@@ -409,7 +409,7 @@ Between fights on the same dive **without** hub visit: FOE positions **persist**
 
 ## Related docs
 
-- [MVP1 enemy roster](enemy-roster.md) â€” stats, skills, encounter groups ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2))
-- [02 â€” Dungeon navigation](../02-dungeon-navigation.md)
-- [ADR 003 â€” FOE step patrol](../../decisions/003-foe-step-patrol.md)
-- [02 â€” Combat](../02-systems/combat.md)
+- [MVP1 enemy roster](enemy-roster.md) — stats, skills, encounter groups ([#2](https://github.com/miramocha/griddungeon-design-docs/issues/2))
+- [02 — Dungeon navigation](../02-dungeon-navigation.md)
+- [ADR 003 — FOE step patrol](../../decisions/003-foe-step-patrol.md)
+- [02 — Combat](../02-systems/combat.md)

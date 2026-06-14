@@ -1,6 +1,6 @@
-Ôªø# Mapping
+# Mapping
 
-The labyrinth **reveals itself** as the party explores. There are **no manual drawing tools** (no wall/door/icon toolbar, eraser, or map notes). The map panel is **read-only** ‚Äî a record of what the party has already discovered.
+The labyrinth **reveals itself** as the party explores. There are **no manual drawing tools** (no wall/door/icon toolbar, eraser, or map notes). The map panel is **read-only** ó a record of what the party has already discovered.
 
 ## Design goal
 
@@ -17,41 +17,41 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 
 ## Map UI
 
-- **Implementation wiring:** [exploration UI](exploration-ui.md) ‚Äî `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` (event subscriptions, input, phase visibility).
-- **Presentation:** **2D schematic** in UI Toolkit from `StratumFloor` + revealed state ‚Äî authored via **floor level painter** ‚Üí SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
+- **Implementation wiring:** [exploration UI](exploration-ui.md) ó `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` (event subscriptions, input, phase visibility).
+- **Presentation:** **2D schematic** in UI Toolkit from `ExplorationFloor` + revealed state ó authored via **floor level painter** ? SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
-- Grid 1:1 with dungeon cells at the party‚Äôs current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle post-MVP1 optional.
+- Grid 1:1 with dungeon cells at the partyís current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle post-MVP1 optional.
 - **Read-only:** pan/zoom only; no edit interactions.
 - Party position and facing indicated on the map.
-- **Combat (MVP1):** Map **not** in the default combat layout; **`M`** toggles read-only floor map ([game phase](game-phase.md), [input bindings](input-bindings.md)). See [¬ß Consider / explore ‚Äî map during combat](#consider--explore--map-during-combat).
+- **Combat (MVP1):** Map **not** in the default combat layout; **`M`** toggles read-only floor map ([game phase](game-phase.md), [input bindings](input-bindings.md)). See [ß Consider / explore ó map during combat](#consider--explore--map-during-combat).
 
 ### Map UI motion
 
-Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes ‚Äî UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
+Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes ó UI reactivity](../04-tech-notes.md#ui-reactivity)). Grid step lerp already blocks movement ([ADR 001](../../decisions/001-grid-movement.md)); map feedback below completes (or runs in the same beat) before the next step is accepted.
 
 **Implementation today:** cell grid is painted imperatively via `MapGridPainter` inside `MapGridPaintController`; **party / FOE / gather / hub-gate** use overlay presenters + `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#94](https://github.com/miramocha/griddungeon-game/pull/94), [#244](https://github.com/miramocha/griddungeon-game/pull/244)). Full read-model + `ExplorationMapPresenter` refactor: [exploration UI appendix](exploration-ui.md#appendix--future-map-read-model-refactor).
 
 | Event | UI reaction (MVP1) | Blocks until done |
 |-------|-------------------|-------------------|
-| Floor / wall revealed | Cell or edge **fade/stamp in** on map panel | Yes ‚Äî with step beat |
-| Door / stairs discovered | Icon **pop-in** on tile | Yes ‚Äî with interact beat |
-| FOE enters sight | FOE marker **fade in** on map | Yes ‚Äî before next step if revealed mid-step |
-| FOE patrol step | Marker **slides** to new cell | No ‚Äî ambient; must not block player input |
-| Party moves | Party arrow **slides** to new cell; optional facing tick | Yes ‚Äî with step lerp |
-| Chest (MVP1) | Chest overlay **flash** + loot toast ‚Äî opened from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes ‚Äî before next interact |
-| Gather (MVP1) | Gather overlay **flash** + loot toast | Yes ‚Äî before next interact |
-| Open fullscreen map (`M`) | Panel **scale/fade** open | No ‚Äî overlay only |
+| Floor / wall revealed | Cell or edge **fade/stamp in** on map panel | Yes ó with step beat |
+| Door / stairs discovered | Icon **pop-in** on tile | Yes ó with interact beat |
+| FOE enters sight | FOE marker **fade in** on map | Yes ó before next step if revealed mid-step |
+| FOE patrol step | Marker **slides** to new cell | No ó ambient; must not block player input |
+| Party moves | Party arrow **slides** to new cell; optional facing tick | Yes ó with step lerp |
+| Chest (MVP1) | Chest overlay **flash** + loot toast ó opened from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes ó before next interact |
+| Gather (MVP1) | Gather overlay **flash** + loot toast | Yes ó before next interact |
+| Open fullscreen map (`M`) | Panel **scale/fade** open | No ó overlay only |
 
 ## Auto-reveal rules
 
 | Element | Revealed when |
 |---------|----------------|
-| **Floor** | Party **enters** cell or **turns in place** ‚Üí chart cells in a **depth-1 facing cone** ahead of party; each lateral column walks forward until a non-walkable cell (blocker revealed + stamped) |
-| **Walls** | **Bump** blocked side ‚Üí stamp that wall; **enter cell / turn** ‚Üí solid perimeter edges for each newly charted cone cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
+| **Floor** | Party **enters** cell or **turns in place** ? chart cells in a **depth-1 facing cone** ahead of party; each lateral column walks forward until a non-walkable cell (blocker revealed + stamped) |
+| **Walls** | **Bump** blocked side ? stamp that wall; **enter cell / turn** ? solid perimeter edges for each newly charted cone cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
-| **Chest** | Party **Interact** on adjacent walkable cell **facing** impassable chest tile ‚Äî loot once; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| **Chest** | Party **Interact** on adjacent walkable cell **facing** impassable chest tile ó loot once; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | **Gather** | Gather node **overlay when visited**; MVP1 instant loot ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Fish** | Fish nodes (**MVP2**) |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
@@ -67,11 +67,11 @@ MVP1 minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto
 
 ## Wipe behavior
 
-On party wipe: **keep revealed map** for that floor (unchanged). Optional hard mode: map wipe ‚Äî not default.
+On party wipe: **keep revealed map** for that floor (unchanged). Optional hard mode: map wipe ó not default.
 
-## Consider / explore ‚Äî map during combat
+## Consider / explore ó map during combat
 
-**Status:** Not locked ‚Äî MVP1 ships **toggle-only** (`M`); showing the map **by default** during fights is under evaluation.
+**Status:** Not locked ó MVP1 ships **toggle-only** (`M`); showing the map **by default** during fights is under evaluation.
 
 ### Why explore this
 
@@ -79,24 +79,24 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 - A second FOE **creeping toward** the fight anchor
 - Whether **flee** is still viable relative to walls and incoming patrol ([foe-encounters](foe-encounters.md#flee-from-foe-fights-locked))
-- EO-style tension: ‚Äúanother stalker on the map‚Äù while you are already in a fight
+- EO-style tension: ìanother stalker on the mapî while you are already in a fight
 
-**MVP1:** Patrol + mid-battle join are **off** ([ADR 015](../../decisions/015-mvp1-combat.md)) ‚Äî ambient grid threat is low, so a combat-only `M` toggle is acceptable for scope.
+**MVP1:** Patrol + mid-battle join are **off** ([ADR 015](../../decisions/015-mvp1-combat.md)) ó ambient grid threat is low, so a combat-only `M` toggle is acceptable for scope.
 
 ### Options (not decided)
 
 | Option | Pros | Cons |
 |--------|------|------|
-| **A ‚Äî Persistent side map** (exploration-style panel) | Always-on FOE icons and party anchor; strongest threat read | Shrinks combat command/arena space; FPV is already hidden ‚Äî panel may feel disconnected from the arena |
-| **B ‚Äî Compact tactical strip** | Small schematic + party/FOE dots only | Extra layout + art; may duplicate arena focus |
-| **C ‚Äî `M` toggle only (current MVP1)** | Clean combat HUD; no layout cost | Easy to forget; no ambient ‚Äúincoming FOE‚Äù read |
-| **D ‚Äî Threat ping only** | Badge/icon when a FOE is within N cells of anchor | Minimal chrome; weak for route and flee planning |
+| **A ó Persistent side map** (exploration-style panel) | Always-on FOE icons and party anchor; strongest threat read | Shrinks combat command/arena space; FPV is already hidden ó panel may feel disconnected from the arena |
+| **B ó Compact tactical strip** | Small schematic + party/FOE dots only | Extra layout + art; may duplicate arena focus |
+| **C ó `M` toggle only (current MVP1)** | Clean combat HUD; no layout cost | Easy to forget; no ambient ìincoming FOEî read |
+| **D ó Threat ping only** | Badge/icon when a FOE is within N cells of anchor | Minimal chrome; weak for route and flee planning |
 
 ### Implementation notes (if we adopt A or B)
 
-- Exploration map lives on sibling **`ExplorationMap`** GameObject ([exploration UI](exploration-ui.md), [class design ¬ß View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded map surfaces + `Map` input map while `Combat` map stays primary.
+- Exploration map lives on sibling **`ExplorationMap`** GameObject ([exploration UI](exploration-ui.md), [class design ß View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded map surfaces + `Map` input map while `Combat` map stays primary.
 - FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
-- Arena stays **slot-based** ([combat scene](combat-scene.md)) ‚Äî map shows **grid** threat, not live battle positions.
+- Arena stays **slot-based** ([combat scene](combat-scene.md)) ó map shows **grid** threat, not live battle positions.
 
 ### Recommendation for next pass
 
@@ -104,17 +104,17 @@ Revisit when enabling **`foeCombatPatrol`** on at least one test floor; playtest
 
 ## Autopilot (MVP2)
 
-**Map click** on a **revealed walkable** cell sets destination; party **pathfinds** over discovered floor on the current `level` and walks the route ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)). Uses charted map state only ‚Äî no player path drawing ([ADR 002](../../decisions/002-mapping-model.md)).
+**Map click** on a **revealed walkable** cell sets destination; party **pathfinds** over discovered floor on the current `level` and walks the route ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)). Uses charted map state only ó no player path drawing ([ADR 002](../../decisions/002-mapping-model.md)).
 
 ---
 
 ## Map cell art (2D schematic)
 
-Locked **cell stack**, **composite walls** (edge segments + alcove ‚Äî not 16 autotiles), **door overlay** tints, sprite checklist, and USS classes: **[map-cell-art.md](map-cell-art.md)**.
+Locked **cell stack**, **composite walls** (edge segments + alcove ó not 16 autotiles), **door overlay** tints, sprite checklist, and USS classes: **[map-cell-art.md](map-cell-art.md)**.
 
-**Cell labels** (`MapGridPaintController` / `MapGridPainter`): fog ‚Üí solid `#` ‚Üí revealed `WallMask` edges (3+ ‚Üí `‚ñà`) ‚Üí features (**stairs only** in cells) ‚Üí floor `¬∑`. Party, FOE, gather, and B1F hub-gate are **not** painted into cell labels ‚Äî they live in sibling overlay layers (see [exploration UI ‚Äî Map marker overlays](exploration-ui.md#map-marker-overlays)).
+**Cell labels** (`MapGridPaintController` / `MapGridPainter`): fog ? solid `#` ? revealed `WallMask` edges (3+ ? `¶`) ? features (**stairs only** in cells) ? floor `∑`. Party, FOE, gather, and B1F hub-gate are **not** painted into cell labels ó they live in sibling overlay layers (see [exploration UI ó Map marker overlays](exploration-ui.md#map-marker-overlays)).
 
-**Overlay layers** (bottom ‚Üí top under `map-view-grid-host`): gather ‚Üí hub entrance (B1F `stairsUp` when visited) ‚Üí FOE ‚Üí party. `MapGridMarkerAnimator` handles fade/slide tweens; FOE patrol slides are **ambient** (do not block input).
+**Overlay layers** (bottom ? top under `map-view-grid-host`): gather ? hub entrance (B1F `stairsUp` when visited) ? FOE ? party. `MapGridMarkerAnimator` handles fade/slide tweens; FOE patrol slides are **ambient** (do not block input).
 
 `FeatureType.Door` exists in data; **door glyph/overlay not wired** on cells. Campaign tutorial blockers (e.g. B1F `(10,13)`) are walkability gates ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)), not map icons.
 
@@ -122,15 +122,15 @@ Locked **cell stack**, **composite walls** (edge segments + alcove ‚Äî not 16 au
 
 ## Related docs
 
-- [Refs ‚Äî Map UI (other games)](../refs/map-ui.md) ‚Äî inspiration screenshots (not spec authority)
-- [Map cell art](map-cell-art.md) ‚Äî sprites, tints, ASCII vs runtime table
-- [Map reveal save format](map-reveal-save-format.md) ‚Äî packing visited cells and wall bitmasks for `SaveGame`
-- [02 ‚Äî Dungeon navigation](../02-dungeon-navigation.md)
+- [Refs ó Map UI (other games)](../refs/map-ui.md) ó inspiration screenshots (not spec authority)
+- [Map cell art](map-cell-art.md) ó sprites, tints, ASCII vs runtime table
+- [Map reveal save format](map-reveal-save-format.md) ó packing visited cells and wall bitmasks for `SaveGame`
+- [02 ó Dungeon navigation](../02-dungeon-navigation.md)
 - [Autopilot (MVP2)](autopilot.md)
-- [FOE encounters](foe-encounters.md) ¬∑ [Chain / mid-battle FOE](chain-foe-battle.md)
-- [Exploration UI](exploration-ui.md) ‚Äî HUD composition and bind lifecycle
-- [Combat scene](combat-scene.md) ¬∑ [Game phase](game-phase.md)
-- [ADR 002 ‚Äî Mapping model](../../decisions/002-mapping-model.md)
-- [ADR 005 ‚Äî FOE combat patrol](../../decisions/005-foe-combat-patrol.md) ¬∑ [ADR 014 ‚Äî MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)
-- [ADR 019 ‚Äî Floor verticality](../../decisions/019-floor-verticality.md)
-- [04 ‚Äî Tech notes](../04-tech-notes.md)
+- [FOE encounters](foe-encounters.md) ∑ [Chain / mid-battle FOE](chain-foe-battle.md)
+- [Exploration UI](exploration-ui.md) ó HUD composition and bind lifecycle
+- [Combat scene](combat-scene.md) ∑ [Game phase](game-phase.md)
+- [ADR 002 ó Mapping model](../../decisions/002-mapping-model.md)
+- [ADR 005 ó FOE combat patrol](../../decisions/005-foe-combat-patrol.md) ∑ [ADR 014 ó MVP1 exploration map](../../decisions/014-mvp1-exploration-map.md)
+- [ADR 019 ó Floor verticality](../../decisions/019-floor-verticality.md)
+- [04 ó Tech notes](../04-tech-notes.md)

@@ -250,7 +250,7 @@ Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-
 
 **Authority:** [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md) (proposed).
 
-Separate from VN step graphs ([ADR 030](../../decisions/030-story-event-graph-authoring.md)): a **floor event graph** decides *which cell* fires *which* handler *when* save flags / quests match (e.g. hide an `!` Event until `quest_cedar_complete`). Compiled rules live on `StratumFloor`; **Core** evaluates conditions; `StoryEventRunner` still runs the dialogue program when an action is `PlayStoryEvent`.
+Separate from VN step graphs ([ADR 030](../../decisions/030-story-event-graph-authoring.md)): a **floor event graph** decides *which cell* fires *which* handler *when* save flags / quests match (e.g. hide an `!` Event until `quest_cedar_complete`). Compiled rules live on `ExplorationFloor`; **Core** evaluates conditions; `StoryEventRunner` still runs the dialogue program when an action is `PlayStoryEvent`.
 
 ## Graph authoring (post-MVP1)
 

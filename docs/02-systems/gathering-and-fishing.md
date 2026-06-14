@@ -137,7 +137,7 @@ Synthesis unlock: quests + hospital/stratum progress — see [character progress
 
 ## Content authoring
 
-Per floor in `StratumFloor`:
+Per floor in `ExplorationFloor`:
 
 ```yaml
 gather_nodes:

@@ -10,7 +10,7 @@
 
 | Property | Value |
 |----------|-------|
-| Logic grid | **1 cell** = one walkable tile in `StratumFloor` (indices 0…19 per axis on MVP1 floors) |
+| Logic grid | **1 cell** = one walkable tile in `ExplorationFloor` (indices 0…19 per axis on MVP1 floors) |
 | World scale (FPV) | **`10` Unity units** per logic cell on XZ (`ExplorationGridMetrics.WorldUnitsPerCell`); see [floor art FPV](02-systems/floor-art-fpv.md#summary) |
 | Coordinates | `(x, y, level)` + `facing` (N/E/S/W) — `level` is walkable height band in the floor ([ADR 019](../decisions/019-floor-verticality.md)) |
 | Stratum floors | `B1F`, `B2F`, … per stratum (dungeon floor id, not height `level`) |

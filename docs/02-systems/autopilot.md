@@ -1,20 +1,20 @@
-Ôªø# Autopilot (MVP2)
+# Autopilot (MVP2)
 
-**Scope:** MVP2 ‚Äî not required for first playable ([release scope](../00-release-scope.md)).
+**Scope:** MVP2 ó not required for first playable ([release scope](../00-release-scope.md)).
 
-> **Scope: Optional feature** ‚Äî not required for initial release.
+> **Scope: Optional feature** ó not required for initial release.
 
-**Autopilot** pathfinds and walks the party along **already discovered** floor tiles so players skip manual stepping on routes they mapped earlier. EO uses **drawn paths**; Grid Dungeon uses **auto-reveal only** ([ADR 002](../../decisions/002-mapping-model.md)) ‚Äî autopilot replaces drawn paths with routing on **revealed walkable** cells.
+**Autopilot** pathfinds and walks the party along **already discovered** floor tiles so players skip manual stepping on routes they mapped earlier. EO uses **drawn paths**; Grid Dungeon uses **auto-reveal only** ([ADR 002](../../decisions/002-mapping-model.md)) ó autopilot replaces drawn paths with routing on **revealed walkable** cells.
 
 ## Design goals
 
 | Goal | How |
 |------|-----|
-| **Backtracking relief** | Click a destination on the map ‚Üí party walks the shortest safe path over known ground |
+| **Backtracking relief** | Click a destination on the map ? party walks the shortest safe path over known ground |
 | **Explored areas only** | Path nodes = **revealed floor** the party has charted; never route through fog/unrevealed cells |
 | **No map drawing** | Destination pick + path overlay; no player-authored lines ([ADR 002](../../decisions/002-mapping-model.md)) |
 | **Same step rules** | Each step on the path is a normal party step (FOE patrol, encounters, reveal) |
-| **Fair stops** | Combat, blocked path, or cancel ‚Äî not silent teleport |
+| **Fair stops** | Combat, blocked path, or cancel ó not silent teleport |
 | **MVP1 unchanged** | Manual grid + hold-to-repeat only ([ADR 001](../../decisions/001-grid-movement.md)) |
 
 ---
@@ -23,12 +23,12 @@
 
 ```
 Player opens map (side or fullscreen)
-  ‚Üí LMB on revealed walkable cell (destination)
-  ‚Üí AutopilotController pathfinds on current floor `level`
+  ? LMB on revealed walkable cell (destination)
+  ? AutopilotController pathfinds on current floor `level`
       nodes = revealed walkable cells; edges = cardinal, respecting walls/doors
-  ‚Üí Preview path overlay on map (dashed)
-  ‚Üí Party walks path one displacement at a time (lerp per ADR 001)
-  ‚Üí Arrive at destination OR stop condition ‚Üí clear overlay, manual control
+  ? Preview path overlay on map (dashed)
+  ? Party walks path one displacement at a time (lerp per ADR 001)
+  ? Arrive at destination OR stop condition ? clear overlay, manual control
 ```
 
 ---
@@ -39,12 +39,12 @@ Player opens map (side or fullscreen)
 |------|--------|
 | **Graph** | Cells where `MapSystem` reports **revealed floor** and walkable on current `level` ([mapping](mapping.md)) |
 | **Edges** | Cardinal adjacency; block on solid walls; **closed doors** block until opened (revealed open door = passable) |
-| **Algorithm** | Shortest path (BFS or A*) on the subgraph above ‚Äî implementation choice |
+| **Algorithm** | Shortest path (BFS or A*) on the subgraph above ó implementation choice |
 | **Start** | Party anchor cell |
 | **Goal** | Clicked cell; must be revealed walkable; reject clicks on walls, fog, FOE icon-only, wrong `level` |
-| **Multi-level** | MVP2: **same `level` only** ‚Äî no path across stairs/jump pads (player walks vertical links manually) |
+| **Multi-level** | MVP2: **same `level` only** ó no path across stairs/jump pads (player walks vertical links manually) |
 | **Repath** | If reveal changes mid-walk (new wall, door closes), **stop** with message; do not cut through newly invalid cells |
-| **FOE cells** | Route **may** include cells that currently show a FOE icon ‚Äî stepping there triggers contact as today (player accepts risk) |
+| **FOE cells** | Route **may** include cells that currently show a FOE icon ó stepping there triggers contact as today (player accepts risk) |
 
 **Not in scope:** routing through unrevealed tiles, teleport, or skipping step events.
 
@@ -55,10 +55,10 @@ Player opens map (side or fullscreen)
 For each path segment:
 
 1. If next cell requires **facing change**, play **turn lerp** (no step events) then step.
-2. Otherwise **displacement** (forward/strafe relative to facing) into next cell ‚Äî one lerp, full step events.
+2. Otherwise **displacement** (forward/strafe relative to facing) into next cell ó one lerp, full step events.
 3. Wait for lerp end before next segment ([ADR 001](../../decisions/001-grid-movement.md)).
 
-Corners and ‚Äújunctions‚Äù on the precomputed path are **not** stop points ‚Äî only stops below apply.
+Corners and ìjunctionsî on the precomputed path are **not** stop points ó only stops below apply.
 
 ---
 
@@ -67,10 +67,10 @@ Corners and ‚Äújunctions‚Äù on the precomputed path are **not** stop points ‚Äî 
 | Condition | Behavior |
 |-----------|----------|
 | **Reached destination** | Stop; clear autopilot state |
-| **Path no longer valid** | Wall/door block on planned next cell ‚Üí stop + toast |
+| **Path no longer valid** | Wall/door block on planned next cell ? stop + toast |
 | **FOE contact** | Stop autopilot; enter FOE fight |
 | **Random encounter** | Stop autopilot; enter fight |
-| **Interactable on next cell** (not destination) | Stop **before** entering (chest, closed door, gather node, etc.) ‚Äî player chooses `Space` |
+| **Interactable on next cell** (not destination) | Stop **before** entering (chest, closed door, gather node, etc.) ó player chooses `Space` |
 | **Destination is interactable** | Stop **on** cell; player interacts manually |
 | **Combat / hub / minigame** | Autopilot inactive; cancel if phase changes |
 | Player **manual move/turn/interact**, new map click, **pause** | Cancel autopilot |
@@ -88,7 +88,7 @@ Every **displacement** on the path runs the normal exploration pipeline:
 4. Random encounter  
 5. Tile script  
 
-**Turns** on path corners: turn lerp only ‚Äî no FOE tick, no encounter ([ADR 001](../../decisions/001-grid-movement.md)).
+**Turns** on path corners: turn lerp only ó no FOE tick, no encounter ([ADR 001](../../decisions/001-grid-movement.md)).
 
 ---
 
@@ -122,9 +122,9 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 
 | Piece | Owner |
 |-------|--------|
-| Path graph + A*/BFS | Split across Core + Runtime ‚Äî see **Implementation (shipped)** below |
+| Path graph + A*/BFS | Split across Core + Runtime ó see **Implementation (shipped)** below |
 | Step commit + lerp | `DungeonExplorer` |
-| Map click ‚Üí goal | `ExplorationMapCoordinator` ‚Üí `AutopilotController` |
+| Map click ? goal | `ExplorationMapCoordinator` ? `AutopilotController` |
 | Overlay | `MapGridPaintController` (BEM path/cursor/destination classes) |
 
 ---
@@ -133,16 +133,16 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 
 **Game repo:** merged [#248](https://github.com/miramocha/griddungeon-game/pull/248) ([`MapPathfinder`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Simulators/MapPathfinder.cs), [`ExplorationPathGraph`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Map/ExplorationPathGraph.cs), [`AutopilotPathWalker`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Exploration/AutopilotPathWalker.cs), [`AutopilotController`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Exploration/AutopilotController.cs)).
 
-**Developer deep dive:** [04 ‚Äî Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
+**Developer deep dive:** [04 ó Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
 
 ### Type ownership
 
 | Type | Assembly | Responsibility |
 |------|----------|----------------|
 | **`MapPathfinder`** | `GridDungeon.Core` | Generic **A\*** on a cardinal grid: injectable node/edge predicates, Manhattan heuristic, uniform step cost, binary min-heap open set. No `MapSystem` / floor knowledge. |
-| **`ExplorationPathGraph`** | `GridDungeon.Runtime` | Builds exploration predicates from `MapSystem` + `StratumFloor` + campaign save (`S1ExplorationWalkability`, walls, doors) and calls `MapPathfinder.TryFindPath`. |
-| **`AutopilotPathWalker`** | `GridDungeon.Core` | Given a path + `pathIndex`, returns the next **turn** or **step** action (`AutopilotWalkerAction`) for `DungeonExplorer` ‚Äî shortest arc (left vs right). |
-| **`AutopilotController`** | `GridDungeon.Runtime` | State machine (`Idle` ‚Üí `Selecting` ‚Üí `Walking` / `Suspended`), destination validation, pathfind orchestration, overlay events, combat suspend/resume, walker dispatch on animation complete. |
+| **`ExplorationPathGraph`** | `GridDungeon.Runtime` | Builds exploration predicates from `MapSystem` + `ExplorationFloor` + campaign save (`S1ExplorationWalkability`, walls, doors) and calls `MapPathfinder.TryFindPath`. |
+| **`AutopilotPathWalker`** | `GridDungeon.Core` | Given a path + `pathIndex`, returns the next **turn** or **step** action (`AutopilotWalkerAction`) for `DungeonExplorer` ó shortest arc (left vs right). |
+| **`AutopilotController`** | `GridDungeon.Runtime` | State machine (`Idle` ? `Selecting` ? `Walking` / `Suspended`), destination validation, pathfind orchestration, overlay events, combat suspend/resume, walker dispatch on animation complete. |
 
 UI wiring (not pathfinding): `ExplorationMapCoordinator` owns `AutopilotController`; `ExpandedMapDestinationSelection` handles expanded-map pointer + arrow cursor; `MapGridPaintController.SetAutopilotOverlay` paints path/cursor/destination.
 
@@ -152,22 +152,22 @@ UI wiring (not pathfinding): `ExplorationMapCoordinator` owns `AutopilotControll
 |--------|------------------|
 | **Neighborhood** | 4 cardinal offsets only |
 | **Edge cost** | Uniform **1** per step (`gScore`) |
-| **Heuristic** | **Manhattan** distance to goal (`|Œîx| + |Œîy|`) ‚Äî admissible on cardinal grid |
+| **Heuristic** | **Manhattan** distance to goal (`|?x| + |?y|`) ó admissible on cardinal grid |
 | **Open set** | **Binary min-heap** keyed by `f = g + h`; tie-break by `h`, then `X`, then `Y` |
 | **Closed set** | `HashSet<GridPosition>`; stale heap entries skipped on pop |
 | **Predicates** | `Func<GridPosition, bool> isNodePassable`; `Func<GridPosition, GridPosition, bool> canTraverseEdge(from, to)` |
 | **Output** | `IReadOnlyList<GridPosition>` from **start** (index 0) through **goal** (last index), inclusive |
-| **Trivial path** | `start == goal` ‚Üí single-cell path (destination pick rejects party cell before walk) |
+| **Trivial path** | `start == goal` ? single-cell path (destination pick rejects party cell before walk) |
 
 ### Graph rules (`ExplorationPathGraph`)
 
 | Layer | Rule |
 |-------|------|
 | **Nodes** | `map.IsVisited(cell)` **and** `S1ExplorationWalkability.IsWalkable(floor, cell, campaign, floorKey)` (tutorial gates, campaign flags) |
-| **Edges** | Cardinal step only; reject if `StratumFloorLayout.IsSolidEdge(floor, from, side)` |
+| **Edges** | Cardinal step only; reject if `ExplorationFloorLayout.IsSolidEdge(floor, from, side)` |
 | **Revealed walls** | Block when `map.GetWalls(from)` includes the step-facing `WallMask` |
 | **Doors** | **Closed** door on **either** endpoint blocks the edge (`FeatureType.Door` + `!IsInteracted`); opened door is passable |
-| **FOE / encounters** | Not in graph ‚Äî routed cells may contain FOE icons; contact runs normal step pipeline |
+| **FOE / encounters** | Not in graph ó routed cells may contain FOE icons; contact runs normal step pipeline |
 
 Same-level only; no stairs/jump-pad edges in the path graph (matches MVP2 spec).
 
@@ -180,7 +180,7 @@ The path list is **inclusive** of start and goal. Walking does **not** re-path e
 | After `TryConfirmDestination` | `1` when `path.Count > 1`, else `0` | Next cell to enter is `path[pathIndex]` (index `0` is current party cell at confirm time) |
 | Each `OnExplorerAnimationCompleted` while `Walking` | Increment when `m_explorer.Cell == path[pathIndex]` | Party has **arrived** on the indexed waypoint |
 | `GetNextAction(path, pathIndex, cell, facing)` | Reads `path[pathIndex]` | Returns `TurnLeft` / `TurnRight` / `StepForward` toward that cell, or `Done` if already there / invalid gap |
-| Walk complete | ‚Äî | `pathIndex >= path.Count` **or** `m_explorer.Cell == m_savedDestination` ‚Üí `Idle`, overlay cleared |
+| Walk complete | ó | `pathIndex >= path.Count` **or** `m_explorer.Cell == m_savedDestination` ? `Idle`, overlay cleared |
 
 Turns use `DungeonExplorer.TryTurnLeft` / `TryTurnRight`; steps use `TryStepForward`. `MovementAcceptance.Ignored` **cancels** autopilot (no toast yet).
 
@@ -188,12 +188,12 @@ Turns use `DungeonExplorer.TryTurnLeft` / `TryTurnRight`; steps use `TryStepForw
 
 | MVP2 spec | Shipped (expanded-map slice) |
 |-----------|------------------------------|
-| `LMB` destination on **side or fullscreen** map | **Expanded map only** ‚Äî **Z** arms path mode (`TabbedPickerRailHints.ExplorationMapAutopilotSelect`); arrow keys move cursor; **Z Confirm** or **click** sets destination. Side minimap has no autopilot pick yet. |
-| Cancel on **combat** | **Suspend + resume** ‚Äî `SuspendForCombat` saves destination; `TryResumeAfterCombat` re-paths from post-fight cell (or `Cancel` if unreachable / already at goal). FOE/random encounter still stops walk via combat entry. |
-| Stop toasts (`Arrived`, `Blocked`, ‚Ä¶) | **Not shipped** ‚Äî silent cancel or idle on complete |
-| Stop **before** interactable on path (not destination) | **Not shipped** ‚Äî walker steps into chests / gather nodes unless movement is blocked |
-| **Avoid FOE cells** setting | **Not shipped** ‚Äî shortest revealed path may cross FOE tiles |
-| Mid-walk **repath** when map changes | **Not shipped** ‚Äî blocked next step cancels; no replan or message |
+| `LMB` destination on **side or fullscreen** map | **Expanded map only** ó **Z** arms path mode (`TabbedPickerRailHints.ExplorationMapAutopilotSelect`); arrow keys move cursor; **Z Confirm** or **click** sets destination. Side minimap has no autopilot pick yet. |
+| Cancel on **combat** | **Suspend + resume** ó `SuspendForCombat` saves destination; `TryResumeAfterCombat` re-paths from post-fight cell (or `Cancel` if unreachable / already at goal). FOE/random encounter still stops walk via combat entry. |
+| Stop toasts (`Arrived`, `Blocked`, Ö) | **Not shipped** ó silent cancel or idle on complete |
+| Stop **before** interactable on path (not destination) | **Not shipped** ó walker steps into chests / gather nodes unless movement is blocked |
+| **Avoid FOE cells** setting | **Not shipped** ó shortest revealed path may cross FOE tiles |
+| Mid-walk **repath** when map changes | **Not shipped** ó blocked next step cancels; no replan or message |
 | `AUTOPILOT` HUD label / pulse | Overlay classes on map cells only (`MapAutopilotCellClasses`) |
 
 ### Automated tests
@@ -205,7 +205,7 @@ Edit Mode fixtures ([game `Assets/Tests/README.md`](https://github.com/miramocha
 | `MapPathfinderTests` | `Map` | Open grid shortest path, wall detour, unreachable goal |
 | `ExplorationPathGraphTests` | `Map` | Unrevealed shortcut skipped, closed vs open door, B1F tutorial blocker + campaign flag |
 | `AutopilotPathWalkerTests` | `Exploration` | Step when aligned; shorter turn arc |
-| `AutopilotControllerTests` | `Exploration` | Select toggle, confirm ‚Üí walk, combat suspend/resume, manual cancel |
+| `AutopilotControllerTests` | `Exploration` | Select toggle, confirm ? walk, combat suspend/resume, manual cancel |
 | `ExpandedMapDestinationSelectionTests` | `UI` | Expanded-map cursor move + confirm |
 | `ExplorationMapCoordinatorTests` | `UI` | M-toggle minimap retract; pause menu minimap retract |
 | `ExplorationInputActionsTests` | `UI` | `Pause` stays enabled while pause menu open (Esc dismiss) |
@@ -218,7 +218,7 @@ Edit Mode fixtures ([game `Assets/Tests/README.md`](https://github.com/miramocha
 | Item | MVP1 | MVP2 |
 |------|------|------|
 | Manual WASD + hold-to-repeat | Yes | Yes |
-| Map click ‚Üí pathfind to discovered tile | No | **Yes** |
+| Map click ? pathfind to discovered tile | No | **Yes** |
 | Path overlay on map | No | Yes |
 | Teleport / unrevealed routing | No | No |
 
@@ -226,11 +226,11 @@ Edit Mode fixtures ([game `Assets/Tests/README.md`](https://github.com/miramocha
 
 ## Related
 
-- [04 ‚Äî Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md) ‚Äî A*, graph rules, API, tests
-- [02 ‚Äî Dungeon navigation](../02-dungeon-navigation.md)
-- [02 ‚Äî Mapping](mapping.md)
+- [04 ó Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md) ó A*, graph rules, API, tests
+- [02 ó Dungeon navigation](../02-dungeon-navigation.md)
+- [02 ó Mapping](mapping.md)
 - [Input bindings](input-bindings.md)
-- [ADR 001 ‚Äî Grid movement](../../decisions/001-grid-movement.md)
-- [ADR 002 ‚Äî Mapping model](../../decisions/002-mapping-model.md)
-- [ADR 021 ‚Äî Autopilot MVP2](../../decisions/021-autopilot-mvp2.md)
+- [ADR 001 ó Grid movement](../../decisions/001-grid-movement.md)
+- [ADR 002 ó Mapping model](../../decisions/002-mapping-model.md)
+- [ADR 021 ó Autopilot MVP2](../../decisions/021-autopilot-mvp2.md)
 - [Release scope](../00-release-scope.md)
