@@ -1,4 +1,4 @@
-# ADR 041 — Floor exit graph (Graph Toolkit wiring)
+# ADR 041 — Floor Connector (Graph Toolkit wiring)
 
 **Status:** Proposed  
 **Date:** 2026-06-14  
@@ -6,7 +6,7 @@
 **Follows:** [ADR 040](040-floor-exit-topology-graph.md) (`FloorExitLink[]` schema, compile-to-assets rule) · [ADR 022](022-side-dungeons-mvp3.md) (side `locationId` floors)  
 **Package pin:** `com.unity.graphtoolkit@0.4.0-exp.2` (experimental — editor-only assembly `GridDungeon.GraphToolkit.Editor`)
 
-> **Naming:** Issue #253 originally used `StratumTopologyGraph`. Implementation uses **`FloorExitGraph`** scoped by **`locationId`** (`s1`, `sd01`, …) — not stratum-only. “Topology” stays in [ADR 040](040-floor-exit-topology-graph.md) title as the data-model decision; this ADR is the **GTK canvas wiring** spec.
+> **Naming:** Issue #253 originally used `StratumTopologyGraph`. Implementation uses **`FloorConnector`** scoped by **`locationId`** (`s1`, `sd01`, …) — not stratum-only. “Topology” stays in [ADR 040](040-floor-exit-topology-graph.md) title as the data-model decision; this ADR is the **GTK canvas wiring** spec.
 
 ## Context
 
@@ -20,29 +20,29 @@
 
 | Asset | Type | Role |
 |-------|------|------|
-| **`FloorExitGraph`** | `ScriptableObject` wrapper | `locationId`, reference to GTK graph, compile options (e.g. bidirectional) |
-| **`FloorExitGraphDefinition`** | Graph Toolkit `[Graph]` asset | Canvas: `FloorNode`, `ExitEdge`, `HubNode` + wires |
+| **`FloorConnector`** | `ScriptableObject` wrapper | `locationId`, reference to GTK graph, compile options (e.g. bidirectional) |
+| **`FloorConnectorGraph`** | Graph Toolkit `[Graph]` asset | Canvas: `FloorNode`, `ExitEdge`, `HubNode` + wires |
 
 **Content layout:**
 
 ```
-Assets/Content/FloorExitGraphs/s1.asset          ← FloorExitGraph (locationId = s1)
-Assets/Content/FloorExitGraphs/s1.graph.asset    ← FloorExitGraphDefinition (GTK sub-asset or linked file)
+Assets/Content/FloorConnectors/s1.asset          ← FloorConnector (locationId = s1)
+Assets/Content/FloorConnectors/s1.graph.asset    ← FloorConnectorGraph (GTK sub-asset or linked file)
 ```
 
-One **`FloorExitGraph` per `locationId`** — stratum (`s1`), side dungeon (`sd01`), future locations. Not one graph per floor.
+One **`FloorConnector` per `locationId`** — stratum (`s1`), side dungeon (`sd01`), future locations. Not one graph per floor.
 
 ```mermaid
 flowchart LR
   subgraph editorAssets [Editor assets]
-    Wrapper["FloorExitGraph SO\nlocationId: s1"]
-    GtkGraph["FloorExitGraphDefinition\n(GTK graph)"]
+    Wrapper["FloorConnector SO\nlocationId: s1"]
+    GtkGraph["FloorConnectorGraph\n(GTK graph)"]
     Wrapper -->|graphAsset ref| GtkGraph
   end
   subgraph compile [Compile]
-    Reader[FloorExitGraphReader]
-    Compiler[FloorExitGraphCompiler]
-    Writer[FloorExitGraphFloorWriter]
+    Reader[FloorConnectorReader]
+    Compiler[FloorConnectorCompiler]
+    Writer[FloorConnectorFloorWriter]
     GtkGraph --> Reader --> Compiler --> Writer
   end
   subgraph runtimeAssets [Runtime assets]
@@ -167,15 +167,15 @@ flowchart TB
 ```mermaid
 sequenceDiagram
   participant Designer
-  participant Window as FloorExitGraphWindow
-  participant Reader as FloorExitGraphReader
-  participant Val as FloorExitGraphValidator
-  participant Comp as FloorExitGraphCompiler
-  participant Writer as FloorExitGraphFloorWriter
+  participant Window as FloorConnectorWindow
+  participant Reader as FloorConnectorReader
+  participant Val as FloorConnectorValidator
+  participant Comp as FloorConnectorCompiler
+  participant Writer as FloorConnectorFloorWriter
   participant Floor as ExplorationFloor_asset
   Designer->>Window: Compile
   Window->>Reader: Walk GTK nodes and wires
-  Reader->>Val: FloorExitGraphCompileInput rows
+  Reader->>Val: FloorConnectorCompileInput rows
   Val-->>Window: errors or OK
   Val->>Comp: validated rows
   Comp->>Writer: floorKey to FloorExitLink array
@@ -190,7 +190,7 @@ sequenceDiagram
 - Unique `exitId` per source floor
 - `targetFloorKey` set when edge wires to `FloorNode`; empty when wired to `HubNode`
 - Source `cell` and `targetSpawnCell` inside grid bounds of respective floors
-- `HubNode.locationId` matches `FloorExitGraph.locationId`
+- `HubNode.locationId` matches `FloorConnector.locationId`
 - No cross-`locationId` floor targets
 
 ---
@@ -227,7 +227,7 @@ S1 can be authored **fully explicit** (bidirectional off) to match hand-migrated
 | Layer | Authority |
 |-------|-----------|
 | **Floor painter** | Grid layout, `^` / `v` **cells**, tiles, FOE pins |
-| **Floor exit graph** | Full **`exitLinks[]`** after Compile (cells + targets) |
+| **Floor Connector** | Full **`exitLinks[]`** after Compile (cells + targets) |
 | **Runtime** | `exitLinks[]` on floor asset only |
 
 Recommended workflow: paint floor grid → author / adjust exit graph → **Compile** → verify cells match markers.
@@ -240,8 +240,8 @@ Painter **Apply** without compile may leave provisional links; graph Compile is 
 
 | Piece | Assembly |
 |-------|----------|
-| `FloorExitGraphCompiler`, `Validator`, `FloorWriter`, DTOs | `GridDungeon.Editor` |
-| `FloorExitGraphDefinition`, nodes, `Reader`, window | `GridDungeon.GraphToolkit.Editor` → `FloorExits/` |
+| `FloorConnectorCompiler`, `Validator`, `FloorWriter`, DTOs | `GridDungeon.Editor` |
+| `FloorConnectorGraph`, nodes, `Reader`, window | `GridDungeon.GraphToolkit.Editor` → `FloorConnector/` |
 | Edit Mode compiler tests | `GridDungeon.Editor.Tests` (no GTK reference) |
 
 ---
@@ -258,7 +258,7 @@ Painter **Apply** without compile may leave provisional links; graph Compile is 
 |---|------------------|------------------------|
 | 1 | Bidirectional compile | Optional toolbar toggle; hub edges excluded |
 | 2 | `exitId` convention | Stable string on `ExitEdge` (e.g. `b1f_up_gate`); unique per floor |
-| 3 | Graph granularity | **One `FloorExitGraph` per `locationId`** |
+| 3 | Graph granularity | **One `FloorConnector` per `locationId`** |
 | 4 | Painter vs graph authority | **Graph Compile replaces full `exitLinks[]`** for shipped content |
 
 ## Related
