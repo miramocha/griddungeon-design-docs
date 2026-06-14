@@ -28,10 +28,10 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 | Property | Rule |
 |----------|------|
-| **Source** | **Summoner class** deploy skills (MVP1+); post-MVP1 **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
+| **Source** | **Summoner class** deploy skills (launch)+); later **Protocol Deploy** sortie ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)); rare items / boss mechanics |
 | **Placement** | Occupies aux **front** or **back** per skill definition |
 | **Duration** | Turns remaining, HP hits zero, or dismissed |
-| **Commands (MVP1)** | **Player-controlled** — Attack / Guard + summon `skillIds`; queued in **command planning** with cores, then executed on AGI slot ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **Commands (launch)** | **Player-controlled** — Attack / Guard + summon `skillIds`; queued in **command planning** with cores, then executed on AGI slot ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
 | **Commands (later)** | Optional **stance hybrid** (AI picks from kit) |
 | **AGI** | Summon has own AGI; enters turn queue; **waits for player** like core |
 | **XP** | No XP to summons |
@@ -40,7 +40,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 **Stacking:** One summon per aux slot. **`deploy_scout_drone`:** may be **queued** while aux back is occupied; on AGI **resolve**, if still occupied → **fail**, **no MP spent** ([mvp1-class-skills](../03-content/class-skills.md#locked-implementation-rules)).
 
-### Navigator sortie (Protocol Deploy — post-MVP1)
+### Navigator sortie (Protocol Deploy — later)
 
 | Property | Rule |
 |----------|------|
@@ -55,7 +55,7 @@ Auxiliary units **do not** appear on the exploration grid — only in combat.
 
 Does **not** violate “Navigator fills aux slot” — the **summon** occupies the slot; Navigator identity stays in the off-formation strip ([ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 
-### MVP1 summon kit (`scout_drone`)
+### (launch) summon kit (`scout_drone`)
 
 Player picks the drone’s command during **command planning** (after cores, before “Party commands locked — executing AGI queue”). Same round as first deploy: drone is **not** in planning until the **next** round. Data on `SummonDefinition`:
 
@@ -64,7 +64,7 @@ summon_id: scout_drone
 duration_rounds: 3
 aux_row: back
 skill_ids: [volt_burst]   # plus implicit Attack / Guard
-# action_script: unused for MVP1 player summons
+# action_script: unused at launch player summons
 ```
 
 | Command | Rule |
@@ -103,12 +103,12 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 - Aux slots: distinct frame (e.g. border color) labeled **Summon** / **Guest**; empty aux slot hidden or shown dimmed.
 - Turn queue shows aux icons mixed with party by AGI.
 
-## MVP1
+## Launch scope
 
 | Phase | Scope |
 |-------|--------|
-| **MVP1** | Aux slots + one test summon — **player-controlled** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
-| **MVP1+** | One scripted **guest** on a quest fight |
+| **Launch** | Aux slots + one test summon — **player-controlled** ([ADR 016](../../decisions/016-summon-control-mvp1.md)) |
+| **(launch)+** | One scripted **guest** on a quest fight |
 | **Later** | Multiple summon skills, enemy summons, guest roster |
 
 ## Related docs
@@ -116,5 +116,5 @@ skill_ids: [volt_burst]   # plus implicit Attack / Guard
 - [Party & classes](party-and-classes.md)
 - [Combat](combat.md)
 - [ADR 004 — Auxiliary slots](../../decisions/004-auxiliary-slots.md)
-- [ADR 016 — Summon control MVP1](../../decisions/016-summon-control-mvp1.md)
+- [ADR 016 — Summon control (launch)](../../decisions/016-summon-control-mvp1.md)
 - [ADR 023 — Protocol Deploy sortie summon](../../decisions/023-protocol-deploy-sortie-summon.md)

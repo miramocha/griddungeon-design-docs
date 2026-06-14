@@ -1,11 +1,11 @@
 ﻿# ADR 017 — Game Phase Controller (C#)
 
-**Status:** Accepted (MVP1)  
+**Status:** Accepted (launch)  
 **Date:** 2026-05-21
 
 ## Context
 
-MVP1 alternates between **hub**, **exploration**, and **combat** ([mvp1-spec](../docs/archive/mvp1-spec.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
+(launch) alternates between **hub**, **exploration**, and **combat** ([release scope](../docs/00-release-scope.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
 
 Requirements:
 
@@ -14,9 +14,9 @@ Requirements:
 - **Clear Enter/Exit** hooks for input maps, scene visibility, and event subscriptions
 - **Single responsibility** — phase orchestration separate from combat round logic
 
-## Decision (MVP1)
+## Decision (launch)
 
-1. **Macro game flow is pure C#** — `GamePhaseController` + three `IPhaseController` implementations. **No UVS state graph** as source of truth in MVP1.
+1. **Macro game flow is pure C#** — `GamePhaseController` + three `IPhaseController` implementations. **No UVS state graph** as source of truth at launch.
 2. **`GamePhase` enum** lives in `GridDungeon.Core`: `Hub`, `Exploration`, `Combat`.
 3. **`GamePhaseController`** (Runtime, plain C# class) owns `Current`, validates transitions via `TryTransitionTo`, raises `PhaseChanged`.
 4. **Phase controllers** (Runtime `MonoBehaviour` or plain classes wired by `GameState`):
@@ -41,7 +41,7 @@ Requirements:
 
 Invalid transitions return `false` from `TryTransitionTo`; callers log or show UI feedback.
 
-## Rejected for MVP1
+## Rejected at launch
 
 | Option | Why |
 |--------|-----|
@@ -63,7 +63,7 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 
 ## Consequences
 
-- Implement under `Assets/Scripts/Runtime/Game/` per [class design MVP1](../docs/05-class-design.md).
+- Implement under `Assets/Scripts/Runtime/Game/` per [class design](../docs/05-class-design.md).
 - `InputRouter` subscribes to `PhaseChanged` (or is called from phase `OnExit`/`OnEnter`).
 - Systems request transitions through `GameState` / `GamePhaseController`, not by enabling scenes ad hoc.
 - Document flow and APIs in [game phase system](../docs/02-systems/game-phase.md). UVS integration examples: [uvs-phase-presentation](../docs/02-systems/uvs-phase-presentation.md).
@@ -72,7 +72,7 @@ Full goals table, layer stack, and sequence diagrams: [game phase system](../doc
 
 - [Game phase (system doc)](../docs/02-systems/game-phase.md)
 - [UVS — phase & presentation hooks](../docs/02-systems/uvs-phase-presentation.md)
-- [05 — Class design MVP1](../docs/05-class-design.md)
+- [05 — class design](../docs/05-class-design.md)
 - [04 — Tech notes](../docs/04-tech-notes.md)
-- [MVP1 spec](../docs/archive/mvp1-spec.md)
+- [(launch) spec](../docs/00-release-scope.md)
 - [Combat](../docs/02-systems/combat.md) — combat round vs game phase terminology

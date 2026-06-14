@@ -11,9 +11,9 @@ description: >-
 
 ## When to use
 
-- Editing `S1B1FLayoutBuilder.k_RowsNorthUp`, MVP1 ASCII in [archive draft layouts](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md), or painted grids in game assets (**layouts not locked**)
+- Editing `S1B1FLayoutBuilder.k_RowsNorthUp`, (launch) ASCII in [archive draft layouts](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md), or painted grids in game assets (**layouts not locked**)
 - User reports reaching `stairsDown` / `v` without passing tutorial blocker `(10, 13)`
-- Before `sync_b1f_asset_tiles` or Unity **Apply s1_B1F MVP1 layout**
+- Before `sync_b1f_asset_tiles` or Unity **Apply s1_B1F (launch) layout**
 - After layout patch — confirm Edit Mode `S1B1FLayoutTests` and this script agree
 
 ## Coordinate system (locked)

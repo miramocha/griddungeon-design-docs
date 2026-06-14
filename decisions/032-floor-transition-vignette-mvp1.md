@@ -14,9 +14,9 @@ Floor changes (stairs, hub re-entry, campaign warp) previously loaded map data a
 
 ## Decision
 
-### 1. MVP1 ships a floor transition vignette
+### 1. (launch) ships a floor transition vignette
 
-| Topic | MVP1 |
+| Topic | Launch |
 |-------|------|
 | **Triggers** | S1 **stairs up/down** (B1F↔B2F↔B3F); **exploration → hub** (gate `stairsUp`); **hub → stratum** enter; campaign **floor change** via `TryChangeFloor` |
 | **Presentation** | Black-backed **3D vignette** (door / hatch / threshold prop) + **Cinemachine 3** virtual cameras; optional Timeline |
@@ -25,7 +25,7 @@ Floor changes (stairs, hub re-entry, campaign warp) previously loaded map data a
 | **Fallback** | Missing beat asset → **fade + sequential load** (no hard block) |
 | **Content** | **One default** beat (`stairs_default`) + catalog override per `leaveKey`→`enterKey` when authored |
 
-**Not required for MVP1 close:** unique beat per stair pair; hub root-menu camera pans; combat arena camera migration to Cinemachine.
+**Not required at launch close:** unique beat per stair pair; hub root-menu camera pans; combat arena camera migration to Cinemachine.
 
 ### 2. Authority vs presentation
 
@@ -67,7 +67,7 @@ Presentation only ([uvs phase presentation](../docs/02-systems/uvs-phase-present
 
 - **Game:** refactor `TryChangeFloor` to async/coroutine path through `FloorTransitionPresenter`; [#102](https://github.com/miramocha/griddungeon-game/issues/102) Play Mode tests target transition enter → load → exit.
 - **Art:** author `Transitions/stairs_default` prefab (black skybox, door mesh, 2 vcams, Timeline).
-- **Docs:** [mvp1-spec](../docs/archive/mvp1-spec.md) checklist row; [release scope](../docs/00-release-scope.md) in-scope line.
+- **Docs:** [release scope](../docs/00-release-scope.md) checklist row; [release scope](../docs/00-release-scope.md) in-scope line.
 
 ## Related
 

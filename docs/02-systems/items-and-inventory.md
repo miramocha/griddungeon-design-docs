@@ -2,7 +2,7 @@
 
 Party **bag** (shared, fixed slots) and **worn equipment** (per core member). **Credits** (hub wallet) stay on save — not a bag slot.
 
-**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked) · equipment stats table [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked)
+**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § content IDs](../05-class-design.md#content-ids-locked) · equipment stats table [character progression § launch equipment](character-progression.md#launch-equipment-locked)
 
 **Implementation tracker:** [design-docs #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) · [game epic #151](https://github.com/miramocha/griddungeon-game/issues/151) (#152–#157, loot [#31](https://github.com/miramocha/griddungeon-game/issues/31))
 
@@ -54,14 +54,14 @@ Shop/hospital/identify copy uses the **display label** via `Mvp1HubConstants.Cur
 
 ---
 
-## Bag model (MVP1)
+## Bag model (launch)
 
 - **Fixed slot count** (EO-style) — default **`partyBagSlotCount = 30`** ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); tune in data, not code forks.
 - Each slot holds **at most one** of:
   - **Empty**
   - **Consumable stack** — one `itemId`, quantity ≤ `ItemDefinition.maxStack`
   - **Equipment instance** — unequipped gear (`equipId` + identify flag)
-  - **Material stack** (MVP2) — same stack shape as consumables; `InventorySlotKind.Material`
+  - **Material stack** (optional) — same stack shape as consumables; `InventorySlotKind.Material`
 - **No stacking across slots** — a full stack occupies one slot; overflow needs another empty slot or fails (bag-full).
 - **Equipped gear does not occupy bag slots** — worn on `CharacterSaveData.Equipment` / runtime `Combatant.Equipment`.
 
@@ -105,7 +105,7 @@ sealed class EquipmentLoadout
 }
 ```
 
-**MVP1 equip reference model:**
+**(launch) equip reference model:**
 
 | Source | On loadout |
 |--------|----------------|
@@ -116,7 +116,7 @@ sealed class EquipmentLoadout
 
 **Class gates:** `EquipmentDefinition.allowedClassIds` + `weaponType` — validate in `InventoryRules.TryEquip` (Core).
 
-Stat and resist bonuses: full table in [character progression § MVP1 equipment](character-progression.md#mvp1-equipment-locked). Applied via **`EquipmentStatAggregator`** when building combatants ([combat status & buffs](combat-status-and-buffs.md)).
+Stat and resist bonuses: full table in [character progression § launch equipment](character-progression.md#launch-equipment-locked). Applied via **`EquipmentStatAggregator`** when building combatants ([combat status & buffs](combat-status-and-buffs.md)).
 
 ---
 
@@ -127,23 +127,23 @@ Stat and resist bonuses: full table in [character progression § MVP1 equipment]
 | **Identified** | `EquipmentDefinition.displayName` | Buy/sell as normal |
 | **Unidentified** | `???` (optional slot hint: Weapon / Head / … from `EquipSlot` only) | **Identify** service — Credits sink; sets `IsIdentified = true` |
 
-**MVP1 content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#mvp1-equipment-locked)). Shop purchases are **identified** on buy.
+**(launch) content:** optional B1F tutorial chest grants `scout_charm` as **unidentified** instance ([character progression § loot](character-progression.md#launch-equipment-locked)). Shop purchases are **identified** on buy.
 
-**Codex / analyze skills:** post-MVP1; MVP1 identify at shop only.
+**Codex / analyze skills:** later; (launch) identify at shop only.
 
 ---
 
 ## Consumables
 
-Locked `itemId` strings — [05 § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked):
+Locked `itemId` strings — [05 § content IDs](../05-class-design.md#content-ids-locked):
 
-| `itemId` | MVP1 use context |
+| `itemId` | (launch) use context |
 |----------|------------------|
 | `patch_kit` | Combat + field — `HealHp` |
 | `stim_draft` | Combat + field — `HealMp` |
 | `trauma_kit` | Combat + field — full HP (`HealHp` high power) |
 | `return_thread` | **Field only** — retreat to hub ([dungeon navigation](../02-dungeon-navigation.md)) |
-| `analysis_glass` | Combat — weakness reveal (optional MVP1 ship) |
+| `analysis_glass` | Combat — weakness reveal (optional (launch) ship) |
 
 `ItemDefinition` (Runtime SO): `itemId`, `displayName`, `ItemEffectType`, `power`, `maxStack`, **`useContexts`** (Combat / Field flags — mirror skill pattern).
 
@@ -179,7 +179,7 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 
 ---
 
-## Party menu shell (MVP1)
+## Party menu shell (launch)
 
 **`Tab`** opens the party menu when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md) §5).
 
@@ -200,7 +200,7 @@ Reject putting stack math or equip validation in UITK views ([architecture princ
 
 ---
 
-## Bag UI — Inventory pane category tabs (MVP1)
+## Bag UI — Inventory pane category tabs (launch)
 
 Party menu section **Inventory** uses **horizontal category tabs**, same interaction model as the skill use picker ([ADR 035](../../decisions/035-skill-use-picker.md)).
 
@@ -229,13 +229,13 @@ Party menu section **Inventory** uses **horizontal category tabs**, same interac
 | Runtime | `IInventoryBagView`, `InventoryBagCoordinator` |
 | UI | `PartyInventoryBagView` → shared **`ItemListPickerView`** on **`ItemListInventoryPresenter`** (sort **251** when opened from party menu) — [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [centralized UI services](../04-dev/centralized-ui-services.md) |
 
-Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` in MVP1.
+Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefinition` at launch.
 
 **Entry points:** `Tab` — party menu shell in **hub** and **exploration** when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)); not combat command bar. See [exploration UI](exploration-ui.md#party-menu).
 
 ---
 
-## Equipment pane (MVP1)
+## Equipment pane (launch)
 
 **Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Center panel is shared **`CharacterDetailView`** (`PartyEquipDisplay`): stats + five worn rows. **Q/E** / **W/S** move floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot is currently a **no-op** (inline bag picker removed; separate picker window + `PartyEquipmentApply` path is follow-up). Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
 
@@ -260,9 +260,9 @@ Combat picker uses the shared tabbed shell with **Immediate** row focus + `Z`/`X
 
 ---
 
-## MVP1 vs MVP2
+## Launch vs optional
 
-| MVP1 | MVP2+ |
+| Launch | Optional+ |
 |------|-------|
 | Fixed bag, tabs (All / Consumables / Equipment) | **Materials** tab + stacks |
 | Shop buy/sell, identify | **Synthesis** ([gathering & fishing](gathering-and-fishing.md)) |
@@ -280,7 +280,7 @@ Combat picker uses the shared tabbed shell with **Immediate** row focus + `Z`/`X
 | Shop identify | Flips instance flag | `PartyInventory`, `Hub.Credits` |
 | Battle victory | `LootTable` → stacks / instances / credits | `PartyInventory`, `Hub.Credits`, XP on roster [#31](https://github.com/miramocha/griddungeon-game/issues/31) |
 | Chest interact | `ChestItemId` | `PartyInventory` |
-| Gather node | Material or consumable (MVP1 stub: consumable) | `PartyInventory` |
+| Gather node | Material or consumable (launch) stub: consumable) | `PartyInventory` |
 | Party menu equip | Bag ↔ `CharacterSaveData.Equipment` | Both |
 
 **Tutorial FOE:** `grp_alley_stalker_tutorial` — no standard farmable loot/XP per [#31](https://github.com/miramocha/griddungeon-game/issues/31).

@@ -8,17 +8,17 @@
 
 ## Context
 
-MVP1 needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
+(launch) needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
 
-Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#mvp1-content-ids-locked), [character progression § MVP1 equipment](../docs/02-systems/character-progression.md#mvp1-equipment-locked)).
+Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#content-ids-locked), [character progression § launch equipment](../docs/02-systems/character-progression.md#launch-equipment-locked)).
 
-## Decision (MVP1)
+## Decision (launch)
 
 ### 1. Two containers + hub Credits
 
 | Container | Scope | Persisted on |
 |-----------|--------|--------------|
-| **Party bag** | Shared fixed slots — consumables, unequipped gear, (MVP2) materials | `SaveGame.PartyInventory` |
+| **Party bag** | Shared fixed slots — consumables, unequipped gear, (optional) materials | `SaveGame.PartyInventory` |
 | **Worn loadout** | Five slots per core character | `CharacterSaveData.Equipment` |
 | **Credits** | Hub wallet (integer) | `HubSaveData.Credits` — **not** a bag slot |
 
@@ -28,7 +28,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 
 ### 2. Fixed bag slots (EO-style)
 
-- **`partyBagSlotCount`** default **30** — tuning constant ([mvp1-spec §6](../docs/archive/mvp1-spec.md#6-open-for-tuning-only-locked-structure)).
+- **`partyBagSlotCount`** default **30** — tuning constant ([release scope § Tuning](../docs/00-release-scope.md#tuning-locked-structure)).
 - Each slot: **empty**, **one consumable/material stack**, or **one equipment instance** — never both; no multi-slot stacks.
 - Equipped items **do not** consume bag slots.
 
@@ -48,7 +48,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 | **Runtime** | `ItemDefinition` / `EquipmentDefinition` SOs, `ContentDatabase`, `ShopService`, coordinators |
 | **UI** | `PartyMenuShell`, `IInventoryBagView`, `IPartyEquipmentView` — **no** stack or equip rules in views |
 
-### 5. Party menu shell (required MVP1)
+### 5. Party menu shell (required (launch))
 
 **`Tab`** opens a **party menu overlay** in **hub** and **exploration** when safe ([ADR 034](034-skill-point-allocation-outside-combat.md)) — not combat.
 
@@ -68,7 +68,7 @@ Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-cl
 
 **Game issues:** shell [#166](https://github.com/miramocha/griddungeon-game/issues/166) · equipment pane [#167](https://github.com/miramocha/griddungeon-game/issues/167) · stats/equip rules [#155](https://github.com/miramocha/griddungeon-game/issues/155).
 
-### 6. Inventory pane — category tabs (required MVP1)
+### 6. Inventory pane — category tabs (required (launch))
 
 Party menu section **Inventory** shows horizontal category tabs — **same rules as ADR 035**:
 
@@ -84,7 +84,7 @@ Party menu section **Inventory** shows horizontal category tabs — **same rules
 - **Z** on equipment bag rows in Inventory pane: **does not equip** in v1 — equip via **Equipment** pane (§7).
 - **Combat `Item` command:** consumable **row list** only — **no** bag tab strip ([ADR 026](026-combat-menu-focus-navigation.md)).
 
-### 7. Equipment pane — worn loadout (required MVP1)
+### 7. Equipment pane — worn loadout (required (launch))
 
 **Members:** **active party cores only** — occupied `PartyRuntime` core slots (up to 6). **Q/E** cycles prev/next member (wrap). Not full guild bench.
 
@@ -105,13 +105,13 @@ Party menu section **Inventory** shows horizontal category tabs — **same rules
 
 On load, map legacy `GatheredItemIds` → `PartyInventory` stacks (e.g. `patch_kit` × N) or clear in dev saves — implement in [#152](https://github.com/miramocha/griddungeon-game/issues/152).
 
-## Rejected for MVP1
+## Rejected at launch
 
 - Unlimited bag size — EO fixed slots from day one.
 - Separate material pouch asset — one `PartyInventory`, kind per slot (MVP2 materials tab).
 - `ItemCategory` on every `ItemDefinition` — slot kind is enough for tabs.
 - Full tabbed bag inside combat Item picker — combat uses filtered consumable list only.
-- Codex-driven identify as MVP1 blocker — shop identify sufficient.
+- Codex-driven identify as (launch) blocker — shop identify sufficient.
 
 ## Consequences
 

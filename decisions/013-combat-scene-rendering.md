@@ -15,7 +15,7 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 
 ## Decision
 
-**Use a battle arena (fixed background + slot rig), not in-world combat geometry, for MVP1 and default long-term.**
+**Use a battle arena (fixed background + slot rig), not in-world combat geometry, at launch and default long-term.**
 
 | Layer | Behavior |
 |-------|----------|
@@ -27,7 +27,7 @@ Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navi
 
 `CombatEntryContext` carries `floorId`, `biome`, `encounterType` (random / FOE / boss), optional `foeId` → selects `BattleBackground` asset.
 
-## Rejected (for MVP1)
+## Rejected (for (launch))
 
 | Option | Why |
 |--------|-----|

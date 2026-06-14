@@ -7,7 +7,7 @@
 **Floor layout:** [archive — s1_B1F (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)  
 **Combat + VN sequence:** [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 
-Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** in MVP1). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
+Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** at launch). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
 **Voice:** **No character speaker** — impersonal coach copy only (system / second-person imperative). No `speakerId`, no portrait. Fiction and emotion live in **story VN** ([narrative POV](../../02-systems/narrative-pov.md)); tutorials teach **controls and UI**. **Act 1** fiction (solo Navigator) is **not** stated in guided rows — only in VN.
 
@@ -43,15 +43,15 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 **On complete:** set `s1_intro_movement_complete`; transition **Exploration → Hub** ([game-phase](../../02-systems/game-phase.md)).
 
-**Not coached in MVP1:** map fullscreen (`M`) — defer until [explore HUD #36](https://github.com/miramocha/griddungeon-game/issues/36).
+**Not coached at launch:** map fullscreen (`M`) — defer until [explore HUD #36](https://github.com/miramocha/griddungeon-game/issues/36).
 
 ---
 
 ## Act 2 — Party (Hub)
 
-**MVP1:** no guided entries — guild UI + service motion only ([ADR 029](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
+**Launch:** no guided entries — guild UI + service motion only ([ADR 029](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
 
-**Navigator framing (S1 copy pass):** MVP1 presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
+**Navigator framing (S1 copy pass):** (launch) presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
 
 ---
 
@@ -108,7 +108,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 
 ---
 
-## Implementation checklist (MVP1)
+## Implementation checklist (launch)
 
 - [ ] `GuidedTutorialDefinition` content for table above
 - [ ] Act 1 triggers on `s1_B1F` intro mode (spawn, bump, cells G/C/^)

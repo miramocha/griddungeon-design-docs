@@ -32,7 +32,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 ### S1 tutorial gating (first FOE)
 
-**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Narrative:** [narrative POV](narrative-pov.md) — Navigator has **no** Synchro/Protocol vocabulary until unlock VN after crisis AOE · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD + Protocol-only gate (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN (done) · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol **coach** (post-MVP1)
+**Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Narrative:** [narrative POV](narrative-pov.md) — Navigator has **no** Synchro/Protocol vocabulary until unlock VN after crisis AOE · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD + Protocol-only gate (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN (done) · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol **coach** (later)
 
 **Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
 
@@ -71,7 +71,7 @@ Random fights before this FOE contact: Synchro **locked**. S1 tutorial FOE: enco
 
 While charge is below 100%, **core formation members** add to the shared pool:
 
-| Event | Synchro gain (MVP1 baseline — tune in data) |
+| Event | Synchro gain launch baseline — tune in data) |
 |-------|-------------------|
 | Normal attack | +4% |
 | Skill used | +6% |
@@ -99,10 +99,10 @@ Exploration steps do **not** charge Synchro.
 | **Cost** | Charge → **0%** after use |
 | **Threshold** | Charge must be **100%** |
 | **Participants** | Living **core six** per skill min/max; downed excluded |
-| **Aux** | Do not participate (MVP1) |
+| **Aux** | Do not participate at launch |
 | **Skill list** | Navigator kit + guild-unlocked common Protocols |
 
-### Timing — core turn action (MVP1)
+### Timing — core turn action (launch)
 
 When **Synchro Charge** is **100%**, a **core member** on their AGI turn may use **Protocol** (`CombatCommand.Protocol`) instead of attack/guard/skill/item:
 
@@ -124,15 +124,15 @@ Combat round:
 
 | Skill | Participants | Effect |
 |-------|----------------|--------|
-| **Protocol Strike** | 2+ | Damage all enemies (MVP1: `protocol_strike`) |
+| **Protocol Strike** | 2+ | Damage all enemies (launch: `protocol_strike`) |
 | **Protocol Guard** | 3+ | Party damage reduction 1 turn |
-| **Protocol Mend** | 2+ | Heal all living core (MVP1: `protocol_mend`) |
+| **Protocol Mend** | 2+ | Heal all living core (launch: `protocol_mend`) |
 | **Protocol Retreat** | 4+ | High chance flee to floor entrance |
 | **Protocol Scan** | 1+ | Register enemy in codex |
 
-### Skill ideas (post-MVP1)
+### Skill ideas (later)
 
-Not MVP1. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deploy) and [ADR 024](../../decisions/024-protocol-transform.md) (Transform). Navigator stays off-formation ([ADR 007](../../decisions/007-navigator-role.md)). **Recharge loop:** multiple Protocols per battle when Synchro hits **100%** again; **not** while sortie or transform is active.
+Later. [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) (Deploy) and [ADR 024](../../decisions/024-protocol-transform.md) (Transform). Navigator stays off-formation ([ADR 007](../../decisions/007-navigator-role.md)). **Recharge loop:** multiple Protocols per battle when Synchro hits **100%** again; **not** while sortie or transform is active.
 
 | Skill | Participants | Effect |
 |-------|----------------|--------|
@@ -148,7 +148,7 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 | Implication | Detail |
 |-------------|--------|
 | **Deploy → Transform in one fight** | Only if **that** Navigator’s kit includes **both** `protocol_deploy` and `protocol_transform` — a **content** choice, not a hub swap |
-| **Typical dive** | Most Navigators expected to offer **one** post-MVP1 mode skill (Deploy **or** Transform) plus common Protocols (Strike, Mend, …); repeated Protocols in a fight are usually **Strike/Mend** recharges |
+| **Typical dive** | Most Navigators expected to offer **one** later mode skill (Deploy **or** Transform) plus common Protocols (Strike, Mend, …); repeated Protocols in a fight are usually **Strike/Mend** recharges |
 | **Overlap rule** | Engine still blocks sortie + transform **at once**; sequential Deploy then Transform is rare but valid when kit allows |
 
 **Content guidance:** prefer **one mode Protocol per Navigator** so players pick Navigators at hub for identity, not to combo Deploy and Transform in a single battle.
@@ -158,20 +158,20 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 - Navigator portrait leads Protocol command ([combat presentation](combat-presentation.md)).
 - Highlight participating core portraits.
 
-## MVP1
+## Launch scope
 
 **Design (locked — this doc):**
 
 - [x] Synchro Charge + Protocol on core turn at 100%
-- [x] Default Navigator kit: `protocol_strike`, `protocol_mend` ([Navigator](navigator.md) · [class design § MVP1 IDs](../05-class-design.md#mvp1-content-ids-locked))
+- [x] Default Navigator kit: `protocol_strike`, `protocol_mend` ([Navigator](navigator.md) · [class design § content IDs](../05-class-design.md#content-ids-locked))
 - [x] Core actions gain Synchro Charge; Navigator off-formation
 - [x] S1 tutorial gating specified (flags, phases, [campaign S1](../03-content/campaign/s1-intro.md))
 
 **Implementation (game — open):**
 
-- [ ] S1 gate (MVP1): crisis AOE → VN unlock → Protocol-only HUD → `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#87](https://github.com/miramocha/griddungeon-game/issues/87), [#35](https://github.com/miramocha/griddungeon-game/issues/35); coach UI [#88](https://github.com/miramocha/griddungeon-game/issues/88) post-MVP1 — [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
+- [ ] S1 gate (launch): crisis AOE → VN unlock → Protocol-only HUD → `protocol_strike` → FOE kill → hub warp ([#10](https://github.com/miramocha/griddungeon-game/issues/10), [#87](https://github.com/miramocha/griddungeon-game/issues/87), [#35](https://github.com/miramocha/griddungeon-game/issues/35); coach UI [#88](https://github.com/miramocha/griddungeon-game/issues/88) later — [story events § S1 flow](story-events.md#s1-tutorial-flow-foe_alley_stalker))
 
-## Not in scope (MVP1)
+## Not in scope (launch)
 
 - Per-character Synchro gauges
 - Aux in Protocol skills

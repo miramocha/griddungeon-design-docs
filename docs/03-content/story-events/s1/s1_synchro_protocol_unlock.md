@@ -1,6 +1,6 @@
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; (launch) = click-through block.
 
 **When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 

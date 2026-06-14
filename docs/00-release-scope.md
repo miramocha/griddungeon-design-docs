@@ -63,14 +63,14 @@ Optional work does not block the required slice. Grouped by theme; each feature 
 |---------|-----|
 | **Autopilot** — pathfind to discovered map tile | [autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md) |
 
-### Side dungeons
+### Side dungeons (sketch)
 
 **Goal:** Optional **side dungeons** — EO-style grid explore + combat outside the stratum ladder, entered from the hub menu.
 
 | Feature | Doc |
 |---------|-----|
 | Hub **Side expedition** menu → unlocked `locationId`s | [side dungeons](02-systems/side-dungeons.md), [hub](02-systems/hub-and-services.md) |
-| `EnterSideDungeon` (separate from `LeaveHub`) | [game phase](02-systems/game-phase.md), [05 — Class design § side dungeons sketch](05-class-design.md#mvp3--side-dungeons-sketch) |
+| `EnterSideDungeon` (separate from `LeaveHub`) | [game phase](02-systems/game-phase.md), [05 — Class design § side dungeons sketch](05-class-design.md#side-dungeons-sketch) |
 | Save/map keys `sd##_F#` | [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md) |
 | Placeholder content `sd01` | [side dungeons § sd01](02-systems/side-dungeons.md#placeholder-content--sd01-salvage-annex) |
 

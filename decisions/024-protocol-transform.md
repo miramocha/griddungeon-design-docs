@@ -6,7 +6,7 @@
 
 ## Context
 
-Post-MVP1 skill **`protocol_transform`** lets the Navigator **replace** one **core** party member in their formation slot with a **fixed transform profile** for a limited time — distinct from [ADR 023](023-protocol-deploy-sortie-summon.md) **Protocol Deploy**, which spawns a **navigator sortie summon** in an **aux** slot.
+Later skill **`protocol_transform`** lets the Navigator **replace** one **core** party member in their formation slot with a **fixed transform profile** for a limited time — distinct from [ADR 023](023-protocol-deploy-sortie-summon.md) **Protocol Deploy**, which spawns a **navigator sortie summon** in an **aux** slot.
 
 **Not in scope:** bench roster swap mid-fight ([party-and-classes](../docs/02-systems/party-and-classes.md)); Navigator entering a formation row ([ADR 007](007-navigator-role.md)); mid-dungeon Navigator swap (hub only — active kit fixed for the dive).
 
@@ -27,7 +27,7 @@ Aligned with [ADR 006](006-union-team-bar.md), [ADR 007](007-navigator-role.md),
 
 ### Skill
 
-1. **`protocol_transform`** — post-MVP1; in active **Navigator’s Protocol kit only** (not guild skill tree).
+1. **`protocol_transform`** — later; in active **Navigator’s Protocol kit only** (not guild skill tree).
 2. **Target** — player picks **one living core** (any front/back slot, including self); **not** aux, **not** downed, **not** bench.
 3. **Navigator** — off-formation; does not become the transform profile ([ADR 007](007-navigator-role.md)).
 

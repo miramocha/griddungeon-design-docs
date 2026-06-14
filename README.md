@@ -82,10 +82,10 @@ See [00 — Release scope](docs/00-release-scope.md) and the [project board](htt
 | [ADR 011 — FOE flee retreat](decisions/011-foe-flee-retreat.md) | Accepted | Flee pushes back 1 cell; disabled at wall |
 | [ADR 012 — Unity 6 stack](decisions/012-unity-6-stack.md) | Accepted | Unity 6, URP, Shader Graph–first |
 | [ADR 013 — Combat scene rendering](decisions/013-combat-scene-rendering.md) | Accepted | Battle arena backdrop; enemies on slots |
-| [ADR 014 — MVP1 exploration & map](decisions/014-mvp1-exploration-map.md) | Accepted | Wall reveal, map input, persist, gather stub |
-| [ADR 015 — MVP1 combat](decisions/015-mvp1-combat.md) | Accepted | Damage, enemy front+back rows (6 max), status subset |
-| [ADR 016 — Summon control MVP1](decisions/016-summon-control-mvp1.md) | Accepted | MVP1 **player-controlled** summons; minimal per-summon kit |
-| [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS MVP1 |
+| [ADR 014 — (launch) exploration & map](decisions/014-mvp1-exploration-map.md) | Accepted | Wall reveal, map input, persist, gather stub |
+| [ADR 015 — (launch) combat](decisions/015-mvp1-combat.md) | Accepted | Damage, enemy front+back rows (6 max), status subset |
+| [ADR 016 — Summon control (launch)](decisions/016-summon-control-mvp1.md) | Accepted | (launch) **player-controlled** summons; minimal per-summon kit |
+| [ADR 017 — Game phase controller](decisions/017-game-phase-controller.md) | Accepted | C# `GamePhaseController` + three `IPhaseController`s; no UVS (launch) |
 | [ADR 018 — Exploration animation speed](decisions/018-exploration-animation-speed.md) | Accepted | Slow / Normal / Fast / Very Fast lerp presets |
 | [ADR 021 — Autopilot MVP2](decisions/021-autopilot-mvp2.md) | Accepted | Pathfind on revealed tiles; no path drawing |
 | [ADR 022 — Side dungeons MVP3](decisions/022-side-dungeons-mvp3.md) | Accepted | Hub Side expedition; `sd##_F#` save keys |

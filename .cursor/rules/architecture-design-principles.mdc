@@ -7,7 +7,7 @@ alwaysApply: true
 
 Applies when editing **design docs** and **class architecture** in this repo. Implementation C# follows the shared Unity rules (`unity-clean-code-principles.mdc`, `unity-csharp-language.mdc`, hard-linked from `griddungeon-game`).
 
-Complements [game phase](../../docs/02-systems/game-phase.md), [class design MVP1](../../docs/05-class-design.md), [ADR 017](../../decisions/017-game-phase-controller.md).
+Complements [game phase](../../docs/02-systems/game-phase.md), [class design](../../docs/05-class-design.md), [ADR 017](../../decisions/017-game-phase-controller.md).
 
 ## Single responsibility (SRP)
 
@@ -30,7 +30,7 @@ Reject designs that put combat formulas, map reveal, or phase transitions in one
 ## DRY
 
 - **One formula** for damage, AGI order, retreat cell, map reveal — document once in Core; Runtime calls simulators.
-- **One content ID table** — [05-class-design MVP1](../../docs/05-class-design.md#mvp1-content-ids-locked); do not duplicate IDs across docs without linking.
+- **One content ID table** — [05-class-design](../../docs/05-class-design.md#content-ids-locked); do not duplicate IDs across docs without linking.
 - **One phase flow doc** — [game-phase.md](../../docs/02-systems/game-phase.md) for diagrams; ADR 017 for the decision; class design for type sketches.
 - Tolerate a single duplicated diagram if it aids readability; do not fork transition rules in three places.
 

@@ -6,7 +6,7 @@
 
 | Topic | Doc |
 |-------|-----|
-| Floor grids, FOE YAML, per-floor random weights | [archive — MVP1 layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md) |
+| Floor grids, FOE YAML, per-floor random weights | [archive — (launch) layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md) |
 | Campaign acts, save flags, tutorial FOE rules | [campaign/s1-intro](campaign/s1-intro.md) · [foe-encounters — tutorial](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker) |
 | **This file** | Locked enemy IDs, stats stubs, skills, encounter groups, FOE ↔ group mapping |
 
@@ -16,7 +16,7 @@ Tuning numbers may move in data ([release scope § Tuning](../00-release-scope.m
 
 ## Enemy definitions (9 types)
 
-Combat uses `CharacterBaseStats` at spawn (no level scaling in MVP1). **ATK** in tables = **STR** for physical enemies; **TEC** for elemental skills. Resistances default **1.0** unless noted (`1.5` weak, `0.5` resist).
+Combat uses `CharacterBaseStats` at spawn (no level scaling at launch). **ATK** in tables = **STR** for physical enemies; **TEC** for elemental skills. Resistances default **1.0** unless noted (`1.5` weak, `0.5` resist).
 
 | Enemy ID | Display | Row | HP | MP | STR | TEC | AGI | VIT | LUC | Skill pool | Status immunities | XP | Notes |
 |----------|---------|-----|----|----|-----|-----|-----|-----|-----|------------|-------------------|-----|-------|
@@ -45,7 +45,7 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling in MVP1). **ATK** in
 
 ## Enemy skill stubs
 
-Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` (MVP1: weighted random or cycle — implementation in game #12).
+Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` (launch): weighted random or cycle — implementation in game #12).
 
 | Skill ID | `descriptionEn` | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
 |----------|-----------------|------|---------|------|----|----------------|--------|---------------|---------|
@@ -111,7 +111,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 |-------|-------------------|------------|-------|
 | `s1_B1F` | Act 1: **off** (`rate 0`). Act 3: `grp_b1_chaff_hound` / `grp_b1_chaff_mite` @ **0.05** | **None** | FOE teaching starts B2F |
 | `s1_B2F` | `grp_b2_chaff` / `grp_b2_shackle_rat` / `grp_b2_venom_slime` @ **0.10** | **`foe_alley_stalker`** → `grp_alley_stalker_tutorial` | Patrol `(12,11)` loop; B3F blocked until tutorial flag |
-| `s1_B3F` | `grp_b3_mix_hounds` / `grp_b3_rubble_pair` / `grp_b3_control` @ **0.12** | **`foe_s1_warden`** → `grp_s1_warden` | Boss `(10,16)`; MVP1 win condition |
+| `s1_B3F` | `grp_b3_mix_hounds` / `grp_b3_rubble_pair` / `grp_b3_control` @ **0.12** | **`foe_s1_warden`** → `grp_s1_warden` | Boss `(10,16)`; (launch) win condition |
 
 **FOE entity IDs** (map / save keys — not enemy definition IDs):
 
@@ -144,9 +144,9 @@ Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeo
 |-----------|--------|
 | Enemy IDs documented (9 types) | ✅ [table](#enemy-definitions-9-types) |
 | Encounter groups incl. `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden` | ✅ [FOE & boss](#foe--boss-authored-spawns) |
-| Stats/skills stubs for MVP1 fights | ✅ [stats](#enemy-definitions-9-types) · [skills](#enemy-skill-stubs) |
+| Stats/skills stubs at launch fights | ✅ [stats](#enemy-definitions-9-types) · [skills](#enemy-skill-stubs) |
 | FOE vs random per floor | ✅ [placement table](#foe-vs-random-placement-per-floor) · [dungeons](dungeons-and-encounters.md#mvp1-floor-summary) |
-| Locked IDs in [05 — content IDs](../05-class-design.md#mvp1-content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
+| Locked IDs in [05 — content IDs](../05-class-design.md#content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
 | Unity SOs / `ContentDatabase` | ⬜ **game #12** |
 
 ---

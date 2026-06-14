@@ -45,7 +45,7 @@ If **multiple FOEs** share the cell same round: **one joins**; others wait for a
 | Topic | Rule |
 |-------|------|
 | **Formation** | Added to **enemy side** — first empty **tactical** slot: front `0..2` left-to-right, then back `3..5` ([combat scene](combat-scene.md#enemy-slots)) |
-| **Roster full (6/6)** | **Join fails** for that round — FOE stays on grid; log `«FOE name» could not join — enemy formation full!`** ; retry next round if still on cell and fight continues (**no** queue or overflow slot in MVP2) |
+| **Roster full (6/6)** | **Join fails** for that round — FOE stays on grid; log `«FOE name» could not join — enemy formation full!`** ; retry next round if still on cell and fight continues (**no** queue or overflow slot when optional) |
 | **AGI** | **Locked:** first turn is **next combat round** — no action the round it joins |
 | **Loot / XP** | Included in encounter rewards on victory |
 | **Codex** | Counts as FOE fight for drops/XP tuning |
@@ -77,7 +77,7 @@ No extra FOE fight after victory for FOEs that already joined mid-battle.
 - FOEs **do not move** during combat → mid-battle join **disabled**.
 - FOEs still start fights via **exploration contact** only.
 
-**MVP1:** Patrol + join **off** — stub `TryMidBattleFoeJoin()`; enable in **MVP2** with `foeCombatPatrol` per [ADR 015](../../decisions/015-mvp1-combat.md).
+**Launch:** Patrol + join **off** — stub `TryMidBattleFoeJoin()`; enable in **Optional** with `foeCombatPatrol` per [ADR 015](../../decisions/015-mvp1-combat.md).
 
 ## UI / presentation
 

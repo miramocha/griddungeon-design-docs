@@ -10,7 +10,7 @@
 
 **Title:** Epic: Layered UITK panels (HUD depth)
 
-**Labels:** `epic`, `P2`, `UI`, `pull-w08` (or post-MVP1 wave — adjust)
+**Labels:** `epic`, `P2`, `UI`, `pull-w08` (or later wave — adjust)
 
 **Body:**
 
@@ -158,7 +158,7 @@ Authority: [ADR 026](https://github.com/miramocha/griddungeon-design-docs/blob/m
 
 ## Non-goals
 
-- Gamepad rebinding (PC MVP1)
+- Gamepad rebinding (PC (launch))
 ```
 
 ---

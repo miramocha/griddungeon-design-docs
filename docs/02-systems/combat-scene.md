@@ -38,7 +38,7 @@ How encounters **leave exploration FPV** and present **enemies** during AGI comb
 - Implementation options (pick per art budget):
   - **2D illustrated plate** (EO classic) — quad behind slots, URP unlit or lit
   - **3D set piece** — simple floor + skybox + props; camera never leaves rig
-- **Not** a live render of the dungeon cell behind the party (rejected for MVP1).
+- **Not** a live render of the dungeon cell behind the party (rejected at launch).
 
 `BattleBackground` ScriptableObject: `id`, `biome`, `prefab`, `lightingProfile`, `ambientAudio`.
 
@@ -48,7 +48,7 @@ Enemies are **not** placed at world `(x, y)` from the grid.
 
 **Two layers — do not conflate:**
 
-| Layer | What it is | MVP1 |
+| Layer | What it is | Launch |
 |-------|------------|------|
 | **Tactical formation** | Front + back rows for targeting, melee, row collapse | **≤3 front + ≤3 back** (6 occupied max) — locked in [combat](combat.md#battle-layout), [ADR 015](../../decisions/015-mvp1-combat.md), `EncounterGroup.frontRow` / `backRow` |
 | **Arena rig** | Backdrop-stage **anchors** where battle sprites/models attach | Up to **6 anchors** on one stage lineup; empty anchors hidden |
@@ -66,15 +66,15 @@ Combat UI and rules use **front/back rows** (like the party). The arena is **not
 
 | Anchor / slot | Content |
 |---------------|---------|
-| `0..5` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [mvp1-enemy-roster](../03-content/enemy-roster.md)) |
+| `0..5` | One arena transform per **occupied** enemy from `EncounterGroup` (front row fills left-to-right, then back — same order as combat UI per [enemy-roster](../03-content/enemy-roster.md)) |
 | Join mid-fight | Next free **tactical** slot (front first, else back); slide-in on matching anchor ([chain FOE](chain-foe-battle.md)) |
 
 **Enemy render mode** (per enemy definition, same slot rig):
 
 | Mode | When | Notes |
 |------|------|-------|
-| **Sprite stack** | MVP1 default | 2D/2.5D billboard or layered sprite (EO HD style) |
-| **3D model** | MVP1+ optional | Model on slot; idle + hit reacts |
+| **Sprite stack** | (launch) default | 2D/2.5D billboard or layered sprite (EO HD style) |
+| **3D model** | (launch)+ optional | Model on slot; idle + hit reacts |
 | **Hybrid** | Bosses | 3D body + 2D VFX overlay |
 
 Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([combat presentation](combat-presentation.md)).
@@ -82,8 +82,8 @@ Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([co
 ### Party presentation
 
 - **Primary:** UI portraits + HP/MP/status (readable AGI play).
-- **Optional:** Low-poly 3D party silhouettes on near plane or omitted in MVP1.
-- **Navigator:** MVP1 portrait strip off formation ([navigator](navigator.md)). **Explore:** bottom-right 3D model; Protocol Deploy/Transform may transition that model into aux / core slot rigs — [navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence).
+- **Optional:** Low-poly 3D party silhouettes on near plane or omitted at launch.
+- **Navigator:** (launch) portrait strip off formation ([navigator](navigator.md)). **Explore:** bottom-right 3D model; Protocol Deploy/Transform may transition that model into aux / core slot rigs — [navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence).
 
 ---
 
@@ -139,7 +139,7 @@ Deferred unless a future **“immersive combat”** experiment flag is approved.
 | **Cinematic QTE** | Full-stage Timeline; backdrop can dim UI edges |
 | **FOE mid-battle join** | Spawn into slot; no FPV FOE walk-in |
 | **Summons** | Aux slot in UI + optional sprite on party side of stage |
-| **Map** | MVP1: `M` toggles read-only floor map (exploration data), not live arena — persistent map during fight **not locked** ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
+| **Map** | (launch): `M` toggles read-only floor map (exploration data), not live arena — persistent map during fight **not locked** ([mapping § Consider / explore](mapping.md#consider--explore--map-during-combat)) |
 
 ---
 
@@ -171,7 +171,7 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 - `CombatEntryContext` → `ResolveBackground()`, `SpawnEncounter(EncounterGroup)`
 - `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
 - Additive scene `CombatArena` or enabled root under `GameRoot`
-- MVP1: one biome backdrop + sprite enemies on 6 slots
+- (launch): one biome backdrop + sprite enemies on 6 slots
 
 ---
 
@@ -179,8 +179,8 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | Arena transition, 1 backdrop, sprite slots, random + FOE entry |
-| **MVP2** | Extra biome plates; optional 3D enemy on boss slot |
+| **Launch** | Arena transition, 1 backdrop, sprite slots, random + FOE entry |
+| **Optional** | Extra biome plates; optional 3D enemy on boss slot |
 | **Later** | Blurred FPV snapshot plate; in-world experiment flag |
 
 ---

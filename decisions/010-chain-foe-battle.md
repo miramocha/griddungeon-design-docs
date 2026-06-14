@@ -21,7 +21,7 @@ Earlier draft used **post-victory chain FOE** (separate fights). User chose **mi
 4. Joined FOE acts in AGI queue starting **next combat round** only — **locked** (not the round they join).
 5. Process join at **end of round** after FOE patrol, **before** victory check.
 6. **No** separate post-victory chain fight for FOEs that could have joined mid-battle.
-7. Feature active when `foeCombatPatrol` enabled ([ADR 005](005-foe-combat-patrol.md)); off in MVP1.
+7. Feature active when `foeCombatPatrol` enabled ([ADR 005](005-foe-combat-patrol.md)); off at launch.
 
 ## Rejected
 

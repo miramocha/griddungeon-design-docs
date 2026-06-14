@@ -4,7 +4,7 @@
 
 **Narrative:** The player **is** the active Navigator ([narrative POV](narrative-pov.md)) — *Amnesia*-style **blank state** at new game; Synchro / Protocol and role lore **unlock through play**, not upfront exposition.
 
-## Narrative role (MVP1)
+## Narrative role (launch)
 
 | Topic | Locked direction |
 |-------|------------------|
@@ -22,7 +22,7 @@ See [narrative POV — reveal pacing](narrative-pov.md#blank-state-locked) for S
 | **Formation** | Off-formation | 3 front + 3 back | +1 front / +1 back |
 | **AGI turns** | No | Yes | Yes (if living) |
 | **Protocol skills** | **Executes** when Synchro 100% | **Participate** per skill rules | No |
-| **Passive buffs** | **Grants** to core six | Receive | No (MVP1) |
+| **Passive buffs** | **Grants** to core six | Receive | No (launch) |
 | **Exploration grid** | No | Yes (party blob) | No |
 | **Swappable** | **Hub only** | Hub bench (core) | N/A |
 
@@ -58,7 +58,7 @@ While a Navigator is active, the **core six** receive that Navigator’s **aura*
 
 | Example Navigator | `navigator_id` | Aura (draft) | Notes |
 |-------------------|----------------|--------------|-------|
-| **Sortie Lead** | `guild_handler` | +5% Synchro Charge gain (MVP1 starter) | Expedition flight lead; executes [Protocol](synchro-protocol.md) |
+| **Sortie Lead** | `guild_handler` | +5% Synchro Charge gain (launch) starter) | Expedition flight lead; executes [Protocol](synchro-protocol.md) |
 | **Route Analyst** | `route_analyst` | +5% accuracy to core | Course / grid planning — not combat targeting |
 | **Wellness Lead** | `wellness_lead` | −5% MP cost on core heals | Crew care; pairs with **Medic** kits, not the `medic` class |
 | **Sync Relay** | `sync_relay` | +3% Synchro Charge gain from core actions | Comms loop for team Synchro; stratum unlock candidate |
@@ -75,7 +75,7 @@ Draft naming: **soft sci-fi expedition flight** (≤2 words, non-battle). Same h
 When [Synchro](synchro-protocol.md) is **100%**, a **core member** on their AGI turn may invoke a Protocol (`CombatCommand.Protocol`) — that core **spends their turn**. The **active Navigator** **executes** the skill off-formation (calls the protocol; does not take an AGI turn):
 
 1. Synchro Charge must be **100%** on the invoking core’s turn.
-2. Player picks a Protocol from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` in MVP1; post-MVP1 includes `protocol_deploy` per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
+2. Player picks a Protocol from the Navigator’s **kit** (`protocol_strike`, `protocol_mend` at launch; later includes `protocol_deploy` per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md)).
 3. Navigator executes; living **core** members participate per skill min/max.
 4. Bar → **0%**; invoking core’s turn ends; queue advances.
 
@@ -103,7 +103,7 @@ Navigators do **not** progress like core party members:
 
 Out of scope: Navigator leveling, trees, gear, or scaling auras.
 
-### Post-MVP1 Protocol skills
+### Later Protocol skills
 
 | Skill | Summary | ADR |
 |-------|---------|-----|
@@ -133,7 +133,7 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 
 | Surface | What the player sees | Navigator 3D corner model? |
 |---------|----------------------|----------------------------|
-| **Hub root menu** | Service list over guild-town backdrop; post-MVP1 camera may pan to **Navigator lodge** when that row is focused | **No** — town is environment only |
+| **Hub root menu** | Service list over guild-town backdrop; later camera may pan to **Navigator lodge** when that row is focused | **No** — town is environment only |
 | **Navigator Office screen** | Scrollable **portrait list** (unlocked selectable, locked silhouette + unlock hint), detail pane (name, aura text, Protocol kit list), **Assign active** | **No** — compare and pick from portraits |
 | **Assign / focus feedback** | Portrait **glow**; aura preview **fade in** on core six preview strip ([hub service UI motion](hub-and-services.md#service-ui-motion)) | **No** |
 | **Leave hub → stratum** | Phase transition fade; exploration HUD loads | **Yes** — corner model **fades in** with exploration phase ([§ Consider / explore](#consider--explore--navigator-3d-presence)) |
@@ -144,38 +144,38 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 - **Job of the screen** — roster management: scan many Navigators, read auras and Protocol lists, assign one for the **next dive**. Dense 2D rows match Guild core recruitment.
 - **Fantasy split** — Office = **contract / briefing** (“who leads this sortie?”). Labyrinth = **field lead beside you** (corner model as expedition companion).
 - **Layout** — Corner rig competes with hub service chrome and has no formation context; office already has a dedicated detail pane for the selected portrait.
-- **Scope** — MVP1 ships office as portraits + motion only ([game #13](https://github.com/miramocha/griddungeon-game/issues/13)); corner 3D is explore and can land later without reopening office UX.
+- **Scope** — (launch) ships office as portraits + motion only ([game #13](https://github.com/miramocha/griddungeon-game/issues/13)); corner 3D is explore and can land later without reopening office UX.
 
-**Optional post-MVP1 office polish (still not corner rig):** when one Navigator row is focused, a **large bust or half-body 3D** in the office **detail pane only** (like a guild hall portrait frame) — supplementary to the list, not a second presentation system. Rejected for office: full-body corner widget, walkable Navigator avatar in the hub scene, or Deploy/Transform slot transitions (those are combat-only per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) / [024](../../decisions/024-protocol-transform.md)).
+**Optional later office polish (still not corner rig):** when one Navigator row is focused, a **large bust or half-body 3D** in the office **detail pane only** (like a guild hall portrait frame) — supplementary to the list, not a second presentation system. Rejected for office: full-body corner widget, walkable Navigator avatar in the hub scene, or Deploy/Transform slot transitions (those are combat-only per [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) / [024](../../decisions/024-protocol-transform.md)).
 
 ## UI
 
-**MVP1 (locked):** Navigator **portrait + name** above or beside formation (not in front/back rows). Aura icons on core portraits (small badge from active Navigator). Protocol use: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Protocol list.
+**(launch) (locked):** Navigator **portrait + name** above or beside formation (not in front/back rows). Aura icons on core portraits (small badge from active Navigator). Protocol use: Navigator voice line / portrait pulse; skill picker shows **Navigator’s** Protocol list.
 
-**Presentation explore:** [§ Consider / explore — Navigator 3D presence](#consider--explore--navigator-3d-presence) (corner model + Protocol transitions). Does **not** change MVP1 portrait strip or [ADR 007](../../decisions/007-navigator-role.md) targeting rules.
+**Presentation explore:** [§ Consider / explore — Navigator 3D presence](#consider--explore--navigator-3d-presence) (corner model + Protocol transitions). Does **not** change (launch) portrait strip or [ADR 007](../../decisions/007-navigator-role.md) targeting rules.
 
-## MVP1 content (locked)
+## Launch content (locked)
 
-Matches [mvp1-spec §4](../archive/mvp1-spec.md#4-mvp1-navigator--synchro-protocol) and [class design — MVP1 IDs](../05-class-design.md#mvp1-content-ids-locked).
+Matches [synchro-protocol § Launch content](02-systems/synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
 
-| Navigator | `navigator_id` | Unlock | Aura (MVP1) | Protocol kit |
+| Navigator | `navigator_id` | Unlock | Aura (launch) | Protocol kit |
 |-----------|----------------|--------|-------------|--------------|
 | **Sortie Lead** | `guild_handler` | Day one | +5% Synchro Charge gain (`synchroGainBonus = 0.05`) | `protocol_strike`, `protocol_mend` |
 
-Additional Navigators unlock via strata/quests post-MVP1.
+Additional Navigators unlock via strata/quests later.
 
-## MVP1
+## Launch scope
 
 **Design (locked):**
 
 - [x] One default Navigator (`guild_handler`) + aura documented
-- [x] MVP1 Protocol kit: `protocol_strike`, `protocol_mend`
+- [x] (launch) Protocol kit: `protocol_strike`, `protocol_mend`
 - [x] Not in formation rows or AGI queue (off-formation executor)
 
 **Implementation (game — open):**
 
 - [ ] Protocol picker when Synchro is 100% (production HUD — [game #19](https://github.com/miramocha/griddungeon-game/issues/19) / [#35](https://github.com/miramocha/griddungeon-game/issues/35))
-- [ ] **Navigator Office:** pick active Navigator from **unlocked** pool ([game #13](https://github.com/miramocha/griddungeon-game/issues/13); post-MVP1: starter + stratum unlock)
+- [ ] **Navigator Office:** pick active Navigator from **unlocked** pool ([game #13](https://github.com/miramocha/griddungeon-game/issues/13); later: starter + stratum unlock)
 
 ## Resolved decisions
 
@@ -187,14 +187,14 @@ Additional Navigators unlock via strata/quests post-MVP1.
 
 ## Consider / explore — Navigator 3D presence
 
-**Status:** Design idea — **not locked**. MVP1 keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
+**Status:** Design idea — **not locked**. (launch) keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
 
 ### Default — corner presence (exploration + combat)
 
 | Phase | Presentation |
 |-------|----------------|
 | **Exploration** | Active Navigator **3D model** anchored **bottom-right** of the screen (HUD layer over FPV). Idle / react animations; does **not** walk on the dungeon grid ([role summary](#role-summary)). |
-| **Combat** | Same **bottom-right** anchor while Navigator is **off-formation** (before / between / after mode skills). Coexists with MVP1 **portrait strip** until a future HUD pass may fold them together. |
+| **Combat** | Same **bottom-right** anchor while Navigator is **off-formation** (before / between / after mode skills). Coexists with (launch) **portrait strip** until a future HUD pass may fold them together. |
 | **Hub** | **No corner model.** [Navigator Office](#hub--navigator-office) = **2D portraits** only; corner rig **spawns on enter stratum**, **despawns on return to hub**. |
 
 One `NavigatorPresence` (or `NavigatorView`) rig: shared prefab, phase-aware camera/layer (screen-space corner vs slot-attached). **Hub office does not host this rig** — only `ExplorationPhaseController` / `CombatPhaseController` (or equivalent) enable it.
@@ -216,7 +216,7 @@ One `NavigatorPresence` (or `NavigatorView`) rig: shared prefab, phase-aware cam
 
 See [§ Presentation at Navigator Office](#presentation-at-navigator-office-locked-direction-for-explore) for office screen breakdown.
 
-### Protocol mode transitions (post-MVP1 skills)
+### Protocol mode transitions (later skills)
 
 When a core invokes **Protocol Deploy** or **Protocol Transform** at Synchro 100%, the corner model **transitions** into the relevant formation representation. The off-formation Navigator **entity** is unchanged for rules (no Navigator AGI turn; not a direct melee target — [ADR 007](../../decisions/007-navigator-role.md)).
 
@@ -232,20 +232,20 @@ When a core invokes **Protocol Deploy** or **Protocol Transform** at Synchro 100
 ### Alignment with combat scene
 
 - **Aux / core slots** in [combat scene](combat-scene.md) are where the transitioned model **lands** for battle presentation.
-- **MVP1 Protocol** (`protocol_strike`, `protocol_mend`) — no slot transition; corner model optional even in MVP1 if art budget allows (VFX-only pulse acceptable).
+- **(launch) Protocol** (`protocol_strike`, `protocol_mend`) — no slot transition; corner model optional even at launch if art budget allows (VFX-only pulse acceptable).
 
 ### Open questions (next pass)
 
 | Question | Notes |
 |----------|--------|
-| Office detail-pane 3D bust? | Optional post-MVP1; list portraits remain primary — [§ Presentation at Navigator Office](#presentation-at-navigator-office-locked-direction-for-explore) |
+| Office detail-pane 3D bust? | Optional later; list portraits remain primary — [§ Presentation at Navigator Office](#presentation-at-navigator-office-locked-direction-for-explore) |
 | One mesh vs sortie/transform variant? | Per-Navigator `battle_model` + optional `sortie_model` / `transform_model` in data. |
 | Strip vs 3D authority | Until locked: **portraits + HP** remain source of truth for targeting; 3D is illustrative unless playtest proves otherwise. |
 | Exploration corner blocks map chrome? | Layout pass with [mapping](mapping.md) side panel + bottom log strip. |
 
 ### Recommendation
 
-Prototype corner idle in **exploration** first (cheap read: “party lead is here”). Add Deploy/Transform transitions when [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) / [024](../../decisions/024-protocol-transform.md) ship; playtest before replacing MVP1 portrait-only Protocol UX.
+Prototype corner idle in **exploration** first (cheap read: “party lead is here”). Add Deploy/Transform transitions when [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) / [024](../../decisions/024-protocol-transform.md) ship; playtest before replacing (launch) portrait-only Protocol UX.
 
 ## Related docs
 

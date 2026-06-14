@@ -9,30 +9,30 @@
 
 | Layer | Choice |
 |-------|--------|
-| Editor / runtime | Unity 6 ù pin minor in `ProjectVersion.txt` when repo exists |
+| Editor / runtime | Unity 6 ÔøΩ pin minor in `ProjectVersion.txt` when repo exists |
 | Rendering | URP (no Built-in RP) |
-| Shaders | **Shader Graph** for most materials/VFX; **HLSL** only when Graph canùt express it or perf demands a custom pass ([ADR 012](../decisions/012-unity-6-stack.md)) |
-| Input | Input System ù `Exploration`, `Combat`, `Map`, `UI` action maps; rebindable player prefs when settings ship |
-| Runtime animation | **DOTween** (Demigiant) ù exploration step lerp, UI, camera punch, Fixed-skill VFX timing |
+| Shaders | **Shader Graph** for most materials/VFX; **HLSL** only when Graph canÔøΩt express it or perf demands a custom pass ([ADR 012](../decisions/012-unity-6-stack.md)) |
+| Input | Input System ÔøΩ `Exploration`, `Combat`, `Map`, `UI` action maps; rebindable player prefs when settings ship |
+| Runtime animation | **DOTween** (Demigiant) ÔøΩ exploration step lerp, UI, camera punch, Fixed-skill VFX timing |
 | Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
-| Save | `JsonUtility` or custom serializer MVP1; ScriptableObjects for content DB |
+| Save | `JsonUtility` or custom serializer (launch); ScriptableObjects for content DB |
 
 Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`).
 
-## Shaders (Shader Graphùfirst)
+## Shaders (Shader GraphÔøΩfirst)
 
 | Use Shader Graph | Use HLSL (exception) |
 |------------------|----------------------|
 | FPV dungeon walls/floor/doors | Custom fullscreen blit with no graph equivalent |
 | Battle arena backdrop & slot lighting | Compute-style pass (if used) |
-| Character/enemy sprites ù lit/unlit | Extremely hot path after profiling |
+| Character/enemy sprites ÔøΩ lit/unlit | Extremely hot path after profiling |
 | Hit flash, poison tint, Synchro burst VFX | Porting legacy `.shader` until rebuilt in Graph |
 | UI-adjacent fullscreen tints | |
 
 **Conventions**
 
 - URP **Shader Graph** assets under `Assets/Shaders/Graph/` (or project convention).
-- Handwritten shaders under `Assets/Shaders/HLSL/` ù **one-line rationale** at top of file.
+- Handwritten shaders under `Assets/Shaders/HLSL/` ÔøΩ **one-line rationale** at top of file.
 - Prefer **subgraphs** for reusable noise, dissolve, hit-flash rather than copy-paste HLSL.
 - No Built-in RP shaders; no Shader Forge legacy imports.
 
@@ -57,55 +57,55 @@ EO alignment drives **auto-reveal map**, **FOE entities**, and **AGI combat queu
 
 ### UI reactivity
 
-**Hub, exploration, and combat** HUDs share the same MVP1 bar: when game state changes, the UI **animates or pulses** so cause ? effect is obvious. Static swaps alone are not enough.
+**Hub, exploration, and combat** HUDs share the same (launch) bar: when game state changes, the UI **animates or pulses** so cause ? effect is obvious. Static swaps alone are not enough.
 
 | Principle | Rule |
 |-----------|------|
-| **Event-driven** | Presenters (`*View` in `GridDungeon.UI`) subscribe to controller events (`CombatController`, `HubController` services, `MapSystem`, `DungeonExplorer`, `GamePhaseController`) and play feedback; views do not poll every frame for diffs. **Full event list:** [04 ù Dev: UI event contract](04-dev/ui-event-contract.md). |
+| **Event-driven** | Presenters (`*View` in `GridDungeon.UI`) subscribe to controller events (`CombatController`, `HubController` services, `MapSystem`, `DungeonExplorer`, `GamePhaseController`) and play feedback; views do not poll every frame for diffs. **Full event list:** [04 ÔøΩ Dev: UI event contract](04-dev/ui-event-contract.md). |
 | **DOTween on Toolkit** | Short tweens on `VisualElement` style/transform (fade, scale punch, slide, fill lerp). Enable DOTween **UI** module. No tween logic in `GridDungeon.Core`. |
 | **State first, motion second** | Apply authoritative values immediately (HP, map cells, queue order); animate **from** the previous visual state. |
-| **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock ù play the full highlight ? VFX ? log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted ù pick one per beat in the phase doc tables. |
-| **Duration** | Typical UI feedback **0.1ù0.4s**; Synchro meter fill and HP drops may use **0.2ù0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
+| **Blocking (EO-style)** | Hold a **presentation lock** until mandatory UI tweens for the current beat finish. The **next** player action (combat command, hub confirm, etc.) is ignored until unlock. **Summon/auto turns** use the same lock ÔøΩ play the full highlight ? VFX ? log chain before the queue advances ([summons](02-systems/summons-and-guests.md)). Exploration grid step already blocks movement during lerp ([ADR 001](../decisions/001-grid-movement.md)); map/HUD feedback for that step may run in parallel or complete before the next step is accepted ÔøΩ pick one per beat in the phase doc tables. |
+| **Duration** | Typical UI feedback **0.1ÔøΩ0.4s**; Synchro meter fill and HP drops may use **0.2ÔøΩ0.6s**. Longer motion belongs in [combat presentation](02-systems/combat-presentation.md) (camera/VFX), not HUD chrome. |
 | **Cleanup** | `Kill` / complete tweens on `OnDisable`, phase exit, and combat end (see [Animation](#animation-dotween--timeline) above). |
 
-**MVP1 checklists by phase:**
+**(launch) checklists by phase:**
 
 | Phase | Doc |
 |-------|-----|
-| Combat | [combat ù UI motion & feedback](02-systems/combat.md#ui-motion--feedback) |
-| Exploration | [mapping ù Map UI motion](02-systems/mapping.md#map-ui-motion) |
-| Hub | [hub ù Service UI motion](02-systems/hub-and-services.md#service-ui-motion); [hub ù environment camera pan](02-systems/hub-and-services.md#hub-environment-presentation) (**post-MVP1**, non-blocking) |
+| Combat | [combat ÔøΩ UI motion & feedback](02-systems/combat.md#ui-motion--feedback) |
+| Exploration | [mapping ÔøΩ Map UI motion](02-systems/mapping.md#map-ui-motion) |
+| Hub | [hub ÔøΩ Service UI motion](02-systems/hub-and-services.md#service-ui-motion); [hub ÔøΩ environment camera pan](02-systems/hub-and-services.md#hub-environment-presentation) (**later**, non-blocking) |
 
-**Deferred (post-MVP1):** global **reduce UI motion** accessibility toggle; keep tween durations in data/prefs so scale-to-zero is trivial later.
+**Deferred (later):** global **reduce UI motion** accessibility toggle; keep tween durations in data/prefs so scale-to-zero is trivial later.
 
 ## High-level modules
 
 ```
 GameState (composition root)
-+-- GamePhaseController  ù Hub | Exploration | Combat ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md))
-ù   +-- HubPhaseController
-ù   +-- ExplorationPhaseController
-ù   +-- CombatPhaseController
-+-- HubServices          ù explorers guild, navigator office, shop, hospital, inn save
-+-- DungeonExplorer      ù grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp ù see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
-+-- ExplorationGridMetrics (Core) ù `WorldUnitsPerCell` (10), corner?world math shared with floor art
-+-- FloorArtPresenter    ù load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102))
-+-- DungeonView          ù FPV mount / visibility (hidden during combat); per-cell blobber deferred
-+-- CombatScenePresenter ù battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
-+-- MapSystem            ù auto-reveal layer, fog, read-only UI
-+-- FoeSystem            ù spawn, visibility, step patrol, contact
-+-- PartyRuntime         ù 6 core + 0ù2 aux combatants, skills; mirrors SaveGame.PartyInventory
-+-- InventoryRules (Core) ù bag add/stack/equip; InventoryBagCatalog (tab filter); EquipmentStatAggregator
-+-- NavigatorRuntime     ù active navigator, aura application, roster
-+-- ProtocolSystem       ù Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
-+-- CombatController     ù AGI queue + command planning + Protocol ? EndRound; `ActionStepDelaySeconds` default **0.55s** between resolved actions (0 in tests)
-+-- CodexSystem          ù enemy knowledge / weaknesses
-+-- StoryEventRunner     ù VN scenes; overlay lock ([#87](https://github.com/miramocha/griddungeon-game/issues/87), [ADR 028](../decisions/028-story-visual-novel-events.md), [story events](02-systems/story-events.md))
-+-- ContentDatabase      ù strata, floors, side dungeons (MVP3), FOE, encounters
-+-- SaveSystem           ù hub save + per-floor revealed map + FOE state
++-- GamePhaseController  ÔøΩ Hub | Exploration | Combat ([ADR 017](../decisions/017-game-phase-controller.md), [game phase](02-systems/game-phase.md))
+ÔøΩ   +-- HubPhaseController
+ÔøΩ   +-- ExplorationPhaseController
+ÔøΩ   +-- CombatPhaseController
++-- HubServices          ÔøΩ explorers guild, navigator office, shop, hospital, inn save
++-- DungeonExplorer      ÔøΩ grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp ÔøΩ see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
++-- ExplorationGridMetrics (Core) ÔøΩ `WorldUnitsPerCell` (10), corner?world math shared with floor art
++-- FloorArtPresenter    ÔøΩ load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102))
++-- DungeonView          ÔøΩ FPV mount / visibility (hidden during combat); per-cell blobber deferred
++-- CombatScenePresenter ÔøΩ battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
++-- MapSystem            ÔøΩ auto-reveal layer, fog, read-only UI
++-- FoeSystem            ÔøΩ spawn, visibility, step patrol, contact
++-- PartyRuntime         ÔøΩ 6 core + 0ÔøΩ2 aux combatants, skills; mirrors SaveGame.PartyInventory
++-- InventoryRules (Core) ÔøΩ bag add/stack/equip; InventoryBagCatalog (tab filter); EquipmentStatAggregator
++-- NavigatorRuntime     ÔøΩ active navigator, aura application, roster
++-- ProtocolSystem       ÔøΩ Synchro Charge gain/spend (`SynchroBar`); Navigator invokes Protocol on core turn at 100%
++-- CombatController     ÔøΩ AGI queue + command planning + Protocol ? EndRound; `ActionStepDelaySeconds` default **0.55s** between resolved actions (0 in tests)
++-- CodexSystem          ÔøΩ enemy knowledge / weaknesses
++-- StoryEventRunner     ÔøΩ VN scenes; overlay lock ([#87](https://github.com/miramocha/griddungeon-game/issues/87), [ADR 028](../decisions/028-story-visual-novel-events.md), [story events](02-systems/story-events.md))
++-- ContentDatabase      ÔøΩ strata, floors, side dungeons (optional), FOE, encounters
++-- SaveSystem           ÔøΩ hub save + per-floor revealed map + FOE state
 ```
 
-**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub ? Exploration ? Combat ? Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). **F3** uses two dev cores + slime when the party roster is empty (AGI order 14 ? 9 ? 5). Editor: **GridDungeon ? Tools ? Dev Tools** (phase shortcuts), **Save Editor** (inn save F5, campaign flags, Edit Mode write ù [PR #84](https://github.com/miramocha/griddungeon-game/pull/84)), **Dev Tools Map**. Game repo: **GridDungeon ? Scenes ? Create Dev Bootstrap**.
+**Dev bootstrap:** `DevBootstrap.unity` (not in git; regenerate locally) + UI Toolkit `GamePhaseDevHud` drives Hub ? Exploration ? Combat ? Hub for macro-phase smoke tests ([game phase](02-systems/game-phase.md#dev-bootstrap-hud-ui-toolkit)). **F3** uses two dev cores + slime when the party roster is empty (AGI order 14 ? 9 ? 5). Editor: **GridDungeon ? Tools ? Dev Tools** (phase shortcuts), **Save Editor** (inn save F5, campaign flags, Edit Mode write ÔøΩ [PR #84](https://github.com/miramocha/griddungeon-game/pull/84)), **Dev Tools Map**. Game repo: **GridDungeon ? Scenes ? Create Dev Bootstrap**.
 
 ## Map system
 
@@ -114,56 +114,56 @@ GameState (composition root)
   - `wallMask` per cell edge (set on bump + perimeter reveal)
   - `features`: door state, stairs, chest opened, trap triggered
   - `foeIcons`: last known FOE cell when in LOS
-- **Truth layer** ù designer collision (editor only); never sent to client as full download
+- **Truth layer** ÔøΩ designer collision (editor only); never sent to client as full download
 - **UI:** read-only grid; pan/zoom; no edit raycasts
 - `MapReveal.OnPartyEnteredCell`, `OnBumpWall(side)`, `OnInteract(type)`
-- **Save packing:** [map-reveal-save-format.md](02-systems/map-reveal-save-format.md) ù `FloorMapStateCodec` (`Visited` / `Walls` packed ints, features/FOE structs)
+- **Save packing:** [map-reveal-save-format.md](02-systems/map-reveal-save-format.md) ÔøΩ `FloorMapStateCodec` (`Visited` / `Walls` packed ints, features/FOE structs)
 
 ### Map authoring & HUD ([ADR 002](../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map))
 
 | Concern | Approach |
 |---------|----------|
-| **Authoring (primary)** | **Floor level painter** (Unity Editor) ? exports **`ExplorationFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol ù epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
-| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map ù [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
-| **Runtime HUD (primary)** | **`ExplorationMapCoordinator`** + `MapGridPaintController` ù 2D UI Toolkit grid from `ExplorationFloor` + `FloorMapState` reveal; refresh on dirty |
+| **Authoring (primary)** | **Floor level painter** (Unity Editor) ? exports **`ExplorationFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol ÔøΩ epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
+| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map ÔøΩ [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
+| **Runtime HUD (primary)** | **`ExplorationMapCoordinator`** + `MapGridPaintController` ÔøΩ 2D UI Toolkit grid from `ExplorationFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
 | **Party / FOE** | Icons on 2D map at `(x, y, level)`; patrol updates view without RT |
 | **Verticality** | Cell `(x,y,level)`; jump pads / stairs in painter data ([ADR 019](../decisions/019-floor-verticality.md)) |
-| **Collision** | Same `ExplorationFloor` truth as painter output ù `MapSystem` / `FloorCollisionQuery`, not HUD drawables |
+| **Collision** | Same `ExplorationFloor` truth as painter output ÔøΩ `MapSystem` / `FloorCollisionQuery`, not HUD drawables |
 | **Deferred** | MapProxy + minimap camera ? RT (optional 3D debug preview only) |
 
 **Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
 
 ### Map cell art assets
 
-Sprite checklist, composite wall rules (edge segments ù no 16 autotiles), door overlay tints, and USS class list: **[map-cell-art.md](02-systems/map-cell-art.md)**. Implementation: [game #38](https://github.com/miramocha/griddungeon-game/issues/38); shared painter: [#26](https://github.com/miramocha/griddungeon-game/issues/26). Campaign gates ? map icons: [#33](https://github.com/miramocha/griddungeon-game/issues/33).
+Sprite checklist, composite wall rules (edge segments ÔøΩ no 16 autotiles), door overlay tints, and USS class list: **[map-cell-art.md](02-systems/map-cell-art.md)**. Implementation: [game #38](https://github.com/miramocha/griddungeon-game/issues/38); shared painter: [#26](https://github.com/miramocha/griddungeon-game/issues/26). Campaign gates ? map icons: [#33](https://github.com/miramocha/griddungeon-game/issues/33).
 
-## Side dungeons (MVP3)
+## Side dungeons (sketch) (optional)
 
-- **Save/map keys:** `{locationId}_{floorId}` ù e.g. `sd01_F1` (not `s1_B1F`). Same `FloorMapStateSave` / `FoeStateSave[]` dictionaries as strata ([side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md)).
+- **Save/map keys:** `{locationId}_{floorId}` ÔøΩ e.g. `sd01_F1` (not `s1_B1F`). Same `FloorMapStateSave` / `FoeStateSave[]` dictionaries as strata ([side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md)).
 - **`ExplorationStateSave`:** add `ExplorationMapKind` (`Stratum` | `SideDungeon`) + `locationId` + `floorId` on active dive.
-- **Hub entry:** `HubController.EnterSideDungeon(locationId, floorId)` ù parallel to `LeaveHub`; loads floor SO from `ContentDatabase` by side key.
+- **Hub entry:** `HubController.EnterSideDungeon(locationId, floorId)` ÔøΩ parallel to `LeaveHub`; loads floor SO from `ContentDatabase` by side key.
 - **Content path (draft):** `Assets/Content/SideDungeons/sd01_F1.asset`
-- **Stratum-only save:** `HubSaveData.UnlockedWarpGateStrata` (hub **Enter Stratum** after in-world gate unlock); does not track side locations ù use `UnlockedSideDungeonIds` or quest flags.
+- **Stratum-only save:** `HubSaveData.UnlockedWarpGateStrata` (hub **Enter Stratum** after in-world gate unlock); does not track side locations ÔøΩ use `UnlockedSideDungeonIds` or quest flags.
 
-## Autopilot (MVP2)
+## Autopilot
 
-- **`MapPathfinder`** (`GridDungeon.Core`) ó generic **A\*** with Manhattan heuristic + binary heap; injectable node/edge predicates ([autopilot pathfinding](04-dev/autopilot-pathfinding.md))
-- **`ExplorationPathGraph`** (`GridDungeon.Runtime`) ó revealed walkable graph (visited cells, layout walkability, walls, closed doors) ? calls `MapPathfinder`
-- **`AutopilotPathWalker`** (`GridDungeon.Core`) ó path index ? next turn or step
-- **`AutopilotController`** ó destination pick, walk state, combat **suspend/resume**, overlay events; `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
-- **UI:** `ExplorationMapCoordinator` + expanded map ó **Z** arm path, arrows/click cursor, path overlay via `MapGridPaintController` (not side minimap pick yet)
-- **Layout validation** uses **`FloorLayoutConnectivity`** on raw `ExplorationFloor` (delegates to `MapPathfinder`; not autopilot fog/walls) ([autopilot pathfinding ó vs FloorLayoutConnectivity](04-dev/autopilot-pathfinding.md#vs-floorlayoutconnectivity-layout-connectivity))
+- **`MapPathfinder`** (`GridDungeon.Core`) ÔøΩ generic **A\*** with Manhattan heuristic + binary heap; injectable node/edge predicates ([autopilot pathfinding](04-dev/autopilot-pathfinding.md))
+- **`ExplorationPathGraph`** (`GridDungeon.Runtime`) ÔøΩ revealed walkable graph (visited cells, layout walkability, walls, closed doors) ? calls `MapPathfinder`
+- **`AutopilotPathWalker`** (`GridDungeon.Core`) ÔøΩ path index ? next turn or step
+- **`AutopilotController`** ÔøΩ destination pick, walk state, combat **suspend/resume**, overlay events; `DungeonExplorer` commits lerps + step events ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md))
+- **UI:** `ExplorationMapCoordinator` + expanded map ÔøΩ **Z** arm path, arrows/click cursor, path overlay via `MapGridPaintController` (not side minimap pick yet)
+- **Layout validation** uses **`FloorLayoutConnectivity`** on raw `ExplorationFloor` (delegates to `MapPathfinder`; not autopilot fog/walls) ([autopilot pathfinding ÔøΩ vs FloorLayoutConnectivity](04-dev/autopilot-pathfinding.md#vs-floorlayoutconnectivity-layout-connectivity))
 - Cancel on manual input, blocked step, or unreachable resume; combat suspends with optional resume after fight
 
-## Gathering & fishing (MVP2)
+## Gathering & fishing
 
-- `MinigameController` ù `Gather` | `Fish`; pauses exploration + FOE step tick
+- `MinigameController` ÔøΩ `Gather` | `Fish`; pauses exploration + FOE step tick
 - `GatherNodeInstance` / `FishNodeInstance` on floor; depleted flags in dive save; reset on hub respawn ([gathering & fishing](02-systems/gathering-and-fishing.md))
 
 ## FOE system
 
-- `FoeInstance` ù id, grid pos, patrol path index, tier, encounter group
+- `FoeInstance` ÔøΩ id, grid pos, patrol path index, tier, encounter group
 - `OnPartyStep()` ? increment floor step count; FOEs with `stepsPerMove` advance patrol index
 - Line-of-sight check for map icon reveal
 - Collision ? `CombatController.StartBattle(foeId)`
@@ -171,85 +171,85 @@ Sprite checklist, composite wall rules (edge segments ù no 16 autotiles), door o
 - `OnFoeFleeSuccess()` ? set party exploration pos to retreat cell
 - **Optional later:** `TickCombatRound()` + `TryJoinOneFoe()` ([ADR 005](../decisions/005-foe-combat-patrol.md), [ADR 010](../decisions/010-chain-foe-battle.md)); flag-gated
 
-MVP1: step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
+(launch): step patrol system in core; early floors mostly `stepsPerMove: 0` or 1-cell paths. No combat-round FOE movement.
 
 ## Combat
 
 - `TurnQueueBuilder.Build(combatants)` sorted by AGI (+ Speed Up/Down from [status system](02-systems/combat-status-and-buffs.md))
-- `StatusSystem` (Core) ù apply/refresh/tick/cleanse using `StatusData` DTOs; SO `StatusDefinition` in Runtime via `ContentDatabase.ToStatusData`
-- `EndOfRoundPipeline` ù regen ? DoT ? decrement durations ? FOE patrol (optional)
+- `StatusSystem` (Core) ÔøΩ apply/refresh/tick/cleanse using `StatusData` DTOs; SO `StatusDefinition` in Runtime via `ContentDatabase.ToStatusData`
+- `EndOfRoundPipeline` ÔøΩ regen ? DoT ? decrement durations ? FOE patrol (optional)
 - UI binds to queue head; advance on action complete
 - `CombatSimulator` pure C# for tests (status inflict + tick unit tests)
 
 ## Navigator
 
-- `NavigatorDefinition` ù aura modifiers, protocol skill ids, `unlockCondition`
+- `NavigatorDefinition` ÔøΩ aura modifiers, protocol skill ids, `unlockCondition`
 - `PartyRuntime.ActiveNavigatorId`; `UnlockedNavigatorIds` (flags from strata/quests/events)
 - `AuraSystem.ApplyPassives(coreSix)` on combat start / navigator swap
 - Not in `Combatant` AGI list; **excluded from targeting** (including boss AOEs); separate UI strip, no HP
-- **Explore:** bottom-right **3D presence** in exploration + combat; Protocol Deploy/Transform transition model into aux / core slot rigs ù [navigator ù Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence) (MVP1 still portrait strip)
+- **Explore:** bottom-right **3D presence** in exploration + combat; Protocol Deploy/Transform transition model into aux / core slot rigs ÔøΩ [navigator ÔøΩ Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence) (launch) still portrait strip)
 
 ## Synchro Protocol (team bar)
 
-- `SynchroBar` float 0ù1 on `PartyRuntime` (Synchro Charge)
-- `ProtocolSystem` ù bar fill from core actions; spend on `CombatCommand.Protocol`
+- `SynchroBar` float 0ÔøΩ1 on `PartyRuntime` (Synchro Charge)
+- `ProtocolSystem` ÔøΩ bar fill from core actions; spend on `CombatCommand.Protocol`
 - Core turn at Synchro == 1: player picks `protocol_strike` / `protocol_mend` from Navigator kit
-- S1: tutorial FOE ù crisis AOE, VN unlock, guided `protocol_strike`, hub warp ([story-events](02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)); guided HUD ù [guided-tutorial](02-systems/guided-tutorial.md), [s1 beats](03-content/campaign/s1-guided-tutorials.md)
-- `ProtocolSkillDefinition` ù participant count, effect, presentation id
+- S1: tutorial FOE ÔøΩ crisis AOE, VN unlock, guided `protocol_strike`, hub warp ([story-events](02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)); guided HUD ÔøΩ [guided-tutorial](02-systems/guided-tutorial.md), [s1 beats](03-content/campaign/s1-guided-tutorials.md)
+- `ProtocolSkillDefinition` ÔøΩ participant count, effect, presentation id
 - Save: `synchroBar` + `activeNavigatorId` per dive
 - FOE state: persist on floor during dive; **reset FOE spawns** on hub return + re-enter
 
 ## Exploration HUD (UI Toolkit)
 
-Shipped on **`ExplorationHud`** (`ExplorationHudView` ù **no** `UIDocument`) + sibling **`ExplorationMap`** (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, document map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
+Shipped on **`ExplorationHud`** (`ExplorationHudView` ÔøΩ **no** `UIDocument`) + sibling **`ExplorationMap`** (`ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView`). Pause / party menu: sibling **`PartyMenuOverlay`**. Party strip: **`PartyFormationFloater`** ([centralized UI services](04-dev/centralized-ui-services.md)). Full bind diagrams, document map, input routing, and replacement checklist: **[exploration UI](02-systems/exploration-ui.md)**.
 
-- Map surfaces ù C# `MapGridHostBuilder` per `UIDocument` under `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)); integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
-- `MapGridPaintController` ù cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#244](https://github.com/miramocha/griddungeon-game/pull/244)).
-- Pause ù `Esc` when map not fullscreen; quit confirm ? `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
-- **Exploration log** ù not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
-- **Layered panels (draft):** exploration Tier 1 **shipped** (map + floater + pause as sibling docs); combat still monolithic ù [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).
+- Map surfaces ÔøΩ C# `MapGridHostBuilder` per `UIDocument` under `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)); integrator: [ui-event-contract](04-dev/ui-event-contract.md), [custom party UI](04-dev/custom-party-ui.md).
+- `MapGridPaintController` ÔøΩ cell grid via `MapGridPainter`; marker overlays via `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapHubEntranceMarkersPresenter`, `MapGridMarkerAnimator` ([#90](https://github.com/miramocha/griddungeon-game/pull/90), [#244](https://github.com/miramocha/griddungeon-game/pull/244)).
+- Pause ÔøΩ `Esc` when map not fullscreen; quit confirm ? `RequestQuitToTitle` ([ADR 014](../decisions/014-mvp1-exploration-map.md)).
+- **Exploration log** ÔøΩ not wired (combat log only). **Map refactor** (read model): [exploration UI appendix](02-systems/exploration-ui.md#appendix--future-map-read-model-refactor).
+- **Layered panels (draft):** exploration Tier 1 **shipped** (map + floater + pause as sibling docs); combat still monolithic ÔøΩ [ADR 037](../decisions/037-layered-uitk-panels.md), [dev note](04-dev/layered-uitk-panels.md).
 
 ## Combat HUD (UI Toolkit)
 
-**Shipped** ù epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame ù [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Spec: [combat ù Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`position: absolute; inset: 0`, `flex-direction: row`):
+**Shipped** ÔøΩ epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame ÔøΩ [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Spec: [combat ÔøΩ Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`position: absolute; inset: 0`, `flex-direction: row`):
 
 ```
 command-rail | center column (log-preview ? enemy ? arena-spacer ? synchro) + PartyFormationFloater overlay | turn-order-strip
 ```
 
-- **Left rail** ù `combat-hud__command-rail` ? `command-panel` (vertical column, centered in rail). Button order: Attack ? ù ? Flee ? **Protocol** ? **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
-- **Top center** ù `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** ù no MP on enemies).
-- **Bottom center** ù `synchro-bar` in center column; party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
-- **Log** ù `combat-log-preview-row` (round + one line; no Log button); modal via **`L`** or preview click; title + scroll only; close via **`L`**, **`X`** / Back (`TryBack` ù log before pickers), or backdrop click (not scroll).
-- **Centralized UI services** ù cross-phase `UIDocument` overlays (`InputHintPresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** ù bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
-- **Right rail** ù `turn-order-strip` vertical flat AGI queue (top ? bottom = soonest ? latest).
+- **Left rail** ÔøΩ `combat-hud__command-rail` ? `command-panel` (vertical column, centered in rail). Button order: Attack ? ÔøΩ ? Flee ? **Protocol** ? **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
+- **Top center** ÔøΩ `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** ÔøΩ no MP on enemies).
+- **Bottom center** ÔøΩ `synchro-bar` in center column; party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
+- **Log** ÔøΩ `combat-log-preview-row` (round + one line; no Log button); modal via **`L`** or preview click; title + scroll only; close via **`L`**, **`X`** / Back (`TryBack` ÔøΩ log before pickers), or backdrop click (not scroll).
+- **Centralized UI services** ÔøΩ cross-phase `UIDocument` overlays (`InputHintPresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** ÔøΩ bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
+- **Right rail** ÔøΩ `turn-order-strip` vertical flat AGI queue (top ? bottom = soonest ? latest).
 
-`CombatRosterView.BindEnemyFormation` ù `EnemySlots[0..2]` ? front, `[3..5]` ? back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+`CombatRosterView.BindEnemyFormation` ÔøΩ `EnemySlots[0..2]` ? front, `[3..5]` ? back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
 
-- **Skill use picker** ù modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
-- **Shared UITK menus** ù `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` ù composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
-- AGI strip ù flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
+- **Skill use picker** ÔøΩ modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
+- **Shared UITK menus** ÔøΩ `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` ÔøΩ composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
+- AGI strip ÔøΩ flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
-- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` ù DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
-- **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control ù `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
-- **Shared panel scale:** `GamePanelSettings.asset` ù Scale With Screen Size, reference **1920ù1080**, **Match Height** (exploration + combat `UIDocument` panels).
+- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` ÔøΩ DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
+- **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control ÔøΩ `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
+- **Shared panel scale:** `GamePanelSettings.asset` ÔøΩ Scale With Screen Size, reference **1920ÔøΩ1080**, **Match Height** (exploration + combat `UIDocument` panels).
 
 ## Combat scene
 
 - `CombatEntryContext` ? `BattleBackground` + `EncounterGroup` ? spawn on `EnemySlot_0..5` ([ADR 013](../decisions/013-combat-scene-rendering.md))
-- `CombatScenePresenter.GetEnemySlotAnchor(int slotIndex)` ù `slotIndex` `0..5` matches UI + `Combatant.SlotIndex`
+- `CombatScenePresenter.GetEnemySlotAnchor(int slotIndex)` ÔøΩ `slotIndex` `0..5` matches UI + `Combatant.SlotIndex`
 - Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
-- Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) ù separate assets per id
+- Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) ÔøΩ separate assets per id
 
 ## Combat presentation
 
-- `BattleCameraRig` ù fixed angle on arena rig ([combat presentation](02-systems/combat-presentation.md))
+- `BattleCameraRig` ÔøΩ fixed angle on arena rig ([combat presentation](02-systems/combat-presentation.md))
 - `SkillDefinition.presentation`: `Fixed` | `Cinematic` | `CinematicQTE`
-- `Fixed` ù VFX at slots; optional subtle zoom to primary target, then reset
-- `Cinematic` / `CinematicQTE` ù `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
-- `CinematicQTE` ù `QTEController` tiers ? damage bonus; skill always resolves base on miss/skip
-- MVP1: all skills `Fixed`; cinematic + QTE stubbed
-- MVP2: 1ù `CinematicQTE` party skill + 1ù boss `Cinematic` sample
+- `Fixed` ÔøΩ VFX at slots; optional subtle zoom to primary target, then reset
+- `Cinematic` / `CinematicQTE` ÔøΩ `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
+- `CinematicQTE` ÔøΩ `QTEController` tiers ? damage bonus; skill always resolves base on miss/skip
+- (launch): all skills `Fixed`; cinematic + QTE stubbed
+- MVP2: 1ÔøΩ `CinematicQTE` party skill + 1ÔøΩ boss `Cinematic` sample
 
 ## Grid / content
 
@@ -278,10 +278,10 @@ When in labyrinth, `exploration` holds position, facing, floor id.
 
 ```
 +------------------------------------+
-ù   FPV dungeon view  ù  Map (view)  ù
-ù                     ù  read-only   ù
-+------------------------------------ù
-ù  Log / party strip (HP, status)    ù
+ÔøΩ   FPV dungeon view  ÔøΩ  Map (view)  ÔøΩ
+ÔøΩ                     ÔøΩ  read-only   ÔøΩ
++------------------------------------ÔøΩ
+ÔøΩ  Log / party strip (HP, status)    ÔøΩ
 +------------------------------------+
 ```
 
@@ -293,32 +293,32 @@ Combat replaces layout with turn order + **4+4 rows** (core + aux).
 enum CombatantKind { Core, Summon, Guest, Enemy }
 ```
 
-- `PartyRuntime` ù 6 core, always
-- `CombatController` ù spawns aux from skills/scripts; clears on battle end
-- Summon AGI turn ù `IsWaitingForPlayer` + filtered command panel ([ADR 016](../decisions/016-summon-control-mvp1.md)); **no** auto `SummonScriptRunner` for player summons
+- `PartyRuntime` ÔøΩ 6 core, always
+- `CombatController` ÔøΩ spawns aux from skills/scripts; clears on battle end
+- Summon AGI turn ÔøΩ `IsWaitingForPlayer` + filtered command panel ([ADR 016](../decisions/016-summon-control-mvp1.md)); **no** auto `SummonScriptRunner` for player summons
 
 ## Performance
 
 - 60 FPS exploration with map visible
 - FOE patrol: =10 active FOEs per floor
-- Floor size: 40ù40 soft max (EO floors vary)
+- Floor size: 40ÔøΩ40 soft max (EO floors vary)
 
 ## Open technical decisions
 
 - [x] Map fullscreen: movement **pass-through** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
 - [x] Wall reveal: **bump + cell perimeter** ([ADR 014](../decisions/014-mvp1-exploration-map.md))
-- [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping ù [mapping ù Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
-- [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions ù [navigator ù Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence); optional Tier 2 under [ADR 037](../decisions/037-layered-uitk-panels.md)
-- [ ] **Layered UITK panels:** exploration + combat HUD split into panel components ù [ADR 037](../decisions/037-layered-uitk-panels.md) (draft epic)
-- [ ] Default `stepsPerMove` per stratum (tune 2ù5 in data)
-- [ ] **Floor level painter** ? `ExplorationFloor` export ù [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; MVP1 floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
+- [ ] **Map during combat:** persistent panel vs `M` toggle vs threat ping ÔøΩ [mapping ÔøΩ Consider / explore](02-systems/mapping.md#consider--explore--map-during-combat) (revisit with [ADR 005](../decisions/005-foe-combat-patrol.md))
+- [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions ÔøΩ [navigator ÔøΩ Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence); optional Tier 2 under [ADR 037](../decisions/037-layered-uitk-panels.md)
+- [ ] **Layered UITK panels:** exploration + combat HUD split into panel components ÔøΩ [ADR 037](../decisions/037-layered-uitk-panels.md) (draft epic)
+- [ ] Default `stepsPerMove` per stratum (tune 2ÔøΩ5 in data)
+- [ ] **Floor level painter** ? `ExplorationFloor` export ÔøΩ [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; (launch) floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)
 
 ## Related docs
 
-- [05 ù Class design MVP1](05-class-design.md) ù full class hierarchy, assembly layout, folder structure
-- [Game phase](02-systems/game-phase.md) ù design goals, diagrams, `GamePhaseController` + phase controllers ([ADR 017](../decisions/017-game-phase-controller.md))
+- [05 ÔøΩ class design](05-class-design.md) ÔøΩ full class hierarchy, assembly layout, folder structure
+- [Game phase](02-systems/game-phase.md) ÔøΩ design goals, diagrams, `GamePhaseController` + phase controllers ([ADR 017](../decisions/017-game-phase-controller.md))
 - [Mapping](02-systems/mapping.md)
 - [ADR 002](../decisions/002-mapping-model.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
-- [ADR 012 ù Unity 6 stack](../decisions/012-unity-6-stack.md)
+- [ADR 012 ÔøΩ Unity 6 stack](../decisions/012-unity-6-stack.md)

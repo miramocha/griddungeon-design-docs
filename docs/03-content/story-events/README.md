@@ -2,11 +2,11 @@
 
 **System:** [story-events.md](../../02-systems/story-events.md) · **ADR:** [028](../../decisions/028-story-visual-novel-events.md) (Proposed) · **Graph authoring (follow-up):** [030](../../decisions/030-story-event-graph-authoring.md) · **Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87)
 
-Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-game` → `Assets/Content/StoryEvents/<storyEventId>.asset` (regen menu: **GridDungeon → Content → Ensure MVP1 S1 Story Events**). Edit drafts here first, then menu/assets. Post-MVP1: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
+Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-game` → `Assets/Content/StoryEvents/<storyEventId>.asset` (regen menu: **GridDungeon → Content → Ensure (launch) S1 Story Events**). Edit drafts here first, then menu/assets. Later: optional graph editor per [ADR 030](../../decisions/030-story-event-graph-authoring.md) compiles to the same step format.
 
-**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — player is the Navigator (**first person** on `navigator:guild_handler` steps); **`npc:*` may speak to the Navigator** when a beat needs it; **no `core:` speakers**. **Act 1 solo**, then **sideline** with crew after hub recruit; *Amnesia*-style **blank state**; no Synchro / Protocol until unlock beat. **MVP1 table below:** Navigator-only drafts until NPC lines are authored.
+**Voice (locked):** [narrative POV](../../02-systems/narrative-pov.md) — player is the Navigator (**first person** on `navigator:guild_handler` steps); **`npc:*` may speak to the Navigator** when a beat needs it; **no `core:` speakers**. **Act 1 solo**, then **sideline** with crew after hub recruit; *Amnesia*-style **blank state**; no Synchro / Protocol until unlock beat. **(launch) table below:** Navigator-only drafts until NPC lines are authored.
 
-## MVP1 — Stratum 1
+## Stratum 1 (launch)
 
 | storyEventId | once | Prerequisite | Trigger | Copy |
 |--------------|------|--------------|---------|------|
@@ -15,7 +15,7 @@ Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-ga
 | `s1_synchro_protocol_unlock` | yes | not `s1_synchro_unlocked` | **Combat:** after crisis AOE UI beat | [synced](s1/s1_synchro_protocol_unlock.md) |
 | `s1_tutorial_hub_return` | yes | tutorial FOE fight (`grp_alley_stalker_tutorial`) | **Combat:** victory after `protocol_strike` kill → hub warp | [synced](s1/s1_tutorial_hub_return.md) |
 
-## Post-MVP1 (placeholders)
+## Later (placeholders)
 
 | storyEventId | Notes |
 |--------------|-------|

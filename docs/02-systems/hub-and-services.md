@@ -2,7 +2,7 @@
 
 Exploration alternates with a **fixed hub** at the labyrinth entrance — not an open overworld. EO's town loop: prepare, dive one stratum, return before overextending.
 
-## Hub locations (MVP1)
+## Hub locations (launch)
 
 | Service | Function |
 |---------|----------|
@@ -10,29 +10,29 @@ Exploration alternates with a **fixed hub** at the labyrinth entrance — not an
 | **Navigator Office** | View **unlocked** Navigators; assign **active** Navigator for next dive; preview aura + Protocol kit — **2D portrait roster** in UI ([navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)); **not** the labyrinth bottom-right 3D rig ([navigator § Consider / explore](navigator.md#consider--explore--navigator-3d-presence)) |
 | **Shop** | Buy/sell weapons, armor, consumables |
 | **Hospital** | Restore HP/MP; cure **all standard combat ailments/debuffs**; revive fallen members (fee) — see [status & buffs](combat-status-and-buffs.md) |
-| **Inn / Camp desk** | Save game (**primary save point** — MVP1 has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
-| **Quest counter** | Accept kill/gather/floor reach quests (optional MVP1) |
-| **Synthesis** (**MVP2**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
-| **Side expedition** (**MVP3**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
+| **Inn / Camp desk** | Save game (**primary save point** — (launch) has no autosave on exploration pause quit-to-title; see [ADR 014 §7](../../decisions/014-mvp1-exploration-map.md)) |
+| **Quest counter** | Accept kill/gather/floor reach quests (optional (launch)) |
+| **Synthesis** (**Optional**) | Fuse dungeon materials → equipment — requires [gathering & fishing](gathering-and-fishing.md) |
+| **Side expedition** (**Optional**) | Travel to unlocked **non-strata** grid maps — [side dungeons](side-dungeons.md), [ADR 022](../../decisions/022-side-dungeons-mvp3.md) |
 
-No real-time hub walking — **menu tree stays the interaction model**. A **single full-screen 3D guild-town** backdrop (same scene from first hub visit) with **root-menu camera pans** post-MVP1 gives place identity without avatar locomotion (see [Hub environment presentation](#hub-environment-presentation)).
+No real-time hub walking — **menu tree stays the interaction model**. A **single full-screen 3D guild-town** backdrop (same scene from first hub visit) with **root-menu camera pans** later gives place identity without avatar locomotion (see [Hub environment presentation](#hub-environment-presentation)).
 
 ### Service UI motion
 
 Hub menus use the same **reactive, blocking** bar as combat and exploration ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
 
-| Event | UI reaction (MVP1) | Blocks until done |
+| Event | UI reaction (launch) | Blocks until done |
 |-------|-------------------|-------------------|
 | Open / close service screen | Panel **fade/slide** | No — navigation only |
 | Inn save | Brief **confirm flash** + text | Yes — before another service action |
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
 | Shop buy / sell | **Credits** balance + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
 | Guild assign party / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
-| Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional MVP1 |
+| Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional (launch) |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
 | Return to hub (exploration gate `stairsUp`) | **Floor transition** fade/vignette via `TryReturnToHub` ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until hub phase ready |
 | Leave hub → stratum | **Floor transition vignette** or fade fallback ([floor transition](floor-transition.md), [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)) | Yes — until exploration phase ready |
-| Menu item **focus** (hover / scroll) | Background camera **pans** to service building ([§ below](#hub-environment-presentation)) — **post-MVP1** | No — navigation stays live |
+| Menu item **focus** (hover / scroll) | Background camera **pans** to service building ([§ below](#hub-environment-presentation)) — **later** | No — navigation stays live |
 
 ### Guild vs Navigator Office
 
@@ -53,7 +53,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 
 | Topic | Decision |
 |-------|----------|
-| **When focus → pan ships** | **Post-MVP1** — MVP1 hub is menus + services; camera pan is the first hub presentation pass after MVP1 |
+| **When focus → pan ships** | **Later** — (launch) hub is menus + services; camera pan is the first hub presentation pass after (launch) |
 | **Town layout** | **One environment** from the first hub visit (S1 Act 2) — same guild-town scene throughout; services unlock via menu, not by swapping hub maps |
 | **Layout** | **Full-screen** 3D backdrop with **UI Toolkit overlay** on top (not split-pane) |
 | **Sub-menus** | **No camera pans** inside service screens (shop tabs, guild skill tree, hospital actions, etc.) — panning applies only to the **root hub menu** |
@@ -62,7 +62,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 | **Locked / unavailable root rows** | **No pan** — focus on a greyed-out service does not move the camera (avoids teasing buildings the player cannot use yet) |
 | **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth  plaza camera pose |
 | **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
-| **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than MVP1** (author with post-MVP1 hub presentation or polish pass) |
+| **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than (launch)** (author with later hub presentation or polish pass) |
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
 | **Camera stack** | **Cinemachine 3** virtual cameras + session `CinemachineBrain` — **not** DOTween on a manual camera rig ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)) |
 
@@ -79,9 +79,9 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 | **After settle** | One smooth lerp to that row’s anchor (cancel any in-flight pan from a *previous* settled target if focus moved again after debounce fired) |
 | **Rejected** | **Interruptible chase** (immediate retarget on every focus change) — too busy when flicking Shop → Hospital |
 
-Tune duration post-MVP1 if keyboard taps feel laggy or fast gamepad flicks never show a building.
+Tune duration later if keyboard taps feel laggy or fast gamepad flicks never show a building.
 
-### Menu focus → camera pan (post-MVP1)
+### Menu focus → camera pan (later)
 
 | Input | Behavior |
 |-------|----------|
@@ -107,8 +107,8 @@ Each hub menu entry maps to an **authored camera pose** (and optional look-at) a
 | **Inn / Camp desk** | Inn or camp desk exterior |
 | **Quest counter** | Notice board / guild quest hall wing |
 | **Enter Stratum** *N* (any *N*) | **One shared** labyrinth gate plaza — same anchor for every stratum entry row |
-| **Side expedition** (MVP3) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
-| **Synthesis** (MVP2) | Workshop / forge annex |
+| **Side expedition** (optional) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
+| **Synthesis** (optional) | Workshop / forge annex |
 
 Anchors are **authored `CinemachineCamera` poses** in the hub town scene (one per root slot + optional establishing wide shot), mapped to `HubRootMenuSlot` in presenter data so layout artists tune framing in Inspector without code changes ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)).
 
@@ -136,11 +136,11 @@ Pattern parallels **floor transition** ([ADR 032](../../decisions/032-floor-tran
 
 | Phase | Hub backdrop & camera |
 |-------|------------------------|
-| **MVP1** | Menu tree + services (required). **Same** guild-town environment art/layout from first hub visit is fine to author early; **static** or simple backdrop OK if pan is not wired yet. **No** focus → pan |
-| **Post-MVP1** | Wire **root-menu focus → pan**; full-screen 3D + UI overlay; anchors per service table above |
+| **Launch** | Menu tree + services (required). **Same** guild-town environment art/layout from first hub visit is fine to author early; **static** or simple backdrop OK if pan is not wired yet. **No** focus → pan |
+| **Later** | Wire **root-menu focus → pan**; full-screen 3D + UI overlay; anchors per service table above |
 | **Defer** | Polished building pass; **light ambient** scene life (NPC idle, VFX); avatar walk-up; sub-menu camera moves; hub **looping ambience** (likely cut) |
 
-**Acceptance (post-MVP1, when pan is wired):** scrolling the **root** list from **Shop** to **Hospital** reframes the environment to each building; opening shop/hospital sub-menus does **not** move the camera again.
+**Acceptance (later, when pan is wired):** scrolling the **root** list from **Shop** to **Hospital** reframes the environment to each building; opening shop/hospital sub-menus does **not** move the camera again.
 
 ## Macro loop (EO-aligned)
 
@@ -150,7 +150,7 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
     → Explore (auto-map) → Fight (random + FOE) → Gather loot
     → Retreat via first-floor stairs up (gate) or Return thread when low
     → Hospital + shop + guild + Navigator Office → Repeat
-    → (MVP3) Side expedition — optional non-strata maps; exit → hub only ([side dungeons](side-dungeons.md))
+    → (optional) Side expedition — optional non-strata maps; exit → hub only ([side dungeons](side-dungeons.md))
 ```
 
 **New game exception:** Stratum 1 starts with **Act 1 on `s1_B1F`** (movement, no hub yet) — see [S1 campaign intro](../03-content/campaign/s1-intro.md).
@@ -166,11 +166,11 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
-- Example: Stratum 1 "Fallen District" — floors B1F–B5F (MVP1: B1F–B3F + boss on B3F).
+- Example: Stratum 1 "Fallen District" — floors B1F–B5F (launch): B1F–B3F + boss on B3F).
 - **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F gate; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
 - **First-floor gate `stairsUp`:** → **hub** only (all strata).
 
-## Quests (optional MVP1)
+## Quests (optional (launch))
 
 | Type | Objective | Example reward |
 |------|-----------|----------------|
@@ -189,15 +189,15 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 | Destination | Hub action | Entry API (draft) |
 |-------------|------------|-------------------|
 | **Stratum** labyrinth | **Enter Stratum** *N* | `LeaveHub(stratumId, floorId)` |
-| **Side dungeon** (MVP3) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
+| **Side dungeon** (optional) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
 
 Strata: warp-gate unlock + beginning-only hub entry (S2+); S1 gate entry. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).
 
 ## Related docs
 
-- [Side dungeons (MVP3)](side-dungeons.md)
+- [Side dungeons (optional)](side-dungeons.md)
 - [Release scope](../00-release-scope.md)
-- [Gathering & fishing (MVP2)](gathering-and-fishing.md)
+- [Gathering & fishing (optional)](gathering-and-fishing.md)
 - [01 — Core loop](../01-core-loop.md)
 - [Character progression](character-progression.md)
 - [Navigator](navigator.md)

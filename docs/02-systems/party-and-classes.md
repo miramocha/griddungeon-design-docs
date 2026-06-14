@@ -15,7 +15,7 @@
 
 Exploration uses **core 6 only** as one grid anchor. Navigator and aux are **not** on the grid blob. Aux exists **in combat UI only**.
 
-Bench: recruit additional characters at guild; swap only at hub (MVP1).
+Bench: recruit additional characters at guild; swap only at hub (launch).
 
 ## Class roster (modern guild)
 
@@ -33,11 +33,11 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 | **Saboteur** | `saboteur` | Front | Control | Bind, bonus vs disabled targets | Dark Hunter |
 | **Overdriver** | `overdriver` | Front | Glass cannon | Charge attacks, self-buff surges | Ronin |
 
-**MVP1 roster:** Vanguard, Breaker, Medic, **Summoner**, Marksman, Tactician (six core slots).
+**(launch) roster:** Vanguard, Breaker, Medic, **Summoner**, Marksman, Tactician (six core slots).
 
-**Post-MVP1 unlock:** Elementalist, Saboteur, Overdriver.
+**Later unlock:** Elementalist, Saboteur, Overdriver.
 
-**Note:** MVP1 has no **Elementalist** — fire/ice/volt specialist joins later; Summoner covers weak ranged bolts + summons only.
+**Note:** (launch) has no **Elementalist** — fire/ice/volt specialist joins later; Summoner covers weak ranged bolts + summons only.
 
 ## Summon skills — Summoner only
 
@@ -50,13 +50,13 @@ Expedition-guild roles — readable job titles, not medieval fantasy. **Code IDs
 | **Marksman traps** | Separate system — not aux slot allies |
 | **Items / bosses** | Rare exceptions; not on core class trees |
 
-**MVP1:** one scout deploy — `deploy_scout_drone` → `scout_drone` (aux back, 3 rounds, **player-controlled** Attack/Guard/`volt_burst`). Full six-class kits: [MVP1 class skills](../03-content/class-skills.md).
+**Launch:** one scout deploy — `deploy_scout_drone` → `scout_drone` (aux back, 3 rounds, **player-controlled** Attack/Guard/`volt_burst`). Full six-class kits: [launch class skills](../03-content/class-skills.md).
 
 **Party build:** Up to **two** deploys if both aux rows filled and Summoner has the skills.
 
 ## Navigator
 
-See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (MVP1).
+See [navigator.md](navigator.md). Swappable party lead; executes [Protocol](synchro-protocol.md) skills; grants auras to core six. **Unlocked** through progression; assigned at **Navigator Office** (launch).
 
 ## Protocol skills (Synchro)
 
@@ -68,9 +68,9 @@ Coordinated team skills via [Synchro Charge](synchro-protocol.md); **Navigator e
 - **Skill points** on level up; allocate on class trees per [ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md) — hub Guild or labyrinth party menu when safe.
 - Skills cost **levels** in prerequisites; some grant passives.
 - Summon skills target **aux front** or **aux back** per definition.
-- No multiclass in MVP1.
+- No multiclass at launch.
 
-**MVP1 kits:** 3 skills per core class (IDs, targeting, Fixed presentation) — [MVP1 class skills](../03-content/class-skills.md).
+**(launch) kits:** 3 skills per core class (IDs, targeting, Fixed presentation) — [launch class skills](../03-content/class-skills.md).
 
 See [character progression](character-progression.md).
 
@@ -83,7 +83,7 @@ See [character progression](character-progression.md).
 ## Guild recruitment
 
 - Create custom characters or use **premade** guild roster (EO gimmick optional).
-- Class unlocked as player progresses stratum (MVP1: all **six MVP1 classes** available day one; Elementalist / Saboteur / Overdriver later).
+- Class unlocked as player progresses stratum (launch): all **six (launch) classes** available day one; Elementalist / Saboteur / Overdriver later).
 
 ## Death
 

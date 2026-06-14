@@ -1,6 +1,6 @@
 ﻿# Character Progression
 
-## Stats (MVP1)
+## Stats (launch)
 
 | Stat | Affects |
 |------|---------|
@@ -35,14 +35,14 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 **Allowed:** **Hub** (Explorers Guild) and **Exploration** (e.g. `Tab` party menu, exploration pause overlay) — same tree UI and rules in both places. Level-ups during a fight apply **after** the battle ends; the player may spend new points on the next safe screen without returning to hub.
 
-**UI entry points (MVP1):**
+**UI entry points (launch):**
 
 | Location | How |
 |----------|-----|
 | Hub | Explorers Guild → skill tree per roster member |
 | Labyrinth | Party / pause menu → **Skills** (when not blocked above) |
 
-- Respec: expensive NPC service or none in MVP1.
+- Respec: expensive NPC service or none at launch.
 
 ## Equipment
 
@@ -52,17 +52,17 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 |------|-------|
 | Weapon | Class restrictions via `weaponType` + optional `allowedClassIds` on `EquipmentDefinition` ([05 — Class design](../05-class-design.md)) |
 | Head / Body / Legs | Armor slots (EO three-piece + weapon) |
-| Accessory | **1 slot** in MVP1 |
+| Accessory | **1 slot** at launch |
 
-### MVP1 equipment (locked)
+### launch equipment (locked)
 
-Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([release scope](00-release-scope.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked).
+Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([release scope](00-release-scope.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § content IDs](../05-class-design.md#content-ids-locked).
 
 **Display names** use municipal-underworks flavor (contract crew gear); **`equipId` strings stay locked** for saves and ContentDatabase.
 
 **Stat bonuses** add to `CharacterBaseStats` on equip (`Hp`, `Mp`, `Str`, `Tec`, `Agi`, `Vit`, `Luc`). **Resist bonuses** use the `StatusResistBonuses` fields on `EquipmentDefinition` (0 = none). **Shop buy** prices are tuning stubs ([release scope § Tuning](../00-release-scope.md#tuning-locked-structure)); sell ≈ **50%** of buy unless noted in data.
 
-| `equipId` | Slot | Display name | `weaponType` | `allowedClassIds` | Stat bonus | Resist bonus | Shop buy | MVP1 source |
+| `equipId` | Slot | Display name | `weaponType` | `allowedClassIds` | Stat bonus | Resist bonus | Shop buy | Launch source |
 |-----------|------|--------------|--------------|---------------------|------------|--------------|----------|-------------|
 | `guild_shortsword` | Weapon | Contract Cutter | `sword` | *(empty — any core class)* | +2 STR, +1 AGI | — | 150 | Shop (day one) |
 | `leather_coif` | Head | Works Hardhat | — | *(empty)* | +2 VIT, +5 HP | — | 60 | Shop (day one) |
@@ -70,20 +70,20 @@ Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 a
 | `leather_boots` | Legs | Channel Waders | — | *(empty)* | +2 VIT, +1 AGI | — | 80 | Shop (day one) |
 | `scout_charm` | Accessory | Utility Charm | — | *(empty)* | +2 LUC | Poison +5% | 100 | Shop (day one); optional B1F chest loot |
 
-**Shop stock (MVP1):** all five rows above in `ShopService` day-one inventory (identified on purchase). No synthesis recipes in MVP1.
+**Shop stock (launch):** all five rows above in `ShopService` day-one inventory (identified on purchase). No synthesis recipes at launch.
 
-**Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only for MVP1.
+**Loot (optional):** `scout_charm` may drop from the B1F tutorial chest (`C` on [s1_B1F](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)) as **unidentified** until shop identify — same `equipId`, `startsIdentified: false` on the inventory instance. Other pieces are shop-only at launch.
 
 **Implementation:** `EquipmentDefinition` ScriptableObjects under `Assets/Content/Equipment/`; lookup via `ContentDatabase.GetEquipment(equipId)` ([05 — Class design](../05-class-design.md)). Runtime flow: [items & inventory](items-and-inventory.md).
 
 ## Identify & codex
 
-- **Unknown equipment** in labyrinth; identify at shop ([items & inventory § identify](items-and-inventory.md#equipment-instances--identify)) or with skill (post-MVP1).
+- **Unknown equipment** in labyrinth; identify at shop ([items & inventory § identify](items-and-inventory.md#equipment-instances--identify)) or with skill (later).
 - **Monstrous Codex** (bestiary): weaknesses fill in as you kill/analyze — EO knowledge metagame.
 
 ## Synthesis (EO crafting)
 
-**MVP2** hub feature ([release scope](../00-release-scope.md)); materials from [gathering & fishing](gathering-and-fishing.md):
+**Optional** hub feature ([release scope](../00-release-scope.md)); materials from [gathering & fishing](gathering-and-fishing.md):
 
 - Combine monster drops + shop materials → weapons/armor
 - Recipe list unlocks via quests and experimentation

@@ -6,7 +6,7 @@
 
 ## Context
 
-MVP1 team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). We want a high-tech / JRPG label that fits the **Navigator** commander fantasy.
+(launch) team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). We want a high-tech / JRPG label that fits the **Navigator** commander fantasy.
 
 ## Shortlist (evaluated)
 
@@ -28,8 +28,8 @@ MVP1 team burst uses a shared 0–100% bar and Navigator-executed skills ([synch
 | **UI meter label** | **Synchro** (short; not “Synchro Charge” on the HUD) |
 | **Content ID prefix** | `protocol_` |
 | **C# module folder / root type** | `Protocol` (`ProtocolSystem`, `ProtocolResolver`, …) |
-| **C# / save field names** | **`SynchroBar`**, **`SynchroBarDelta`** — **no rename** to `SynchroCharge` in MVP1; maps to Synchro Charge in docs ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md)) |
-| **MVP1 skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
+| **C# / save field names** | **`SynchroBar`**, **`SynchroBarDelta`** — **no rename** to `SynchroCharge` at launch; maps to Synchro Charge in docs ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md)) |
+| **(launch) skill IDs** | `protocol_strike`, `protocol_mend` (was `union_strike`, `union_mend`) |
 
 Presentation:
 
@@ -55,4 +55,4 @@ Presentation:
 
 - [Synchro Protocol system](../docs/02-systems/synchro-protocol.md)
 - [Navigator](007-navigator-role.md)
-- [mvp1-spec §4](../docs/archive/mvp1-spec.md#4-mvp1-navigator--synchro-protocol)
+- [synchro-protocol § Launch content](../docs/02-systems/synchro-protocol.md#launch-scope)

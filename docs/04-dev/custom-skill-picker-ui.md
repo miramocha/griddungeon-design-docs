@@ -60,7 +60,7 @@ Path: `Assets/Scripts/UI/Views/ITabbedRowPickerKeyboardView.cs`
 
 Replaces the deleted per-picker interfaces `ICombatSkillPickerKeyboardView` and `ICombatItemPickerKeyboardView` ([#232](https://github.com/miramocha/griddungeon-game/issues/232)). Implement on the same class as the view (or a wrapper). `CombatInputHandler` calls these only while `ICombatSkillPickerHost.IsOpen`:
 
-| Method | MVP1 input |
+| Method | (launch) input |
 |--------|------------|
 | `MoveRowFocusNext` / `MoveRowFocusPrevious` | Arrows / WASD (`MenuNavigate`) |
 | `ConfirmFocused` | Z / Enter (`MenuConfirm`) |
@@ -188,7 +188,7 @@ Built only by `SkillPickerCatalog` in Core. Read-only at the view boundary.
 
 Copy authority: [mvp1-class-skills](../03-content/class-skills.md) (`descriptionEn` on assets). Descriptions are **authored** — the catalog copies `DescriptionEn` from `SkillData`; it does **not** build description text from stats.
 
-Tab rules (MVP1):
+Tab rules (launch):
 
 - **All** tab always present (may have 0 rows).
 - Type tabs (`physical`, `elemental`, `heal`, …) only when that type has ≥1 row in this pick.
@@ -229,7 +229,7 @@ ADR 035 reserves `FieldSkillPickerHost` + Field UI scope for hub/exploration **U
 
 ## Checklist
 
-- [ ] View implements `ISkillUsePickerView` (+ keyboard interface for MVP1 PC binds)
+- [ ] View implements `ISkillUsePickerView` (+ keyboard interface at launch PC binds)
 - [ ] No skill filtering or MP formatting in view — bind `CostLabel` and `DescriptionEn` from the model
 - [ ] Detail panel tracks focused row (`DescriptionEn`); list rows show name + cost (+ disabled reason)
 - [ ] `Selected` only for enabled rows with valid `skillId`

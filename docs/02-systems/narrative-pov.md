@@ -1,6 +1,6 @@
 # Narrative POV — Navigator, blank state
 
-**Status:** Locked (MVP1 S1)  
+**Status:** Locked (launch) S1)  
 **Applies to:** [story events](story-events.md), [guided tutorial](guided-tutorial.md), hub copy, future Navigator unlock scenes  
 **Reference tone:** *Amnesia*-style blank state — the player **is** the active Navigator; they **do not** know their role, past, or full toolkit at new game.
 
@@ -13,7 +13,7 @@
 | **Story VN** | **Navigator** (`navigator:guild_handler` in S1) **+ optional NPCs** who speak **to** the Navigator (see [§ Story VN speakers](#story-vn-speakers)) | The Navigator — **player** lines are first-person **I** / **my**; other characters use their own voice |
 | **Guided tutorial** | **No character speaker** — impersonal system / imperative coach ([guided-tutorial](guided-tutorial.md)) | Same player, but copy does not use Navigator **I** |
 | **Combat log / skills** | System + neutral tags until taught | Navigator directs cores; no core-by-class dialogue |
-| **Hub services** | UI labels + optional Navigator asides (post-MVP1) | Navigator between dives |
+| **Hub services** | UI labels + optional Navigator asides (later) | Navigator between dives |
 
 **Not the player:** a disembodied remote commander, or dialogue tied to a **specific core class / roster slot**. The six **cores** stay **silent** in scripted fiction so any player build works — use **NPC `speakerId`s** (guild staff, topside contact, etc.) when another character must talk **with** the Navigator.
 
@@ -36,7 +36,7 @@ At **new game** the Navigator:
 
 **Avoid in early scenes:** “As your Sortie Lead…”, “I always give +5% Synchro…”, “Remember your Protocol kit”, lore that assumes prior campaigns.
 
-**Reveal pacing (S1 MVP1):**
+**Reveal pacing (S1 (launch)):**
 
 | Beat | Navigator knows (fiction) | Systems unlocked |
 |------|---------------------------|------------------|
@@ -65,13 +65,13 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 
 ### Story VN speakers
 
-| Speaker | MVP1 S1 | Notes |
+| Speaker | (launch) S1 | Notes |
 |---------|---------|--------|
 | **`navigator:guild_handler`** | **Yes** — default voice for player | First person; blank-state safe |
 | **`npc:*`** | **When the beat needs it** | Guild clerk, topside handler, etc. — stable ids, not `core:<characterId>` |
 | **`narrator`** | Rare | Impersonal signage / system voice only |
 | **`core:<id>`** | **No** | Breaks custom party roster |
-| **`foe:*`** | **No** in S1 tutorial | FOE reaction via combat log / VFX, not VN banter (revisit post-MVP1) |
+| **`foe:*`** | **No** in S1 tutorial | FOE reaction via combat log / VFX, not VN banter (revisit later) |
 
 **S1 drafts today:** four tutorial scenes are **Navigator-only** monologue ([story-events index](../03-content/story-events/README.md)); add `npc:*` lines when a beat needs dialogue **with** someone topside or at hub.
 
@@ -87,7 +87,7 @@ Later strata / Navigator unlocks add **memory chips**, office files, and `s2_nav
 2. Check row against **Reveal pacing** table above.
 3. Import to game `Assets/Content/StoryEvents/` when implementation syncs ([#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
-Game copy should match design drafts; re-running **Ensure MVP1 S1 Story Events** overwrites hand edits — prefer updating drafts first, then menu/assets.
+Game copy should match design drafts; re-running **Ensure (launch) S1 Story Events** overwrites hand edits — prefer updating drafts first, then menu/assets.
 
 ---
 

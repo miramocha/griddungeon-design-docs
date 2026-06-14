@@ -9,7 +9,7 @@
 [Loop] Hub → enter stratum at beginning (S1 gate; S2+ warp gate when unlocked) → explore → fight → loot
     → Retreat via first-floor gate stairs up (hub) / return item
     → Hub: heal, save → repeat (skill points anytime outside combat / story / cutscene — hub or labyrinth)
-[MVP3] Hub → Side expedition → non-strata map (sd01, …) → explore → fight → exit stairs → hub
+[optional] Hub → Side expedition → non-strata map (sd01, …) → explore → fight → exit stairs → hub
 ```
 
 See [campaign S1 intro](03-content/campaign/s1-intro.md), [hub](02-systems/hub-and-services.md), and [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked).
@@ -65,9 +65,9 @@ Combat start (identify FOE vs random for loot/XP tuning)
 | **Combat** | Turn UI; exploration frozen |
 | **Map view** | Larger read-only map (pan/zoom) |
 | **Hub menus** | Explorers Guild, Navigator Office, shop, hospital, inn save |
-| **Side expedition** (**MVP3**) | Hub menu → non-strata grid — [side dungeons](02-systems/side-dungeons.md) |
-| **Gather / fish** (**MVP2**) | Minigame at dungeon nodes → materials — [gathering & fishing](02-systems/gathering-and-fishing.md) |
-| **Autopilot** (**MVP2**) | Pathfind to discovered map tile — [autopilot](02-systems/autopilot.md) |
+| **Side expedition** (**Optional**) | Hub menu → non-strata grid — [side dungeons](02-systems/side-dungeons.md) |
+| **Gather / fish** (**Optional**) | Minigame at dungeon nodes → materials — [gathering & fishing](02-systems/gathering-and-fishing.md) |
+| **Autopilot** (**Optional**) | Pathfind to discovered map tile — [autopilot](02-systems/autopilot.md) |
 
 ## Win / lose
 
@@ -77,7 +77,7 @@ Combat start (identify FOE vs random for loot/XP tuning)
 
 ## Related docs
 
-- [Side dungeons (MVP3)](02-systems/side-dungeons.md)
+- [Side dungeons (optional)](02-systems/side-dungeons.md)
 - [Release scope](00-release-scope.md)
 - [Hub & services](02-systems/hub-and-services.md)
 - [Mapping](02-systems/mapping.md)

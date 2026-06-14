@@ -10,7 +10,7 @@
 
 | Property | Value |
 |----------|-------|
-| Logic grid | **1 cell** = one walkable tile in `ExplorationFloor` (indices 0…19 per axis on MVP1 floors) |
+| Logic grid | **1 cell** = one walkable tile in `ExplorationFloor` (indices 0…19 per axis on (launch) floors) |
 | World scale (FPV) | **`10` Unity units** per logic cell on XZ (`ExplorationGridMetrics.WorldUnitsPerCell`); see [floor art FPV](02-systems/floor-art-fpv.md#summary) |
 | Coordinates | `(x, y, level)` + `facing` (N/E/S/W) — `level` is walkable height band in the floor ([ADR 019](../decisions/019-floor-verticality.md)) |
 | Stratum floors | `B1F`, `B2F`, … per stratum (dungeon floor id, not height `level`) |
@@ -30,13 +30,13 @@ Exploration keeps **two layers**: grid state (rules, map, FOEs, encounters) and 
 
 `PartyPose` is a **scene object name** for the pose root, not a separate game type. If `m_poseRoot` is unset, the explorer falls back to its own `Transform`.
 
-**Grid → world (MVP1)**
+**Grid → world (launch)**
 
 | Grid | World (Unity) |
 |------|----------------|
 | `Cell.X` | `position.x` |
 | `Cell.Y` | `position.z` (horizontal plane; grid **y** is not Unity **Y**) |
-| `level` (when [ADR 019](../decisions/019-floor-verticality.md) lands) | Not applied to pose Y in MVP1 — walkable height stays in collision/map data until vertical art ships |
+| `level` (when [ADR 019](../decisions/019-floor-verticality.md) lands) | Not applied to pose Y at launch — walkable height stays in collision/map data until vertical art ships |
 | — | `position.y` = **0** (floor plane) |
 
 Mapping uses **integer cell indices** and a **corner anchor** (south-west corner of the cell on the floor plane) — **no half-cell centering offset**:
@@ -46,7 +46,7 @@ world.x = origin.x + cell.X * WorldUnitsPerCell
 world.z = origin.z + cell.Y * WorldUnitsPerCell
 ```
 
-MVP1 default: `WorldUnitsPerCell = 10`, `origin = (0, 0, 0)` → cell `(3, 4)` is world `(30, 0, 40)`. Movement step distance is **10** units per forward/strafe cell ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md) — Normal **0.32s** `OutQuad` step lerp).
+(launch) default: `WorldUnitsPerCell = 10`, `origin = (0, 0, 0)` → cell `(3, 4)` is world `(30, 0, 40)`. Movement step distance is **10** units per forward/strafe cell ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md) — Normal **0.32s** `OutQuad` step lerp).
 
 **Facing → rotation**
 
@@ -122,7 +122,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 ## Interactables
 
 - Doors, keys, one-way passages
-- Chests (**MVP1**); gather / fish nodes (**MVP2** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
+- Chests (**(launch)**); gather / fish nodes (**optional** minigame → materials — [gathering & fishing](02-systems/gathering-and-fishing.md))
 - **Stairs down (`v`)** — next floor in the **same stratum** (paired `stairsUp` on floor below).
 - **Stairs up (`^`) on first floor of stratum (gate)** — not the same as mid-stratum stairs:
   - → **Hub** only (Exploration → Hub phase; EO “return to camp”).
@@ -140,7 +140,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 - Short step lerp (~0.32s at **Normal** speed) via **DOTween**; logic commits at step start ([ADR 001](../decisions/001-grid-movement.md), [ADR 018](../decisions/018-exploration-animation-speed.md)).
 - **Hold-to-repeat:** holding a displacement key walks one cell per lerp cycle; holding a turn key rotates 90° per turn lerp; no new commit while a step, turn, or bump lerp is in progress ([ADR 001](../decisions/001-grid-movement.md)).
-- **Autopilot (MVP2):** map click → pathfind over **discovered** walkable tiles → auto-walk path; same step events as manual ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md)).
+- **Autopilot (optional):** map click → pathfind over **discovered** walkable tiles → auto-walk path; same step events as manual ([autopilot](02-systems/autopilot.md), [ADR 021](../decisions/021-autopilot-mvp2.md)).
 - Bump feedback when movement blocked — **auto-stamp wall** on that edge ([mapping](02-systems/mapping.md)).
 
 ## Input
@@ -154,6 +154,6 @@ PC defaults: `W/S` forward/back, `Q/E` strafe, `A/D` turn, `Space` interact — 
 - [ADR 001](../decisions/001-grid-movement.md)
 - [ADR 019](../decisions/019-floor-verticality.md)
 - [ADR 003](../decisions/003-foe-step-patrol.md)
-- [Autopilot (MVP2)](02-systems/autopilot.md)
+- [Autopilot (optional)](02-systems/autopilot.md)
 - [ADR 021](../decisions/021-autopilot-mvp2.md)
 - [03 — Dungeons & encounters](03-content/dungeons-and-encounters.md)

@@ -8,7 +8,7 @@
 
 ## Context
 
-Post-MVP1 hub presentation reframes a **full-screen 3D guild-town** when the player focuses rows on the **root** hub menu ([hub environment](../docs/02-systems/hub-and-services.md#hub-environment-presentation)). MVP1 ships menus and services only; this ADR locks **how** pans run when the hub environment epic wires focus → camera.
+Later hub presentation reframes a **full-screen 3D guild-town** when the player focuses rows on the **root** hub menu ([hub environment](../docs/02-systems/hub-and-services.md#hub-environment-presentation)). (launch) ships menus and services only; this ADR locks **how** pans run when the hub environment epic wires focus → camera.
 
 `com.unity.cinemachine` **3.x** is already in the game manifest and used for **floor transition** vignettes ([ADR 032](032-floor-transition-vignette-mvp1.md)). Exploration FPV still uses `ExplorationCameraRig` with the brain **off** during normal play. Hub pans are **ambient, debounced, non-blocking** — not skill cinematics ([ADR 027](027-combat-cinematic-timeline-events.md)) and not floor commits.
 
@@ -73,8 +73,8 @@ HubTown (scene or additive root)
 
 | Phase | Camera |
 |-------|--------|
-| **MVP1** | No focus → pan (unchanged) |
-| **Hub environment POC / post-MVP1** | Cinemachine-backed pans per this ADR |
+| **Launch** | No focus → pan (unchanged) |
+| **Hub environment POC / later** | Cinemachine-backed pans per this ADR |
 | **Defer** | Timeline-driven hub intros; per-sub-menu vcams; combat arena Cinemachine migration |
 
 ## Consequences

@@ -45,11 +45,11 @@ While a story event runs:
 - **`StoryEventRunner`** sets an **input / presentation lock** (same EO-style pattern as combat presentation lock — [04 — Tech notes](../docs/04-tech-notes.md#ui-reactivity)).
 - Underlying sim **paused** (combat AGI queue does not advance; exploration steps blocked).
 
-**Rejected for MVP1:** `GamePhase.Story` as a peer phase — would complicate save/resume, combat state, and `InputRouter` for little gain.
+**Rejected at launch:** `GamePhase.Story` as a peer phase — would complicate save/resume, combat state, and `InputRouter` for little gain.
 
 ### 3. Step model (content schema)
 
-Minimum step kinds for **MVP1 + S1 tutorial**:
+Minimum step kinds for **(launch) + S1 tutorial**:
 
 | Step kind | Purpose |
 |-----------|---------|
@@ -58,7 +58,7 @@ Minimum step kinds for **MVP1 + S1 tutorial**:
 | `choice` | 1–N branches → jump to step index or nested `branchId` |
 | `effect` | Side effect only (no line) — see §4 |
 
-**Post-MVP1 (optional):** `bg`, `music`, `shake`, `illustration` full-screen still.
+**Later (optional):** `bg`, `music`, `shake`, `illustration` full-screen still.
 
 Authoring format: **YAML or ScriptableObject** referencing text keys — **TBD** ([Open questions](#open-questions)).
 
@@ -105,15 +105,15 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 
 | Milestone | UI | Notes |
 |-----------|-----|--------|
-| **MVP1 (S1 unlock)** | **Click-through block** — full-screen panel, text, click or **Z** to advance/dismiss each step | No portraits required yet; same `StoryEventRunner` step pipeline |
+| **(launch) (S1 unlock)** | **Click-through block** — full-screen panel, text, click or **Z** to advance/dismiss each step | No portraits required yet; same `StoryEventRunner` step pipeline |
 | **Next** | Full VN layout (`StoryEvent.uxml`): portraits, name plate, line advance | Portrait **emotion** swaps supported in schema; **low art priority** |
-| **Later** | Skip, auto-advance, back — **VN controls deferred** | No skip on tutorial in MVP1 |
+| **Later** | Skip, auto-advance, back — **VN controls deferred** | No skip on tutorial at launch |
 
 | Element | Rule |
 |---------|------|
 | **Background (combat)** | **Arena / battle view stays visible**; combat chrome may **retract** — which panels TBD ([open questions](#open-questions)) |
-| **Advance** | **Z** (combat confirm) **or mouse click** on panel — no separate Story map in MVP1 |
-| **Skip** | **Disabled** for MVP1 tutorial |
+| **Advance** | **Z** (combat confirm) **or mouse click** on panel — no separate Story map at launch |
+| **Skip** | **Disabled** at launch tutorial |
 | **Act 1 B1F** | **One** Event-cell story scene before first hub (`s1_b1f_gate_briefing`); other beats = [ADR 029](029-guided-tutorial.md) guided pages + codex |
 
 Exploration/hub: use same overlay pattern when content exists; Act 1 + B2F tutorial can land in either order — **implementation order deferred**.
@@ -144,11 +144,11 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | Runner + click-through view; **`s1_b1f_gate_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
-| **MVP1 schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
-| **MVP1 content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
+| **Launch** | Runner + click-through view; **`s1_b1f_gate_briefing`** (Act 1 Event → first hub) + **`s1_b2f_stalker_briefing`** (B2F Event → tutorial fight) + **`s1_synchro_protocol_unlock`** + **`s1_tutorial_hub_return`**; crisis AOE + guided Protocol + hub warp; **Z** or click advance |
+| **(launch) schema** | `line` + `effect` steps; **`choice` / branching deferred** but schema reserves `gotoStep` + flag hooks for later |
+| **(launch) content** | Navigator-only copy; **no VO** (schema may add optional `voClipId` later) |
 | **Deferred** | Authoring format (YAML vs SO); hub/explore content beyond S1 |
-| **Post-MVP1** | Full VN portraits; Act 1 beats; skip/auto; exploration tile events; hub Navigator unlock scenes |
+| **Later** | Full VN portraits; Act 1 beats; skip/auto; exploration tile events; hub Navigator unlock scenes |
 
 **Save / replay:** Inn save at hub only — no mid-fight save. Reloading during tutorial is out of scope; flags gate re-showing scenes.
 
@@ -174,7 +174,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 - **Content:** `Assets/Content/StoryEvents/` + `docs/03-content/story-events/` index.
 - **Runtime:** `StoryEventRunner`, `StoryEventView`; combat tutorial invokes runner instead of ad-hoc modal.
 - **Issues:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) (story runner + S1 content); [#88](https://github.com/miramocha/griddungeon-game/issues/88) (guided coach — handoff from `start_guided_protocol`).
-- **Class design:** Add types to [05 — Class design MVP1](../docs/05-class-design.md) when accepted.
+- **Class design:** Add types to [05 — class design](../docs/05-class-design.md) when accepted.
 
 ## Stakeholder decisions (2026-05-23)
 
@@ -182,8 +182,8 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 |-------|----------|
 | Phase B trigger | **2 core turns** OR **FOE at HP floor** — first wins |
 | Scene timing | After triggering action UI beat completes |
-| MVP1 UI | Click-through full-screen block (text + dismiss); full VN chrome later |
-| Skip | None in MVP1; controls later |
+| (launch) UI | Click-through full-screen block (text + dismiss); full VN chrome later |
+| Skip | None at launch; controls later |
 | Combat backdrop | Arena visible; UI retract **TBD** |
 | Speakers (S1) | Navigator only; no core dialogue (custom party) |
 | Input | **Z** or click |
@@ -191,7 +191,7 @@ Content table: `docs/03-content/story-events/` (new) — index of `storyEventId`
 | #35 split | **Resolved** — [#35](https://github.com/miramocha/griddungeon-game/issues/35) = combat reactive + Synchro HUD only; [#87](https://github.com/miramocha/griddungeon-game/issues/87) = story events |
 | Branching | Deferred; schema should support flag branches later |
 | VO | None planned yet |
-| Localization | **Recommendation:** `textKey` on every line from day one; optional inline `textEn` (or default table) for MVP1 authoring — see [story-events § Localization](../docs/02-systems/story-events.md#localization) |
+| Localization | **Recommendation:** `textKey` on every line from day one; optional inline `textEn` (or default table) at launch authoring — see [story-events § Localization](../docs/02-systems/story-events.md#localization) |
 | Mid-fight save replay | N/A (hub inn only) |
 
 ## Open questions
@@ -203,7 +203,7 @@ Resolve UI retract before **Accepted** (implementation may proceed on [#87](http
 
 ## Related
 
-- [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md) — follow-up; graph UI compiles to step list; does not block MVP1
+- [ADR 030 — Story event graph authoring](030-story-event-graph-authoring.md) — follow-up; graph UI compiles to step list; does not block (launch)
 - [ADR 029 — Guided tutorial (HUD coaching)](029-guided-tutorial.md) — orthogonal; `start_guided_protocol` handoff
 - [Story events (system doc)](../docs/02-systems/story-events.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)

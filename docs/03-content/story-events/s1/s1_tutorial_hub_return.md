@@ -1,6 +1,6 @@
 # Draft — `s1_tutorial_hub_return`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; (launch) = click-through block.
 
 **When:** Immediately after **`protocol_strike`** resolves and FOE is removed (tutorial kill).
 

@@ -1,6 +1,6 @@
-# Gathering & Fishing (MVP2)
+# Gathering & Fishing (optional)
 
-**Scope:** MVP2 — not required for first playable ([release scope](../00-release-scope.md)).
+**Scope:** Optional — [release scope](../00-release-scope.md).
 
 > **Scope: Optional feature** — not required for initial release.
 
@@ -159,7 +159,7 @@ fish_nodes:
 
 ---
 
-## UI & input (MVP2)
+## UI & input (optional)
 
 | Context | Input |
 |---------|--------|
@@ -184,7 +184,7 @@ Combat map not used during minigame.
 
 ## Scope checklist
 
-| Item | MVP1 | MVP2 |
+| Item | Launch | MVP2 |
 |------|-----|------|
 | Placeholder gather tiles on map | Optional stub | Active nodes |
 | Interact → loot | Instant or disabled | Minigame required |

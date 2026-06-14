@@ -75,7 +75,7 @@ Joined FOEs are part of the same encounter; flee from an FOE fight uses the same
 - Flee disabled state: tooltip **“No escape route behind you.”**
 - Optional: show retreat cell highlight on map when Flee hovered (debug/assist mode).
 
-## MVP1 implementation (game)
+## (launch) implementation (game)
 
 | Rule | Owner |
 |------|--------|

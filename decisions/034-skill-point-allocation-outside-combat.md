@@ -1,8 +1,8 @@
 ﻿# ADR 034 — Skill point allocation outside combat
 
-**Status:** Accepted (MVP1)  
+**Status:** Accepted (launch)  
 **Date:** 2026-05-30  
-**Supersedes:** “Hub only” skill spending called out in early MVP1 docs and `GuildService`-only wiring.
+**Supersedes:** “Hub only” skill spending called out in early (launch) docs and `GuildService`-only wiring.
 
 ## Context
 
@@ -14,10 +14,10 @@ Players should be able to **react to a level-up** (or spend banked points) **wit
 
 - **Navigator** kits — unlock + assign at Navigator Office; no skill points ([ADR 007](007-navigator-role.md)).
 - **Summon combat kits** — fixed `skillIds` on `SummonDefinition`, not guild trees ([ADR 016](016-summon-control-mvp1.md)).
-- **Respec** — still expensive NPC or none in MVP1.
+- **Respec** — still expensive NPC or none at launch.
 - **Mid-combat level-up UI** — XP applies after battle; spending waits until a **safe** screen.
 
-## Decision (MVP1)
+## Decision (launch)
 
 1. **Class skill trees** are editable whenever the player is **not** in:
    - **`GamePhase.Combat`** (command planning, AGI playback, battle-end flow until macro phase returns to Exploration or Hub)
@@ -34,7 +34,7 @@ Players should be able to **react to a level-up** (or spend banked points) **wit
 
 5. **Level-up during combat** — grant `+1` skill point in post-battle rewards; player may spend on the **next** safe Hub or Exploration screen without a hub return.
 
-## Rejected for MVP1
+## Rejected at launch
 
 | Option | Why |
 |--------|-----|
@@ -51,7 +51,7 @@ Players should be able to **react to a level-up** (or spend banked points) **wit
 - **`HubServices.TryAllocateSkillPoint`** (game repo) — extend or extract to `PartyProgressionService` (or equivalent) used by Guild **and** exploration menus
 - **Exploration UI** — party menu / pause **Skills** screen (may not exist yet); gate on ADR §1 blockers
 - **Save:** `AllocatedSkillPoints` / `AllocatedSkillIds` unchanged — allocation timing only
-- **MVP1 trees:** still flat 3 nodes per class ([mvp1-class-skills](../docs/03-content/class-skills.md))
+- **(launch) trees:** still flat 3 nodes per class ([mvp1-class-skills](../docs/03-content/class-skills.md))
 
 ## Implementation (game repo)
 
@@ -67,7 +67,7 @@ No mandatory issue number at accept time — file against hub/exploration UI or 
 
 - [Party & classes](../docs/02-systems/party-and-classes.md)
 - [Hub & services](../docs/02-systems/hub-and-services.md)
-- [MVP1 spec](../docs/archive/mvp1-spec.md)
+- [(launch) spec](../docs/00-release-scope.md)
 - [ADR 007 — Navigator role](007-navigator-role.md)
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
 - [ADR 028 — Story visual novel events](028-story-visual-novel-events.md)

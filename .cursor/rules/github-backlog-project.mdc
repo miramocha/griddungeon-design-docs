@@ -20,7 +20,7 @@ The only per-repo difference is **`repoPrefer`** — project identity and column
 
 ## Pull order
 
-Wave labels (`pull-w01` … `pull-w08`) are legacy labels; new work uses `required` / `optional` labels. Scope authority: [docs/00-release-scope.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/00-release-scope.md) (`pullOrderDoc` in JSON). Historical wave table: git history of [docs/archive/mvp1-spec.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-spec.md).
+Wave labels (`pull-w01` … `pull-w08`) are legacy labels; new work uses `required` / `optional` labels. Scope authority: [docs/00-release-scope.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/00-release-scope.md) (`pullOrderDoc` in JSON). Historical wave table: git history of [docs/00-release-scope.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/00-release-scope.md).
 
 ## Skill workflow
 

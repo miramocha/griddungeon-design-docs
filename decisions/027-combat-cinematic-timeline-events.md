@@ -4,11 +4,11 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-23  
-**Aligns with:** [ADR 012](012-unity-6-stack.md) (Timeline for combat cinematics), [ADR 015](015-mvp1-combat.md) (MVP1 `Fixed` only), [combat presentation](../docs/02-systems/combat-presentation.md)
+**Aligns with:** [ADR 012](012-unity-6-stack.md) (Timeline for combat cinematics), [ADR 015](015-mvp1-combat.md) (launch) `Fixed` only), [combat presentation](../docs/02-systems/combat-presentation.md)
 
 ## Context
 
-Combat skills use three presentation profiles: `Fixed`, `Cinematic`, and `CinematicQTE` ([combat presentation](../docs/02-systems/combat-presentation.md)). MVP1 ships **`Fixed` only**; cinematics are stubbed ([ADR 015](015-mvp1-combat.md)).
+Combat skills use three presentation profiles: `Fixed`, `Cinematic`, and `CinematicQTE` ([combat presentation](../docs/02-systems/combat-presentation.md)). (launch) ships **`Fixed` only**; cinematics are stubbed ([ADR 015](015-mvp1-combat.md)).
 
 Early doc sketches used **`at_sec`** fields for QTE prompt timing and implied hand-authored **durations** in skill data. That duplicates timing already authored on Timeline clips, drifts when clips are re-timed, and splits the source of truth between content DB and presentation assets.
 
@@ -113,8 +113,8 @@ Confirm skill (Cinematic | CinematicQTE)
 
 | Milestone | Rule |
 |-----------|------|
-| **MVP1** | ADR applies to **stub** / pipeline only; no shipping cinematics ([ADR 015](015-mvp1-combat.md)) |
-| **MVP2** | First `Cinematic` + first `CinematicQTE` **must** use markers + `stopped`; no `at_sec` in locked content |
+| **Launch** | ADR applies to **stub** / pipeline only; no shipping cinematics ([ADR 015](015-mvp1-combat.md)) |
+| **Optional** | First `Cinematic` + first `CinematicQTE` **must** use markers + `stopped`; no `at_sec` in locked content |
 | **Later** | More skills; hold/mouse QTE types per combat presentation |
 
 ### 9. Authoring conventions
@@ -146,9 +146,9 @@ Confirm skill (Cinematic | CinematicQTE)
 ## Related
 
 - [ADR 012 — Unity 6 stack](012-unity-6-stack.md)
-- [ADR 015 — MVP1 combat](015-mvp1-combat.md)
+- [ADR 015 — (launch) combat](015-mvp1-combat.md)
 - [ADR 018 — Exploration animation speed](018-exploration-animation-speed.md) (orthogonal — exploration presets only)
 - [Combat presentation](../docs/02-systems/combat-presentation.md)
 - [04 — Tech notes § Animation](../docs/04-tech-notes.md#animation-dotween--timeline)
-- [05 — Class design MVP1 § Skills](../docs/05-class-design.md#skills)
+- [05 — class design § Skills](../docs/05-class-design.md#skills)
 - [Input bindings — cinematic QTE](../docs/02-systems/input-bindings.md#cinematic-qte)

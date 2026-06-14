@@ -1,7 +1,7 @@
-﻿# MVP1 class skills (content kit)
+﻿# launch class skills (content kit)
 
-**Status:** Locked for MVP1 ContentDB ([design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12))  
-**Authority:** Skill IDs and targeting here; implementation types in [05 — Class design MVP1](../05-class-design.md).
+**Status:** Locked at launch ContentDB ([design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12))  
+**Authority:** Skill IDs and targeting here; implementation types in [05 — class design](../05-class-design.md).
 
 ---
 
@@ -10,10 +10,10 @@
 | Rule | Detail |
 |------|--------|
 | **ID format** | `{class_id}_{snake_name}` — stable in `SkillDefinition.skillId` and save data |
-| **Presentation** | **Fixed** for every MVP1 class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
+| **Presentation** | **Fixed** for every (launch) class skill ([combat presentation](../02-systems/combat-presentation.md), [ADR 015](../../decisions/015-mvp1-combat.md)) |
 | **Deploy** | **Summoner only** — `deploy_scout_drone` per [ADR 016](../../decisions/016-summon-control-mvp1.md); targets **aux back** |
 | **Summon turns** | **Player-controlled** — minimal kit on `SummonDefinition` ([summons & guests](../02-systems/summons-and-guests.md)) |
-| **Tree (MVP1)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
+| **Tree (launch)** | Flat **3 nodes** per class — no prerequisite chain; 1 skill point per node when allowed ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md)) |
 | **Use picker tabs** | **All** (default) + one tab per non-empty `SkillType` ([ADR 035](../../decisions/035-skill-use-picker.md)); **Type** column below = `SkillType` |
 | **Numbers** | `mpCost`, `powerByRank[]`, inflict `%` — **tuning** in data; structure locked |
 | **Descriptions** | `descriptionEn` on every `SkillDefinition` — **mechanical summary only**, no exact MP/power/% in prose ([game #149](https://github.com/miramocha/griddungeon-game/issues/149)) |
@@ -77,15 +77,15 @@
 | Node | `skill_id` | Role in kit |
 |------|------------|-------------|
 | 1 | `medic_heal` | Primary HP restore |
-| 2 | `medic_purify` | Cleanse MVP1 ailments ([status subset](../02-systems/combat-status-and-buffs.md)) |
+| 2 | `medic_purify` | Cleanse (launch) ailments ([status subset](../02-systems/combat-status-and-buffs.md)) |
 | 3 | `medic_revive` | Post-fight recovery enabler (downed → fighting) |
 
 ### Summoner (`summoner`)
 
 | Node | `skill_id` | Role in kit |
 |------|------------|-------------|
-| 1 | `summoner_volt_bolt` | Personal ranged volt (no Elementalist in MVP1) |
-| 2 | `deploy_scout_drone` | **Only** MVP1 aux deploy — aux **back**, `scout_drone` |
+| 1 | `summoner_volt_bolt` | Personal ranged volt (no Elementalist at launch) |
+| 2 | `deploy_scout_drone` | **Only** (launch) aux deploy — aux **back**, `scout_drone` |
 | 3 | `summoner_focus` | Self buff before deploy / bolt spam |
 
 **Deploy skill data:**
@@ -99,7 +99,7 @@ summon_definition_id: scout_drone
 # Occupied aux back: fail cast, no MP spent
 ```
 
-**Deploy vs traps:** Only Summoner has aux deploy skills in MVP1. Future Marksman **floor traps** are a separate exploration system — not aux-slot allies ([party & classes](../02-systems/party-and-classes.md#summon-skills--summoner-only)).
+**Deploy vs traps:** Only Summoner has aux deploy skills at launch. Future Marksman **floor traps** are a separate exploration system — not aux-slot allies ([party & classes](../02-systems/party-and-classes.md#summon-skills--summoner-only)).
 
 ### Marksman (`marksman`)
 
@@ -158,6 +158,6 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 - [Party & classes](../02-systems/party-and-classes.md) — roster, deploy rules
 - [Summons & guests](../02-systems/summons-and-guests.md) — aux slots, `scout_drone` kit
 - [Combat](../02-systems/combat.md) — damage pipeline, targeting, row collapse
-- [05 — Class design MVP1 § MVP1 content IDs](../05-class-design.md#mvp1-content-ids-locked)
-- [MVP1 spec](../archive/mvp1-spec.md) — checklist row
+- [05 — class design § content IDs](../05-class-design.md#content-ids-locked)
+- [release scope](../00-release-scope.md) — checklist row
 - [ADR 016](../../decisions/016-summon-control-mvp1.md) — summon player control

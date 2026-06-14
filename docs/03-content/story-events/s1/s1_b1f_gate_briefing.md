@@ -1,6 +1,6 @@
 # Draft — `s1_b1f_gate_briefing`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b1f_gate_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; MVP1 = click-through block.
+**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b1f_gate_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; (launch) = click-through block.
 
 **When:** **Exploration Act 1** — Navigator enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (gate camp threshold), **solo**, **before** first **hub** via gate `^` `(10, 11)`.
 

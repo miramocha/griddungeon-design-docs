@@ -15,7 +15,7 @@ Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-move
 3. **What scales:** Visual lerp durations only — **step move**, **turn rotate**, and **bump nudge** (both segments). Does **not** change when grid logic commits, FOE step patrol, or random encounter rolls.
 4. **Hold-to-repeat:** Unchanged ([ADR 001](001-grid-movement.md)); a faster preset shortens time between repeated steps while holding a key, not game-time step rules.
 5. **Persistence:** `PlayerPrefs` (or future settings save) when the settings UI ships; until then, runtime uses **Normal**.
-6. **UI (future):** Pause → Settings → Gameplay or Accessibility dropdown; not required for MVP1 code. Exploration pause: **Resume** / **Quit to title** only — no hub return ([ADR 014](014-mvp1-exploration-map.md) §7).
+6. **UI (future):** Pause → Settings → Gameplay or Accessibility dropdown; not required at launch code. Exploration pause: **Resume** / **Quit to title** only — no hub return ([ADR 014](014-mvp1-exploration-map.md) §7).
 
 ### Locked durations
 
@@ -36,7 +36,7 @@ Bump animation total = 2 × bump segment. Turn lerp ≈ 81% of Normal step lerp 
 | **Turn** | `OutQuad` | Unchanged |
 | **Bump out / in** | `OutQuad` / `InQuad` | Unchanged |
 
-**Amendment (2026-05-26):** MVP1 exploration world scale is **10 Unity units per logic cell** (`ExplorationGridMetrics.WorldUnitsPerCell`). Normal **step** duration increases **0.28 s → 0.32 s** so perceived walk pace stays similar; step tween uses **OutQuad** instead of linear. Other presets’ step durations scale by the same ratio (~8/7); turn/bump timings unchanged until `ExplorationAnimationDurations` ships in Core.
+**Amendment (2026-05-26):** (launch) exploration world scale is **10 Unity units per logic cell** (`ExplorationGridMetrics.WorldUnitsPerCell`). Normal **step** duration increases **0.28 s → 0.32 s** so perceived walk pace stays similar; step tween uses **OutQuad** instead of linear. Other presets’ step durations scale by the same ratio (~8/7); turn/bump timings unchanged until `ExplorationAnimationDurations` ships in Core.
 
 ## Rejected
 
@@ -50,11 +50,11 @@ Bump animation total = 2 × bump segment. Turn lerp ≈ 81% of Normal step lerp 
 
 - **Core:** `ExplorationAnimationSpeed` enum + `ExplorationAnimationDurations.Get(speed)` (pure C#, unit-testable).
 - **Runtime:** `DungeonExplorer` reads preset durations on enable and when the setting changes; mid-lerp: finish current tween, apply new durations on the next action.
-- **UI:** Settings dropdown writes prefs (post-MVP1).
+- **UI:** Settings dropdown writes prefs (later).
 
 ## Related
 
 - [ADR 001 — Grid movement](001-grid-movement.md)
 - [02 — Dungeon navigation](../docs/02-dungeon-navigation.md)
 - [Input bindings](../docs/02-systems/input-bindings.md)
-- [05 — Class design MVP1](../docs/05-class-design.md#exploration)
+- [05 — class design](../docs/05-class-design.md#exploration)

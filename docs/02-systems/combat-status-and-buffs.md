@@ -30,14 +30,14 @@ Order at **end of combat round** (after last AGI turn):
 
 ```
 1. Regen / MP regen (buffs) — heal before DoT for readability
-2. Poison / Burn DoT — HP loss; **can reduce to 0** (MVP1: Poison only; Burn MVP2)
+2. Poison / Burn DoT — HP loss; **can reduce to 0** (launch): Poison only; Burn MVP2)
 3. Decrement durations on all buffs, debuffs, ailments
 4. Remove expired instances
 5. FOE patrol / mid-battle join (if enabled)
 6. Rebuild AGI queue for next round
 ```
 
-**Between fights:** most combat statuses **clear** on battle end. **Persistent** ailments (curse, rare story flags) are content-tagged — default **none** for MVP1.
+**Between fights:** most combat statuses **clear** on battle end. **Persistent** ailments (curse, rare story flags) are content-tagged — default **none** at launch.
 
 **Hub hospital:** clears **all standard ailments** and restores HP/MP; does not remove permanent story debuffs if any exist later.
 
@@ -89,7 +89,7 @@ Binds **disable skill categories** tied to body parts — not basic **Attack** u
 | `poison` | Poison | **Max HP %** loss (e.g. 5%) | Turns | Refresh duration if re-applied |
 | `burn` | Burn | **Fixed fire damage** + optional `-FireRes` | Turns | Separate from Poison |
 
-**DoT slot:** Poison and Burn can coexist. Re-applying same DoT **refreshes** duration; does not stack damage tiers in MVP1.
+**DoT slot:** Poison and Burn can coexist. Re-applying same DoT **refreshes** duration; does not stack damage tiers at launch.
 
 ### Death
 
@@ -105,7 +105,7 @@ Death is a **state**, not a cleansable ailment. Guests/summons leave combat on K
 
 EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 
-### Party & enemy stats (MVP1)
+### Party & enemy stats (launch)
 
 | ID | Name | Effect (example tuning) | Duration |
 |----|------|-------------------------|----------|
@@ -122,16 +122,16 @@ EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 
 **Stacking rule (same ID):** if target already has `offense_up`, reapply → **refresh duration**, do not add a second stack. Different IDs (Offense Up + Defense Up) **stack**.
 
-**Up + Down on same axis:** net to **neutral** (cancel) or stronger magnitude wins — **MVP1: cancel to neutral** when opposite applied.
+**Up + Down on same axis:** net to **neutral** (cancel) or stronger magnitude wins — **(launch): cancel to neutral** when opposite applied.
 
-### Elemental resistance mods (MVP2)
+### Elemental resistance mods (optional)
 
 | ID | Example |
 |----|---------|
 | `fire_res_up` / `fire_res_down` | ±25% fire damage taken |
 | `ice_res_up`, `volt_res_up`, … | Per element |
 
-MVP1 combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
+(launch) combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
 
 ---
 
@@ -187,7 +187,7 @@ Resist reduces **inflict chance**, not damage (unless a debuff specifically says
 | **Targeting** | Sleep/Paralysis: target still **valid** but skips turn; dead excluded |
 | **FOE mid-battle join** | Joining enemy enters with **no** party debuffs; can be buffed by enemy skills same round |
 | **Flee** | Allowed unless Panic randomizes away; binds do not block Flee |
-| **Codex** | Weakness icons separate; status resist not required for MVP1 codex |
+| **Codex** | Weakness icons separate; status resist not required at launch codex |
 
 ---
 
@@ -237,9 +237,9 @@ Skills reference `inflictStatusId`, `chance`, `durationOverride`. Skills tag `bo
 
 ---
 
-## MVP1 vs later
+## Launch vs later
 
-| MVP1 | Later |
+| Launch | Later |
 |-----|-------|
 | Poison, Sleep, Panic, Head/Arm Bind | Leg bind, Paralysis |
 | Offense/Defense Up & Down | Elemental res up/down |

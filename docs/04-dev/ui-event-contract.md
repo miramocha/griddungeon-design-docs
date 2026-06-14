@@ -23,7 +23,7 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 | Combat **motion** (flash, lerp, block?) | [combat § UI motion](../02-systems/combat.md#ui-motion--feedback) | Event names only |
 | Macro phase transitions, Enter/Exit | [game phase](../02-systems/game-phase.md) | `PhaseChanged` summary |
 | UVS / Timeline bridges, scripted walk | [UVS phase presentation](../02-systems/uvs-phase-presentation.md) | Same events, UVS examples |
-| Type sketches (target vs shipped) | [05 — Class design MVP1](../05-class-design.md) | Prefer link over copying events |
+| Type sketches (target vs shipped) | [05 — class design](../05-class-design.md) | Prefer link over copying events |
 | Short tech index | [04 — Tech notes](../04-tech-notes.md) | One-line pointer |
 
 ---
@@ -34,7 +34,7 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 |-------|---------------------|
 | **Core** | Read models (`Combatant`, `BattleState`, sim results). **No events, no UI.** |
 | **Runtime** | **Subscribe** to `public event` on controllers; **call** command/query methods. Owns phase transitions and rules. |
-| **UI** | Your `MonoBehaviour` / presenters: clone UXML, `Q` by name, refresh on events. **No UITK data binding** in MVP1. |
+| **UI** | Your `MonoBehaviour` / presenters: clone UXML, `Q` by name, refresh on events. **No UITK data binding** at launch. |
 
 Runtime **never** calls into your UI. You pull from `GameState` references (serialized on bootstrap or `FindAnyObjectByType` in dev only).
 
@@ -274,7 +274,7 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 
 ---
 
-## Not wired (MVP1)
+## Not wired (launch)
 
 | Surface | Notes |
 |---------|--------|
@@ -290,4 +290,4 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 |------|------|
 | 2026-05-30 | Cross-links to [custom party UI](custom-party-ui.md); doc map + shipped entry points |
 | 2026-05-30 | mvp1-spec [#138](https://github.com/miramocha/griddungeon-game/issues/138) combat picker shipped; tech-notes party roster fix |
-| 2026-05-25 | Initial integrator contract (MVP1 shipped events); doc dedup pass |
+| 2026-05-25 | Initial integrator contract (launch) shipped events); doc dedup pass |

@@ -37,7 +37,7 @@ Party takes 3 displacement steps (any mix of forward/back/strafe) → stalker mo
 | Real-time patrol timer | Desyncs from grid logic; unfair if player opens map/menu; harder to test |
 | Patrol on turn-in-place | Inflates step count without exploration progress |
 
-## MVP1
+## Launch scope
 
 - Implement step counter + patrol resolution in core.
 - **Content:** Stratum 1 can use mostly stationary FOEs; B3F+ uses patrol paths.
@@ -51,7 +51,7 @@ Party takes 3 displacement steps (any mix of forward/back/strafe) → stalker mo
 
 ## Optional later
 
-[ADR 005 — FOE movement during combat](005-foe-combat-patrol.md): while party is in battle, FOEs advance **1 cell per combat round** (not per AGI turn; exploration step patrol paused). Off in MVP1.
+[ADR 005 — FOE movement during combat](005-foe-combat-patrol.md): while party is in battle, FOEs advance **1 cell per combat round** (not per AGI turn; exploration step patrol paused). Off at launch.
 
 ## Related
 

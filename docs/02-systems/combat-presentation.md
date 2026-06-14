@@ -6,7 +6,7 @@ How skills look and feel in battle — camera, animation, VFX, and **cinematic p
 
 **Most spells and skills** use the standard **fixed battle camera**:
 
-- **Three-quarter** fixed angle for the encounter (MVP1 — [ADR 015](../../decisions/015-mvp1-combat.md)).
+- **Three-quarter** fixed angle for the encounter (launch) — [ADR 015](../../decisions/015-mvp1-combat.md)).
 - Camera **does not** cut, orbit, or change angle per cast.
 - Optional **slight zoom** toward the primary enemy target on hit — subtle punch-in via **DOTween**, then ease back to default framing before the next action.
 - No dramatic camera moves; zoom is short and repeatable (tuned per skill or global default).
@@ -49,7 +49,7 @@ Confirm skill → CinematicQTE starts (camera + Timeline)
 
 **Rejected:** Failing QTE cancels the skill or wastes the turn — too punishing in AGI combat.
 
-### Prompt types (MVP2+)
+### Prompt types (optional+)
 
 | Type | Input | Example |
 |------|--------|---------|
@@ -93,11 +93,11 @@ Combat log always records **mechanical outcome** (damage, status) even if visual
 
 Each skill references a **presentation profile**. **Timing** for cinematics is authored on the Timeline ([ADR 027](../../decisions/027-combat-cinematic-timeline-events.md)); skill data holds **profile + asset id + QTE bonus numbers** only.
 
-| Profile | Camera | Animation | QTE | MVP1 |
+| Profile | Camera | Animation | QTE | Launch |
 |---------|--------|-----------|-----|------|
 | `Fixed` (default) | Same angle; optional target zoom | Simple cast + VFX | — | All skills |
 | `Cinematic` | Scripted | Timeline / clip | None | Stub only |
-| `CinematicQTE` | Scripted | Timeline + **markers** | 1–N prompts on Timeline | **MVP2** (1–2 skills) |
+| `CinematicQTE` | Scripted | Timeline + **markers** | 1–N prompts on Timeline | **Optional** (1–2 skills) |
 
 **Skill / SO fields (Unity content):**
 
@@ -114,7 +114,7 @@ Each skill references a **presentation profile**. **Timing** for cinematics is a
 - Marker track **`Cinematic Beats`**: `CinematicQteOpenMarker` / `CinematicQteCloseMarker` at authored frames ([ADR 027 §4](../../decisions/027-combat-cinematic-timeline-events.md#4-mid-cinematic-beats--markers-vs-signals)).
 - End of clip → `PlayableDirector.stopped` → apply rules + resume queue.
 
-**Deprecated:** doc-only `qte_prompts[].at_sec` lists — do not ship in MVP2+ content; re-time prompts by moving markers in the Timeline editor.
+**Deprecated:** doc-only `qte_prompts[].at_sec` lists — do not ship in optional+ content; re-time prompts by moving markers in the Timeline editor.
 
 ---
 
@@ -170,8 +170,8 @@ Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowe
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **MVP1** | `Fixed` only; cinematic + QTE **stubbed** (no prompts in shipping fights) |
-| **MVP2** | 1 party `CinematicQTE` + 1 boss `Cinematic` (no QTE); pipeline + UI |
+| **Launch** | `Fixed` only; cinematic + QTE **stubbed** (no prompts in shipping fights) |
+| **Optional** | 1 party `CinematicQTE` + 1 boss `Cinematic` (no QTE); pipeline + UI |
 | **Later** | More skills; hold/mouse prompt types; Protocol cinematic QTE |
 
 See [release scope](../00-release-scope.md). Optional in MVP2 alongside gather/fish — prioritize if combat spectacle is a milestone goal.

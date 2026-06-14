@@ -4,7 +4,7 @@
 **Last updated:** 2026-05-22  
 **Scope:** `GridDungeon.Core` boundaries inside `griddungeon-game`; no non-Unity extraction, no second-repo split unless a second Unity project appears.
 
-**Related:** [05-class-design MVP1](../05-class-design.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
+**Related:** [05-class-design](../05-class-design.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
 ---
 
@@ -14,7 +14,7 @@
 |------|---------------------------|
 | **One formula, one owner** | Keep combat/map/save *rules* in Core; Unity presentation in Runtime/UI |
 | **Fast Edit Mode feedback** | Core-only tests for simulators; Runtime only when wiring requires it |
-| **Low ceremony for MVP1** | Stay monolithic in one Unity project until reuse is real |
+| **Low ceremony at launch** | Stay monolithic in one Unity project until reuse is real |
 | **Optional second Unity title later** | Clear trigger + folder layout for embedded UPM, without doing it early |
 
 ---
@@ -47,7 +47,7 @@
 
 ---
 
-## Phase 0 — Now (MVP1, single project)
+## Phase 0 — Now (launch), single project)
 
 **Intent:** Strengthen boundaries in place; zero new repos or packages.
 
@@ -96,7 +96,7 @@
 
 ---
 
-## Phase 1 — Hardening (before MVP1 ship or during combat/map polish)
+## Phase 1 — Hardening (before (launch) ship or during combat/map polish)
 
 **Intent:** Make Core easier to audit and split later, without packaging.
 
@@ -109,7 +109,7 @@ Run a one-time pass (can be a single doc issue or spike):
 | **Reusable simulators** | `DamageCalculator`, `TurnQueueBuilder`, `MapRevealCalculator` | Keep in Core root / `Simulators/` |
 | **Grid primitives** | `GridPosition`, `GridMovement`, `FacingDirection` | Keep in Core |
 | **S1 campaign** | `S1CampaignResolver`, `S1FloorKeys`, B1F spawn constants | Keep grouped; document “optional package slice” |
-| **Save schema** | `SaveGame`, `CampaignSaveData` | Keep in Core for MVP1; version fields if schema changes |
+| **Save schema** | `SaveGame`, `CampaignSaveData` | Keep in Core at launch; version fields if schema changes |
 
 **Deliverable:** Short table in this doc’s appendix (or a GitHub issue checklist) listing each `Core/` top-level folder and “generic vs S1 vs save schema.”
 
@@ -137,7 +137,7 @@ Run a one-time pass (can be a single doc issue or spike):
 - `GridDungeon.Tests.Core.asmdef` → references **Core only**
 - `GridDungeon.Tests.Integration.asmdef` → references Core + Runtime
 
-Default: **keep single `GridDungeon.Tests`** for MVP1 (KISS).
+Default: **keep single `GridDungeon.Tests`** at launch (KISS).
 
 ### Phase 1 exit criteria
 
@@ -204,7 +204,7 @@ YourGame.UI.asmdef       →  references YourGame.Runtime
 | Publish to Unity Asset Store / npm | No consumer yet |
 | Generic “grid dungeon engine” API | Domain model is Grid Dungeon–specific |
 | Move simulators to Runtime for Inspector convenience | Breaks testability and SRP |
-| Headless `dotnet test` for Core in MVP1 | Duplicates harness; team uses Editor Test Runner |
+| Headless `dotnet test` for Core at launch | Duplicates harness; team uses Editor Test Runner |
 
 ---
 
@@ -254,6 +254,6 @@ GridDungeon.Core   →  (none)
 
 ### Links
 
-- Implementation tree: [05-class-design MVP1 § MVP1 folder tree](../05-class-design.md)
+- Implementation tree: [05-class-design § (launch) folder tree](../05-class-design.md)
 - Phase ownership: [game-phase.md](../02-systems/game-phase.md)
 - ADR 017 (phase controller): [017-game-phase-controller](../../decisions/017-game-phase-controller.md)

@@ -1,6 +1,6 @@
 ﻿# Guided Tutorial (player coaching)
 
-**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **MVP1 (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Post-MVP1:** Act 1 coach, `GuidedTutorialController`, pause-menu codex ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
+**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **(launch) (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 
 **Authority for S1 beats:** [S1 guided tutorials](../03-content/campaign/s1-guided-tutorials.md)  
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
@@ -24,7 +24,7 @@ A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (
 
 ---
 
-## Goals (MVP1)
+## Goals (launch)
 
 | Goal | Approach |
 |------|----------|
@@ -79,8 +79,8 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | Field | Required | Notes |
 |-------|----------|-------|
 | `tutorialEntryId` | yes | Stable id (codex row); may match trigger `hintId` |
-| `pages[]` | yes | `{ textKey, imageId? }` per page — MVP1 **stills only** (`videoId` reserved post-MVP1) |
-| `speakerId` | **no** | Omit for MVP1 — **no** Navigator, core, or NPC speaker; UI shows body text only (no portrait) |
+| `pages[]` | yes | `{ textKey, imageId? }` per page — (launch) **stills only** (`videoId` reserved later) |
+| `speakerId` | **no** | Omit at launch — **no** Navigator, core, or NPC speaker; UI shows body text only (no portrait) |
 | `mode` | yes | `exploration` \| `combat` \| `hub` |
 | `codexCategory` | no | Menu grouping (`basics`, `combat`, `synchro`, …) |
 | `once` | yes | In-world trigger once; codex unlock persists |
@@ -98,17 +98,17 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | **What it is** | UI to **re-read** tutorial pages the player already saw — not a second rules engine |
 | **Unlock** | On in-world complete (or last page), add `tutorialEntryId` to `unlockedCodexTutorialIds` (save) |
 | **Replay** | No flags, no combat gates, no `start_guided_protocol` |
-| **vs story** | S1 Navigator **story** scenes ([ADR 028](../../decisions/028-story-visual-novel-events.md)) stay story events; codex MVP1 = **guided entries** only |
+| **vs story** | S1 Navigator **story** scenes ([ADR 028](../../decisions/028-story-visual-novel-events.md)) stay story events; codex (launch) = **guided entries** only |
 
 **Still called guided tutorial** — codex is the archive surface for that content.
 
-### Highlight targets (MVP1)
+### Highlight targets (launch)
 
 | `highlight` id | UI |
 |----------------|-----|
 | `explore.move` | Movement hint (generic) |
 | `explore.interact` | Interact / stairs affordance |
-| `explore.map` | Map toggle (**post-MVP1** if not wired) |
+| `explore.map` | Map toggle (**later** if not wired) |
 | `combat.command.attack` | Attack button |
 | `combat.command.guard` | Guard |
 | `combat.command.skill` | Skill |

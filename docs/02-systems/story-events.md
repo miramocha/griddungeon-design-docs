@@ -43,14 +43,14 @@ Trigger (hub / explore / combat)
 
 ---
 
-## Step kinds (MVP1 minimum)
+## Step kinds (launch minimum)
 
 | Kind | Fields (draft) | Notes |
 |------|----------------|-------|
 | `line` | `speakerId`, `text` or `textKey`, `emotion?` | Name plate + body |
 | `effect` | `effects[]` | No visible line; run between lines |
 | `wait` | `durationSec` | Auto-advance |
-| `choice` | `prompt`, `options[]` → `gotoStep` / `branchId` | Post-MVP1 if not needed for S1 |
+| `choice` | `prompt`, `options[]` → `gotoStep` / `branchId` | Later if not needed for S1 |
 
 ### Speaker ids
 
@@ -140,7 +140,7 @@ Between unlock VN and Protocol resolve — **authority:** [guided-tutorial § co
 
 Summary: Synchro at **100%**; pulse **Protocol**; other commands disabled; player still confirms **`protocol_strike`**; no skip until resolve.
 
-### Story events (MVP1)
+### Story events (launch)
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
@@ -174,13 +174,13 @@ Example index row:
 
 ---
 
-## UI — MVP1 vs full VN
+## UI — launch vs full VN
 
 | Phase | Presentation |
 |-------|----------------|
-| **MVP1** | **Click-through block:** full-screen panel, body text, **Z** or **click** to advance/dismiss each step; arena stays visible |
+| **Launch** | **Click-through block:** full-screen panel, body text, **Z** or **click** to advance/dismiss each step; arena stays visible |
 | **Next** | Full VN: portraits, name plate, bottom text box; emotion swaps on bust (**low art priority**) |
-| **Later** | Skip, auto-advance, back — deferred; no skip on S1 tutorial in MVP1 |
+| **Later** | Skip, auto-advance, back — deferred; no skip on S1 tutorial at launch |
 
 **Combat backdrop (locked):** battle **arena visible**; which HUD panels retract during scene — **TBD** (command bar, AGI strip, when Synchro meter appears, etc.).
 
@@ -194,7 +194,7 @@ Example index row:
 | **`npc:<role>`** | Guild staff, topside contact, quest giver — **dialogue with** the Navigator when the beat needs it |
 | **`narrator`** | Impersonal signage / system voice only |
 | **`core:<id>`** | **Avoid** — roster is player-defined |
-| **`foe:*`** | SFX / UI reaction in S1 tutorial; full FOE VN lines post-MVP1 if ever |
+| **`foe:*`** | SFX / UI reaction in S1 tutorial; full FOE VN lines later if ever |
 
 **S1 (locked):** Do **not** explain Synchro / Protocol in Act 1 gate briefing; first in-fiction **name** of the burst = `s1_synchro_protocol_unlock` after crisis AOE. **Current S1 drafts** are Navigator-only monologue; **multi-speaker scenes are allowed** when authored (alternate `speakerId` per step).
 
@@ -204,7 +204,7 @@ Example index row:
 
 ## Localization
 
-**Recommendation (for schema, even in click-block MVP1):**
+**Recommendation (for schema, even in click-block (launch)):**
 
 | Field | Use |
 |-------|-----|
@@ -213,17 +213,17 @@ Example index row:
 
 At runtime: resolve `textKey` from localization table; if missing and `textEn` present, show `textEn` (dev-friendly). Avoid English-only fields with no key — retrofit is painful.
 
-**VO:** not planned; optional `voClipId` on step reserved for later — unused in MVP1.
+**VO:** not planned; optional `voClipId` on step reserved for later — unused at launch.
 
 ## Input (locked)
 
 | Action | Binding |
 |--------|---------|
 | Advance / dismiss step | **Z** (same as combat confirm) **or** click on story panel |
-| Back | Not in MVP1 tutorial |
-| Skip | Disabled MVP1 |
+| Back | Not at launch tutorial |
+| Skip | Disabled (launch) |
 
-Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Story** action map optional post-MVP1.
+Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Story** action map optional later.
 
 ---
 
@@ -232,7 +232,7 @@ Reuse combat confirm routing while `StoryEventRunner.IsActive`; dedicated **Stor
 | Phase | Example trigger |
 |-------|-----------------|
 | Hub | Service script after Navigator unlock |
-| Exploration | Cell script `storyEventId` on `OnPartyEnteredCell` — **MVP1:** `s1_b1f_gate_briefing` (Act 1, before first hub); `s1_b2f_stalker_briefing` (B2F, before tutorial combat / scripted hub) |
+| Exploration | Cell script `storyEventId` on `OnPartyEnteredCell` — **Launch:** `s1_b1f_gate_briefing` (Act 1, before first hub); `s1_b2f_stalker_briefing` (B2F, before tutorial combat / scripted hub) |
 | Combat | Tutorial phase callback, boss intro before turn 1 |
 
 Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-and-encounters.md#encounter-types)): **S1 tutorial** = dialogue on enter, then `start_combat` on dismiss (no flee). Other events may use before/after fight — per content row.
@@ -242,23 +242,23 @@ Tile **Event** encounters ([dungeons § Encounter types](../03-content/dungeons-
 ## Open design questions
 
 1. **Combat UI retract** — which panels hide during mid-combat story (command bar, AGI strip, enemy row, Synchro meter reveal on scene end only, etc.).
-2. **Authoring** — YAML vs ScriptableObject for MVP1 ([#87](https://github.com/miramocha/griddungeon-game/issues/87)); graph-UI editor deferred — [ADR 030](../../decisions/030-story-event-graph-authoring.md).
+2. **Authoring** — YAML vs ScriptableObject at launch ([#87](https://github.com/miramocha/griddungeon-game/issues/87)); graph-UI editor deferred — [ADR 030](../../decisions/030-story-event-graph-authoring.md).
 
 ---
 
-## Floor pins & quest gating (post-MVP1)
+## Floor pins & quest gating (later)
 
 **Authority:** [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md) (proposed).
 
 Separate from VN step graphs ([ADR 030](../../decisions/030-story-event-graph-authoring.md)): a **floor event graph** decides *which cell* fires *which* handler *when* save flags / quests match (e.g. hide an `!` Event until `quest_cedar_complete`). Compiled rules live on `ExplorationFloor`; **Core** evaluates conditions; `StoryEventRunner` still runs the dialogue program when an action is `PlayStoryEvent`.
 
-## Graph authoring (post-MVP1)
+## Graph authoring (later)
 
 **Authority:** [ADR 030](../../decisions/030-story-event-graph-authoring.md).
 
 Designers author **one graph per `storyEventId`** (nodes = steps, edges = branches/choices). An Editor compile step exports the **same** `StoryEventDefinition` step array `StoryEventRunner` already runs — runtime does not interpret the graph in builds.
 
-| Concern | MVP1 ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) | Post-MVP1 ([ADR 030](../../decisions/030-story-event-graph-authoring.md)) |
+| Concern | (launch) ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) | Later ([ADR 030](../../decisions/030-story-event-graph-authoring.md)) |
 |---------|------|-------------|
 | Branching in play | Linear S1 only | `choice` + flag branches |
 | Authoring UI | Hand YAML / SO | GraphView editor + compile |

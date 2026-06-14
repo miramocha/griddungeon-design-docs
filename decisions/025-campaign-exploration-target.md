@@ -6,7 +6,7 @@
 
 ## Context
 
-MVP1 exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
+(launch) exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
 
 Macro flow already anticipates **different hub → exploration rules per stratum**:
 
@@ -21,7 +21,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 
 ### 1. Neutral spawn DTO (Core)
 
-| Today (MVP1) | Target |
+| Today (launch) | Target |
 |--------------|--------|
 | `S1ExplorationTarget` | Rename or alias to **`ExplorationTarget`** in `GridDungeon.Core` — same fields, no S1-specific members. |
 
@@ -33,7 +33,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 |----------------|-------------------------|----------|
 | S1 | `S1CampaignResolver` (existing) | Intro `(4,2)`, gate `(10,11)`, B2F tutorial gates, within-stratum stairs |
 | S2+ | `S2CampaignResolver` or `Core/Campaign/S2/*` | Warp-gate spawn, stratum entry floor, Synchro on hub exit per content |
-| Side dungeon (MVP3) | Separate resolver / `HubController.EnterSideDungeon` | Composite keys `sd##_F#`; hub-only exit ([ADR 022](022-side-dungeons-mvp3.md)) |
+| Side dungeon (optional) | Separate resolver / `HubController.EnterSideDungeon` | Composite keys `sd##_F#`; hub-only exit ([ADR 022](022-side-dungeons-mvp3.md)) |
 
 **Not** a single god `CampaignResolver` with `switch (stratumId)` spanning all acts — mirror [improvement plan §0.2](../docs/plans/core-assembly-improvement-plan.md).
 
@@ -46,13 +46,13 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 - `CanAscendToHub` (surface exit — S1 gate only today)
 - Walkability / encounter-rate overrides (today: `S1ExplorationWalkability` + resolver helpers)
 
-MVP1 may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
+(launch) may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
 
 ### 4. Optional interface (defer)
 
-Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed registry) **only when** two or more policies exist and tests need swapping — YAGNI for S1-only MVP1.
+Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed registry) **only when** two or more policies exist and tests need swapping — YAGNI for S1-only (launch).
 
-## MVP1 (unchanged)
+## (launch) (unchanged)
 
 - Keep **`S1ExplorationTarget`** + **`S1CampaignResolver`** names unless a rename ticket is explicitly scoped.
 - No new abstraction layer required for Stratum 1 vertical slice ([#15](https://github.com/miramocha/griddungeon-game/issues/15)).
@@ -60,7 +60,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 
 ## Consequences (when implemented)
 
-- [05 — Class design MVP1](../docs/05-class-design.md) — update `ExplorationPhaseController` sketch and campaign types.
+- [05 — class design](../docs/05-class-design.md) — update `ExplorationPhaseController` sketch and campaign types.
 - [game phase](../docs/02-systems/game-phase.md) — hub → explore table references policy dispatch, not only S1.
 - [improvement plan](../docs/plans/core-assembly-improvement-plan.md) — link this ADR from §0.2 / §1.1 audit row for `Core/Campaign/`.
 - **Tests:** per-stratum fixtures under `Tests/GameFlow/` (e.g. `S1CampaignResolverTests`, future `S2CampaignResolverTests`).
@@ -74,7 +74,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 ## Related
 
 - [ADR 017 — Game phase controller](017-game-phase-controller.md)
-- [ADR 014 — MVP1 exploration & map](014-mvp1-exploration-map.md)
+- [ADR 014 — (launch) exploration & map](014-mvp1-exploration-map.md)
 - [ADR 022 — Side dungeons MVP3](022-side-dungeons-mvp3.md)
 - [ADR 040 — Floor exit topology graph](040-floor-exit-topology-graph.md)
 - [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md)

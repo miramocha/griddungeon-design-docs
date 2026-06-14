@@ -36,7 +36,7 @@ Upload PNG/JPG/WebP to [`assets/map-ui/`](assets/map-ui/) and add a row below (o
 
 **What to study:** Two-column fullscreen map — metadata column (dungeon name, floor name, **Coordinates X/Y**, **Area Information** stub) + numbered grid map (0–19). Floor switching on pills (Q/W). Corridor fill vs void; door segments across cells; distinct icons for party, hazards (fire), POI (green glow), exit (orange arrow).
 
-**vs Grid Dungeon:** EO-adjacent auto-map discipline (no note toolbar in this shot); coordinate read is explicit — we use grid 1:1 but may not need X/Y labels MVP1. Good reference for **read-only schematic + context column**.
+**vs Grid Dungeon:** EO-adjacent auto-map discipline (no note toolbar in this shot); coordinate read is explicit — we use grid 1:1 but may not need X/Y labels (launch). Good reference for **read-only schematic + context column**.
 
 ---
 
@@ -76,7 +76,7 @@ Upload PNG/JPG/WebP to [`assets/map-ui/`](assets/map-ui/) and add a row below (o
 
 **What to study:** Map lives on the **exploration HUD** (not a separate menu in this shot) — top-left stack: location banner (**UNDERGROUND CAVERN**), sub-area (**AREA 2**), square grid minimap with purple grid lines, **pink/magenta** explored paths, **green triangle** party facing, **yellow lock** / POI squares, thick white wall edges; **ZOOM** above, **`[M] TOGGLE MAP DISPLAY`** below. High contrast on dark FPV view — map stays readable without covering center reticle.
 
-**vs Grid Dungeon:** Closest fit to our [MSK secondary references](../00-game-references.md#secondary-references) — **auto-map**, FPV grid labyrinth, **strong threats on the map** (Nightmares / Marchens). Matches MVP1 **always-on side map in exploration** + **`M` fullscreen** ([mapping § Map UI](../02-systems/mapping.md#map-ui)). Study **compact minimap chrome** and icon read; not MSK hub/base presentation.
+**vs Grid Dungeon:** Closest fit to our [MSK secondary references](../00-game-references.md#secondary-references) — **auto-map**, FPV grid labyrinth, **strong threats on the map** (Nightmares / Marchens). Matches (launch) **always-on side map in exploration** + **`M` fullscreen** ([mapping § Map UI](../02-systems/mapping.md#map-ui)). Study **compact minimap chrome** and icon read; not MSK hub/base presentation.
 
 ---
 
@@ -92,7 +92,7 @@ Upload PNG/JPG/WebP to [`assets/map-ui/`](assets/map-ui/) and add a row below (o
 
 **What to study:** **`[M]` toggled** — large **centered** map panel (blue frame) over the **live FPV** dungeon (brown brick still visible). Same location chrome as #3 (**UNDERGROUND CAVERN / AREA 2**). Bigger grid read: dark purple corridors, pink rooms, **orange arrow** party facing (vs green triangle on minimap), **padlock** doors, **hand** interact icons, colored POI dots; **EXAMINE** prompt anchored on the map panel. Bottom HUD still shows party (FRONT/BACK), Blood Ability, and **`[M] TOGGLE MAP DISPLAY`** — map is an overlay, not a full-screen menu like CoH3/Galleria.
 
-**vs Grid Dungeon:** Strong reference for MVP1 **`M` fullscreen** ([mapping § Map UI](../02-systems/mapping.md#map-ui), [ADR 014](../../decisions/014-mvp1-exploration-map.md)) — **pass-through** exploration (FPV + HUD remain) vs dedicated map screen. Pair with #3 for **minimap → expanded** on the same floor state. Keep our schematic **read-only** (auto icons only; MSK **EXAMINE** on map is interact routing, not drawing). No separate pan/zoom chrome visible in this shot.
+**vs Grid Dungeon:** Strong reference at launch **`M` fullscreen** ([mapping § Map UI](../02-systems/mapping.md#map-ui), [ADR 014](../../decisions/014-mvp1-exploration-map.md)) — **pass-through** exploration (FPV + HUD remain) vs dedicated map screen. Pair with #3 for **minimap → expanded** on the same floor state. Keep our schematic **read-only** (auto icons only; MSK **EXAMINE** on map is interact routing, not drawing). No separate pan/zoom chrome visible in this shot.
 
 ---
 
