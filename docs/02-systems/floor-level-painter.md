@@ -67,8 +67,9 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 
 1. **GridDungeon → Content → Floor Editor** (UI Toolkit) — **Paint** mode for layout; **Select** mode for per-cell exit targets (Hub / floor key, spawn, facing — ExitEdge parity).
 2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v`) or Select mode → **Save** to `Assets/Content/Floors/s1_B*n*F.asset`.
-3. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
-4. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
+3. **Target spawn picker:** with a `^` / `v` cell selected, set **Target = Floor** and choose the destination floor key, then **Pick on target floor**. The map pane loads that floor asset (read-only); click a walkable cell and **Confirm spawn** to stage **Target spawn X/Y** on that exit. **Cancel pick** restores the source floor grid without losing unsaved edits. Exit field edits stage immediately; **Save** writes bindings to the asset.
+4. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
+5. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
 
 **Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon → Content → Apply s1_B*n*F MVP1 layout** (`ExplorationFloorDevMenu`) — destructive to painted layouts.
 
