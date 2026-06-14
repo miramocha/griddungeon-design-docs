@@ -56,7 +56,7 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 |-------|-----------|
 | **Grid `^` / `v`** | **Where** each exit sits — multiple markers per floor |
 | **Painter Apply** | Emits one `FloorExitLink` per marker (`exitId`, `cell`, `direction`); may leave `target*` empty until topology compile |
-| **Stratum topology graph** (editor-only, [#253](https://github.com/miramocha/griddungeon-game/issues/253)) | Fills `targetFloorKey`, `targetSpawnCell`, `targetFacing`; validates paired up/down between floors — **no runtime graph** |
+| **Floor exit graph** (editor-only, [#253](https://github.com/miramocha/griddungeon-game/issues/253), [ADR 041](../../decisions/041-floor-exit-graph-toolkit-wiring.md)) | **Compile** replaces full `exitLinks[]` per `locationId` (cells + targets) — **no runtime graph** |
 | **`ExplorationFloor` asset** | Runtime reads `exitLinks[]` only |
 
 **Orthogonal:** quest / flag **gating** of pins and events is [ADR 031](../../decisions/031-floor-event-pin-condition-graph.md) — not fields on exit links. Campaign **hub entry** spawn stays in per-stratum policy ([ADR 025](../../decisions/025-campaign-exploration-target.md)).
@@ -104,3 +104,4 @@ Legacy Python/builder path (CI / regression only): [stratum-floor-layout-check](
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
 - [05-class-design — `FloorPainterWindow`](05-class-design.md)
 - [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)
+- [ADR 041 — Floor exit graph (GTK wiring)](../../decisions/041-floor-exit-graph-toolkit-wiring.md)

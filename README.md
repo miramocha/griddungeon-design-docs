@@ -98,7 +98,8 @@ See [00 — Release scope](docs/00-release-scope.md) and the [project board](htt
 | [ADR 037 — Layered UITK panels](decisions/037-layered-uitk-panels.md) | Proposed | Split phase HUDs into smaller `UIDocument` panels + sort stack for HUD depth (draft) |
 | [ADR 038 — Centralized UI presentation lifecycle](decisions/038-centralized-ui-presentation-lifecycle.md) | Accepted | `ICentralizedUiSurface`, `Show`/`Hide`/`IsSettling`; internal `IPresentationDriver` |
 | [ADR 039 — UITK show/hide via DOTween](decisions/039-uitk-dotween-show-hide.md) | Accepted | `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS overlay transitions |
-| [ADR 040 — Floor exit topology graph](decisions/040-floor-exit-topology-graph.md) | Proposed | `FloorExitLink[]` replaces scalar stairs; Graph Toolkit stratum topology compile (editor-only) |
+| [ADR 040 — Floor exit topology graph](decisions/040-floor-exit-topology-graph.md) | Proposed | `FloorExitLink[]` replaces scalar stairs; Graph Toolkit floor exit compile (editor-only) |
+| [ADR 041 — Floor exit graph (GTK wiring)](decisions/041-floor-exit-graph-toolkit-wiring.md) | Proposed | `FloorNode` / `ExitEdge` / `HubNode` ports, S1 canvas, compile pipeline ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) |
 
 ## Resolved
 

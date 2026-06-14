@@ -65,14 +65,14 @@ FloorExitLink[] exitLinks;   // 0..N per floor; authoritative routing
 
 **Rejected:** keeping `TargetForStairsUp` / `TargetForStairsDown` in `S1CampaignResolver` once links ship — destinations live on compiled links; resolver shrinks to policy only ([ADR 025](025-campaign-exploration-target.md)).
 
-### 3. Stratum topology graph (Graph Toolkit — editor-only)
+### 3. Floor exit graph (Graph Toolkit — editor-only)
 
-Author **inter-floor connectivity** in a **stratum topology graph** (Unity Graph Toolkit, experimental — same package evaluation as [ADR 031](031-floor-event-pin-condition-graph.md)):
+Author **inter-floor connectivity** in a **floor exit graph** per `locationId` (Unity Graph Toolkit, experimental — same package evaluation as [ADR 031](031-floor-event-pin-condition-graph.md)). **GTK node wiring, ports, and S1 canvas layout:** [ADR 041](041-floor-exit-graph-toolkit-wiring.md).
 
 ```mermaid
 flowchart TB
   subgraph editor [Editor only]
-    GT[Stratum topology graph]
+    GT[FloorExitGraph GTK canvas]
     GT -->|compile| Links[FloorExitLink rows on each ExplorationFloor]
   end
   subgraph runtime [Player build]
@@ -137,7 +137,7 @@ See [side dungeons](../docs/02-systems/side-dungeons.md#authoring-mvp3).
 | **A — Data + runtime** ([#250](https://github.com/miramocha/griddungeon-game/issues/250)) | `FloorExitLink`, `FloorExitResolver`, migrate S1 assets, gut resolver stair routing |
 | **B — Ungate** ([#251](https://github.com/miramocha/griddungeon-game/issues/251)) | Remove S1 stair / Protocol tutorial blocks (orthogonal to link shape) |
 | **C — Painter** ([#252](https://github.com/miramocha/griddungeon-game/issues/252)) | Multi `^` / `v` markers → `exitLinks[]` on Apply |
-| **D — Graph editor** ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) | Graph Toolkit stratum topology → compile / validate links |
+| **D — Graph editor** ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) | Graph Toolkit floor exit graph → compile / validate links ([ADR 041](041-floor-exit-graph-toolkit-wiring.md)) |
 
 ## Consequences
 
@@ -158,11 +158,11 @@ See [side dungeons](../docs/02-systems/side-dungeons.md#authoring-mvp3).
 
 ## Open questions
 
-1. **Bidirectional compile** — graph emits both directions of a stair pair automatically vs designer authors each `FloorExitLink` row.
-2. **exitId convention** — `{floorKey}_{direction}_{cell}` vs graph-node uuid.
-3. **Graph granularity** — one topology asset per `stratumId` vs one campaign graph with stratum subgraphs.
-4. **Painter vs graph authority** — when both exist, graph wins on `target*` fields; painter wins on `cell` placement only.
-5. **Package maturity** — minimum Graph Toolkit pin; fallback hand-authored links only ([#253](https://github.com/miramocha/griddungeon-game/issues/253) optional).
+1. ~~Bidirectional compile~~ — resolved in [ADR 041](041-floor-exit-graph-toolkit-wiring.md) (optional toggle).
+2. ~~exitId convention~~ — resolved in [ADR 041](041-floor-exit-graph-toolkit-wiring.md) (`ExitEdge` string id).
+3. ~~Graph granularity~~ — resolved in [ADR 041](041-floor-exit-graph-toolkit-wiring.md) (one `FloorExitGraph` per `locationId`).
+4. ~~Painter vs graph authority~~ — resolved in [ADR 041](041-floor-exit-graph-toolkit-wiring.md) (Compile replaces full `exitLinks[]`).
+5. **Package maturity** — minimum Graph Toolkit pin `0.4.0-exp.2`; fallback hand-authored links ([#253](https://github.com/miramocha/griddungeon-game/issues/253) optional).
 
 ## Related
 
@@ -172,4 +172,5 @@ See [side dungeons](../docs/02-systems/side-dungeons.md#authoring-mvp3).
 - [Floor level painter](../docs/02-systems/floor-level-painter.md)
 - [Side dungeons](../docs/02-systems/side-dungeons.md)
 - [05 — Class design — Floors & stratum](../docs/05-class-design.md#floors--stratum)
+- [ADR 041 — Floor exit graph (Graph Toolkit wiring)](041-floor-exit-graph-toolkit-wiring.md)
 - [Unity Graph Toolkit — Introduction](https://docs.unity3d.com/Packages/com.unity.graphtoolkit@0.4/manual/introduction.html)
