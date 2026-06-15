@@ -97,7 +97,7 @@ Defined in `GridDungeon.Core/Enums/` (and related Core folders). Shared across a
 | `ExplorationAnimationSpeed` | `Slow`, `Normal`, `Fast`, `VeryFast` |
 | `ExplorationMapKind` | `Stratum`, `SideDungeon` (optional side dungeons — [ADR 022](../decisions/022-side-dungeons-mvp3.md)) |
 
-**Value structs:** `GridPosition` (X, Y, Level — [ADR 019](../decisions/019-floor-verticality.md)), `CellEdge`, `CharacterBaseStats`, `TargetingRule`, `StatusInflict`, `ElementResistances`, `FloorExitLink`, `FloorTileData`, `FoeSpawnConfig`, and other small DTOs in Core — see game repo `Assets/Scripts/Core/`.
+**Value structs:** `GridPosition` (X, Y, Level — [ADR 019](../decisions/019-floor-verticality.md)), `CellEdge`, `CharacterBaseStats`, `TargetingRule`, `StatusInflict`, `ElementResistances`, `FloorExitLink`, `FloorTileData`, `FoeSpawnConfig`, `StoryEventTriggerConfig` (floor-authored exploration story trigger: cell + `storyEventId` + optional `RequiredFlagsTrue` / `RequiredFlagsFalse`), and other small DTOs in Core — see game repo `Assets/Scripts/Core/`.
 
 ---
 
@@ -174,6 +174,7 @@ Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase
 | `InventoryRules`, `InventoryBagCatalog`, `EquipmentStatAggregator` | Bag and equip rules ([ADR 036](../decisions/036-party-inventory-model.md)) |
 | `CombatSimulator` | Full round simulation (tests) |
 | `GuildPartyRules` | Generic party formation slot rules (no campaign flag writes) |
+| `StoryEventTriggerLookup`, `ExplorationStoryEventTriggers` | Floor trigger cell match + flag gates; floor-first resolver with `StoryEventTriggerCatalog` fallback |
 
 Edit Mode fixtures: [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
@@ -252,7 +253,7 @@ Lives in `GridDungeon.Campaign`. References Core only.
 | `S1CampaignResolver` | S1 floor keys, spawn cells, encounter suppress |
 | `S1GuildPartyRules` | S1 party-ready flag writes |
 | `StoryEventEffectExecutor`, `StoryEventRunner`, `StoryEventPlayback` | Story VN execution |
-| `StoryEventIds`, `StoryEventTriggerCatalog` | Content IDs and trigger catalog |
+| `StoryEventIds`, `StoryEventTriggerCatalog` | Content IDs and trigger catalog (catalog fallback until floor rows migrated) |
 | `CombatTutorialHudRules` | Tutorial combat HUD policy |
 | `S1CampaignBootstrap` | New-game bootstrap |
 
@@ -301,6 +302,8 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 |------|------|
 | `GridDungeonSaveEditorWindow` | Save / campaign flag dev tooling ([PR #84](https://github.com/miramocha/griddungeon-game/pull/84)) |
 | `FloorPainterWindow` | Floor level painter → `ExplorationFloor` asset ([ADR 002](../decisions/002-mapping-model.md), [#107](https://github.com/miramocha/griddungeon-game/issues/107)) |
+| `FloorEditorFoeSpawnStore`, `FloorEditorStoryEventStore` | Floor Editor parallel stores for FOE spawns and story-event triggers (mode-gated grid overlays) |
+| `FloorEditorFoeInspector`, `FloorEditorStoryEventInspector` | Side-panel editors for FOE / Events modes |
 
 ---
 
