@@ -66,7 +66,7 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 ## Workflow
 
 1. **GridDungeon → Content → Floor Editor** (UI Toolkit) — **New** creates an `ExplorationFloor` under `Assets/Content/Floors/`; **Paint Wall** for bulk `#`/`.` layout, **Border walls** / **Fill all walls** / **Fill all floors**, and Generate/Transmute maze tools; **Edit Cell** for per-cell types (markers, chest, gather, blocker) and exit targets; **FOE** for spawn placement and metadata (patrol paths on asset for v1); **Floor Data** for **Location id** and **Floor id** (encounter rate / tables — future mode).
-2. **New:** pick path (e.g. `s1_B4F.asset`) → asset created with parsed Location / Floor id → session seeded with **Border walls** on a 20×20 grid → paint → **Save** writes layout to disk.
+2. **New:** pick path (default `NewExplorationFloor.asset`; rename to e.g. `s1_B5F` before save if desired) → asset created with parsed Location / Floor id → session seeded with **Border walls** on a 20×20 grid → paint → **Save** writes layout to disk.
 3. **Paint Wall:** drag-fill walls and floors; use **Border walls**, **Fill all walls**, or **Fill all floors** for bulk layout; use **Maze** panel below palette to Generate or Transmute a layout.
 4. **Floor Data:** edit **Location id** and **Floor id**; use header row **Content database** + **Register** (under New / Load / Save) to add the floor to a database list; **Save** persists the asset file (grid layout still comes from Paint Wall / Edit Cell).
 5. **Edit Cell:** select a cell → **Cell type** for `E` / `M` / `^` / `v`, chest, gather, blocker, or single-cell wall/floor fixes → **Save** to `Assets/Content/Floors/s1_B*n*F.asset`.
