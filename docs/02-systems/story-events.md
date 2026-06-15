@@ -16,7 +16,7 @@ Scripted **story scenes** with visual-novel-style presentation: character portra
 |------|----------|
 | Reuse everywhere | Single `StoryEventRunner` + `StoryEventView`; content-driven `storyEventId` |
 | Combat-safe | Overlay + pause queue; **no** extra `GamePhase` |
-| Rules stay in Core | Effects call campaign/combat APIs; runner does not embed S1 logic |
+| Rules stay in Campaign asmdef | Story DTOs in Core; `StoryEventEffectExecutor` / play-once in `GridDungeon.Campaign`; runner does not embed S1 logic |
 | EO-readable pacing | Line-by-line advance; presentation lock until scene completes or skips to safe point |
 | Navigator POV | Player is the Navigator; [blank-state amnesia](narrative-pov.md) — mechanics named only when the beat teaches them |
 
@@ -69,7 +69,7 @@ Executed synchronously when a step is entered (or when a choice is picked). Impl
 | `combat_tutorial_phase` | `phase` | **Target** — advance S1 tutorial beat via campaign flags + `CombatController` (crisis / unlock); not a field on `CombatEntryContext` |
 | `show_combat_hint` | `hintId` | Combat HUD (#35) — optional delegation |
 | `start_guided_protocol` | `skillId` | Set unlock flags → `CombatTutorialHudRules` Protocol-only gate + guided coach ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
-| `start_combat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` ([`CombatTutorialHudRules.S1FirstFoeEncounterGroupId`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Campaign/CombatTutorialHudRules.cs)) |
+| `start_combat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` ([`CombatTutorialHudRules.S1FirstFoeEncounterGroupId`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Campaign/CombatTutorialHudRules.cs)) |
 | `teleport_to_hub` | — | `GamePhaseController` scripted `Combat → Hub` |
 | `end_story_event` | — | Runner |
 

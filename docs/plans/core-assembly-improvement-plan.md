@@ -1,10 +1,10 @@
 ﻿# Core assembly — improvement plan (Unity-only)
 
 **Status:** Draft  
-**Last updated:** 2026-05-22  
+**Last updated:** 2026-06-15  
 **Scope:** `GridDungeon.Core` boundaries inside `griddungeon-game`; no non-Unity extraction, no second-repo split unless a second Unity project appears.
 
-**Related:** [05-class-design](../05-class-design.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
+**Related:** [05-class-design](../05-class-design.md), [04-tech-notes](../04-tech-notes.md), [game-phase](../02-systems/game-phase.md), [architecture principles](../../.cursor/rules/architecture-design-principles.mdc), [unity-core-campaign-assembly](../../.cursor/rules/unity-core-campaign-assembly.mdc), game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md), [Assets/Tests/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
 ---
 
@@ -30,7 +30,7 @@
 
 **Friction (acceptable today, costly if ignored)**
 
-- **Game-specific campaign logic** lives in Core (`Campaign/S1CampaignResolver`, `S1FloorKeys`, S1 flags on `CampaignSaveData`).
+- **Game-specific campaign logic** moved to `GridDungeon.Campaign` asmdef (`Campaign/` — resolvers, story executor, S1 triggers). Core keeps story/campaign **DTOs** and `ExplorationTarget`.
 - **Class design** mentions “CI without headless Unity,” but tests still run **only** via Unity Test Runner; there is no standalone test project (fine for Unity-only).
 - Some tests reference **Runtime** for layout/codec/phase wiring — correct for integration, but blurs “rules vs glue” when auditing coverage.
 - Save shapes use `[Serializable]` + list-encoded dictionaries for **Unity `JsonUtility`** — correct for this game; not a portable wire format (not a goal here).
@@ -42,7 +42,7 @@
 1. **Unity-only** — No `.csproj` / `dotnet test` extraction unless team explicitly revisits (out of scope).
 2. **YAGNI on packaging** — No UPM package until a **second Unity project** needs shared Core.
 3. **SRP per assembly** — Core = rules + DTOs; Runtime = Unity lifecycle + content assets; UI = Toolkit views.
-4. **Campaign is content, not engine** — S1-specific constants and gates stay grouped and named so they can move to `GridDungeon.Campaign.S1` later without a repo-wide rename.
+4. **Campaign is content, not engine** — S1 policy lives in `GridDungeon.Campaign` (in-repo asmdef, not UPM). Core keeps neutral DTOs/models. Optional UPM slice later if a second Unity project appears ([#43](https://github.com/miramocha/griddungeon-game/issues/43)).
 5. **Fix boundaries in the area you touch** — No drive-by “extract everything” passes during unrelated tickets.
 
 ---
@@ -55,7 +55,8 @@
 
 | Task | Owner / when | Done when |
 |------|----------------|-----------|
-| New **pure rules** → `Assets/Scripts/Core/` (simulator or model), not Runtime | Any combat/map/save ticket | PR has no new `UnityEngine` in Core |
+| New **pure rules** (generic) → `Assets/Scripts/Core/` | Any combat/map/save ticket | PR has no new `UnityEngine` in Core |
+| New **campaign/story behavior** → `Assets/Scripts/Campaign/` | Stratum gates, story executor, triggers | No new `Core/Campaign/`; no story executors in `Core/Story/` |
 | New **Unity-only** behaviour → Runtime or UI | Scene, SO, presenter, input | No `MonoBehaviour` in Core |
 | Map content IDs through **DTOs** at Core boundaries | Content/features | Runtime calls `ContentDatabase.To*Data()`; Core methods take structs/DTOs |
 | Avoid duplicating formulas in Runtime “for UI” | Combat HUD, map, etc. | UI reads state; Core already computed values |
@@ -66,10 +67,11 @@
 |-----------|----------------|---------------------|
 | `Core/Simulators/` | Deterministic rules (damage, AGI, reveal, retreat, protocol math) | Animation, input, scene objects |
 | `Core/Models/`, `Core/Content/` | Battle/exploration models and data shapes | ScriptableObject assets |
-| `Core/Campaign/` | S1 story gates, floor keys, spawn constants | Generic reusable campaign framework |
+| `Core/Story/` (DTOs only) | Story event data shapes (`StoryEventDefinitionData`, effects, steps) | Behavior (`StoryEventEffectExecutor`, triggers) → `Campaign/Story/` |
+| `Campaign/` (`GridDungeon.Campaign`) | S1 resolvers, story executor, triggers, bootstrap | Generic engine simulators; save schema stays in Core |
 | `Core/SaveData/` | Save DTOs + mappers used by both layers | File I/O paths (Runtime `SaveSystem`) |
 
-**Action:** When adding S2+ campaign code, use `Core/Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts. Target shape for neutral spawn DTO + per-stratum policy: [ADR 025](../decisions/025-campaign-exploration-target.md) (proposed stub).
+**Action:** When adding S2+ campaign code, use `Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts. Neutral spawn DTO: `ExplorationTarget` in Core ([ADR 025](../decisions/025-campaign-exploration-target.md)).
 
 ### 0.3 Tests (Unity Edit Mode)
 
@@ -88,11 +90,21 @@
 | Link this plan from [05-class-design](../05-class-design.md) assembly table | Done in same PR as this file |
 | Game repo Scripts README points here for assembly strategy | Done in same PR |
 
+### 0.5 PR review gate (campaign in Core)
+
+Reject PRs that add under `Assets/Scripts/Core/`:
+
+- Story executors, play-once rules, trigger catalogs, or `switch (storyEventId)` effect tables
+- Stratum resolvers, floor-key constants, tutorial encounter policy, or campaign flag writes from hub helpers
+- Any `using GridDungeon.Core.Campaign` from a Core `.cs` file (folder removed — use `GridDungeon.Campaign` assembly)
+
+Rule: `.cursor/rules/unity-core-campaign-assembly.mdc`.
+
 ### Phase 0 exit criteria
 
 - [ ] No new upward references (Core → Runtime/UI).
 - [ ] New simulator tests added in the matching `Tests/<Domain>/` folder with domain category.
-- [ ] Campaign-specific edits stay under `Core/Campaign/` (or new campaign subfolder).
+- [x] Campaign-specific **behavior** under `Assets/Scripts/Campaign/` (`GridDungeon.Campaign` asmdef).
 
 ---
 
@@ -168,7 +180,7 @@ Optional sibling package:
 
 ```
   com.miramocha.griddungeon-campaign-s1/
-    (Core/Campaign/* + S1 save bootstrap if shared)
+    (Campaign/* + S1 save bootstrap if shared)
 ```
 
 ### 2.2 Consumer project
@@ -213,7 +225,7 @@ YourGame.UI.asmdef       →  references YourGame.Runtime
 | Question | Revisit when |
 |----------|----------------|
 | Split `GridDungeon.Tests` asmdef? | Edit Mode compile time > ~30s routinely, or need Core-only CI job **with Unity closed** |
-| Extract `GridDungeon.Campaign.S1` package? | Second project shares S1; otherwise keep in game Core |
+| Extract `GridDungeon.Campaign` to UPM? | Second project shares S1; in-repo asmdef done at launch |
 | Change save wire format? | Cross-game save sharing or non-JsonUtility serializer — new ADR |
 | Update “CI without Unity” wording in class design? | Phase 2 package + optional second test harness exists |
 
@@ -235,9 +247,10 @@ Copy into issues as needed:
 ### Assembly dependency (target)
 
 ```
-GridDungeon.Tests  →  Core, Runtime (integration only where needed)
+GridDungeon.Tests  →  Core, Campaign, Runtime (integration only where needed)
 GridDungeon.UI     →  Runtime
-GridDungeon.Runtime →  Core
+GridDungeon.Runtime →  Core, Campaign
+GridDungeon.Campaign → Core
 GridDungeon.Core   →  (none)
 ```
 
@@ -249,7 +262,7 @@ GridDungeon.Core   →  (none)
 | AGI order, action resolve | `Core/Simulators/` |
 | Hub shop UI | `UI/` + Runtime service |
 | FOE patrol step on grid | `Runtime/Exploration/`; retreat *cell math* in Core |
-| B1F tutorial blocker cell | `Core/Campaign/` |
+| B1F tutorial blocker cell | `Campaign/Story/` (triggers) or floor asset ([#112](https://github.com/miramocha/griddungeon-game/issues/112)) |
 | ScriptableObject skill | `Runtime/Content/` + DTO in Core |
 
 ### Links

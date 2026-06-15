@@ -1,0 +1,65 @@
+---
+description: GridDungeon.Core vs GridDungeon.Campaign — block campaign/story behavior in Core
+alwaysApply: true
+---
+
+# Core vs Campaign assembly boundaries
+
+Authority: [core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md), [05-class-design](../docs/05-class-design.md), [ADR 025](../decisions/025-campaign-exploration-target.md), [story-events](../docs/02-systems/story-events.md).
+
+## Dependency (locked)
+
+```
+GridDungeon.Campaign  →  GridDungeon.Core   (only)
+GridDungeon.Runtime   →  Core + Campaign
+GridDungeon.Core      →  (none — never references Campaign)
+```
+
+`GridDungeon.Campaign.asmdef`: `noEngineReferences: true` (same as Core).
+
+## Core owns (generic engine)
+
+| Put in `Assets/Scripts/Core/` | Examples |
+|--------------------------------|----------|
+| Simulators / formulas | `DamageCalculator`, `MapRevealCalculator`, `TurnQueueBuilder` |
+| Neutral models & DTOs | `ExplorationTarget`, `FloorExitLink`, `CombatEntryContext` |
+| Story **data shapes** only | `StoryEventDefinitionData`, `StoryEventEffectData`, `StoryEventStepData` |
+| Save schema | `SaveGame`, `CampaignSaveData`, `CampaignFlagAccessor` |
+| Generic hub rules | `GuildPartyRules.IsPartyFormationReady` (slot count — no campaign flag writes) |
+
+## Campaign owns (content / stratum behavior)
+
+| Put in `Assets/Scripts/Campaign/` | Examples |
+|-----------------------------------|----------|
+| Stratum resolvers & constants | `S1CampaignResolver`, `S1FloorKeys`, `S1FloorExitLinks` |
+| Story **execution** | `StoryEventEffectExecutor`, `StoryEventPlayOnceRules`, `StoryEventPlayback` |
+| Content IDs & trigger catalogs | `StoryEventIds`, `StoryEventTriggerCatalog` |
+| Tutorial / transition policy | `CombatTutorialHudRules`, `CampaignTransitionEffects`, `S1GuildPartyRules` |
+| New-game bootstrap | `S1CampaignBootstrap` |
+
+S2+ policy: `Campaign/S2/` (or sibling types) — do not grow `S1CampaignResolver` for unrelated acts.
+
+## Do not add to Core
+
+| Smell | Put instead |
+|-------|-------------|
+| `switch (storyEventId)` or per-event hardcoded effects | `StoryEventDefinition` asset effects + `StoryEventEffectExecutor` (Campaign) |
+| S1 floor keys, spawn cells, encounter suppress in resolver | `S1CampaignResolver` or `Campaign/S2/*` |
+| `RefreshPartyReadyFlag` / writing `campaign.S1*` from hub rules | `S1GuildPartyRules` (Campaign) |
+| Tutorial encounter skip wired inside Core calculators | Campaign helper; Core takes `bool skipRewards` or predicate from Runtime |
+| Hardcoded exploration trigger cells / prereq flags | `StoryEventTriggerCatalog` or floor asset rows ([#112](https://github.com/miramocha/griddungeon-game/issues/112)) |
+| `MonoBehaviour`, `UnityEngine`, ScriptableObject types | Runtime / Editor |
+
+## PR / agent checklist
+
+Before adding C# under `Core/`:
+
+1. **Stratum- or story-specific?** → `Campaign/` (not Core).
+2. **Only a data shape** crossing layers? → DTO in Core; behavior in Campaign or Runtime.
+3. **Would a second stratum duplicate this with different constants?** → Campaign policy, not Core simulator.
+4. **Does Core need a Campaign type?** → Stop — refactor (neutral DTO in Core, policy in Campaign). **Never** add `GridDungeon.Campaign` to `GridDungeon.Core.asmdef`.
+
+## Tests
+
+- Core simulator tests: `using GridDungeon.Core.*` only when testing generic rules.
+- Campaign policy tests: `Tests/GameFlow/` — reference `GridDungeon.Campaign` (see `S1CampaignResolverTests`, `StoryEventRunnerTests`).
