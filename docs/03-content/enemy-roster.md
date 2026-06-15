@@ -39,7 +39,7 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling at launch). **ATK** 
 | `venom_slime` | 1.0 | 1.0 | 1.0 | **1.5** | 1.0 |
 | `s1_warden` | 1.0 | 1.0 | **0.5** | 1.0 | **1.5** |
 
-**Loot (stub):** chaff enemies → empty or 5% `patch_kit` (tune in SO); `s1_warden` → guaranteed `patch_kit` ×1 + 50% `stim_draft` (post–[game #31](https://github.com/miramocha/griddungeon-game/issues/31)).
+**Loot (stub):** shared `LootTableDefinition` SOs under `Assets/Content/LootTables/` — chaff → `loot_chaff_consumable` (5% `patch_kit`, independent rolls); `s1_warden` → `loot_s1_warden`; gather nodes → `loot_gather_patch_kit` (weighted pick, post–[game #31](https://github.com/miramocha/griddungeon-game/issues/31)).
 
 ---
 
