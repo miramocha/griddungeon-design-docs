@@ -55,7 +55,7 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 | Layer | Authority |
 |-------|-----------|
 | **Grid `^` / `v`** | **Where** each exit sits — multiple markers per floor |
-| **Painter Save** | Emits one `FloorExitLink` per binding (`exitId`, `cell`, `direction`, full `target*`) from **Select** cell inspector or paint markers |
+| **Painter Save** | Emits one `FloorExitLink` per binding (`exitId`, `cell`, `direction`, full `target*`) from **Edit Cell** inspector or paint markers |
 | **Floor Connector** (editor-only, [#253](https://github.com/miramocha/griddungeon-game/issues/253), [ADR 041](../../decisions/041-floor-connector-toolkit-wiring.md)) | **Compile** replaces full `exitLinks[]` per `locationId` (cells + targets) — **no runtime graph** |
 | **`ExplorationFloor` asset** | Runtime reads `exitLinks[]` only |
 
@@ -65,12 +65,14 @@ When gate and hub stairs share a cell (canonical B1F), only `^` appears on the g
 
 ## Workflow
 
-1. **GridDungeon → Content → Floor Editor** (UI Toolkit) — **Paint** mode for layout; **Select** mode for per-cell exit targets (Hub / floor key, spawn, facing — ExitEdge parity); **FOE** mode for spawn placement and metadata (FoeId, encounter group, flags — patrol paths stay on the asset for v1).
-2. Place **entry / gate / stairs** with marker tools (`E` / `M` / `^` / `v`) or Select mode → **Save** to `Assets/Content/Floors/s1_B*n*F.asset`.
-3. **FOE mode:** select a walkable cell, click **Add FOE** to create a spawn (or select an existing spawn to edit). Edit fields in the side panel, then **Save**. Existing patrol paths load from the asset unchanged; waypoint editing is not in the Floor Editor yet.
-4. **Target spawn picker:** with a `^` / `v` cell selected, set **Target = Floor** and choose the destination floor key, then **Pick on target floor**. The map pane loads that floor asset (read-only); click a walkable cell and **Confirm spawn** to stage **Target spawn X/Y** on that exit. **Cancel pick** restores the source floor grid without losing unsaved edits. Exit field edits stage immediately; **Save** writes bindings to the asset.
-5. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
-6. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
+1. **GridDungeon → Content → Floor Editor** (UI Toolkit) — **Paint Wall** for bulk `#`/`.` layout, **Border walls** / **Fill all walls** / **Fill all floors**, and Generate/Transmute maze tools; **Edit Cell** for per-cell types (markers, chest, gather, blocker) and exit targets; **FOE** for spawn placement and metadata (patrol paths on asset for v1); **Floor Data** for **Location id** and **Floor id** (encounter rate / tables — future mode).
+2. **Paint Wall:** drag-fill walls and floors; use **Border walls**, **Fill all walls**, or **Fill all floors** for bulk layout; use **Maze** panel below palette to Generate or Transmute a layout.
+3. **Floor Data:** edit **Location id** and **Floor id** on the selected `ExplorationFloor` asset; **Save** persists the asset file (grid layout still comes from Paint Wall / Edit Cell).
+4. **Edit Cell:** select a cell → **Cell type** for `E` / `M` / `^` / `v`, chest, gather, blocker, or single-cell wall/floor fixes → **Save** to `Assets/Content/Floors/s1_B*n*F.asset`.
+5. **FOE mode:** select a walkable cell, click **Add FOE** to create a spawn (or select an existing spawn to edit). Edit fields in the side panel, then **Save**. Existing patrol paths load from the asset unchanged; waypoint editing is not in the Floor Editor yet.
+6. **Target spawn picker:** with a `^` / `v` cell selected in Edit Cell, set **Target = Floor** and choose the destination floor key, then **Pick on target floor**. The map pane loads that floor asset (read-only); click a walkable cell and **Confirm spawn** to stage **Target spawn X/Y** on that exit. **Cancel pick** restores the source floor grid without losing unsaved edits. Exit field edits stage immediately; **Save** writes bindings to the asset.
+7. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
+8. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
 
 **Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). To reset a floor to canonical builder ASCII, use **GridDungeon → Content → Apply s1_B*n*F MVP1 layout** (`ExplorationFloorDevMenu`) — destructive to painted layouts.
 
