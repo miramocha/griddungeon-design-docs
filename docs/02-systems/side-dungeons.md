@@ -99,7 +99,7 @@ Same as labyrinth unless noted:
 
 ## Authoring (optional)
 
-Reuse the **ExplorationFloor** tile/FOE shape from [class design � floors](../05-class-design.md#floors--stratum); tag content as side via `ExplorationMapKind` or parallel `SideDungeonFloor` SO ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)).
+Reuse the **ExplorationFloor** tile/FOE shape from [class design � floors](../05-class-design.md#content-definitions-runtime-scriptableobjects); tag content as side via `ExplorationMapKind` or parallel `SideDungeonFloor` SO ([ADR 022](../../decisions/022-side-dungeons-mvp3.md)).
 
 | Field | Side dungeon note |
 |-------|-------------------|

@@ -15,4 +15,4 @@ Narrative progression, tutorials, and one-time gates � **not** floor grids or 
 
 **Launch S1:** four story events � B1F **Event cell** before first hub; B2F Event before tutorial fight; mid-combat unlock; hub outro ([story-events index](../story-events/README.md)).
 
-**Later:** more hub / exploration tile scripts and one-off fights. Game assets stay on existing types (`ExplorationFloor`, `EncounterGroup`, save flags) � see [05 � Class design](../../05-class-design.md#floors--stratum).
+**Later:** more hub / exploration tile scripts and one-off fights. Game assets stay on existing types (`ExplorationFloor`, `EncounterGroup`, save flags) � see [05 � Class design](../../05-class-design.md#content-definitions-runtime-scriptableobjects).

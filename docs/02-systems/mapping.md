@@ -94,7 +94,7 @@ When [FOE combat patrol](../../decisions/005-foe-combat-patrol.md) and [mid-batt
 
 ### Implementation notes (if we adopt A or B)
 
-- Exploration map lives on sibling **`ExplorationMap`** GameObject ([exploration UI](exploration-ui.md), [class design � View controllers](../05-class-design.md#view-controllers)); combat would need shared or embedded map surfaces + `Map` input map while `Combat` map stays primary.
+- Exploration map lives on sibling **`ExplorationMap`** GameObject ([exploration UI](exploration-ui.md), [class design � View controllers](../05-class-design.md#ui-layer)); combat would need shared or embedded map surfaces + `Map` input map while `Combat` map stays primary.
 - FOE markers should reflect **patrol step** and **in-combat / joining** state ([chain-foe-battle](chain-foe-battle.md)); updates must **not** block combat input (ambient slide, same as exploration patrol).
 - Arena stays **slot-based** ([combat scene](combat-scene.md)) � map shows **grid** threat, not live battle positions.
 

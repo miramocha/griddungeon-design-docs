@@ -58,7 +58,7 @@ See [00 — Release scope](docs/00-release-scope.md) and the [project board](htt
 | [02 — FOE encounters](docs/02-systems/foe-encounters.md) | Accepted | Contact, flee, retreat cell |
 | [02 — Game phase](docs/02-systems/game-phase.md) | Accepted | `GamePhaseController`, phase diagrams, Enter/Exit ([ADR 017](decisions/017-game-phase-controller.md)) |
 | [02 — UVS phase & presentation](docs/02-systems/uvs-phase-presentation.md) | Draft | Optional Visual Scripting hooks: `GameState`, movement, gates, examples |
-| [05 — Class design](docs/05-class-design.md) | Draft | Assemblies, Core DTOs, class sketches, content IDs |
+| [05 — Class design](docs/05-class-design.md) | Locked | Assemblies, type catalog, folder layout, content IDs |
 | [02 — FOE mid-battle join](docs/02-systems/chain-foe-battle.md) | Accepted | 1 FOE joins current fight / round |
 | [02 — Gathering & fishing](docs/02-systems/gathering-and-fishing.md) | Optional | Dungeon minigames; materials |
 | [02 — Autopilot](docs/02-systems/autopilot.md) | Optional | Pathfind to discovered tile on map |

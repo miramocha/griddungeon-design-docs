@@ -268,7 +268,7 @@ Combat must show a **vertical strip** on the **right rail** (top → bottom = so
 | Living **core**, **aux**, and **enemies** in `TurnQueue.Ordered` | **Navigator** (Protocol only; separate portrait) |
 | | Dead / KO at **queue rebuild** (round start/end); mid-round deaths **skip** turn without rebuild |
 
-**Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design.md#view-controllers)).
+**Data:** `TurnQueue.Ordered` from `TurnQueueBuilder` at round start; `TurnQueue.Current` drives highlight. UI binds via `TurnOrderStripView.Bind(TurnQueue)` ([class design](../05-class-design.md#ui-layer)).
 
 **Visual rules At launch:**
 

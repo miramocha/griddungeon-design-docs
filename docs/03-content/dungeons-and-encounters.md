@@ -60,7 +60,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
 
-**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 � Class design](../05-class-design.md#floors--stratum)).
+**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 � Class design](../05-class-design.md#content-definitions-runtime-scriptableobjects)).
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace gate stairs.
 

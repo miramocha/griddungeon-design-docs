@@ -332,5 +332,5 @@ Coordinate equipment SOs with [#12](https://github.com/miramocha/griddungeon-gam
 - [Gathering & fishing](gathering-and-fishing.md) — MVP2 materials
 - [Input bindings](input-bindings.md) — `Tab`, inventory modal
 - [Combat](combat.md) — Item command
-- [05 — Class design](../05-class-design.md) — SO sketches, save types
+- [05 — Class design](../05-class-design.md) — type catalog, save types
 - [UI event contract](../04-dev/ui-event-contract.md) — phase events
