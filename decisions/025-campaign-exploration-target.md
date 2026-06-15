@@ -13,7 +13,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 - [ADR 017](017-game-phase-controller.md) — S1 **B1F gate** after Act 2; **S2+ warp gate**; new game Act 1 intro on `s1_B1F`.
 - [Hub & services — macro loop](../docs/02-systems/hub-and-services.md) — “spawn rule per stratum.”
 - [ADR 014](014-mvp1-exploration-map.md) — `HubSaveData.UnlockedWarpGateStrata` for stratum warp gates.
-- [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md) — add `Core/Campaign/S2/` (or similar); do not grow `S1CampaignResolver` with unrelated acts.
+- [Core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md) — add `Campaign/S2/` (or similar); do not grow `S1CampaignResolver` with unrelated acts.
 
 **Side dungeons** ([ADR 022](022-side-dungeons-mvp3.md)) use separate save keys and hub entry; they share **Exploration** phase but are **out of scope** for this ADR’s stratum resolver split.
 
@@ -32,7 +32,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 | Stratum / mode | Policy owner (proposed) | Examples |
 |----------------|-------------------------|----------|
 | S1 | `S1CampaignResolver` (existing) | Intro `(4,2)`, gate `(10,11)`, B2F tutorial gates, within-stratum stairs |
-| S2+ | `S2CampaignResolver` or `Core/Campaign/S2/*` | Warp-gate spawn, stratum entry floor, Synchro on hub exit per content |
+| S2+ | `S2CampaignResolver` or `Campaign/S2/*` | Warp-gate spawn, stratum entry floor, Synchro on hub exit per content |
 | Side dungeon (optional) | Separate resolver / `HubController.EnterSideDungeon` | Composite keys `sd##_F#`; hub-only exit ([ADR 022](022-side-dungeons-mvp3.md)) |
 
 **Not** a single god `CampaignResolver` with `switch (stratumId)` spanning all acts — mirror [improvement plan §0.2](../docs/plans/core-assembly-improvement-plan.md).
@@ -62,7 +62,7 @@ Introduce something like **`ICampaignExplorationPolicy`** (or stratum-keyed regi
 
 - [05 — class design](../docs/05-class-design.md) — update `ExplorationPhaseController` sketch and campaign types.
 - [game phase](../docs/02-systems/game-phase.md) — hub → explore table references policy dispatch, not only S1.
-- [improvement plan](../docs/plans/core-assembly-improvement-plan.md) — link this ADR from §0.2 / §1.1 audit row for `Core/Campaign/`.
+- [improvement plan](../docs/plans/core-assembly-improvement-plan.md) — link this ADR from §0.2 / §1.1 audit row for `Campaign/`.
 - **Tests:** per-stratum fixtures under `Tests/GameFlow/` (e.g. `S1CampaignResolverTests`, future `S2CampaignResolverTests`).
 
 ## Open questions

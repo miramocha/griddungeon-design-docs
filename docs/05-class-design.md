@@ -32,16 +32,22 @@ flowchart BT
   T[GridDungeon.Tests]
   UI[GridDungeon.UI]
   R[GridDungeon.Runtime]
+  Camp[GridDungeon.Campaign]
   C[GridDungeon.Core]
   T --> C
+  T --> Camp
   T --> R
   UI --> R
+  R --> Camp
   R --> C
+  Camp --> C
 ```
 
 ```
 GridDungeon.Core       (pure C#, no UnityEngine)
-    ?
+    ^
+GridDungeon.Campaign   (S1 policy + story behavior; references Core)
+    ^
 GridDungeon.Runtime    (MonoBehaviours, ScriptableObjects)
     ?
 GridDungeon.UI         (UI Toolkit views, input handlers)
@@ -51,10 +57,13 @@ GridDungeon.Tests      (NUnit, references Core + Runtime; domain folders � gam
 
 | Assembly | `asmdef` path | Notes |
 |----------|---------------|-------|
-| `GridDungeon.Core` | `Assets/Scripts/Core/GridDungeon.Core.asmdef` | No `UnityEngine` refs; Edit Mode tests via Unity Test Runner ([improvement plan](plans/core-assembly-improvement-plan.md)) |
-| `GridDungeon.Runtime` | `Assets/Scripts/Runtime/GridDungeon.Runtime.asmdef` | References Core |
+| `GridDungeon.Core` | `Assets/Scripts/Core/GridDungeon.Core.asmdef` | No `UnityEngine` refs; simulators + DTOs ([improvement plan](plans/core-assembly-improvement-plan.md)) |
+| `GridDungeon.Campaign` | `Assets/Scripts/Campaign/GridDungeon.Campaign.asmdef` | S1 campaign + story behavior; references Core only |
+| `GridDungeon.Runtime` | `Assets/Scripts/Runtime/GridDungeon.Runtime.asmdef` | References Core + Campaign |
 | `GridDungeon.UI` | `Assets/Scripts/UI/GridDungeon.UI.asmdef` | References Runtime; UI Toolkit bindings |
-| `GridDungeon.Tests` | `Assets/Tests/GridDungeon.Tests.asmdef` | References Core + Runtime; Edit Mode layout in game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
+| `GridDungeon.Tests` | `Assets/Tests/GridDungeon.Tests.asmdef` | References Core + Campaign + Runtime; Edit Mode layout in game repo [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
+
+**Do not put campaign/story behavior in Core** — stratum resolvers, story executors, trigger catalogs, and S1 flag policy live in `GridDungeon.Campaign`. Core keeps DTOs and neutral models only. Enforced in PR review: [unity-core-campaign-assembly.mdc](../../.cursor/rules/unity-core-campaign-assembly.mdc).
 
 ---
 

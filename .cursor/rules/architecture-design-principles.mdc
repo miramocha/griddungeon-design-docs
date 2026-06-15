@@ -21,6 +21,7 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design](..
 | FOE flee retreat cell (walkable?) | `RetreatCellCalculator` (Core); `FoeSystem.CanRetreatFromFoe` delegates |
 | FOE flee post-combat placement (FOE contact only) | `FoeFleeRetreatPlacement` (Core); `ExplorationPhaseController` applies on flee end |
 | Damage / hit / status math | Core simulators (`DamageCalculator`, `StatusSystem`, …) |
+| S1 stratum spawn / story gates / VN effect execution | `GridDungeon.Campaign` (`S1CampaignResolver`, `StoryEventEffectExecutor`, …) — not Core |
 | Scene composition / lifetime refs | `GameState` (composition root, not phase logic) |
 | Battle arena visuals | `CombatScenePresenter` (not `CombatController`) |
 | Input action maps per mode | `InputRouter` |
@@ -53,7 +54,9 @@ Architecture docs should name **who initiates transitions** and **who owns state
 ## When proposing new types
 
 1. Which **game phase** is active?
-2. Does it belong in **Core** (testable rules) or **Runtime** (Unity)?
+2. Does it belong in **Core** (generic simulators + DTOs), **Campaign** (stratum/story behavior), or **Runtime** (Unity)?
 3. Is there already a subsystem in the module tree ([04-tech-notes](../../docs/04-tech-notes.md))?
+
+Campaign/story placement: see `unity-core-campaign-assembly.mdc`.
 
 If none apply, question whether the type is required.
