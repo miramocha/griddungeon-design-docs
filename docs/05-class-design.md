@@ -221,7 +221,7 @@ class EnemyDefinition : ScriptableObject
     CharacterBaseStats stats;
     ElementResistances resistances;
     string[] skillIds;          // enemy skill pool
-    LootTable lootTable;
+    LootTableDefinition lootTableRef;  // Assets/Content/LootTables/
     int xpReward;
     bool noFlee;
     string[] statusImmuneTags;
@@ -235,6 +235,16 @@ struct ElementResistances
 
 struct LootTable { LootEntry[] Entries; }
 struct LootEntry  { string itemId; float dropChance; int minQty; int maxQty; }
+
+// Assets/Content/LootTables/
+class LootTableDefinition : ScriptableObject
+{
+    string lootTableId;
+    LootResolveMode resolveMode;   // IndependentEntries (battle) | PickOneWeighted (gather)
+    LootTable table;
+}
+
+enum LootResolveMode { IndependentEntries, PickOneWeighted }
 
 // Assets/Content/Encounters/
 class EncounterGroup : ScriptableObject
@@ -336,8 +346,8 @@ struct TutorialBlocker
     string requiredSaveFlag;      // e.g. "s1_tutorial_dive_started"
 }
 
-// Chest: IsWalkable=false + ChestItemId; interact adjacent+facing (#105). Gather: HasGatherNode on walkable cell (G).
-struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string ChestItemId; }
+// Chest: IsWalkable=false + ChestItemId; interact adjacent+facing (#105). Gather: HasGatherNode + lootTableId on walkable cell (G).
+struct FloorTileData  { bool IsWalkable; WallMask SolidEdges; bool HasGatherNode; string LootTableId; string ChestItemId; }
 struct FoeSpawnConfig { string foeId; GridPosition spawnCell; GridPosition[] patrolPath; int stepsPerMove; }
 struct EncounterTable { EncounterWeight[] Entries; }
 struct EncounterWeight { string groupId; float weight; }
