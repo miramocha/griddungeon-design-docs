@@ -38,7 +38,7 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 
 **Goal:** EO-style auto-map in the HUD � schematic 2D chart, not a render of the FPV corridor.
 
-### Authoring � floor level painter (primary)
+### Authoring � Floor Editor (primary)
 
 | Piece | Rule |
 |-------|------|

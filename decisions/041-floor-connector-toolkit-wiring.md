@@ -265,7 +265,7 @@ Painter **Apply** without compile may leave provisional links; graph Compile is 
 
 - [ADR 040 — Floor exit topology graph](040-floor-exit-topology-graph.md)
 - [ADR 031 — Floor event pin condition graph](031-floor-event-pin-condition-graph.md) (orthogonal gating)
-- [Floor level painter — multi-exit markers](../docs/02-systems/floor-level-painter.md#multi-exit-markers-and-topology-graph)
+- [Floor Editor — multi-exit markers](../docs/02-systems/floor-editor.md#multi-exit-markers-and-topology-graph)
 - [Side dungeons](../docs/02-systems/side-dungeons.md)
 - [game #253](https://github.com/miramocha/griddungeon-game/issues/253)
 - [Unity Graph Toolkit — Implement nodes](https://docs.unity3d.com/Manual/gtk/implement-nodes.html)

@@ -1,7 +1,7 @@
-# Floor level painter / Floor Editor (Unity Editor)
+# Floor Editor (Unity Editor)
 
 **Status:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)  
-**Authority:** [ADR 002 — floor level painter](../decisions/002-mapping-model.md#authoring--floor-level-painter-primary)
+**Authority:** [ADR 002 — Floor Editor](../decisions/002-mapping-model.md#authoring--floor-editor-primary)
 
 Design-time tool only. Players never draw on the map ([ADR 002](../decisions/002-mapping-model.md) — auto-chart on explore).
 
@@ -44,7 +44,7 @@ Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_
 | **Grid char** | Authoring truth for entry/stairs — `E` / `M` / `^` / `v` on cells |
 | **Painter UI** | Marker palette tools write those chars; coord summary **derived** from grid scan on refresh |
 | **`ExplorationFloor` asset** | Runtime exploration reads serialized coords + tiles — **not** ASCII scan at play time |
-| **Anti-pattern** | Parallel pin coord store (e.g. `FloorPainterPinState`) — removed; grid is the only painter state for markers |
+| **Anti-pattern** | Parallel pin coord store (e.g. `FloorEditorPinState`) — removed; grid is the only painter state for markers |
 
 When gate and hub stairs share a cell (canonical B1F), only `^` appears on the grid; Apply sets `partyEntryGate` to the `^` cell when `M` is absent.
 
@@ -108,6 +108,6 @@ Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-che
 ## Related
 
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
-- [05-class-design — `FloorPainterWindow`](05-class-design.md)
+- [05-class-design — `FloorEditorWindow`](05-class-design.md)
 - [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)
 - [ADR 041 — Floor Connector (GTK wiring)](../../decisions/041-floor-connector-toolkit-wiring.md)

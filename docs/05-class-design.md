@@ -120,7 +120,7 @@ All read-only at runtime. Created in the Unity editor and referenced by `Content
 | `NavigatorDefinition` | `Assets/Content/Navigators/` | [navigator](02-systems/navigator.md) |
 | `ProtocolSkillDefinition` | `Assets/Content/ProtocolSkills/` | [synchro protocol](02-systems/synchro-protocol.md) |
 | `SummonDefinition` | `Assets/Content/Summons/` | [summons & guests](02-systems/summons-and-guests.md), [ADR 016](../decisions/016-summon-control-mvp1.md) |
-| `ExplorationFloor` | `Assets/Content/Floors/` | [mapping](02-systems/mapping.md), [floor painter](02-systems/floor-level-painter.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md); `randomEncounterTableId` → shared table SO |
+| `ExplorationFloor` | `Assets/Content/Floors/` | [mapping](02-systems/mapping.md), [floor painter](02-systems/floor-editor.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md); `randomEncounterTableId` → shared table SO |
 | `StratumDefinition` | `ContentDatabase` | [dungeons & encounters](03-content/dungeons-and-encounters.md), [campaign S1 intro](03-content/campaign/s1-intro.md) |
 
 **Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
@@ -305,7 +305,7 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 | Type | Role |
 |------|------|
 | `GridDungeonSaveEditorWindow` | Save / campaign flag dev tooling ([PR #84](https://github.com/miramocha/griddungeon-game/pull/84)) |
-| `FloorPainterWindow` | Floor level painter → `ExplorationFloor` asset ([ADR 002](../decisions/002-mapping-model.md), [#107](https://github.com/miramocha/griddungeon-game/issues/107)) |
+| `FloorEditorWindow` | Floor Editor → `ExplorationFloor` asset ([ADR 002](../decisions/002-mapping-model.md), [#107](https://github.com/miramocha/griddungeon-game/issues/107)) |
 | `FloorEditorFoeSpawnStore`, `FloorEditorStoryEventStore` | Floor Editor parallel stores for FOE spawns and story-event triggers (mode-gated grid overlays) |
 | `FloorEditorFoeInspector`, `FloorEditorStoryEventInspector`, `FloorEditorRandomEncountersInspector` | Side-panel editors for FOE / Events / Random Encounters modes |
 | `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor` | UITK `CreateInspectorGUI` content SO inspectors ([unity-editor-ui-toolkit](../.cursor/rules/unity-editor-ui-toolkit.mdc)) |

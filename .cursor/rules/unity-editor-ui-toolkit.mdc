@@ -10,7 +10,7 @@ alwaysApply: false
 
 When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, UXML/USS under `Assets/UI/Editor/`, `*Panel` / custom `VisualElement`) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
 
-Examples: `FloorPainterWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor`.
+Examples: `FloorEditorWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor`.
 
 ## Custom SO UITK inspector (summary)
 
@@ -22,4 +22,4 @@ Do **not** wrap a `Foldout` in a bordered parent — arrow sits outside box. Put
 
 ## Content database scope (summary)
 
-Catalog pickers use **`EditorContentDatabaseScope`** (EditorPrefs + default `DevSceneComposition.ContentPath`). Expose **`EditorContentDatabaseField`** when a tool owns dropdowns; refresh pickers on change. Shared with Floor Painter — one pick, all editor catalogs. Details: game repo rule.
+Catalog pickers use **`EditorContentDatabaseScope`** (EditorPrefs + default `DevSceneComposition.ContentPath`). Expose **`EditorContentDatabaseField`** when a tool owns dropdowns; refresh pickers on change. Shared with Floor Editor — one pick, all editor catalogs. Details: game repo rule.

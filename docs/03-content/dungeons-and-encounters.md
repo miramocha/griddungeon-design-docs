@@ -38,7 +38,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Required vertical slice** stops at **B3F** with the stratum boss and win condition ([release scope](../00-release-scope.md#required-first-playable), [S1 intro](campaign/s1-intro.md)). B4F–B5F stay in the full-game arc table above; do not block the required slice on them. 
 
-**Floor grids (B1F�B3F) are draft � not locked.** Per-floor ASCII, spawn tables, and export checklists live in [archive — S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). During iteration, **game `ExplorationFloor` assets** + Floor Painter Apply are runtime authority; design-docs blockouts are reference only.
+**Floor grids (B1F�B3F) are draft � not locked.** Per-floor ASCII, spawn tables, and export checklists live in [archive — S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). During iteration, **game `ExplorationFloor` assets** + Floor Editor Apply are runtime authority; design-docs blockouts are reference only.
 
 ---
 
@@ -47,7 +47,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design.md#content-ids-locked) (save/map/FOE state)  
 **Grid:** **20�20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) � no jump pads in required slice)  
-**Implementation:** `ExplorationFloor` assets under `Assets/Content/Floors/` ([ADR 002](../../decisions/002-mapping-model.md), [floor level painter](../02-systems/floor-level-painter.md)). **Layouts are draft** � see [archive draft layouts](../archive/mvp1-s1-floor-layouts-draft.md); game assets + Floor Painter Apply are iteration authority until lock.
+**Implementation:** `ExplorationFloor` assets under `Assets/Content/Floors/` ([ADR 002](../../decisions/002-mapping-model.md), [Floor Editor](../02-systems/floor-editor.md)). **Layouts are draft** � see [archive draft layouts](../archive/mvp1-s1-floor-layouts-draft.md); game assets + Floor Editor Apply are iteration authority until lock.
 
 ### Stratum entry & warp gates (locked)
 
@@ -164,7 +164,7 @@ foes:
 
 ## Random encounter table
 
-**Shipped model ([game #288](https://github.com/miramocha/griddungeon-game/pull/288)):** reusable **`RandomEncounterTableDefinition`** SOs under `Assets/Content/RandomEncounterTables/`. Each floor stores **`randomEncounterTableId`** only on `ExplorationFloor`; rate and weighted groups live on the table asset. Author in Floor Editor **Random Encounters** mode or open the table inspector directly ([floor painter](02-systems/floor-level-painter.md)).
+**Shipped model ([game #288](https://github.com/miramocha/griddungeon-game/pull/288)):** reusable **`RandomEncounterTableDefinition`** SOs under `Assets/Content/RandomEncounterTables/`. Each floor stores **`randomEncounterTableId`** only on `ExplorationFloor`; rate and weighted groups live on the table asset. Author in Floor Editor **Random Encounters** mode or open the table inspector directly ([floor painter](02-systems/floor-editor.md)).
 
 | Floor key | Table id | Base rate | Weighted groups (design) |
 |-----------|----------|-----------|--------------------------|

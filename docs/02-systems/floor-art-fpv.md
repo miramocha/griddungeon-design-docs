@@ -3,7 +3,7 @@
 **Status:** Draft  
 **Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor)  
 **Follows:** [Editor floor art grid rig #92](https://github.com/miramocha/griddungeon-game/issues/92)  
-**Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [floor level painter](floor-level-painter.md) (logic tiles / FOE / export)
+**Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [Floor Editor](floor-editor.md) (logic tiles / FOE / export)
 
 ## Summary
 

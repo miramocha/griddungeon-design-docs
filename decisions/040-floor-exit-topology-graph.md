@@ -105,7 +105,7 @@ flowchart TB
 
 When gate and hub stairs share a cell (canonical S1 B1F), one `^` at `(10, 11)` → one `Up` link with `targetKind = Hub`.
 
-See [floor level painter](../docs/02-systems/floor-level-painter.md#multi-exit-markers-and-topology-graph).
+See [Floor Editor](../docs/02-systems/floor-editor.md#multi-exit-markers-and-topology-graph).
 
 ### 5. Campaign policy vs exit links ([ADR 025](025-campaign-exploration-target.md))
 
@@ -169,7 +169,7 @@ See [side dungeons](../docs/02-systems/side-dungeons.md#authoring-mvp3).
 - [ADR 025 — Campaign exploration target](025-campaign-exploration-target.md)
 - [ADR 031 — Floor event & pin condition graph](031-floor-event-pin-condition-graph.md)
 - [ADR 022 — Side dungeons MVP3](022-side-dungeons-mvp3.md)
-- [Floor level painter](../docs/02-systems/floor-level-painter.md)
+- [Floor Editor](../docs/02-systems/floor-editor.md)
 - [Side dungeons](../docs/02-systems/side-dungeons.md)
 - [05 — Class design — Floors & stratum](../docs/05-class-design.md#content-definitions-runtime-scriptableobjects)
 - [ADR 041 — Floor Connector (Graph Toolkit wiring)](041-floor-connector-toolkit-wiring.md)
