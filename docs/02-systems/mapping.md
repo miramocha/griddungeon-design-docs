@@ -18,7 +18,7 @@ Mapping stays central for **navigation and FOE tracking**, but skill expression 
 ## Map UI
 
 - **Implementation wiring:** [exploration UI](exploration-ui.md) � `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` (event subscriptions, input, phase visibility).
-- **Presentation:** **2D schematic** in UI Toolkit from `ExplorationFloor` + revealed state � authored via **floor level painter** ? SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
+- **Presentation:** **2D schematic** in UI Toolkit from `ExplorationFloor` + revealed state � authored via **Floor Editor** ? SO, not FPV mesh or minimap camera ([ADR 002](../../decisions/002-mapping-model.md#technical-notes-unity--authoring--runtime-map)).
 - **Always available** in exploration (side panel; fullscreen `M`).
 - **Fullscreen map:** movement **pass-through** (can still step); pan/zoom mouse on map ([ADR 014](../../decisions/014-mvp1-exploration-map.md)).
 - Grid 1:1 with dungeon cells at the party�s current **`level`** band; north up ([ADR 019](../../decisions/019-floor-verticality.md)). Other height bands: same rules when visited; layer toggle later optional.

@@ -1,6 +1,6 @@
 # Authoring floor transition beats (stairs vignette)
 
-**Scope:** 3D **transition prefabs** played when the party changes exploration floor via stairs or hub stratum entry — **not** dungeon grid markers (`^` / `v` on `ExplorationFloor`). For layout stairs, see [floor level painter](../02-systems/floor-level-painter.md) and [dungeons & encounters](../03-content/dungeons-and-encounters.md#map-legend-ascii-blockouts).
+**Scope:** 3D **transition prefabs** played when the party changes exploration floor via stairs or hub stratum entry — **not** dungeon grid markers (`^` / `v` on `ExplorationFloor`). For layout stairs, see [Floor Editor](../02-systems/floor-editor.md) and [dungeons & encounters](../03-content/dungeons-and-encounters.md#map-legend-ascii-blockouts).
 
 **Runtime spec:** [floor transition](../02-systems/floor-transition.md) · [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)  
 **Game repo paths:** `Assets/Scenes/Transitions/` · [Transitions/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scenes/Transitions/README.md)

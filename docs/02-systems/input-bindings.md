@@ -424,7 +424,7 @@ Policy for a future `Gamepad` control scheme in `GridDungeon.inputactions`. **PC
 
 **Removed from action maps:** **`Space`** / **`Enter`** — use **`Z`** for confirm / interact. (Deferred QTE / cinematic beats may document their own keys when implemented.)
 
-**Dev / editor only (not player binds):** `F1`–`F10` in `GamePhaseDevShortcuts`; Floor Painter `KeyCode` — ignore for gamepad policy.
+**Dev / editor only (not player binds):** `F1`–`F10` in `GamePhaseDevShortcuts`; Floor Editor `KeyCode` — ignore for gamepad policy.
 
 ### Agent / PR checklist (new binds)
 

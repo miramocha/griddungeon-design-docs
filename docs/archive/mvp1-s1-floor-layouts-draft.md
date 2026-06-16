@@ -3,14 +3,14 @@
 **Status:** **Draft — not locked** (archived 2026-06-14)  
 **Supersedes:** detailed per-floor ASCII blockouts that lived in [dungeons — launch §](../03-content/dungeons-and-encounters.md#mvp1--stratum-1-b1fb3f)
 
-Use this file as **design reference** while grids, spawns, and exit topology are iterated in **Floor Painter** and `Assets/Content/Floors/s1_B*n*F.asset`. Do **not** treat coordinates or ASCII rows as shipping authority until a layout lock ticket closes.
+Use this file as **design reference** while grids, spawns, and exit topology are iterated in **Floor Editor** and `Assets/Content/Floors/s1_B*n*F.asset`. Do **not** treat coordinates or ASCII rows as shipping authority until a layout lock ticket closes.
 
 **Runtime authority during iteration:**
 
 | Source | Role |
 |--------|------|
 | `Assets/Content/Floors/s1_B1F.asset` etc. (game) | Play Mode + tests read serialized tiles + `exitLinks[]` |
-| Floor Painter **Apply** | Authoring path for custom / side-dungeon floors |
+| Floor Editor **Apply** | Authoring path for custom / side-dungeon floors |
 | `S1B*FLayoutBuilder` (game) | Dev reset / migration only — not spec authority |
 | This archive | Historical blockouts + FOE YAML sketches |
 

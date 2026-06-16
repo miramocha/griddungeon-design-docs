@@ -123,7 +123,7 @@ GameState (composition root)
 
 | Concern | Approach |
 |---------|----------|
-| **Authoring (primary)** | **Floor level painter** (Unity Editor) ? exports **`ExplorationFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol � epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-level-painter.md](02-systems/floor-level-painter.md) |
+| **Authoring (primary)** | **Floor Editor** (Unity Editor) ? exports **`ExplorationFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol � epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-editor.md](02-systems/floor-editor.md) |
 | **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map � [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
 | **Runtime HUD (primary)** | **`ExplorationMapCoordinator`** + `MapGridPaintController` � 2D UI Toolkit grid from `ExplorationFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
@@ -311,7 +311,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 - [ ] **Navigator 3D presence:** corner model (explore + combat) + Deploy/Transform slot transitions � [navigator � Consider / explore](02-systems/navigator.md#consider--explore--navigator-3d-presence); optional Tier 2 under [ADR 037](../decisions/037-layered-uitk-panels.md)
 - [ ] **Layered UITK panels:** exploration + combat HUD split into panel components � [ADR 037](../decisions/037-layered-uitk-panels.md) (draft epic)
 - [ ] Default `stepsPerMove` per stratum (tune 2�5 in data)
-- [ ] **Floor level painter** ? `ExplorationFloor` export � [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; launch floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
+- [ ] **Floor Editor** ? `ExplorationFloor` export � [#75](https://github.com/miramocha/griddungeon-game/issues/75) epic; launch floors hand-filled via builders until [#77](https://github.com/miramocha/griddungeon-game/issues/77)
 - [ ] Custom Unity editor for FOE patrol paths + `stepsPerMove` (can merge into floor painter)
 
 ## Related docs
