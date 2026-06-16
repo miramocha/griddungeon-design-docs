@@ -49,6 +49,22 @@ Combat **player command UI** (planning, targeting, summon/per-slot control): sup
 
 Exploration movement trial layout, map pan/zoom, and gamepad deferral unchanged.
 
+## Amendment (2026-06) — Gamepad-ready keyboard layout
+
+**Motivation:** Future gamepad support should not require redesigning every action. Keyboard defaults should cluster on keys that map 1:1 to stick / face / shoulder groups.
+
+**Decision:**
+
+1. **Layout policy** (implementation still deferred): [input-bindings.md § Gamepad-ready keyboard layout](../docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation)
+   - **`WASD`** (+ arrows) → left stick / D-pad
+   - **`Z` / `X` / `C` / `V`** → face buttons (Xbox **A / B / X / Y**); **`V`** = combat log; **`C`** = map autopilot
+   - **`Q` / `E`** → **L1 / R1** shoulder bumpers (tab cycle or exploration turn — phase-gated)
+2. **`Tab` / `Esc`** → **Menu** / **Options** (`startButton`); **`M`** (map) → Xbox **View** (`selectButton`); DualSense **touchpad click** (`touchpadButton`, not Create) — not **`C`**, not **L3**.
+3. **PC confirm:** **`Z` only** in `GridDungeon.inputactions` — no **`Space`** / **`Enter`** gameplay binds.
+4. **Known layout:** Combat log on **`V`** (was **`L`**). Map toggle stays **`M`** (gamepad **View** / PS touchpad), not **`C`**.
+5. **Reference table:** [input-bindings.md § PC vs console reference](../docs/02-systems/input-bindings.md#pc-vs-console-reference-locked-intent).
+6. **Agent rule:** `.cursor/rules/unity-input-vocabulary.mdc` § Gamepad-ready layout.
+
 ## Related
 
 - [Input bindings](../docs/02-systems/input-bindings.md)

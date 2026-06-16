@@ -56,7 +56,7 @@ During **command planning**, each pick is **confirmed** with **`Z`** (keyboard) 
 
 **Input:** Arrows or **`W`/`A`/`S`/`D`** move focus on command bar (WASD mirrors arrows in combat); **`Z`** confirms command; **`X`** / **Back button** = Back (LIFO or cancel targeting). **`Esc`** = pause when pause UI ships (no-op until then). **`R`** dropped ([input bindings](input-bindings.md), [ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 
-**UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. **Global input hint** (bottom-right `InputHintPresenter`): context copy from `TabbedPickerRailHints` — e.g. **Z Confirm · X Cancel · WASD Navigate · L Log** during core planning (**Esc Pause** deferred until combat pause UI ships); **X Close · L Close** while the log modal is open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). Per-panel footer hints removed. Roster **queued** styling clears when a command is popped.
+**UI:** Command bar **Back button**; enabled when targeting or when LIFO is available. **Global input hint** (bottom-right `InputHintPresenter`): context copy from `TabbedPickerRailHints` — e.g. **`[Z] Confirm · [X] Cancel · [Directional] Navigate · [V] Log`** during core planning (**`[Esc] Pause`** deferred until combat pause UI ships); **`[X] Close · [V] Close`** while the log modal is open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). Per-panel footer hints removed. Roster **queued** styling clears when a command is popped.
 
 ### Command planning — targeting
 
@@ -267,10 +267,10 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Surface | Behavior |
 |---------|----------|
 | **Preview row** | Top of center column (above enemy roster); **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. **No** separate Log button. |
-| **Open** | Click preview row or **`L`** (`ToggleLog`, Combat action map) → `combat-log-modal` (`hud-overlay` panel). Opening log **cancels** any open skill/item picker. |
+| **Open** | Click preview row or **`V`** (`ToggleLog`, Combat action map) → `combat-log-modal` (`hud-overlay` panel). Opening log **cancels** any open skill/item picker. |
 | **Modal body** | Title + scrollable full fight history (`combat-log` ScrollView) only — **no** Close button, **no** footer hint |
-| **Close** | **`L`** toggle; **`X`** / Back (`CombatPlayerCommandGate.TryBack` — log dismissed **before** pickers); LMB on modal backdrop, not scroll area (interim UX — may revisit). Read-only — does not pause combat. |
-| **Global hint** | `TabbedPickerRailHints.LogModal` → **L or X Close** while open; idle/planning states include **L Log** |
+| **Close** | **`V`** toggle; **`X`** / Back (`CombatPlayerCommandGate.TryBack` — log dismissed **before** pickers); LMB on modal backdrop, not scroll area (interim UX — may revisit). Read-only — does not pause combat. |
+| **Global hint** | `TabbedPickerRailHints.LogModal` → **`[X] Close · [V] Close`** while open; idle/planning states include **`[V] Log`** |
 
 `CombatHudLogView.Append` updates preview label and modal scroll. Reactive presenter keeps calling the same API ([#35](https://github.com/miramocha/griddungeon-game/issues/35)).
 

@@ -111,7 +111,8 @@ Map fullscreen still allows movement pass-through per [ADR 014](../../decisions/
 
 | Action | Default | Notes |
 |--------|---------|-------|
-| **Set autopilot destination** | `LMB` on map (revealed walkable) | Side panel or fullscreen map |
+| **Arm destination pick** | **`C`** on expanded map | Enter cursor mode |
+| **Confirm destination** | **`C`** or `LMB` on map (revealed walkable) | Expanded map only at launch |
 | **Cancel autopilot** | `Esc`, any move/turn/interact, or `LMB` on party cell | Immediate |
 
 PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when settings UI ships.
@@ -188,7 +189,7 @@ Turns use `DungeonExplorer.TryTurnLeft` / `TryTurnRight`; steps use `TryStepForw
 
 | MVP2 spec | Shipped (expanded-map slice) |
 |-----------|------------------------------|
-| `LMB` destination on **side or fullscreen** map | **Expanded map only** � **Z** arms path mode (`TabbedPickerRailHints.ExplorationMapAutopilotSelect`); arrow keys move cursor; **Z Confirm** or **click** sets destination. Side minimap has no autopilot pick yet. |
+| `LMB` destination on **side or fullscreen** map | **Expanded map only** — **`C`** arms path mode (`TabbedPickerRailHints.ExplorationMapAutopilotSelect`); arrow keys move cursor; **`C` Confirm** or **click** sets destination. **`Z` interact** (e.g. stairs) still works while expanded. Side minimap has no autopilot pick yet. |
 | Cancel on **combat** | **Suspend + resume** � `SuspendForCombat` saves destination; `TryResumeAfterCombat` re-paths from post-fight cell (or `Cancel` if unreachable / already at goal). FOE/random encounter still stops walk via combat entry. |
 | Stop toasts (`Arrived`, `Blocked`, �) | **Not shipped** � silent cancel or idle on complete |
 | Stop **before** interactable on path (not destination) | **Not shipped** � walker steps into chests / gather nodes unless movement is blocked |

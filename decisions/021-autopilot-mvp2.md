@@ -35,7 +35,7 @@ At launch: **manual** grid steps + hold-to-repeat only ([ADR 001](001-grid-movem
 
 - `AutopilotController` (Runtime): pathfind + next-segment facing; `DungeonExplorer` keeps lerp/events.
 - `MapView`: destination pick, path overlay, invalid-click feedback.
-- Input: `MapSetAutopilotDestination`, `CancelAutopilot` (map `LMB` + `Esc` defaults).
+- Input: `ConfirmDestination` / `SetDestination` on expanded map (**`C`** arm + confirm, **LMB** set); `CancelAutopilot` / `DisengageDestinationPick` (**`Esc`** / **`X`**). **`Z`** stays `Exploration.Interact` while fullscreen so stairs and other interactables are not blocked.
 
 ## Related
 

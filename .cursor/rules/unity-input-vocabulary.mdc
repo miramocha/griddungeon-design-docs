@@ -13,7 +13,7 @@ Hub, combat command UI, party menu, and tabbed pickers share one vocabulary. Whe
 | Role | Keyboard | Mouse | Input System |
 |------|----------|-------|--------------|
 | Navigate / focus | `WASD` + arrows | Hover + LMB on control | `MenuNavigate` |
-| Confirm | `Z` (+ `Enter`) | LMB on control | `MenuConfirm` |
+| Confirm | `Z` | LMB on control | `MenuConfirm` |
 | Cancel / back | `X` | RMB | `MenuCancel` |
 | Tab cycle | `Q` / `E` | LMB on tab chip | `*TabPrev` / `*TabNext` (scoped) |
 | Menu / pause | `Tab` / `Esc` | — | `PartyMenu` / `Pause` |
@@ -36,9 +36,32 @@ No overlay open: `WASD` = grid move, `Q`/`E` = turn — **not** tab cycle. `Inpu
 
 | Navigator | Hint token |
 |-----------|------------|
-| 1D vertical rail/list | `W/S` (e.g. section rail, quit rows) |
-| 2D or full `MenuNavigate` | `WASD Navigate` or `WASD Target` / `WASD Member` |
-| Tabbed picker rows + tabs | `Q/E Tab` + `W/S Row` via `ForItemPickerRows` |
-| Map autopilot cursor | `WASD · Arrows Cursor` |
+| 1D vertical rail/list | `[Up/Down]` (e.g. section rail, quit rows) |
+| 2D or full `MenuNavigate` | `[Directional] Navigate` |
+| Tabbed picker rows + tabs | `[Q/E] Tab` + `[Up/Down] Navigate` via `ForItemPickerRows` |
+| Map autopilot cursor | `[Directional] Navigate` |
 
 Prefer **Navigate** over **Command** / **Menu** / **Action** on hub and combat hints when `MenuNavigate` applies.
+
+## Gamepad-ready layout (deferred)
+
+**Authority:** [input-bindings.md § Gamepad-ready keyboard layout](../../docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation), [ADR 009 § Gamepad-ready amendment](../../decisions/009-input-bindings-pc.md#amendment-2026-06--gamepad-ready-keyboard-layout).
+
+Keyboard defaults should mirror future gamepad groups:
+
+| Slot | Keyboard | Gamepad (Xbox) |
+|------|----------|----------------|
+| Move / navigate | `WASD` + arrows | Left stick / D-pad |
+| Confirm / interact | `Z` | A (south) |
+| Cancel / back | `X` | B (east) |
+| Secondary action | `C` | X (west) — expanded-map autopilot |
+| Tertiary action | `V` | Y (north) — combat / battle log |
+| Tab / turn | `Q` / `E` | L1 / R1 |
+| Map toggle | `M` | View (Xbox); touchpad click (DualSense) |
+| Menu / pause | `Tab` / `Esc` | Menu (Xbox); Options (PS) |
+
+**System tier (outside face row):** `Tab` / `Esc` → **Menu** / **Options**; `M` (map) → Xbox **View** or DualSense **touchpad click** — not west face **`C`**, not **L3**. DualSense **Create** (`selectButton`) stays free when map uses touchpad.
+
+Full table: [input-bindings.md § PC vs console reference](../../docs/02-systems/input-bindings.md#pc-vs-console-reference-locked-intent).
+
+**Before adding a bind outside this table:** document it in the input-bindings audit table.

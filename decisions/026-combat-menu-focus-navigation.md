@@ -97,7 +97,7 @@ Hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), 
 - **Breaking change** for players used to `Z`/`X`/`C`/`V`/`B` direct commands and `R`/`Esc` Back.
 - **Combat HUD** labels: remove per-button `(Z)` hints; show global **Z Confirm · X Cancel · Esc Pause**.
 - **Tests:** Edit Mode for navigator (`MenuFocusNavigatorTests`), command bar (`CommandPanelViewTests`), target list (`TargetSelectionViewTests`, `CombatPlayerCommandGateTests`); Play Mode checklist for planning, targeting Path B, LIFO, mouse instant queue. `CombatInputHandlerTests` removed — routing covered by panel/gate fixtures per [unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc).
-- **Gamepad (later):** map face buttons to same Confirm/Cancel actions as `Z`/`X`.
+- **Gamepad (later):** map [gamepad-ready layout](../docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation) — **`Z`/`X`/`V`** → A/B/Y; combat log on **`V`**; **`Tab`/`Esc`** → **Start**; map **`M`** → **View** / **Select** (locked).
 
 ## Related
 

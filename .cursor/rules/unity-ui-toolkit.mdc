@@ -57,7 +57,7 @@ Do not embed game logic in UXML. Do not hardcode colours in UXML when a USS clas
 | Show/hide by phase, tab, or overlay | Duplicate trees per phase (`hub-rail.uxml` + `combat-rail.uxml` for same shell) |
 | Dynamic labels (HP, floor name, credits, row text) | Hardcoded player-facing copy that changes with game state |
 | Which buttons exist and what they do | Static `Button` lists that only one screen ever uses — build into a shared host in code |
-| Input bind strings | `Label` footers with `Z Confirm · X Cancel` (use `InputHints` + `TabbedPickerRailHints`) |
+| Input bind strings | `Label` footers with `[Z] Confirm · [X] Cancel` (use `InputHints` + `TabbedPickerRailHints`) |
 | Enable/disable, selected row, fullscreen | Inline `style="display: none"` toggles without a BEM `--hidden` class |
 
 **Branching:** one **shell** UXML per reusable block; C# picks visible branch via **BEM modifier** (`EnableInClassList`) or populates an empty host (`PanelHost`, row list, tab strip). Do not fork UXML for every state — fork only when **layout structure** genuinely differs (e.g. `ItemListPickerLayout` profiles with different `name` hooks + `HiddenClass`).
@@ -65,7 +65,7 @@ Do not embed game logic in UXML. Do not hardcode colours in UXML when a USS clas
 ```xml
 <!-- ❌ BAD — game-state copy and bind footer baked into markup -->
 <ui:Label text="Floor 3 — buy stim_draft for 50c" />
-<ui:Label text="Z Confirm · X Cancel" />
+<ui:Label text="[Z] Confirm · [X] Cancel" />
 
 <!-- ✅ GOOD — stable hooks; presenter sets text / visibility -->
 <ui:Label name="hub-credits" class="hub-hud__credits" text="—" />
@@ -211,7 +211,7 @@ Recipe: domain helper → `SetModalOpen` → `SyncModalChipRail` / `ApplyModalCh
 
 ## Global input hints
 
-**Input bind copy only** on `InputHintPresenter` (bottom-right strip) — not map legend, coords, or warnings. Publish via `InputHints`; constants in `TabbedPickerRailHints` (segment order: Z/X → W/S & Q/E → other keys). No duplicate bind footers on panels or pickers. See [`unity-global-input-hints.mdc`](unity-global-input-hints.mdc).
+**Input bind copy only** on `InputHintPresenter` (bottom-right strip) — not map legend, coords, or warnings. Publish via `InputHints`; constants in `TabbedPickerRailHints` (segment order: Z/X → Up/Down & Q/E → other keys). No duplicate bind footers on panels or pickers. See [`unity-global-input-hints.mdc`](unity-global-input-hints.mdc).
 
 ## Project layout (recommended)
 

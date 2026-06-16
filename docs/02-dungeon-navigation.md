@@ -147,7 +147,7 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 
 ## Input
 
-PC defaults: `W/S` forward/back, `Q/E` strafe, `A/D` turn, `Space` interact — see [input bindings](02-systems/input-bindings.md).
+PC defaults: `W/S` forward/back, `A/D` strafe, `Q/E` turn, `Z` interact — see [input bindings](02-systems/input-bindings.md).
 
 ## Related docs
 

@@ -48,9 +48,9 @@ flowchart TB
 
 **Typical confirm → walk sequence**
 
-1. Player opens expanded map; **Z** enters `AutopilotState.Selecting` (`ExplorationMapCoordinator.ConfirmAutopilotDestinationFromInput` / `ToggleAutopilotSelectFromInput`).
+1. Player opens expanded map; **`C`** enters `AutopilotState.Selecting` (`ExplorationMapCoordinator.ConfirmAutopilotDestinationFromInput`).
 2. Cursor moves (arrows or pointer hover); `ExpandedMapDestinationSelection` calls `AutopilotController.TryPreviewPath` → overlay path preview.
-3. **Z Confirm** or LMB on cell → `TryConfirmDestination` → `ExplorationPathGraph.TryFindPath` → `m_pathIndex = 1` → `Walking`.
+3. **`C` Confirm** or LMB on cell → `TryConfirmDestination` → `ExplorationPathGraph.TryFindPath` → `m_pathIndex = 1` → `Walking`.
 4. `ExecuteNextWalkerAction` → `AutopilotPathWalker.GetNextAction` → `DungeonExplorer` turn or step.
 5. Exploration presenter calls `AutopilotController.OnExplorerAnimationCompleted` after lerp; index advances; repeat until destination or cancel.
 

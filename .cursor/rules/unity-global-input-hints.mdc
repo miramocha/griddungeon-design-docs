@@ -12,23 +12,25 @@ Design reference: [shared menu & picker UI § Global input hints](../../docs/04-
 
 ## Global strip — input binds only
 
-**Publish only** keyboard/mouse **verbs**: key or button name + action (`Z Confirm`, `W/S Row`, `L Log`, `M Fullscreen`, `Esc Pause`).
+**Publish only** keyboard/mouse **verbs**: `[Key] Verb` per segment (`[Z] Confirm`, `[Directional] Navigate`, `[Up/Down] Navigate`, `[V] Log`, `[M] Map`, `[Esc] Pause`). Prefer short verbs (Confirm, Back, Navigate) over screen-specific labels.
+
+**Navigation labels (gamepad-ready):** `[Directional]` = 2D move (PC: WASD / arrows / stick); `[Up/Down]` = 1D vertical (PC: W/S or stick Y).
 
 ## Segment order (locked)
 
 Every bind segment in `TabbedPickerRailHints` (game repo: `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs`) uses this order:
 
-1. **Z and X** — confirm/cancel first (`Z Confirm · X Cancel`)
-2. **W/S and Q/E** — navigation axes next; **W/S before Q/E** when both apply (`WASD Navigate · Q/E Tab` or `W/S Row · Q/E Tab`)
-3. **Other keys** — L, Esc, M, Click, … last (`L Log · Esc Pause`)
+1. **Z and X** — confirm/cancel first (`[Z] Confirm · [X] Cancel`)
+2. **Up/Down and Q/E** — navigation axes next; **Up/Down before Q/E** when both apply (`[Directional] Navigate · [Q/E] Tab` or `[Up/Down] Navigate · [Q/E] Tab`)
+3. **Other keys** — V, Esc, M, Click, … last (`[V] Log · [Esc] Pause`)
 
 Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint strings in views — add a constant or helper on `TabbedPickerRailHints`.
 
 | OK on global strip | Not on global strip |
 |--------------------|---------------------|
-| `Z Confirm · X Cancel · WASD Navigate · L Log` | Party cell, facing arrow, HP/MP, floor name |
-| `Z Confirm · X Back · Q/E Tab · W/S Row` | Tutorial lore, quest text, warnings |
-| `Z Pick · X Back · Q/E Member · W/S Slots` | `north up`, map legend, focused slot names (`· Weapon`), confirm-target labels |
+| `[Z] Confirm · [X] Cancel · [Directional] Navigate · [V] Log` | Party cell, facing arrow, HP/MP, floor name |
+| `[Z] Confirm · [X] Back · [Q/E] Tab · [Up/Down] Navigate` | Tutorial lore, quest text, warnings |
+| `[Z] Confirm · [X] Back · [Q/E] Tab · [Up/Down] Navigate` | `north up`, map legend, focused slot names (`· Weapon`), confirm-target labels |
 
 **Do not** put bind copy on panel footers, picker chrome, command rail, map title row, or victory overlays — use `InputHints.Publish(gameState, text)` / `Clear` instead.
 
@@ -59,8 +61,8 @@ When a modal’s **only** footer text is bind copy (`Esc Resume`), prefer **glob
 ## Implementation checklist
 
 1. New screen with keyboard/mouse binds → add/extend `TabbedPickerRailHints` (or documented constant), publish from one view method, clear on close.
-2. **Segment order** — new copy follows Z/X → W/S & Q/E → other keys; mirror the table in [shared-menu-picker-ui.md § TabbedPickerRailHints copy](../../docs/04-dev/shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
+2. **Segment order** — new copy follows Z/X → Up/Down & Q/E → other keys; mirror the table in [shared-menu-picker-ui.md § TabbedPickerRailHints copy](../../docs/04-dev/shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
 3. Removing a legacy footer hint → delete UXML `Label` + USS; wire publisher + input-handler block while overlay open.
 4. PR review: if `InputHintPresenter` text is not a bind line, move status/tutorial to HUD labels or modal body — not the global strip.
-5. PR review: reject hint strings that reorder segments (e.g. `L Log` before `Z Confirm`) or duplicate bind footers on panels.
-6. **Navigate vs Command/Menu/Action** — use `WASD Navigate` (or `WASD Target` / `WASD Member`) when `MenuNavigate` applies; reserve `W/S` for 1D vertical rails only (`W/S Section`, `W/S Row`, `W/S Slots`). See `unity-input-vocabulary.mdc`.
+5. PR review: reject hint strings that reorder segments (e.g. `[V] Log` before `[Z] Confirm`) or duplicate bind footers on panels.
+6. **Hint format** — `[Key] Verb` per segment; use `[Directional] Navigate` / `[Up/Down] Navigate` for menu focus — not slot/member/target names on the global strip. See `unity-input-vocabulary.mdc`.

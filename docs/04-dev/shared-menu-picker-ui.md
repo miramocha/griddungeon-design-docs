@@ -275,32 +275,36 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 
 ### `TabbedPickerRailHints` copy
 
-**Segment order (locked):** Z/X → W/S and Q/E → other keys (L, Esc, M, Click, …).
+**Format:** `[Key] Verb` per segment (e.g. `[Z] Confirm · [X] Cancel`). **`[Directional]`** = 2D move; **`[Up/Down]`** = 1D vertical. Prefer short verbs over screen-specific labels.
+
+**Segment order (locked):** Z/X → Up/Down and Q/E → other keys (V, Esc, M, Click, …).
 
 | Constant / helper | Copy |
 |-------------------|------|
-| `HubRoot` | Z Confirm · X Cancel · WASD Navigate |
-| `HubService` | Z Confirm · X Back · WASD Navigate |
-| `CombatIdle` | Z Confirm · X Cancel · L Log |
-| `CombatCommand` | Z Confirm · X Cancel · WASD Navigate · L Log |
-| `CombatTarget` | Z Confirm · X Cancel · WASD Target · L Log |
-| `LogModal` | X Close · L Close |
-| `BattleReward` / `ModalDismiss` | Z Continue · Click Close |
-| `ExplorationPauseMenuShell` | Z Open · X Close · W/S Section · Esc Close |
-| `ExplorationMapPanel` | M Fullscreen · Esc Pause |
-| `ExplorationMapFullscreen` | M or Esc Exit Fullscreen |
-| `PartyMenuShell` | Z Open · X Close · W/S Section |
-| `PartyQuitConfirm` | Z Confirm · X Back · W/S Row |
-| `HubHospitalPick` | Z Pick · X Back · WASD Member — hub hospital heal/revive on party floater |
-| `PartyInventoryEngage` | Z Engage · X Back · Q/E Tab |
-| `PartyEquipmentEngage` | Z Engage · X Back · WASD Member |
-| `PartyEquipmentSlots` | X Back · W/S Slots |
-| `PartyFormationSwap` | Z Pick · X Cancel · WASD Member — default when Formation pane is open (auto-engage on reveal) |
-| `PartyFormationEngage` | Z Engage · X Back · WASD Member — after **X** backs out of swap mode while pane stays open |
-| `ForItemPickerEngage(backVerb)` | Z Confirm · X {backVerb} |
-| `ForItemPickerRows(multiTab, backVerb)` | Z Confirm · X {backVerb} · Q/E Tab · W/S Row — or Z Confirm · X {backVerb} · W/S Row when single tab |
+| `HubRoot` | [Z] Confirm · [X] Cancel · [Directional] Navigate |
+| `HubService` | [Z] Confirm · [X] Back · [Directional] Navigate |
+| `CombatIdle` | [Z] Confirm · [X] Cancel · [V] Log |
+| `CombatCommand` | [Z] Confirm · [X] Cancel · [Directional] Navigate · [V] Log |
+| `CombatTarget` | [Z] Confirm · [X] Cancel · [Directional] Navigate · [V] Log |
+| `LogModal` | [X] Close · [V] Close |
+| `BattleReward` / `ModalDismiss` | [Z] Continue · [Click] Close |
+| `ExplorationPauseMenuShell` | [Z] Open · [X] Close · [Up/Down] Navigate · [Esc] Close |
+| `ExplorationMapPanel` | [M] Map · [Esc] Pause |
+| `ExplorationMapFullscreen` | [C] Auto · [M] Map · [Esc] Close |
+| `ExplorationMapAutopilotSelect` | [C] Confirm · [X] Cancel · [Directional] Navigate · [Click] Set · [Esc] Cancel |
+| `ExplorationMapAutopilotWalking` | [Esc] Stop |
+| `PartyMenuShell` | [Z] Open · [X] Close · [Up/Down] Navigate |
+| `PartyQuitConfirm` | [Z] Confirm · [X] Back · [Up/Down] Navigate |
+| `HubHospitalPick` | [Z] Confirm · [X] Back · [Directional] Navigate — hub hospital heal/revive on party floater |
+| `PartyInventoryEngage` | [Z] Confirm · [X] Back · [Q/E] Tab |
+| `PartyEquipmentEngage` | [Z] Confirm · [X] Back · [Directional] Navigate |
+| `PartyEquipmentSlots` | [X] Back · [Up/Down] Navigate |
+| `PartyFormationSwap` | [Z] Confirm · [X] Cancel · [Directional] Navigate — default when Formation pane is open (auto-engage on reveal) |
+| `PartyFormationEngage` | [Z] Confirm · [X] Back · [Directional] Navigate — after **X** backs out of swap mode while pane stays open |
+| `ForItemPickerEngage(backVerb)` | [Z] Confirm · [X] {backVerb} |
+| `ForItemPickerRows(multiTab, backVerb)` | [Z] Confirm · [X] {backVerb} · [Q/E] Tab · [Up/Down] Navigate — or [Z] Confirm · [X] {backVerb} · [Up/Down] Navigate when single tab |
 
-Party equipment (slots engaged): `X Back · W/S Slots` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Member pick on the party floater uses **WASD** before slot engage (`PartyEquipmentEngage`).
+Party equipment (slots engaged): `[X] Back · [Up/Down] Navigate` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Member pick on the party floater uses **`[Directional]`** (`WASD` on PC) before slot engage (`PartyEquipmentEngage`).
 
 ---
 

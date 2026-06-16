@@ -11,10 +11,12 @@ Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action map
 | Role | Keyboard | Mouse | Input System (menu surfaces) |
 |------|----------|-------|------------------------------|
 | **Navigate / focus** | `W`/`A`/`S`/`D` + arrows | Hover + LMB on focusable control | `MenuNavigate` (2D vector) |
-| **Confirm** | `Z` (+ `Enter` alias) | LMB on focused or clicked control | `MenuConfirm` |
+| **Confirm** | `Z` | LMB on focused or clicked control | `MenuConfirm` |
 | **Cancel / back** | `X` | RMB | `MenuCancel` |
 | **Tab cycle** | `Q` / `E` | LMB on tab chip | `*TabPrev` / `*TabNext` (scoped per overlay) |
 | **Menu / pause** | `Tab` / `Esc` | — | `PartyMenu` / `Pause` (phase-specific) |
+
+**Gamepad-ready clustering:** new binds should prefer **`WASD`**, face row **`Z` / `X` / `C` / `V`**, and **`Q` / `E`** ([§ Gamepad-ready layout](#gamepad-ready-keyboard-layout-deferred-implementation)). **`V`** = combat log. **`C`** = expanded-map autopilot. **`Tab` / `Esc`** → **Menu** / **Options**; **`M`** → **View** (Xbox) / **touchpad click** (DualSense). No **`Space`** / **`Enter`** in `GridDungeon.inputactions` — use **`Z`**. Full PC vs pad table: [§ PC vs console reference](#pc-vs-console-reference-locked-intent).
 
 **Mouse parity:** UITK `Button` controls activate on **LMB** without an extra `Z`. Keyboard **`Z`** is the **focus-then-confirm** path on the same control. LMB on a combat command or valid target still **instant-queues** (no extra confirm) per [ADR 026](../../decisions/026-combat-menu-focus-navigation.md).
 
@@ -27,7 +29,7 @@ When a **party menu**, **skill/item picker**, **hub service panel**, or other mo
 
 ### Exploration FPV exception
 
-With **no** overlay owning input, labyrinth FPV uses `W`/`A`/`S`/`D` and arrows for **grid displacement** (not menu focus), and **`Q`/`E`** for **90° turn** (not tab cycle). See [Exploration](#exploration) below. Map **autopilot destination pick** reuses universal navigate (`WASD` / arrows = cursor, `Z` / LMB = confirm, `X` = cancel pick).
+With **no** overlay owning input, labyrinth FPV uses `W`/`A`/`S`/`D` and arrows for **grid displacement** (not menu focus), and **`Q`/`E`** for **90° turn** (not tab cycle). See [Exploration](#exploration) below. Map **autopilot destination pick** reuses universal navigate (`WASD` / arrows = cursor, **`C` / LMB** = arm pick + confirm destination, **`X`** = cancel pick). **`Z`** stays **`Interact`** while the expanded map is open (stairs, doors, gather) — autopilot does **not** steal universal confirm on that surface.
 
 ### Menu / pause (`Tab` / `Esc`) by phase
 
@@ -58,9 +60,9 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 | **Strafe right** | `D` | Displacement (trial layout — was EO `E`) |
 | **Turn left** | `Q` | No step events (trial layout — was EO `A`) |
 | **Turn right** | `E` | No step events (trial layout — was EO `D`) |
-| **Interact** | `Space` or `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
+| **Interact** | `Z` | Door, chest, stairs, gather, hub gate, stratum transitions |
 | **Toggle map** | `M` | Side panel ↔ fullscreen map |
-| **Party / pause menu** | `Tab` or `Esc` | Same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)): **Inventory**, **Equipment**, **Quit to title** (hub + exploration; confirm pane → `RequestQuitToTitle`, no inn save). **Skills** / **Tutorial codex** deferred ([guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)). Exploration: `Esc` cancels autopilot / exits fullscreen map **first**; when pause shell is open, **Esc closes** the menu (`Exploration.Pause` stays enabled while menu open). Global hint on shell: `Esc Close` ([shared menu § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). |
+| **Party / pause menu** | `Tab` or `Esc` | Same overlay when safe ([ADR 034](../../decisions/034-skill-point-allocation-outside-combat.md), [ADR 036](../../decisions/036-party-inventory-model.md)): **Inventory**, **Equipment**, **Quit to title** (hub + exploration; confirm pane → `RequestQuitToTitle`, no inn save). **Skills** / **Tutorial codex** deferred ([guided-tutorial](guided-tutorial.md#codex), [ADR 029](../../decisions/029-guided-tutorial.md)). Exploration: `Esc` cancels autopilot / exits fullscreen map **first**; when pause shell is open, **Esc closes** the menu (`Exploration.Pause` stays enabled while menu open). | Global hint on shell: `[Esc] Close` ([shared menu § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)). |
 
 **Arrow keys** duplicate `W/S` (forward/back) and left/right arrows (turn). Strafe (`A`/`D`) has no arrow duplicate.
 
@@ -77,9 +79,11 @@ Active during labyrinth FPV (not in combat, not in modal menus).
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Arm destination pick** | **Z** on fullscreen map | Enter cursor mode ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)) |
-| **Confirm destination** | **Z** or click revealed walkable cell | Pathfind + walk; expanded map only (side minimap pick deferred) |
+| **Arm destination pick** | **`C`** on fullscreen map | Enter cursor mode ([autopilot](autopilot.md), [ADR 021](../../decisions/021-autopilot-mvp2.md)) |
+| **Confirm destination** | **`C`** or click revealed walkable cell | Pathfind + walk; expanded map only (side minimap pick deferred) |
 | **Cancel autopilot** | `Esc`, any move/turn/interact, or disengage pick (**X**) | Immediate; `Esc` also closes pause menu when shell open |
+
+**`Z` interact** (stairs, doors, chests, gather) remains available while the expanded map is open — autopilot arm/confirm uses **`C`** so it does not conflict with confirm on the same key.
 
 ---
 
@@ -94,22 +98,25 @@ Active when map panel is visible or fullscreen (`M`).
 | **Zoom out** | Mouse wheel down | |
 | **Recenter on party** | `Home` or `P` | Snap view to party cell |
 | **Close fullscreen map** | `M` or `Esc` | Return to exploration layout |
+| **Arm / confirm autopilot** | **`C`** or LMB on revealed walkable cell | Expanded map only; see [Autopilot](#autopilot) |
+| **Disengage destination pick** | **`X`** | Exit cursor mode without walking |
 
-Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-only mode — **default:** fullscreen map still allows movement keys to pass through to exploration (map stays visible). Alternative: movement disabled in fullscreen — **use pass-through** for EO-like flow.
+Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-only mode — **default:** fullscreen map still allows movement keys to pass through to exploration (map stays visible). **`Z` interact** also passes through while fullscreen (stairs, doors, etc.). Alternative: movement disabled in fullscreen — **use pass-through** for EO-like flow.
 
 ---
 
 ## Combat
 
-**Authority:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md). Global combat UI keys: **arrows or `W`/`A`/`S`/`D`** = move focus (`W`↑ `S`↓ `A`← `D`→, same as arrows), **`Z`** = confirm (`Enter` alias), **`X`** = cancel / Back, **`Esc`** = pause (no-op until pause UI ships). **`R`** is not used for Back. Exploration `W`/`S`/`A`/`D` do **not** apply while the Combat map is active.
+**Authority:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md). Global combat UI keys: **arrows or `W`/`A`/`S`/`D`** = move focus (`W`↑ `S`↓ `A`← `D`→, same as arrows), **`Z`** = confirm, **`X`** = cancel / Back, **`V`** = toggle battle log, **`Esc`** = pause (no-op until pause UI ships). **`R`** is not used for Back. Exploration `W`/`S`/`A`/`D` do **not** apply while the Combat map is active.
 
 ### Command bar (planning + player-controlled turns)
 
 | Action | Keyboard | Notes |
 |--------|----------|-------|
 | **Move focus** | Arrow keys or `W` / `A` / `S` / `D` | Active scope: command bar or target list; WASD mirrors arrows ([ADR 026 amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-05-23-wasd-menu-navigate)) |
-| **Confirm** | `Z` or `Enter` | Queue focused command, confirm target, or activate **Back button** |
+| **Confirm** | `Z` | Queue focused command, confirm target, or activate **Back button** |
 | **Cancel / Back** | `X` | Cancel targeting, or LIFO undo last queued command when planning |
+| **Toggle battle log** | `V` | Log modal; **`X`** also closes while open |
 | **Pause** | `Esc` | Pause menu (incl. **Tutorial codex** when unlocked — [ADR 029](../../decisions/029-guided-tutorial.md)); no-op until UI ships ([ADR 015](../../decisions/015-mvp1-combat.md)) |
 
 | Action | Mouse | Notes |
@@ -133,7 +140,7 @@ After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/
 | Action | Keyboard | Notes |
 |--------|----------|-------|
 | **Move target focus** | Arrow keys or `W` / `A` / `S` / `D` | Valid slots only; first valid slot highlighted on enter |
-| **Confirm target** | `Z` or `Enter` | Queue command with `TargetId`; advance to next core |
+| **Confirm target** | `Z` | Queue command with `TargetId`; advance to next core |
 | **Cancel targeting** | `X` or **Back button** (+ `Z` on focused Back) | No command queued; return to command bar (default focus Attack) |
 
 **Path B:** entering targeting **moves focus to the target list**; command bar **`Z`** is ignored until targeting ends.
@@ -159,7 +166,7 @@ When the **skill use picker** is open ([ADR 035](../../decisions/035-skill-use-p
 | **Previous tab** | **`Q`** | Cycles visible tabs (wrap); default tab **All** |
 | **Next tab** | **`E`** | |
 | **Move row focus** | Arrows or `W` / `A` / `S` / `D` | Active tab’s skill list only |
-| **Confirm skill** | `Z` or `Enter` | Then combat targeting or field apply |
+| **Confirm skill** | `Z` | Then combat targeting or field apply |
 | **Cancel picker** | `X` | Close modal; no command queued |
 | **Pick tab (optional)** | LMB on tab | Same tabs as Q/E cycle |
 
@@ -213,7 +220,7 @@ When the **party menu** is open ([ADR 036](../../decisions/036-party-inventory-m
 
 | Action | Input | Notes |
 |--------|-------|-------|
-| **Toggle combat log** | `L` or click preview row | Opens/closes `combat-log-modal`; **`X`** / Back closes modal before pickers (`CombatPlayerCommandGate.TryBack` order). Global hint: **L or X Close** when open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)) |
+| **Toggle combat log** | `V` or click preview row | Opens/closes `combat-log-modal`; **`X`** / Back closes modal before pickers (`CombatPlayerCommandGate.TryBack` order). Global hint: **`[V]` / `[X]` Close** when open ([shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints)) |
 | **Toggle map** | `M` | Read-only floor map |
 | **Pause** | `Esc` | When pause UI ships — all phases ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) |
 
@@ -233,7 +240,7 @@ Enemy **`Cinematic`** (no QTE): `Esc` skip only. Settings: **Auto QTE** (Good ti
 
 ## Global input hints
 
-Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — key/button names and actions (`Z Confirm`, `M Fullscreen`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
+Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared across hub, combat, exploration minimap, party menu, and post-battle victory. Hosts publish **input bind copy only** — `[Key] Verb` segments (e.g. `[Z] Confirm`, `[M] Map`) — via `InputHints.Publish(gameState, text)`; clear on overlay close or phase exit.
 
 **Integrator:** [centralized UI services](../04-dev/centralized-ui-services.md) — presenter/facade pattern, sort stack, bootstrap.
 
@@ -268,7 +275,10 @@ Exploration
   MoveForward, MoveBack, StrafeLeft, StrafeRight
   TurnLeft, TurnRight
   Interact, ToggleMap, PartyMenu, Pause
-  MapSetAutopilotDestination, CancelAutopilot   # MVP2 (map LMB + Esc)
+
+Map
+  Pan, Zoom, RecenterParty, CloseFullscreen
+  CursorMove, ConfirmDestination, SetDestination, CancelAutopilot, DisengageDestinationPick   # expanded map — C arm/confirm, X disengage, LMB set, Esc cancel/close
 
 Combat
   MenuNavigate, MenuConfirm, MenuCancel   # ADR 026 — arrows + WASD / Z / X / RMB on MenuNavigate composite
@@ -278,10 +288,6 @@ Combat
   CmdAttack, CmdGuard, CmdSkill, CmdItem, CmdFlee   # deprecate direct fire — focus list drives Submit
   CycleTarget                             # deferred; targeting uses MenuNavigate on roster
   ToggleLog, ToggleMap, Pause             # Esc → Pause when UI ships
-
-Map
-  Pan, Zoom, RecenterParty
-  SetAutopilotDestination   # MVP2 — LMB on revealed walkable cell
 
 Hub
   MenuNavigate, MenuConfirm, MenuCancel   # Z / X / RMB; Tab + Esc → PartyMenu
@@ -293,9 +299,158 @@ UI
 
 ---
 
+## Gamepad-ready keyboard layout (deferred implementation)
+
+**Goal:** PC keyboard defaults should map cleanly to a future gamepad scheme without rebinding every action. **No gamepad control scheme ships yet** — this section is layout policy + audit only.
+
+### Core mapping (locked intent)
+
+| Keyboard slot | Role | Gamepad (Xbox names) | Notes |
+|---------------|------|----------------------|-------|
+| **`W` / `A` / `S` / `D`** (+ arrows) | Move / navigate / map cursor | **Left stick** or **D-pad** | Arrows = D-pad alias on PC |
+| **`Z`** | Confirm / interact (primary) | **A** (south) | Sole confirm key in `GridDungeon.inputactions` |
+| **`X`** | Cancel / back | **B** (east) | RMB = `MenuCancel` alias on PC |
+| **`C`** | Secondary confirm / context action | **X** (west) | Expanded-map autopilot arm + confirm only |
+| **`V`** | Tertiary face action | **Y** (north) | Combat / battle log toggle |
+| **`Q` / `E`** | Tab prev/next **or** exploration turn | **L1** / **R1** (shoulder bumpers) | Same keys, phase-gated (`InputRouter`) |
+
+PlayStation / Switch: same **positions** (Cross/Circle/Square/Triangle; B/A/Y/X on Switch) — bind by **action**, not by letter on the plastic.
+
+### Face row semantics
+
+Same physical tier on gamepad; different **roles** on keyboard:
+
+| Face slot | Keyboard | Gamepad (Xbox) | Class | Typical phases |
+|-----------|----------|----------------|-------|----------------|
+| South | `Z` | **A** | **Verb** — confirm / interact | Global |
+| East | `X` | **B** | **Verb** — cancel / back | Menus, map pick cancel |
+| West | `C` | **X** | **Verb** — context confirm | Expanded-map autopilot only |
+| North | `V` | **Y** | **Overlay** — read-only UI | Combat battle log (not a confirm key) |
+
+### Map toggle — `M`, not `C`
+
+**Locked PC default:** **`M`** toggles side minimap ↔ fullscreen map (exploration + combat read-only) — [ADR 014](../../decisions/014-mvp1-exploration-map.md), Mary Skelter 2 **`[M] TOGGLE MAP DISPLAY`** ([map-ui refs](../refs/map-ui.md)).
+
+| Reference | Map open key | Notes |
+|-----------|--------------|-------|
+| **Mary Skelter 2** (PC) | **`M`** | HUD copy: toggle map display / expanded overlay |
+| **Etrian / DRPG lane** (general) | **`M`** or map menu item | Class of Heroes 3 uses map as dedicated screen; floor pills use other keys |
+| **Labyrinth of Galleria** (map screen) | **`C`** / **`V`** | **On the map UI only** — treasure list / legend — not global map toggle |
+
+**Do not move map toggle to `C`.** **`C`** is committed to expanded-map **autopilot** (face-row west / Xbox **X**).
+
+**Gamepad map toggle (locked default):** **`M`** → Xbox **View** (`<Gamepad>/selectButton`); DualSense **touchpad click** (`DualShockGamepad.touchpadButton` — **not** Create / `selectButton`). Not **Menu** (party / pause), not **L3** (MSK2 pad uses stick click — we pass for one global scheme).
+
+### Genre cross-check (FPV DRPG / EO lane)
+
+Compared against [00 — Game references](../00-game-references.md) primary (**Etrian Odyssey**) and secondary (**Mary Skelter**), plus [map-ui refs](../refs/map-ui.md) (Galleria, CoH3, MSK2). Sources: [StrategyWiki EO controls](https://strategywiki.org/wiki/Etrian_Odyssey/Controls), [MSK2 PC controls](https://www.gamenguides.com/mary-skelter-2-pc-keyboard-and-gamepad-controls) (Jan 2022 PC port).
+
+| Action | **Grid Dungeon** | **Etrian Odyssey** (PC / Origins) | **Mary Skelter 2** (PC) | **Verdict** |
+|--------|------------------|-----------------------------------|-------------------------|-------------|
+| **Move** | `WASD` + arrows | `WASD` | `WASD` + arrows | Aligned |
+| **Strafe** | `A` / `D` | `Q` / `E` | `Q` / `E` (sidestep) | **Trial swap** — we strafe on `A`/`D`, turn on `Q`/`E` ([§ Exploration](#exploration)); EO/MSK invert that pair |
+| **Turn** | `Q` / `E` | (via `A`/`D` in EO PC table) | `A` / `D` (with move) | Same trial swap; bumpers still map cleanly |
+| **Confirm / interact** | **`Z`** | **`Space`** | **`Space` / `Enter`** | **Diverges** from EO/MSK PC — intentional: one key → gamepad **A**; MSK uses **`Z`** for dialog skip only |
+| **Cancel / back** | **`X`** | **`R`** | **Backspace / Shift** | **Diverges** from EO **`R`** — our **`X`** matches east-face / Nintendo cancel on keyboard |
+| **Menu / pause** | **`Tab` / `Esc`** | **`Tab`** (main menu) | **`Esc`** (system / log history) | Aligned intent → gamepad **Start** |
+| **Map toggle** | **`M`** | Map side panel + draw mode (no single **`M`** in EO table) | **`M`** (pad: **L3** in MSK2) | **PC `M` locked**; gamepad **`View`/`Select`** (not L3) |
+| **Battle / event log** | **`V`** (combat) | — | **`F`** (pad: **Y**) | Same **north face** tier as MSK log (**Y**); letter differs (**V** vs **F**) |
+| **Map screen extras** | **`C`** = autopilot pick | **`C`** = icon list; **`V`** = tool confirm | — | **`C`/`V` on map** common in NIS lane — we use for **autopilot** / **log**, not draw tools ([ADR 002](../../decisions/002-mapping-model.md) no drawing) |
+| **Mouse** | Combat target, map pan, hub | Full mouse + draw | Supported | PC-first — matches EO Origins PC pitch |
+
+**Takeaways**
+
+1. **`M` for map** — MSK PC match; gamepad **`View`/`Select`** locked (MSK pad uses **L3** — we standardize on **View** for `ToggleMap`).
+2. **`Z` not `Space`** — Western EO/MSK default; we pick **JP-style `Z`/`X` face row** + pad **A**/**B** over EO **`Space`**/**`R`** — document in tutorials / first hub hint if EO migrants complain.
+3. **`Q`/`E` turn vs strafe** — Only major movement divergence from EO/MSK; locked as trial layout in [input-bindings § Exploration](#exploration); bumpers (**L1**/**R1**) still work for tab/turn.
+4. **`C` for autopilot** — Not a global map key in genre; Galleria **`C`** is **in-map UI** (treasure list). Safe as secondary face action while **`M`** owns toggle.
+5. **No `Space`/`Enter` in action maps** — Stricter than EO/MSK; rebind screen (deferred) can restore western defaults without changing gamepad layout.
+
+### System tier
+
+**Intentionally outside the `ZXCV` face row** — center / meta buttons, not confirm/cancel:
+
+| Keyboard | Action(s) | Xbox | PlayStation | Switch |
+|----------|-----------|------|-------------|--------|
+| **`Tab` / `Esc`** | Party menu, pause, close map, cancel autopilot | **Menu** (Start) | **Options** | **+** |
+| **`M`** | Toggle map (exploration + combat) | **View** | **Touchpad click** | **−** (or View equiv.) |
+| **Mouse** | Pan, zoom, click targets, hub hover | R stick (deferred) | R stick | R stick |
+
+**PlayStation note:** Unity maps Xbox **View** to `Gamepad.selectButton` (= **Create** on DualSense). Grid Dungeon **map** uses **touchpad click** instead so **Create stays free**. Codex / journal deferred to pause menu — not View.
+
+### PC vs console reference (locked intent)
+
+Policy for a future `Gamepad` control scheme in `GridDungeon.inputactions`. **PC column matches shipped keyboard binds today.**
+
+| Action | PC keyboard | PC mouse | Xbox | PlayStation | Status |
+|--------|-------------|----------|------|-------------|--------|
+| **Move / navigate** | `WASD`, arrows | — | L stick, D-pad | Same | PC wired |
+| **Confirm / interact** | `Z` | LMB (context) | **A** | **Cross** | PC wired |
+| **Cancel / back** | `X` | RMB (`MenuCancel`) | **B** | **Circle** | PC wired |
+| **Map autopilot** (expanded) | `C` | LMB (set dest.) | **X** (west) | **Square** | PC wired |
+| **Battle log** (combat) | `V` | — | **Y** (north) | **Triangle** | PC wired |
+| **Tab / turn** | `Q` `E` | Tab chips (LMB) | **L1** **R1** | L1 R1 | PC wired |
+| **Party menu** | `Tab` | — | **Menu** | **Options** | PC wired |
+| **Pause / overlay stack** | `Esc` | — | **Menu** | **Options** | PC wired |
+| **Toggle map** | `M` | — | **View** | **Touchpad click** | PC wired; pad deferred |
+| **Map pan** | — | Drag | R stick (deferred) | R stick | Deferred |
+| **Map zoom** | — | Wheel | L2/R2 (deferred) | L2/R2 | Deferred |
+| **Recenter map** | `Home` / `P` | — | L3 long-press? (deferred) | L3? | Audit only |
+| **Combat target** | — | Click cell | Pointer / stick (deferred) | Same | PC wired |
+
+**PC ↔ pad asymmetry (documented):** map letter **`M`** on keyboard; pad uses **View / touchpad**, not west face **`C`**. Confirm **`Z`** only on PC — no **`Space`** / **`Enter`** in gameplay action maps.
+
+### Audit — current `GridDungeon.inputactions` (2026-06)
+
+**In pattern**
+
+| Key | Action map | Action |
+|-----|------------|--------|
+| WASD + arrows | Exploration, Combat, Hub, Map | Move, `MenuNavigate`, `CursorMove` |
+| Z | Exploration, Combat, Hub | `Interact`, `MenuConfirm` |
+| X | Combat, Hub, Map | `MenuCancel`, `DisengageDestinationPick` |
+| C | Map | `ConfirmDestination`, `ToggleAutopilotSelect` |
+| V | Combat | `ToggleLog` |
+| Q / E | Exploration, Combat, Hub | Turn (FPV), `*TabPrev` / `*TabNext`, `SkillPickerTab*` |
+
+**Outside pattern — document before adding more**
+
+| Key | Action map | Action | Gamepad note |
+|-----|------------|--------|--------------|
+| **`M`** | Exploration, Combat | `ToggleMap` | **View** / **Select** — locked (not L3) |
+| **`Tab`** | Exploration, Hub, Combat | `PartyMenu`, `CycleTarget` (deferred) | **Start** with **`Esc`** |
+| **`Esc`** | Exploration, Hub, Map | `Pause`, `PartyMenu`, `CloseFullscreen`, `CancelAutopilot` | **Start** |
+| **`Home` / `P`** | Map | `RecenterParty` | Map utility — stick-click or long-press map |
+
+**Removed from action maps:** **`Space`** / **`Enter`** — use **`Z`** for confirm / interact. (Deferred QTE / cinematic beats may document their own keys when implemented.)
+
+**Dev / editor only (not player binds):** `F1`–`F10` in `GamePhaseDevShortcuts`; Floor Painter `KeyCode` — ignore for gamepad policy.
+
+### Agent / PR checklist (new binds)
+
+1. Prefer **`WASD`**, **`Z`/`X`/`C`/`V`**, or **`Q`/`E`** before other keys.
+2. If you must use another key, add a row to the audit table above with proposed gamepad home.
+3. Do not add **`Space`** / **`Enter`** to `GridDungeon.inputactions` for gameplay — use **`Z`**.
+4. Map toggle stays **`M`** (gamepad **View**) — not **`C`**.
+
+---
+
 ## Gamepad (deferred)
 
-Ship PC first. Later: left stick = forward/back strafe optional; right stick disabled in FPV; face buttons for interact/confirm. Document in separate pass when controller map is scoped.
+Ship PC first. When a `Gamepad` control scheme is added to `GridDungeon.inputactions`, mirror the [PC vs console reference](#pc-vs-console-reference-locked-intent) — one action per role, not one binding per key letter.
+
+**Implementation notes (Unity Input System):**
+
+| Action | Xbox bind | PlayStation bind |
+|--------|-----------|------------------|
+| `ToggleMap` | `<Gamepad>/selectButton` (View) | `<DualShockGamepad>/touchpadButton` |
+| `PartyMenu` / `Pause` | `<Gamepad>/startButton` | Same path (Options) |
+| Face row actions | `<Gamepad>/buttonSouth` … `buttonNorth` | Same paths (position-based) |
+| `Q`/`E` tier | `<Gamepad>/leftShoulder`, `rightShoulder` | Same |
+
+Mouse pan/zoom stays PC-primary; map zoom may later use triggers. DualSense **Create** (`selectButton`) remains unbound unless a future feature needs the Xbox View slot on Sony pads without touchpad.
+
+**Previously:** “document in separate pass” — layout pass is above; implementation still deferred ([release scope](../00-release-scope.md)).
 
 ---
 

@@ -226,13 +226,13 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 
 ### Global input hints — `InputHintPresenter` + `InputHints`
 
-**Job:** Bottom-right **input bind copy only** (`Z Confirm · X Cancel · WASD Navigate`). Not map legend, HP, quest text, or tutorial body copy.
+**Job:** Bottom-right **input bind copy only** (`[Z] Confirm · [X] Cancel · [Directional] Navigate`). Not map legend, HP, quest text, or tutorial body copy.
 
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/Runtime/UI/InputHintPresenter.cs` | `sortingOrder` **300**; `pickingMode = Ignore` |
 | Facade | `Assets/Scripts/UI/Views/InputHints.cs` | `Publish(gameState, text)` / `Clear(gameState)` |
-| Copy constants | `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs` | Segment order: Z/X → W/S & Q/E → other keys |
+| Copy constants | `Assets/Scripts/UI/Views/TabbedPickerRailHints.cs` | Segment order: Z/X → Up/Down & Q/E → other keys |
 | UXML / USS | `Assets/UI/Screens/Shared/InputHint.uxml`, `InputHint.uss` | `name="input-hint"`, `name="input-hint-text"` |
 | Bootstrap | `DevSceneComposition.WireInputHint` | Child of `GameState`; ref on `m_inputHint` |
 
