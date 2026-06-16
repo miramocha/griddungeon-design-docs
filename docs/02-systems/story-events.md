@@ -14,7 +14,7 @@ Scripted **story scenes** with visual-novel-style presentation: character portra
 
 | Goal | Approach |
 |------|----------|
-| Reuse everywhere | Single `StoryEventRunner` + `StoryEventView`; content-driven `storyEventId` |
+| Reuse everywhere | Single `StoryEventRunner` + `StoryEventPresenter`; content-driven `storyEventId` |
 | Combat-safe | Overlay + pause queue; **no** extra `GamePhase` |
 | Rules stay in Campaign asmdef | Story DTOs in Core; `StoryEventEffectExecutor` / play-once in `GridDungeon.Campaign`; runner does not embed S1 logic |
 | EO-readable pacing | Line-by-line advance; presentation lock until scene completes or skips to safe point |
@@ -28,7 +28,7 @@ Scripted **story scenes** with visual-novel-style presentation: character portra
 Trigger (hub / explore / combat)
   → StoryEventRunner.Play(storyEventId)
   → InputRouter: story-only (or UI) map
-  → StoryEventView: show step
+  → StoryEventPresenter: show step
   → Player advance / auto wait / choice
   → Apply step effects
   → Next step or Complete()
@@ -39,7 +39,7 @@ Trigger (hub / explore / combat)
 |------|----------|------|
 | `StoryEventDefinition` | Content | Steps, speakers, effects |
 | `StoryEventRunner` | Runtime | Orchestration, effect dispatch |
-| `StoryEventView` | UI | VN layout (UI Toolkit) |
+| `StoryEventPresenter` | UI | VN layout (UI Toolkit); facade `StoryEventOverlay` |
 
 ---
 

@@ -269,7 +269,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `InputHints` | `Publish(gameState, text)` / `Clear(gameState)` — static facade to `GameState.InputHint` |
 | `TabbedPickerRailHints` | Shared bind-copy strings for hub, combat, exploration, and party pickers |
 
-**Publishers:** `HubHudView.RefreshInputHint` / `RestoreInputHint`, `CombatHudView.RefreshInputHint` / `RestoreInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (hub shell, exploration pause shell, engage, row/slot picker states; quit confirm clears strip), `ExplorationMapCoordinator.RefreshGlobalInputHint`, `StoryEventView`, `BattleRewardScreenView` (victory dismiss), hub leave / `FloorTransitionPresenter` (animated `Clear` / `Hide` at beat start; `ExplorationMapCoordinator` / `HubHudView` republish on `PresentationReleased`), `InputRouter` (restore phase hint on story end).
+**Publishers:** `HubHudView.RefreshInputHint` / `RestoreInputHint`, `CombatHudView.RefreshInputHint` / `RestoreInputHint`, `PartyMenuOverlayView.RefreshMenuHint` (hub shell, exploration pause shell, engage, row/slot picker states; quit confirm clears strip), `ExplorationMapCoordinator.RefreshGlobalInputHint`, `StoryEventPresenter`, `BattleRewardScreenView` (victory dismiss), hub leave / `FloorTransitionPresenter` (animated `Clear` / `Hide` at beat start; `ExplorationMapCoordinator` / `HubHudView` republish on `PresentationReleased`), `InputRouter` (restore phase hint on story end).
 
 **Removed UXML bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, `party-equipment-detail` bind footer, `map-view-hint`, `battle-reward-hint`, `exploration-pause-hint`, `story-event-hint`.
 

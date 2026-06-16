@@ -122,7 +122,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
 | **100** | Exploration expanded map overlay | `ExpandedMapOverlayView` |
-| **150** | Story modal | `StoryEventView` on `StoryHud` |
+| **150** | Story event VN modal | `StoryEventPresenter` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
@@ -244,7 +244,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 | Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
 | Exploration map | `ExplorationMapCoordinator.RefreshGlobalInputHint` |
 | Party menu / pause | `PartyMenuOverlayView.RefreshMenuHint` |
-| Story modal | `StoryEventView` → `TabbedPickerRailHints.ModalDismiss` |
+| Story modal | `StoryEventPresenter` → `TabbedPickerRailHints.ModalDismiss` |
 | Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; map/hub republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter.RestoreGlobalInputHintForPhase` |
@@ -399,6 +399,30 @@ CharacterDetail.Hide();
 
 ---
 
+### Story event overlay — `StoryEventPresenter` + `StoryEventOverlay`
+
+**Job:** Cross-phase **visual-novel / briefing panel** (ADR 028). `StoryEventRunner` on `GameState` orchestrates steps and presentation locks; presenter subscribes to runner events and owns PopIn lifecycle. Macro `GamePhase` unchanged during play.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/StoryEventPresenter.cs` | `sortingOrder` **150**; `ICentralizedUiSurface` via `CentralizedUiPresenterBase` |
+| Panel view | `Assets/Scripts/UI/Views/StoryEventPanelView.cs` | Speaker/body labels; panel click → `StoryEventRunner.Advance` |
+| Facade | `Assets/Scripts/UI/Views/StoryEventOverlay.cs` | Lifecycle queries; `Register` / `Unregister` |
+| UXML / USS | `Assets/UI/Screens/Shared/StoryEventOverlay.uxml`, `StoryEventOverlay.uss` | BEM `story-event-root--hidden`; `pop-in` on panel |
+| Bootstrap | `DevSceneComposition.WireStory` + `WireStoryEventPresenter` | Child `StoryHud` GO; runner on `GameState` |
+
+**Publishers:** `StoryEventPresenter` on `StoryEventRunner.StepShown` / `ActiveChanged` — `Show` + label refresh; `Hide` when inactive. Global hint: `TabbedPickerRailHints.ModalDismiss` on show; clear owned hint on dismiss. Input: `StoryInputHandler` (Z) + panel click.
+
+```csharp
+// Lifecycle (tests / phase handoff)
+StoryEventOverlay.HideImmediate();
+
+// Runner drives content — no Open* facade API yet
+gameState.Story.TryPlay(storyEventId);
+```
+
+---
+
 ### Exploration map — `ExplorationMapCoordinator`
 
 **Job:** Exploration minimap (side panel) + expanded map overlay — shared `MapGridPaintController`, global input-hint publish. Two `UIDocument` presenters; coordinator owns event wiring and M-toggle choreography.
@@ -449,7 +473,6 @@ These use the **multi-`UIDocument` bootstrap** pattern but are **phase/modal-spe
 | Document | Sort | Role |
 |----------|------|------|
 | `PartyMenuOverlay` | 250 | Hub party menu + exploration pause shell |
-| `StoryHud` | 150 | Story event modal |
 | `FloorTransitionPresenter` | (uses fade + vignette) | Stairs transition; clears global hints on start |
 
 Treat them as **overlays** with their own `*View` lifecycle, not as generic “services.” Only add a `PartyFormationFloater`-style facade when **three or more** unrelated callers need the same panel.
@@ -477,7 +500,7 @@ GameState
 ├── CombatHud
 ├── HubHud
 ├── PartyMenuOverlay
-└── StoryHud
+└── StoryHud (StoryEventPresenter)
 ```
 
 Wiring: `Assets/Scripts/Editor/DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs`. After clone, run **Create Dev Bootstrap** if console reports missing floater or hint refs.
@@ -723,7 +746,7 @@ public interface ICentralizedUiSurface
 
 | Driver | Animation family | Used by |
 |--------|------------------|---------|
-| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker` |
+| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker`, `StoryEventPresenter` |
 | `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
 | `ScaleInPresentationDriver` | Uniform scale (`UniformScaleTransition`) | `ExpandedMapOverlayView` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) |
@@ -742,6 +765,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `ItemListPickerView` / `ItemListInventory` | Presenter + view + facade ✅ | PopIn | [#207](https://github.com/miramocha/griddungeon-game/issues/207), [#213](https://github.com/miramocha/griddungeon-game/issues/213) |
 | `CharacterDetail` | Presenter + facade ✅ | PopIn | [#209](https://github.com/miramocha/griddungeon-game/issues/209) |
 | `SkillUsePicker` | Presenter + facade ✅ | PopIn | [#212](https://github.com/miramocha/griddungeon-game/issues/212) |
+| `StoryEventOverlay` | Presenter + facade ✅ | PopIn | ADR 028 / centralized migration |
 | `PartyFormationFloater` | Presenter ✅ | Collapse | [#214](https://github.com/miramocha/griddungeon-game/issues/214) |
 | `WalletHud` | Presenter + facade ✅ | Slide | [#215](https://github.com/miramocha/griddungeon-game/issues/215) |
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
