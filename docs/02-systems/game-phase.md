@@ -395,13 +395,14 @@ at launch acceptance for macro phases is exercised in **`Assets/Scenes/DevBootst
 | Keyboard | F1�F4 | Hub / Exploration / Combat / flee (same as buttons; Input System `Keyboard`) |
 | Keyboard (save / campaign) | F5 / F6 / F8 | Inn save / `s1_party_ready` / reset new game � mirrored in **Save Editor** ([#84](https://github.com/miramocha/griddungeon-game/pull/84)) |
 | Keyboard (combat) | U / M | Dev Protocol strike / mend when Synchro ready |
-| Editor � **Dev Tools** | `GridDungeon ? Tools ? Dev Tools` | Phase/combat/party shortcuts (`GridDungeonDevWindow`) |
-| Editor � **Save Editor** | `GridDungeon ? Tools ? Save Editor` | Inn save, delete/reset, Edit Mode JSON write, campaign flag toggles (`CampaignFlagId` / `CampaignFlagAccessor` in Core) � [#84](https://github.com/miramocha/griddungeon-game/pull/84) |
-| Editor � **Dev Tools Map** | `GridDungeon ? Tools ? Dev Tools Map` | Reveal-all floor preview in Exploration |
+| Editor — **Dev Tools** | `GridDungeon → Tools → Dev Tools` | Phase/combat/party shortcuts (`GridDungeonDevWindow`) — Play Mode actions; not top-menu duplicates |
+| Editor — **Save Editor** | `GridDungeon → Tools → Save Editor` | Inn save, delete/reset, Edit Mode JSON write, campaign flag toggles (`CampaignFlagId` / `CampaignFlagAccessor` in Core) — [#84](https://github.com/miramocha/griddungeon-game/pull/84) |
+| Editor — **Dev Tools Map** | `GridDungeon → Tools → Dev Tools Map` | Reveal-all floor preview in Exploration |
+| Editor menu policy | [unity-editor-grid-dungeon-menu.mdc](../../.cursor/rules/unity-editor-grid-dungeon-menu.mdc) | Edit Mode authoring on `GridDungeon/` menu; Play Mode dev actions in Dev Tools + F-keys only |
 
 **Play-mode loop:** F1 Hub ? F2 Exploration ? F3 Combat ? F4 flee (? Exploration) ? F1 Hub.
 
-**Save / campaign QA:** Use **Save Editor** for `s1_*` flags and drift vs on-disk save; **B2F complete + inn save** sets `s1_first_foe_tutorial_complete` and writes the inn snapshot (B3F stairs). `GridDungeon ? Save ? Log at launch save path` only logs the JSON path.
+**Save / campaign QA:** Use **Save Editor** for `s1_*` flags and drift vs on-disk save; **B2F complete + inn save** sets `s1_first_foe_tutorial_complete` and writes the inn snapshot (B3F stairs). **GridDungeon → Tools → Log MVP1 Save Path** logs the JSON path.
 
 **F3 dev combat roster** (game repo `DevCombatDefaults`, when `PartyRuntime` has no cores): `dev_hero` (AGI 14) + `dev_medic` (AGI 9, **Skill** = ally heal `dev_field_patch`) + `dev_slime` (AGI 5) � for turn-order strip and ally-target keyboard QA until Guild (#13) fills a real party. Production **Combat HUD** (`CombatHudView`, issue #34) binds the same queue; **player command** turns highlight the acting core on the **party roster**, not the AGI strip ([combat.md](combat.md#turn-order-strip-agi-queue-ui)).
 

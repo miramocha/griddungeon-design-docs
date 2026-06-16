@@ -98,7 +98,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 
 ## Editor — Populate workflow
 
-1. Open floor art scene (e.g. `Assets/Scenes/Floors/s1_B1F.unity`).
+1. Open **FPV preview** (**GridDungeon → Floor Art → Preview → Open Preview For Floor…**) or a floor art scene for hand-editing.
 2. Assign `ExplorationFloor` on **Floor Art Grid**; enable **Show Blocked Overlay** to verify alignment.
 3. Assign **Wall Block Prefabs** list on `FloorArtGrid`.
 4. Click **Populate Wall Blocks** (name TBD).
