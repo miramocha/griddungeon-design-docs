@@ -1,0 +1,48 @@
+---
+description: GridDungeon editor MenuItem layout — Edit Mode authoring only; Play Mode actions in Dev Tools window
+globs:
+  - ../griddungeon-game/Assets/Scripts/Editor/**/*.cs
+  - ../griddungeon-game/Assets/Scripts/Runtime/Dev/GridDungeonEditorMenuHints.cs
+---
+
+# GridDungeon editor menu (`MenuItem`)
+
+Authority: `GridDungeonEditorMenus` (Editor) + `GridDungeonEditorMenuHints` (runtime log copy) in **griddungeon-game**.
+
+## GridDungeon menu = Edit Mode / authoring
+
+| OK on `GridDungeon/` menu | Not OK |
+|---|---|
+| Open editor windows (Floor Editor, Dev Tools, Save Editor, Dev Tools Map) | Play Mode **actions** (combat, fill party, flee, hub jump, …) |
+| Create/regenerate assets, scenes, prefabs, catalogs | `[MenuItem(..., true)]` gated on `Application.isPlaying` |
+| Content ensure / compact / sync pipelines | Duplicate of a button inside **Tools → Dev Tools** |
+
+Opening **Dev Tools** / **Dev Tools Map** / **Save Editor** from the menu is OK — opens a **window**; Play Mode work happens inside it.
+
+## Play Mode dev actions
+
+- **Tools → Dev Tools** — buttons + live status (authoritative UI).
+- **F-keys** — `GamePhaseDevShortcuts` in Play Mode.
+- **Save Editor** — save file + campaign flags (Edit Mode write; F5/F8 mirrors in Play Mode).
+
+No `GridDungeon/Dev/` or `Tools/Play Mode/` menu commands for phase/combat/party shortcuts.
+
+## Nested submenu layout
+
+| Top-level | Submenus / items |
+|---|---|
+| **Tools** | Dev Tools, Dev Tools Map, Save Editor, Log MVP1 Save Path |
+| **Scenes** | Create Dev Bootstrap, Create Play Mode Exploration Scene |
+| **Content** | Floor Editor, Ensure MVP1 ContentDatabase, Ensure MVP1 S1 Story Events, Compact floor list, **Floor Connector/** |
+| **Floor Art** | **Preview/**, **Templates/**, **Lighting/**, **Dev Prefabs/**, Sync S1 Stratum Defaults |
+| **Map** | Create catalog, Wire SVG textures |
+| **Hub** | Cinemachine brain, Greybox town prefab |
+| **Floor Transition** | Create stairs beat prefab, Sync catalog |
+
+`Create → GridDungeon → …` (`CreateAssetMenu`) is a separate Unity menu — do not conflate with top-bar `GridDungeon/`.
+
+## PR / agent checklist
+
+- [ ] New `[MenuItem]` is Edit Mode / authoring — not a Play Mode action dupe of Dev Tools
+- [ ] Path added to `GridDungeonEditorMenuHints` + `GridDungeonEditorMenus`; logs/docs use `Display()` or `*Display` readonly fields
+- [ ] README / design-docs menu copy updated when paths change

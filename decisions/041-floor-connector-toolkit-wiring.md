@@ -55,7 +55,7 @@ flowchart LR
   Writer --> B3F
 ```
 
-**Menu:** `GridDungeon → Content → Floor Exit Graph` opens the wrapper + GTK canvas.
+**Menu:** `GridDungeon → Content → Floor Connector → Open Graph Canvas` opens the wrapper + GTK canvas.
 
 ---
 
