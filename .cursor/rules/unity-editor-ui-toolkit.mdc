@@ -6,8 +6,20 @@ alwaysApply: false
 
 # Editor tools — UI Toolkit first
 
-Authoritative copy: [griddungeon-game `.cursor/rules/unity-editor-ui-toolkit.mdc`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-editor-ui-toolkit.mdc).
+**Authoritative copy:** [griddungeon-game `.cursor/rules/unity-editor-ui-toolkit.mdc`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-editor-ui-toolkit.mdc).
 
 When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, UXML/USS under `Assets/UI/Editor/`, `*Panel` / custom `VisualElement`) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
 
-Examples: `FloorPainterWindow`, `GridDungeonSaveEditorWindow`, `GridDungeonDevWindow`.
+Examples: `FloorPainterWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`.
+
+## Custom SO UITK inspector (summary)
+
+New `[CustomEditor]` for ScriptableObjects: **`CreateInspectorGUI`**, BEM root + USS in `Assets/UI/Editor/<Feature>/`, **`EditorContentDatabaseField`** at top when pickers read ContentDatabase catalogs, catalog-backed id fields (not raw string `PropertyField`), **`RefreshCatalogSources()`** on list panels, foldout-as-card for list rows. Full skeleton + checklist: game repo rule (`EncounterGroupEditor`).
+
+## Foldout in bordered cards (summary)
+
+Do **not** wrap a `Foldout` in a bordered parent — arrow sits outside box. Put **`editor-foldout-card`** on `Foldout` root; load **`Assets/UI/Editor/Shared/EditorFoldoutCard.uss`**. UXML: `<ui:Foldout class="editor-foldout-card">`. Full pattern: game repo rule.
+
+## Content database scope (summary)
+
+Catalog pickers use **`EditorContentDatabaseScope`** (EditorPrefs + default `DevSceneComposition.ContentPath`). Expose **`EditorContentDatabaseField`** when a tool owns dropdowns; refresh pickers on change. Shared with Floor Painter — one pick, all editor catalogs. Details: game repo rule.
