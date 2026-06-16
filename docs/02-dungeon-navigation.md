@@ -116,7 +116,9 @@ Player tactics: wait for patrol gap, bait FOE to empty cells, or fight for XP/lo
 ## Random encounters
 
 - Rolled per step on eligible tiles (not in safe rooms if any).
-- Rate varies by floor; **Suppress** skills/items optional later.
+- Rate from floor's **`RandomEncounterTableDefinition`** (`baseEncounterRate`); campaign may zero rate (e.g. S1 Act 1 B1F tutorial).
+- Weighted rows pick an **`EncounterGroup`** id — not inline enemy lists.
+- **Suppress** skills/items optional later.
 - Distinct from FOE fights (different drop tables / XP).
 
 ## Interactables

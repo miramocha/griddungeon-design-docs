@@ -79,7 +79,7 @@ Same as labyrinth unless noted:
 |--------|----------------|
 | Grid FPV + auto-map | Yes ([mapping](mapping.md), [ADR 002](../../decisions/002-mapping-model.md)) |
 | FOE step patrol + contact | Yes ([ADR 003](../../decisions/003-foe-step-patrol.md)) |
-| Random encounters | Per-floor `EncounterTable` |
+| Random encounters | Per-floor `randomEncounterTableId` → `RandomEncounterTableDefinition` |
 | FOE combat patrol + mid-battle join | When optional+ features ship ([ADR 005](../../decisions/005-foe-combat-patrol.md), [ADR 010](../../decisions/010-chain-foe-battle.md)) |
 | Autopilot | Same revealed-tile pathfind when optional+ ships ([ADR 021](../../decisions/021-autopilot-mvp2.md)) |
 | Unlimited steps | Yes ([ADR 008](../../decisions/008-campaign-defaults.md)) |

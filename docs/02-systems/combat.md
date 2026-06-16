@@ -97,6 +97,21 @@ After **Attack** or a **single-target** skill during command planning ([#60](htt
 
 - Attack, skill, debuff, buff allies, **summon adds** (may fill enemy aux or extra slots), flee (rare).
 
+## Encounter events (combat → story)
+
+**Authority:** `EncounterGroup` rows in game repo (`EncounterEventConfigData`); runtime `EncounterEventScheduler` on `CombatController`; payload = `storyEventId` → `StoryEventRunner.TryPlay` ([ADR 028](../../decisions/028-story-visual-novel-events.md)).
+
+| Timing | When |
+|--------|------|
+| `StartOfTurn` | Living AGI actor selected; before `OnTurnStart` |
+| `BeforeAction` | Before `ActionResolver` / Protocol resolve (defers action until VN dismiss) |
+| `AfterAction` | After `OnActionResolved`; before action-step delay |
+| `EndOfTurn` | Start of `AdvanceTurn` (after delay) |
+
+**Predicates (AND per row):** turn counter (`AtTurnCounter`, `EveryNTurnCounter` on `AgiTurn` / `Round` / `CoreTurnCompleted`), `CombatantHp` (absolute or % max), `CombatantAlive` (`Alive` / `Dead` / `Downed`). **OR** triggers = multiple rows sharing `EventId` + `PlayOnce` (first match wins).
+
+Orthogonal to enemy turn AI (`EnemyTurnPlanner`) and skill cinematics ([ADR 027](../../decisions/027-combat-cinematic-timeline-events.md)).
+
 ## Damage pipeline
 
 Locked at launch ([ADR 015](../../decisions/015-mvp1-combat.md)). Tune constants in data; structure unchanged.

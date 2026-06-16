@@ -138,7 +138,7 @@ When layouts lock, promote coords from game `s1_B*n*F.asset` back here or replac
 
 | Type | Trigger | Design notes |
 |------|---------|--------------|
-| **Random** | Per-step roll | Table per floor; no FOE sprite |
+| **Random** | Per-step roll | Shared table SO per floor (`randomEncounterTableId`); no FOE sprite |
 | **FOE** | Grid entity contact | Authored position; patrol path optional; flee ? 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
 | **Boss FOE** | Unique spawn | Stratum gate; higher rewards |
 | **Event** | Tile script | Story fight, no flee |
@@ -164,17 +164,29 @@ foes:
 
 ## Random encounter table
 
+**Shipped model ([game #288](https://github.com/miramocha/griddungeon-game/pull/288)):** reusable **`RandomEncounterTableDefinition`** SOs under `Assets/Content/RandomEncounterTables/`. Each floor stores **`randomEncounterTableId`** only on `ExplorationFloor`; rate and weighted groups live on the table asset. Author in Floor Editor **Random Encounters** mode or open the table inspector directly ([floor painter](02-systems/floor-level-painter.md)).
+
+| Floor key | Table id | Base rate | Weighted groups (design) |
+|-----------|----------|-----------|--------------------------|
+| `s1_B1F` | `enc_s1_b1_chaff` | **0.05** Act 3 (Act 1 forced **0** by `S1CampaignResolver`) | `grp_b1_chaff_hound` / `grp_b1_chaff_mite` |
+| `s1_B2F` | `enc_s1_act2_mid` | **0.10** | `grp_b2_chaff` / `grp_b2_shackle_rat` / `grp_b2_venom_slime` |
+| `s1_B3F` | `enc_s1_act3_deep` | **0.12** | `grp_b3_mix_hounds` / `grp_b3_rubble_pair` / `grp_b3_control` |
+
+**Example table shape** (YAML sketch — runtime uses SO + `EncounterTable` DTO):
+
 ```yaml
-floor: B3F
-rate: 0.12  # per step
+tableId: enc_s1_act3_deep
+baseEncounterRate: 0.12
 entries:
-  - weight: 50
-    group: [stray_hound, stray_hound]
-  - weight: 30
-    group: [rust_mite]
+  - weight: 45
+    groupId: grp_b3_mix_hounds
+  - weight: 35
+    groupId: grp_b3_rubble_pair
   - weight: 20
-    group: [gutter_crow, stray_hound]
+    groupId: grp_b3_control
 ```
+
+Legacy inline floor `EncounterTable` fields are removed — floors reference shared tables only.
 
 ## Traps & gathers
 

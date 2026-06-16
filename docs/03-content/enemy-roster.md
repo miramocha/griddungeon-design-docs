@@ -124,15 +124,16 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## ContentDatabase checklist (game #12)
 
-Author under `Assets/Content/Enemies/` and `Assets/Content/Encounters/` per [05 — folder structure](../05-class-design.md#folder-structure-game-repo).
+Author under `Assets/Content/Enemies/` and `Assets/Content/EncounterGroups/` per [05 — folder structure](../05-class-design.md#folder-structure-game-repo).
 
 | Asset kind | Count | IDs |
 |------------|-------|-----|
 | `EnemyDefinition` | 9 | All rows in [enemy definitions](#enemy-definitions-9-types) |
 | `SkillDefinition` | 8 | `enemy_attack` + 7 `atk_*` (class skills are separate — [design #3](https://github.com/miramocha/griddungeon-design-docs/issues/3)) |
 | `EncounterGroup` | 11 | All rows in [encounter groups](#encounter-groups) |
+| `RandomEncounterTableDefinition` | 5 | `enc_s1_none`, `enc_s1_b1_chaff`, `enc_s1_act2_mid`, `enc_s1_act3_deep`, `enc_s1_stub` — register in `ContentDatabase`; floors assign `randomEncounterTableId` |
 
-Wire floor `EncounterTable` / `FoeSpawnConfig.encounterGroupId` to match [dungeons YAML](../archive/mvp1-s1-floor-layouts-draft.md). `EncounterGroup.tutorialUnbeatable` must be honored in combat ([foe-encounters](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)).
+Wire floor **`randomEncounterTableId`** → shared table SO (rate + weighted `groupId` rows) and `FoeSpawnConfig.encounterGroupId` to match [dungeons YAML](../archive/mvp1-s1-floor-layouts-draft.md). `EncounterGroup.tutorialUnbeatable` must be honored in combat ([foe-encounters](../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)).
 
 **Already aligned in game (verify when landing SOs):** `S1B2FLayoutBuilder` random table uses `grp_b2_*` weights 35/35/30; tutorial FOE uses `grp_alley_stalker_tutorial`.
 

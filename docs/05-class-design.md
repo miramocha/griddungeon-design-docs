@@ -114,11 +114,13 @@ All read-only at runtime. Created in the Unity editor and referenced by `Content
 | `ItemDefinition` | `Assets/Content/Items/` | [items & inventory](02-systems/items-and-inventory.md) |
 | `EnemyDefinition` | `Assets/Content/Enemies/` | [enemy roster](03-content/enemy-roster.md) |
 | `LootTableDefinition` | `Assets/Content/LootTables/` | [items & inventory](02-systems/items-and-inventory.md) |
-| `EncounterGroup` | `Assets/Content/Encounters/` | [enemy roster](03-content/enemy-roster.md), [FOE encounters](02-systems/foe-encounters.md) |
+| `RandomEncounterTableDefinition` | `Assets/Content/RandomEncounterTables/` | [dungeons & encounters](03-content/dungeons-and-encounters.md#random-encounter-table), [enemy-roster](03-content/enemy-roster.md#foe-vs-random-placement-per-floor); floor assigns `randomEncounterTableId` only |
+| `EncounterGroup` | `Assets/Content/EncounterGroups/` | [enemy roster](03-content/enemy-roster.md), [FOE encounters](02-systems/foe-encounters.md); optional `Events[]` combat→story rows ([combat § Encounter events](02-systems/combat.md#encounter-events-combat--story)) |
+| `StoryEventDefinition` | `Assets/Content/StoryEvents/` | [story events](02-systems/story-events.md), [ADR 028](../decisions/028-story-visual-novel-events.md) |
 | `NavigatorDefinition` | `Assets/Content/Navigators/` | [navigator](02-systems/navigator.md) |
 | `ProtocolSkillDefinition` | `Assets/Content/ProtocolSkills/` | [synchro protocol](02-systems/synchro-protocol.md) |
 | `SummonDefinition` | `Assets/Content/Summons/` | [summons & guests](02-systems/summons-and-guests.md), [ADR 016](../decisions/016-summon-control-mvp1.md) |
-| `ExplorationFloor` | `Assets/Content/Dungeons/` | [mapping](02-systems/mapping.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md) |
+| `ExplorationFloor` | `Assets/Content/Floors/` | [mapping](02-systems/mapping.md), [floor painter](02-systems/floor-level-painter.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md); `randomEncounterTableId` → shared table SO |
 | `StratumDefinition` | `ContentDatabase` | [dungeons & encounters](03-content/dungeons-and-encounters.md), [campaign S1 intro](03-content/campaign/s1-intro.md) |
 
 **Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
@@ -174,7 +176,7 @@ Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase
 | `InventoryRules`, `InventoryBagCatalog`, `EquipmentStatAggregator` | Bag and equip rules ([ADR 036](../decisions/036-party-inventory-model.md)) |
 | `CombatSimulator` | Full round simulation (tests) |
 | `GuildPartyRules` | Generic party formation slot rules (no campaign flag writes) |
-| `StoryEventTriggerLookup`, `ExplorationStoryEventTriggers` | Floor trigger cell match + flag gates; floor-first resolver with `StoryEventTriggerCatalog` fallback |
+| `StoryEventTriggerLookup` | Floor trigger cell match + flag gates |
 
 Edit Mode fixtures: [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md).
 
@@ -225,6 +227,7 @@ Pure C# phase orchestration. **Not** Unity Visual Scripting. Diagrams and Enter/
 | Type | Role |
 |------|------|
 | `CombatController` | Battle lifecycle, command planning, AGI turns, flee |
+| `EncounterEventScheduler` | Combat→story rows from `EncounterGroup.Events[]` ([combat § Encounter events](02-systems/combat.md#encounter-events-combat--story)) |
 | `CombatScenePresenter` | Arena rig and enemy slot anchors ([combat scene](02-systems/combat-scene.md)) |
 | `CombatPresentationGate` | Presentation lock for reactive HUD |
 | `EndOfRoundPipeline` | Status ticks and end-of-round log lines |
@@ -254,6 +257,7 @@ Lives in `GridDungeon.Campaign`. References Core only.
 | `S1GuildPartyRules` | S1 party-ready flag writes |
 | `StoryEventEffectExecutor`, `StoryEventRunner`, `StoryEventPlayback` | Story VN execution |
 | `StoryEventIds`, `StoryEventTriggerCatalog` | Content IDs and trigger catalog (catalog fallback until floor rows migrated) |
+| `ExplorationStoryEventTriggers` | Floor-first resolver with `StoryEventTriggerCatalog` fallback |
 | `CombatTutorialHudRules` | Tutorial combat HUD policy |
 | `S1CampaignBootstrap` | New-game bootstrap |
 
@@ -303,7 +307,8 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 | `GridDungeonSaveEditorWindow` | Save / campaign flag dev tooling ([PR #84](https://github.com/miramocha/griddungeon-game/pull/84)) |
 | `FloorPainterWindow` | Floor level painter → `ExplorationFloor` asset ([ADR 002](../decisions/002-mapping-model.md), [#107](https://github.com/miramocha/griddungeon-game/issues/107)) |
 | `FloorEditorFoeSpawnStore`, `FloorEditorStoryEventStore` | Floor Editor parallel stores for FOE spawns and story-event triggers (mode-gated grid overlays) |
-| `FloorEditorFoeInspector`, `FloorEditorStoryEventInspector` | Side-panel editors for FOE / Events modes |
+| `FloorEditorFoeInspector`, `FloorEditorStoryEventInspector`, `FloorEditorRandomEncountersInspector` | Side-panel editors for FOE / Events / Random Encounters modes |
+| `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor` | UITK `CreateInspectorGUI` content SO inspectors ([unity-editor-ui-toolkit](../.cursor/rules/unity-editor-ui-toolkit.mdc)) |
 
 ---
 
@@ -352,9 +357,9 @@ Assets/
 │   └── Screens/                  UXML/USS per screen + Shared/
 ├── Content/
 │   ├── Classes/, Skills/, Status/, Equipment/, Items/
-│   ├── Enemies/, Encounters/, LootTables/
+│   ├── Enemies/, EncounterGroups/, LootTables/, RandomEncounterTables/
+│   ├── StoryEvents/, Floors/
 │   ├── Navigators/, ProtocolSkills/, Summons/
-│   └── Dungeons/Stratum01/      B1F, B2F, B3F assets
 ├── Tests/                        GridDungeon.Tests.asmdef (see game repo README)
 └── Plugins/Demigiant/DOTween/    required (see tech notes)
 ```
@@ -384,6 +389,7 @@ These string IDs must be stable across code and SO assets.
 | Enemy | `stray_hound`, `rust_mite`, `gutter_crow`, `scrapling`, `shackle_rat`, `venom_slime`, `alley_thug`, `rubble_guard`, `s1_warden` | [enemy-roster](03-content/enemy-roster.md) |
 | Enemy skill | `enemy_attack`, `atk_peck_volt`, `atk_bind_arm`, `atk_poison_spit`, `atk_heavy_swing`, `atk_guard_slam`, `atk_warden_bind`, `atk_warden_venom` | Enemy pool only |
 | Encounter group | `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden`, `grp_b1_chaff_hound`, `grp_b1_chaff_mite`, `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime`, `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | Slot layouts in roster doc |
+| Random encounter table | `enc_s1_none`, `enc_s1_b1_chaff`, `enc_s1_act2_mid`, `enc_s1_act3_deep`, `enc_s1_stub` | Shared table SOs; floors reference by id ([dungeons § random encounter table](03-content/dungeons-and-encounters.md#random-encounter-table)) |
 | FOE entity | `foe_alley_stalker`, `foe_s1_warden` | Map keys; not `EnemyDefinition` ids |
 
 ### Class skills (3 per class — locked)

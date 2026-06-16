@@ -10,7 +10,7 @@ alwaysApply: false
 
 When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, UXML/USS under `Assets/UI/Editor/`, `*Panel` / custom `VisualElement`) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
 
-Examples: `FloorPainterWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`.
+Examples: `FloorPainterWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor`.
 
 ## Custom SO UITK inspector (summary)
 
