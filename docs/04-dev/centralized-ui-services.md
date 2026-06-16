@@ -123,6 +123,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
 | **100** | Exploration expanded map overlay | `ExpandedMapOverlayView` |
 | **150** | Story event VN modal | `StoryEventPresenter` |
+| **175** | Notice overlay (loot, skill unlock, …) | `NoticeOverlayPresenter` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
@@ -245,6 +246,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 | Exploration map | `ExplorationMapCoordinator.RefreshGlobalInputHint` |
 | Party menu / pause | `PartyMenuOverlayView.RefreshMenuHint` |
 | Story modal | `StoryEventPresenter` → `TabbedPickerRailHints.ModalDismiss` |
+| Notice overlay | `NoticeOverlayPresenter` → `TabbedPickerRailHints.ModalDismiss` |
 | Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; map/hub republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter.RestoreGlobalInputHintForPhase` |
@@ -423,6 +425,35 @@ gameState.Story.TryPlay(storyEventId);
 
 ---
 
+### Notice overlay — `NoticeOverlayPresenter` + `Notice`
+
+**Job:** Phase-agnostic **acknowledgement modal** — title + body lines, full-screen blocker, confirm (Z / gamepad) or panel click to dismiss. **FIFO queue** when multiple notices fire in one session (e.g. loot then skill unlock). Blocks hub/exploration chrome via `PhasePresentationGateResolver` until the queue is empty.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/NoticeOverlayPresenter.cs` | `sortingOrder` **175**; `INoticeOverlayService` + `INoticeOverlayInput`; queue + gate |
+| Panel view | `Assets/Scripts/UI/Views/NoticeOverlayPanelView.cs` | Title/body labels; panel click → `Dismiss` |
+| Registrar | `Assets/Scripts/UI/Views/NoticeOverlay.cs` | Lifecycle queries; `Register` / `Unregister` |
+| Domain API | `Assets/Scripts/UI/Views/Notice.cs` | `TryShow`, `TryShowLoot`, `TryShowSkillUnlock`; rejects while story VN active |
+| Runtime API | `Assets/Scripts/Runtime/UI/INoticeOverlayService.cs` | Registered on `GameState.NoticeOverlay` — Runtime callers avoid `GridDungeon.UI` |
+| Core DTO / builders | `NoticeContent`, `NoticeContentBuilder` | `FromLoot`, `FromSkillUnlock` |
+| UXML / USS | `Assets/UI/Screens/Shared/NoticeOverlay.uxml`, `NoticeOverlay.uss` | BEM `notice-overlay-*`; `pop-in` on panel |
+| Bootstrap | `DevSceneComposition.WireNoticeOverlay` | Child `NoticeOverlay` GO under `GameState` |
+
+**Publishers (this pass):** `ExplorationPhaseController.TryGatherAt` → `gameState.NoticeOverlay.TryShowLoot` after grant. Future: chest interactor ([#105](https://github.com/miramocha/griddungeon-game/issues/105)), hub skill unlock via `Notice.TryShowSkillUnlock`.
+
+**Input:** `InputRouter` priority story → `TryEnableNoticeOverlayOnly()` (`Notice.IsActive`) → normal phase maps. `NoticeOverlayInputHandler` on `MenuConfirm`.
+
+```csharp
+// Runtime (exploration gather)
+m_gameState.NoticeOverlay?.TryShowLoot(loot, id => m_gameState.Content.GetItem(id)?.DisplayName);
+
+// UI layer / hub (when wired)
+Notice.TryShowSkillUnlock(gameState, "Protocol Strike");
+```
+
+---
+
 ### Exploration map — `ExplorationMapCoordinator`
 
 **Job:** Exploration minimap (side panel) + expanded map overlay — shared `MapGridPaintController`, global input-hint publish. Two `UIDocument` presenters; coordinator owns event wiring and M-toggle choreography.
@@ -501,6 +532,7 @@ GameState
 ├── HubHud
 ├── PartyMenuOverlay
 └── StoryHud (StoryEventPresenter)
+└── NoticeOverlay (NoticeOverlayPresenter)
 ```
 
 Wiring: `Assets/Scripts/Editor/DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs`. After clone, run **Create Dev Bootstrap** if console reports missing floater or hint refs.
@@ -746,7 +778,7 @@ public interface ICentralizedUiSurface
 
 | Driver | Animation family | Used by |
 |--------|------------------|---------|
-| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker`, `StoryEventPresenter` |
+| `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker`, `StoryEventPresenter`, `NoticeOverlayPresenter` |
 | `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
 | `ScaleInPresentationDriver` | Uniform scale (`UniformScaleTransition`) | `ExpandedMapOverlayView` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) |
