@@ -7,7 +7,7 @@
 
 ## Context
 
-Exploration content is authored as **grid pins** — story **Event** cells (`!`), role markers (`E` / `M` / `^` / `v`), gather (`G`), chests (`C`), FOE spawns, and similar features on `ExplorationFloor` ([Floor Editor](../docs/02-systems/floor-editor.md)). **When** a pin exists on the map, **whether** the player can interact with it, and **what** runs on trigger should often depend on **campaign progress** — for example:
+Exploration content is authored as **grid pins** — story **Event** cells (`!`), role markers (`S` / `M` / `^` / `v`), gather (`G`), chests (`C`), FOE spawns, and similar features on `ExplorationFloor` ([Floor Editor](../docs/02-systems/floor-editor.md)). **When** a pin exists on the map, **whether** the player can interact with it, and **what** runs on trigger should often depend on **campaign progress** — for example:
 
 - A lore `!` cell does not appear (or does not fire) until a hub quest is turned in.
 - A shortcut door stays blocked until a key item flag is set.

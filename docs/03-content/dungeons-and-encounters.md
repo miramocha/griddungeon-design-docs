@@ -1,4 +1,4 @@
-# Dungeons & Encounters
+﻿# Dungeons & Encounters
 
 Content structured like **Etrian Odyssey strata** � themed zones with multiple floors, FOE placements, and floor gimmicks.
 
@@ -74,7 +74,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 
 | Floor ID | Theme | Spawns | Stairs (gate / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
-| `s1_B1F` | Outskirts gate | Intro `(4,2)` / gate `(10,11)` | Gate `^` ? **hub**; `v` `(10,17)` ? B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** � `grp_b1_chaff_*` |
+| `s1_B1F` | Outskirts gate | Spawn start `(4,2)` / gate `(10,11)` | Gate `^` ? **hub**; `v` `(10,17)` ? B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** � `grp_b1_chaff_*` |
 | `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` � **same stratum only** | **1** � `foe_alley_stalker` ? `grp_alley_stalker_tutorial` | **0.10** � `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
 | `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** � `foe_s1_warden` ? `grp_s1_warden` | **0.12** � `grp_b3_mix_hounds` / `rubble_pair` / `control` |
 
@@ -86,7 +86,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 |--------|---------|--------------------------------------------------------------|
 | `#` | Non-walkable (perimeter / room wall) | Solid block � `map-view__cell--wall` |
 | `.` | Walkable floor | Floor `�` when revealed |
-| `E` | Intro spawn � Act 1 only (`partyEntryIntro`) | Spawn only � not a map icon |
+| `S` | Spawn start — starting floor only (`partyEntryPoint`) | Spawn only — not a map icon |
 | `M` | Gate landing fiction `(10, 10)`; hub spawn at `^` `(10, 11)` (`partyEntryGate`) | `M` not a map icon |
 | `^` | `stairsUp` � gate: ? **hub** (all strata) | Stairs up icon / `^` |
 | `v` | `stairsDown` � next floor **in same stratum** | Stairs down icon / `v` |
