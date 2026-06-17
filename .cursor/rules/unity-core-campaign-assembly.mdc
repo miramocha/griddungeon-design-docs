@@ -35,7 +35,7 @@ GridDungeon.Core      →  (none — never references Campaign)
 | Story **execution** | `StoryEventEffectExecutor`, `StoryEventPlayOnceRules`, `StoryEventPlayback` |
 | Content IDs & trigger catalogs | `StoryEventIds`, `StoryEventTriggerCatalog` |
 | Tutorial / transition policy | `CombatTutorialHudRules`, `CampaignTransitionEffects`, `S1GuildPartyRules` |
-| New-game bootstrap | `S1CampaignBootstrap` |
+| New-game bootstrap | `NewGameBootstrap` + `SaveGameFactory` (Core empty shell) |
 
 S2+ policy: `Campaign/S2/` (or sibling types) — do not grow `S1CampaignResolver` for unrelated acts.
 

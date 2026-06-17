@@ -125,7 +125,7 @@ All read-only at runtime. Created in the Unity editor and referenced by `Content
 
 **Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryIntro` + blockers; `s2+` adds `hasWarpGate`.
 
-**Chest / gather:** `IsWalkable=false` + `ChestItemId` for chests (interact adjacent+facing — [#105](https://github.com/miramocha/griddungeon-game/issues/105)); `HasGatherNode` + `lootTableId` on walkable gather cells.
+**Chest / gather:** `IsWalkable=false` + `HasChest` + `ChestConfig[]` on floor asset (adjacent interact, any player facing — [#105](https://github.com/miramocha/griddungeon-game/issues/105)); opened state in `CampaignSaveData.OpenedChestIds` (fixed item + quantity, not loot table); `HasGatherNode` + `lootTableId` on walkable gather cells.
 
 ---
 
@@ -259,7 +259,7 @@ Lives in `GridDungeon.Campaign`. References Core only.
 | `StoryEventIds`, `StoryEventTriggerCatalog` | Content IDs and trigger catalog (catalog fallback until floor rows migrated) |
 | `ExplorationStoryEventTriggers` | Floor-first resolver with `StoryEventTriggerCatalog` fallback |
 | `CombatTutorialHudRules` | Tutorial combat HUD policy |
-| `S1CampaignBootstrap` | New-game bootstrap |
+| `NewGameBootstrap` | New-game defaults on empty save shell (`SaveGameFactory` in Core) |
 
 Authority: [story events](02-systems/story-events.md), [unity-core-campaign-assembly.mdc](../.cursor/rules/unity-core-campaign-assembly.mdc).
 

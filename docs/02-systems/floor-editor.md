@@ -31,11 +31,11 @@ Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_
 | `#` | No | Wall |
 | `X` | No | Tutorial / script blocker |
 | `.` | Yes | Open floor |
-| `C` | No | **Chest** — `ChestItemId`; party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| `C` | No | **Chest** — `ChestConfig` (`chestId`, facing for FPV art, fixed `itemId` + `quantity`); party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an orthogonally adjacent walkable cell — **player facing not required** ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | `G` | Yes | **Gather** — `HasGatherNode`; instant loot at launch on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
 | `v`, `^`, `M`, `E` | Yes | **Role markers** — intro (`E`), gate (`M`), exit up (`^`), exit down (`v`); Apply scans the grid and writes entry coords + **`FloorExitLink[]`** ([#107](https://github.com/miramocha/griddungeon-game/issues/107), [ADR 040](../../decisions/040-floor-exit-topology-graph.md)). **Multiple `^` / `v` per floor** allowed — one link row per marker cell. |
 
-**Walkability (target):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `S1B1FLayoutBuilder.IsWalkableSymbol` after [#105](https://github.com/miramocha/griddungeon-game/issues/105). Until that ships, B1F layout code may still treat `C` as walkable gather (legacy); painter palette and export ([#77](https://github.com/miramocha/griddungeon-game/issues/77)) should follow this table.
+**Walkability (shipped):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `FloorEditorLayoutSymbols` export ([#105](https://github.com/miramocha/griddungeon-game/issues/105), [#77](https://github.com/miramocha/griddungeon-game/issues/77)).
 
 ## Markers vs parallel pin store ([#107](https://github.com/miramocha/griddungeon-game/issues/107))
 
