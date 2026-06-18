@@ -39,7 +39,7 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | FOE enters sight | FOE marker **fade in** on map | Yes � before next step if revealed mid-step |
 | FOE patrol step | Marker **slides** to new cell | No � ambient; must not block player input |
 | Party moves | Party arrow **slides** to new cell; optional facing tick | Yes � with step lerp |
-| Chest at launch | Map chest overlay **instant** closed→open swap + loot toast — opened from **orthogonally adjacent** cell; **player facing not required** ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes — FPV open animation + notice before next interact |
+| Chest at launch | Map chest overlay **instant** closed→open swap + loot toast — opened from **orthogonally adjacent** cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) | Yes — FPV open animation + notice before next interact |
 | Gather at launch | Gather overlay **flash** + loot toast | Yes � before next interact |
 | Open fullscreen map (`M`) | Panel **scale/fade** open | No � overlay only |
 
@@ -51,7 +51,7 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | **Walls** | **Bump** blocked side ? stamp that wall; **enter cell / turn** ? solid perimeter edges for each newly charted cone cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
 | **Stairs** | Party **steps on** stairs tile |
-| **Chest** | Party **Interact** from orthogonally adjacent walkable cell (any facing) on impassable chest tile — fixed itemId + quantity once per globally unique chestId in CampaignSaveData.OpenedChestIds; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| **Chest** | Party **Interact** from orthogonally adjacent walkable cell while **facing** the chest on impassable chest tile — fixed itemId + quantity once per globally unique chestId in CampaignSaveData.OpenedChestIds; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | **Gather** | Gather node **overlay when visited**; instant loot at launch ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | **Fish** | Fish nodes (**Optional**) |
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |

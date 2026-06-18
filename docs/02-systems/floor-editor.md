@@ -31,7 +31,7 @@ Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_
 | `#` | No | Wall |
 | `X` | No | Tutorial / script blocker |
 | `.` | Yes | Open floor |
-| `C` | No | **Chest** — `ChestConfig` (`chestId`, facing for FPV art, fixed `itemId` + `quantity`); party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an orthogonally adjacent walkable cell — **player facing not required** ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
+| `C` | No | **Chest** — `ChestConfig` (`chestId`, facing for FPV art, fixed `itemId` + `quantity`); party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an orthogonally adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | `G` | Yes | **Gather** — `HasGatherNode`; instant loot at launch on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
 | `H`, `E`, `M`, `S` | Yes | **Role markers** — spawn start (`S`), story gate (`M`), hub return (`H`), inter-floor exit (`E`); direction + floor target live on **exit bindings** in the cell inspector ([#107](https://github.com/miramocha/griddungeon-game/issues/107), [ADR 040](../../decisions/040-floor-exit-topology-graph.md)). **`H` and `S`/`M` are unique per floor**; **multiple `E` per floor** allowed — one `FloorExitLink` row per `H`/`E` cell. **`H`** and **`S`** (B1F) expose **Target facing** in Edit Cell (same rotate UX as **`E`**); hub **`Direction`** stays internal **`Up`** — not authorable. Spawn facing persists on `ExplorationFloor.partyEntrySpawnFacing`. |
 
