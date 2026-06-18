@@ -36,8 +36,9 @@ Exploration keeps **two layers**: grid state (rules, map, FOEs, encounters) and 
 |------|----------------|
 | `Cell.X` | `position.x` |
 | `Cell.Y` | `position.z` (horizontal plane; grid **y** is not Unity **Y**) |
-| `level` (when [ADR 019](../decisions/019-floor-verticality.md) lands) | Not applied to pose Y at launch — walkable height stays in collision/map data until vertical art ships |
-| — | `position.y` = **0** (floor plane) |
+| `level` (when [ADR 019](../decisions/019-floor-verticality.md) lands) | Walkable **height band** for collision/map — distinct from per-cell **elevation steps** below |
+| `cellElevationSteps` + `elevationStepUnits` | `DungeonExplorer.BindElevationY` sets `position.y` from authored floor steps ([floor editor § Elevation](02-systems/floor-editor.md)); `RefreshPose()` re-snaps after spawn, floor transition, and floor-art load |
+| — | Flat floors: `position.y` = **0** when no elevation query is bound |
 
 Mapping uses **integer cell indices** and a **corner anchor** (south-west corner of the cell on the floor plane) — **no half-cell centering offset**:
 

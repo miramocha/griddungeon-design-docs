@@ -248,7 +248,7 @@ Bottom-right overlay chip (`InputHintPresenter`, `sortingOrder` 300) shared acro
 
 **Removed per-panel bind footers:** `cmd-input-hint`, `hub-input-hint`, `party-menu-hint`, `tabbed-picker__hint`, `item-list-picker-hint`, `skill-picker-hint`, party equipment detail bind footer, `map-view-hint`, `battle-reward-hint`.
 
-Copy constants: `TabbedPickerRailHints` — full table in [shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints).
+Copy constants: `TabbedPickerRailHints` — full table in [shared menu & picker UI § Global input hints](../04-dev/shared-menu-picker-ui.md#global-input-hints). Exploration minimap uses `ForExplorationMapPanel` / `ForExplorationMapFullscreen` — `[Z] Open` when a chest is in the **facing** cell ahead, `[Z] Gather` when standing on a gather node; refreshes on turn-in-place and after interact.
 
 ---
 

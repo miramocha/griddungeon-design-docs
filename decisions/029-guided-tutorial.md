@@ -106,7 +106,7 @@ Advance: **Z** or click — same as [ADR 028](028-story-visual-novel-events.md) 
 - View **reflects** allowed commands (grey/disable + pulse Protocol).
 - Finisher clears guided state → story event `s1_tutorial_hub_return`.
 
-Aligns with [game #10](https://github.com/miramocha/griddungeon-game/issues/10): tutorial fight via `EncounterGroupId` (`grp_alley_stalker_tutorial`) + `CombatTutorialHudRules` (not a `TutorialCombatKind` field on `CombatEntryContext`).
+Aligns with [game #10](https://github.com/miramocha/griddungeon-game/issues/10): tutorial fight via `EncounterGroupId` (`grp_alley_stalker_tutorial`) + encounter/story events (not a `TutorialCombatKind` field on `CombatEntryContext`). Protocol-only rail: `CommandPanelView` when [#88](https://github.com/miramocha/griddungeon-game/issues/88) ships.
 
 ### 8. Triggers
 
@@ -150,7 +150,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **Launch — S1 teach (shipped path)** | Story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` Protocol-only gate ([#35](https://github.com/miramocha/griddungeon-game/issues/35)); campaign rules unchanged |
+| **Launch — S1 teach (shipped path)** | Story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `EncounterGroup.Events[]` / `StoryEventEffectExecutor`; Protocol-only rail deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | **Later — S1 Act 1** | Paginated tutorial entries per [s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f); unlock codex rows on complete ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | **Later — S1 B2F** | `s1_combat_guided_protocol` coach after `s1_synchro_protocol_unlock` (in addition to HUD gate) |
 | **Later — Codex UI** | Read-only replay — **Pause menu** row (`Esc`; exploration, combat, hub) |
@@ -198,7 +198,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | Codex | Unlock on complete / full read; **no** re-apply of combat gates or flags on replay |
 | Hub Act 2 hints | **Cut at launch** unless playtest fails |
 | Combat Protocol coach | **Blocking** + command gate; may use same page block for copy + HUD pulse |
-| **Launch full coach + codex** | **Deferred** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); launch relies on VN + `CombatTutorialHudRules` only ([release scope § Later](../docs/00-release-scope.md#later)) |
+| **Launch full coach + codex** | **Deferred** (2026-06-03) — [#88](https://github.com/miramocha/griddungeon-game/issues/88); launch relies on VN + encounter events ([release scope § Later](../docs/00-release-scope.md#later)) |
 | Progression storage | **Campaign flags** for gates + **codex unlock list** for replay index |
 | Story vs guided | **S1 unlock/outro** remain **story events** ([ADR 028](028-story-visual-novel-events.md)); Act 1 movement + Protocol coach = **guided** |
 

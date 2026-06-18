@@ -60,18 +60,17 @@ Reuse content ids where possible: `navigator:guild_handler`, `core:<characterId>
 
 ## Effects (draft)
 
-Executed synchronously when a step is entered (or when a choice is picked). Implementations must be **idempotent** where replay / skip could re-fire.
+Executed synchronously when a step completes (or on `m_completionEffects`). Implementations must be **idempotent** where replay / skip could re-fire. Runtime: `StoryEventEffectExecutor` (Core) via `StoryEventRunner` sink.
 
-| Effect | Parameters | Owner API |
+| Effect (`StoryEventEffectKind`) | Parameters | Owner API |
 |--------|------------|-----------|
-| `set_campaign_flag` | `flag`, `value` | `CampaignSaveData` |
-| `set_synchro_charge` | `percent` | `PartyRuntime` / combat session |
-| `combat_tutorial_phase` | `phase` | **Target** — advance S1 tutorial beat via campaign flags + `CombatController` (crisis / unlock); not a field on `CombatEntryContext` |
-| `show_combat_hint` | `hintId` | Combat HUD (#35) — optional delegation |
-| `start_guided_protocol` | `skillId` | Set unlock flags → `CombatTutorialHudRules` Protocol-only gate + guided coach ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
-| `start_combat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` ([`CombatTutorialHudRules.S1FirstFoeEncounterGroupId`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Campaign/CombatTutorialHudRules.cs)) |
-| `teleport_to_hub` | — | `GamePhaseController` scripted `Combat → Hub` |
-| `end_story_event` | — | Runner |
+| `SetCampaignFlag` | `flagId`, `value` | `CampaignSaveData.SetFlag` |
+| `SetSynchroCharge` | `percent` | `StoryEventRunner.SetSynchroCharge` → combat / party session |
+| `StartCombat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` |
+| `StartGuidedProtocol` | `protocolSkillId`, optional `synchroPercent` | Sets bar full + `OnGuidedProtocolStarted` — **Protocol-only HUD coach deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); `CommandPanelView` supports `command-panel--protocol-only` when wired |
+| `TeleportToHub` | — | `GamePhaseController` scripted `Combat → Hub` |
+
+**Deferred / not in enum:** `combat_tutorial_phase`, `show_combat_hint` — use encounter `Events[]`, story completion effects, or [#88](https://github.com/miramocha/griddungeon-game/issues/88) guided coach instead of per-event C# switches.
 
 New effects require an ADR amendment or appendix — avoid ad-hoc string effects in scenes.
 
@@ -103,42 +102,41 @@ sequenceDiagram
   participant EP as ExplorationPhaseController
   participant FOE as foe_alley_stalker
   participant CC as CombatController
+  participant ES as EncounterEventScheduler
   participant VN as StoryEventRunner
   participant HUD as Guided tutorial HUD
 
   P->>EP: Enter Event cell on s1_B2F
   EP->>VN: s1_b2f_stalker_briefing
   VN->>P: Navigator lines (Z / click)
-  VN->>CC: start_combat grp_alley_stalker_tutorial
-  Note over P,FOE: Phase A — Synchro locked, FOE unbeatable
-  P->>FOE: Up to 2 core turns and/or chip FOE to HP floor
-  CC->>CC: Crisis trigger (2 turns OR FOE at 1 HP)
-  FOE->>P: Scripted crisis AOE — all core HP to 1 (no wipe)
-  CC->>VN: s1_synchro_protocol_unlock
+  VN->>CC: StartCombat grp_alley_stalker_tutorial (NoFlee)
+  Note over P,FOE: Phase A — Synchro locked until unlock beat
+  P->>FOE: Fight until encounter event predicates fire
+  ES->>VN: s1_synchro_protocol_unlock (EncounterGroup.Events[])
   VN->>P: Navigator lines (Z / click)
-  VN->>CC: s1_synchro_unlocked, Synchro 100%
-  CC->>HUD: Guided Protocol — highlight command bar
+  VN->>CC: Set flags + Synchro 100% (completion effects)
+  CC->>HUD: Guided Protocol coach — deferred [#88]
   P->>CC: protocol_strike
-  CC->>FOE: Protocol kill (unbeatable lifted)
-  CC->>VN: s1_tutorial_hub_return
-  VN->>CC: Warp to hub, s1_first_foe_tutorial_complete
+  CC->>FOE: Protocol kill
+  CC->>VN: s1_tutorial_hub_return (encounter victory row or scheduler)
+  VN->>CC: TeleportToHub, s1_first_foe_tutorial_complete
 ```
 
 | Step | Systems | Story / UI |
 |------|---------|------------|
-| **Approach (exploration)** | Event cell `(7, 11)` on `s1_B2F` | **`s1_b2f_stalker_briefing`** → `start_combat` (tutorial group); main path before hub warp |
-| **Crisis trigger** | `CombatController` tutorial phase | Same condition as before: **2 core turns** OR **FOE at HP floor** (anti soft-lock) |
-| **Crisis AOE** | Scripted FOE action — party HP → **1** each living core | Combat log + VFX; **not** GAME OVER |
-| **Unlock VN** | `s1_synchro_protocol_unlock` after AOE UI beat | Navigator-only click-through block |
-| **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) coach + [#35](https://github.com/miramocha/griddungeon-game/issues/35) Protocol-only gate | Only **Protocol → `protocol_strike`** enabled |
-| **Finisher** | `protocol_strike` kills FOE | Sets `s1_synchro_protocol_tutorial_done` |
-| **Hub outro** | `s1_tutorial_hub_return` | VN lines → **`teleport_to_hub`** (scripted `Combat → Hub`) |
+| **Approach (exploration)** | Event cell on `s1_B2F` | **`s1_b2f_stalker_briefing`** → `StartCombat` (`grp_alley_stalker_tutorial`, `NoFlee`) |
+| **Mid-fight unlock** | `EncounterGroup.Events[]` → `EncounterEventScheduler` | **`s1_synchro_protocol_unlock`** when predicates match (e.g. FOE HP at floor) — shipped row on tutorial encounter asset |
+| **Crisis AOE** | **Design target** — scripted FOE action → party HP **1** (no wipe) | **Not** a dedicated C# tutorial type; author via encounter AI / skill row when crisis beat returns |
+| **Unlock VN** | Story event overlay during combat | Navigator lines; completion effects set `s1_synchro_unlocked`, Synchro **100%** |
+| **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) coach + `command-panel--protocol-only` | **Deferred** — player uses normal command bar; only **Protocol → `protocol_strike`** is required by design |
+| **Finisher** | `protocol_strike` kills FOE | Sets `s1_synchro_protocol_tutorial_done` via content flags |
+| **Hub outro** | `s1_tutorial_hub_return` | VN lines → **`TeleportToHub`** (scripted `Combat → Hub`) |
 
 ### Guided tutorial (HUD)
 
 Between unlock VN and Protocol resolve — **authority:** [guided-tutorial § combat](guided-tutorial.md#combat-guided-tutorial-s1--protocol) · content: [`s1_combat_guided_protocol`](../03-content/campaign/s1-guided-tutorials.md#guided-hint--protocol-coach).
 
-Summary: Synchro at **100%**; pulse **Protocol**; other commands disabled; player still confirms **`protocol_strike`**; no skip until resolve.
+Summary: Synchro at **100%** after unlock VN completion effects; **Protocol-only command rail and coach UI deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) — `CommandPanelView` already supports `--protocol-only` when a presenter passes `protocolOnly: true`.
 
 ### Story events at launch
 
@@ -170,7 +168,7 @@ Example index row:
 
 | storyEventId | once | prerequisite | trigger |
 |--------------|------|--------------|---------|
-| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` | Combat: after crisis AOE on `grp_alley_stalker_tutorial` |
+| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` | Combat: `EncounterGroup.Events[]` on `grp_alley_stalker_tutorial` (e.g. FOE HP predicate) |
 
 ---
 

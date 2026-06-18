@@ -1,6 +1,6 @@
 ﻿# S1 — Guided tutorial beats (later target)
 
-**Required slice:** S1 teaching uses story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + `CombatTutorialHudRules` ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) only — full coach + codex deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [release scope § Later](../../00-release-scope.md#later)).
+**Required slice:** S1 teaching uses story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story combat beats (`EncounterGroup.Events[]`, `StoryEventEffectExecutor`) — full coach + Protocol-only rail deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [release scope § Later](../../00-release-scope.md#later)).
 
 **System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted)  
 **Campaign acts & flags:** [s1-intro.md](s1-intro.md)  
@@ -113,7 +113,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 - [ ] `GuidedTutorialDefinition` content for table above
 - [ ] Act 1 triggers on `s1_B1F` intro mode (spawn, bump, cells G/C/^)
 - [ ] `s1_combat_guided_protocol` wired from `start_guided_protocol` ([#88](https://github.com/miramocha/griddungeon-game/issues/88))
-- [x] Protocol-only command gate — `CombatTutorialHudRules` + `CombatController` ([#35](https://github.com/miramocha/griddungeon-game/pull/35))
+- [ ] Protocol-only command gate — `CommandPanelView` `protocolOnly` + coach ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) — deferred; unlock VN + encounter events ship today
 - [ ] Guided coach UI (`s1_combat_guided_protocol`) — [#88](https://github.com/miramocha/griddungeon-game/issues/88)
 - [ ] Playtest: Act 1 ≤ 8 min with hints; B2F crisis → Protocol path not soft-lockable
 

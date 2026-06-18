@@ -21,9 +21,10 @@ GridDungeon.Core      →  (none — never references Campaign)
 
 | Put in `Assets/Scripts/Core/` | Examples |
 |--------------------------------|----------|
-| Simulators / formulas | `DamageCalculator`, `MapRevealCalculator`, `TurnQueueBuilder` |
+| Simulators / formulas | `DamageCalculator`, `MapRevealCalculator`, `TurnQueueBuilder`, `FloorExitResolver`, `EncounterEventEvaluator` |
 | Neutral models & DTOs | `ExplorationTarget`, `FloorExitLink`, `CombatEntryContext` |
 | Story **data shapes** only | `StoryEventDefinitionData`, `StoryEventEffectData`, `StoryEventStepData` |
+| Story **effect dispatch** | `StoryEventEffectExecutor`, `StoryEventPlayOnceRules` |
 | Save schema | `SaveGame`, `CampaignSaveData`, `CampaignFlagAccessor` |
 | Generic hub rules | `GuildPartyRules.IsPartyFormationReady` (slot count — no campaign flag writes) |
 
@@ -31,11 +32,10 @@ GridDungeon.Core      →  (none — never references Campaign)
 
 | Put in `Assets/Scripts/Campaign/` | Examples |
 |-----------------------------------|----------|
-| Stratum resolvers & constants | `S1CampaignResolver`, `S1FloorKeys`, `S1FloorExitLinks` |
-| Story **execution** | `StoryEventEffectExecutor`, `StoryEventPlayOnceRules`, `StoryEventPlayback` |
+| Stratum resolvers & constants | `S1CampaignResolver`, `S1FloorKeys` |
+| Story **runtime playback** | `StoryEventRunner` (Runtime), `StoryEventPlayback` |
 | Content IDs & trigger catalogs | `StoryEventIds`, `StoryEventTriggerCatalog` |
-| Tutorial / transition policy | `CombatTutorialHudRules`, `CampaignTransitionEffects`, `S1GuildPartyRules` |
-| New-game bootstrap | `NewGameBootstrap` + `SaveGameFactory` (Core empty shell) |
+| Hub / new-game policy | `HubStratumEntryRules`, `NewGameBootstrap` (`SaveGameFactory` empty shell) |
 
 S2+ policy: `Campaign/S2/` (or sibling types) — do not grow `S1CampaignResolver` for unrelated acts.
 
@@ -43,9 +43,9 @@ S2+ policy: `Campaign/S2/` (or sibling types) — do not grow `S1CampaignResolve
 
 | Smell | Put instead |
 |-------|-------------|
-| `switch (storyEventId)` or per-event hardcoded effects | `StoryEventDefinition` asset effects + `StoryEventEffectExecutor` (Campaign) |
+| `switch (storyEventId)` or per-event hardcoded effects | `StoryEventDefinition` asset effects + `StoryEventEffectExecutor` |
 | S1 floor keys, spawn cells, encounter suppress in resolver | `S1CampaignResolver` or `Campaign/S2/*` |
-| `RefreshPartyReadyFlag` / writing `campaign.S1*` from hub rules | `S1GuildPartyRules` (Campaign) |
+| `RefreshPartyReadyFlag` / writing `campaign.S1*` from hub rules | Story effects / save flags on content assets — not hardcoded hub helpers |
 | Tutorial encounter skip wired inside Core calculators | Campaign helper; Core takes `bool skipRewards` or predicate from Runtime |
 | Hardcoded exploration trigger cells / prereq flags | `StoryEventTriggerCatalog` or floor asset rows ([#112](https://github.com/miramocha/griddungeon-game/issues/112)) |
 | `MonoBehaviour`, `UnityEngine`, ScriptableObject types | Runtime / Editor |

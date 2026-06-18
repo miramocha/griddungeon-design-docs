@@ -1,6 +1,6 @@
 ﻿# Guided Tutorial (player coaching)
 
-**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Launch (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + tutorial combat HUD gating — `CombatTutorialHudRules` + `CombatHudView` ([#35](https://github.com/miramocha/griddungeon-game/pull/35)). **Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
+**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Launch (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story-driven combat beats (`EncounterEventScheduler`, `StoryEventEffectExecutor`). **Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex, Protocol-only command rail ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 
 **Authority for S1 beats:** [S1 guided tutorials](../03-content/campaign/s1-guided-tutorials.md)  
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
@@ -16,7 +16,7 @@
 |-------|-----|-------------|
 | **Guided tutorial** (this doc) | **Coach the player** — callouts, highlights, optional input gates; short **impersonal** copy (no character `speakerId`); arena or map stays readable | Act 1: “move north”; combat: pulse **Protocol** after unlock |
 | **Story event (VN)** | **Narrative beat** — multi-line dialogue, portraits later; may set flags and hand off to guided phase; **blank-state** — no mechanic spoilers before the beat’s job | `s1_b1f_gate_briefing`, `s1_b2f_stalker_briefing`, `s1_synchro_protocol_unlock`, `s1_tutorial_hub_return` |
-| **Campaign / combat rules** | **Truth** — walk blockers, unbeatable FOE, crisis AOE, allowed commands | `CombatTutorialHudRules`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
+| **Campaign / combat rules** | **Truth** — walk blockers, encounter events, allowed commands | `EncounterGroup.Events[]`, `EncounterGroupId` / `TutorialFirstFoe` on spawn, `NoFlee`, campaign save flags |
 
 A single S1 moment often uses **two layers**: crisis AOE (rules) → unlock VN (story) → guided Protocol (this doc) → finisher (rules).
 
@@ -146,7 +146,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | **Skip** | **Disabled** until Protocol resolves |
 | **VN vs coach** | Navigator **lines** = story event only; **“use Protocol now”** = impersonal guided hint `s1_combat_guided_protocol` |
 
-**Effect bridge (target):** story step `start_guided_protocol` → set `s1_synchro_unlocked` / protocol-tutorial flags → `CombatTutorialHudRules.RequiresProtocolOnlyCommands` (shipped via campaign + `grp_alley_stalker_tutorial`) + `GuidedTutorialController.Start("s1_combat_guided_protocol")` ([#88](https://github.com/miramocha/griddungeon-game/issues/88) — coach UI not yet wired).
+**Effect bridge (target):** story `StartGuidedProtocol` effect → Synchro 100% + `OnGuidedProtocolStarted`; **Protocol-only rail** via `CommandPanelView` `protocolOnly` flag ([#88](https://github.com/miramocha/griddungeon-game/issues/88) — not wired for S1) + `GuidedTutorialController.Start("s1_combat_guided_protocol")` when coach ships.
 
 **End:** `protocol_strike` resolves and kills FOE → clear guided state → `s1_tutorial_hub_return` story event.
 
@@ -173,7 +173,7 @@ Beat list and copy drafts: [s1-guided-tutorials.md](../03-content/campaign/s1-gu
 flowchart LR
   subgraph rules [Rules layer]
     CC[CombatController]
-    CR[Crisis AOE / gates]
+    ES[EncounterEventScheduler]
   end
   subgraph story [Story layer]
     VN[StoryEventRunner]
@@ -233,4 +233,4 @@ Deferred: map (`M`) coach, shared panel UXML with story layer, authoring format 
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)
 - [Story events](story-events.md)
 - [01 — Core loop](../01-core-loop.md)
-- [05 — class design § CombatEntryContext](../05-class-design.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via `CombatTutorialHudRules`
+- [05 — class design § CombatEntryContext](../05-class-design.md) — `EncounterGroupId`, `NoFlee`; tutorial detect via encounter group id + floor spawn flags

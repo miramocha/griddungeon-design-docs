@@ -290,7 +290,13 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `BattleReward` / `ModalDismiss` | [Z] Continue · [Click] Close |
 | `ExplorationPauseMenuShell` | [Z] Open · [X] Close · [Up/Down] Navigate · [Esc] Close |
 | `ExplorationMapPanel` | [M] Map · [Esc] Pause |
+| `ExplorationMapPanelWithOpen` | [Z] Open · [M] Map · [Esc] Pause — chest in **facing** cell ahead |
+| `ExplorationMapPanelWithGather` | [Z] Gather · [M] Map · [Esc] Pause — standing on gather node |
+| `ForExplorationMapPanel(canOpenChest, canGather)` | Picks gather → open → default (gather wins when both apply) |
 | `ExplorationMapFullscreen` | [C] Auto · [M] Map · [Esc] Close |
+| `ExplorationMapFullscreenWithOpen` | [Z] Open · [C] Auto · [M] Map · [Esc] Close |
+| `ExplorationMapFullscreenWithGather` | [Z] Gather · [C] Auto · [M] Map · [Esc] Close |
+| `ForExplorationMapFullscreen(canOpenChest, canGather)` | Same priority as panel helper |
 | `ExplorationMapAutopilotSelect` | [C] Confirm · [X] Cancel · [Directional] Navigate · [Click] Set · [Esc] Cancel |
 | `ExplorationMapAutopilotWalking` | [Esc] Stop |
 | `PartyMenuShell` | [Z] Open · [X] Close · [Up/Down] Navigate |

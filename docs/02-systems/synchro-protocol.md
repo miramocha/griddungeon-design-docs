@@ -63,9 +63,9 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 5. **Crisis AOE** — authored scripted enemy action (display-only or minimal rules damage); must not KO cores — clamp living core HP to **1**. FOE HP may stay at floor through crisis.
 6. **Hub return** — exceptional `Combat → Hub` transition ([game phase](game-phase.md)); player re-enters stratum from hub when ready (gate spawn per [S1 intro](../03-content/campaign/s1-intro.md)).
 
-Random fights before this FOE contact: Synchro **locked**. S1 tutorial FOE: encounter group `TutorialFirstFoe` + `CombatTutorialHudRules` ([combat](combat.md)).
+Random fights before this FOE contact: Synchro **locked** until `s1_synchro_unlocked`. S1 tutorial FOE: encounter group `grp_alley_stalker_tutorial`; mid-fight unlock via `EncounterGroup.Events[]` → `EncounterEventScheduler` ([combat § Encounter events](combat.md#encounter-events-combat--story)).
 
-**Protocol-only command rail (phase D):** `RequiresProtocolOnlyCommands` hides Attack/Guard/Skill/Item/Flee; **Protocol** button appears only when `CanUseProtocol` (bar full). Planning prompt via `CombatTutorialHudRules.TutorialPlanningPrompt`: *Gain Synchro in combat…* until ready, then *Synchro is full. Open Protocol → Protocol Strike.* Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182).
+**Protocol-only command rail (phase D):** **Design target** — `CommandPanelView` supports `command-panel--protocol-only` (hides Attack/Guard/Skill/Item/Flee). **S1 wiring deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); until then player uses full command bar with Synchro at 100% after unlock VN. Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182).
 
 ### During combat
 

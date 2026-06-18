@@ -230,7 +230,7 @@ command-rail | center column (log-preview ? enemy ? arena-spacer ? synchro) + Pa
 - **Shared UITK menus** � `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` � composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
 - AGI strip � flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
-- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` � DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal; `CombatTutorialHudRules` (Core) gates S1 tutorial commands.
+- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` � DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal. Mid-fight story: `EncounterEventScheduler` on `CombatController`.
 - **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control � `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
 - **Shared panel scale:** `GamePanelSettings.asset` � Scale With Screen Size, reference **1920�1080**, **Match Height** (exploration + combat `UIDocument` panels).
 

@@ -383,6 +383,19 @@ Implementation: gate `GuildService` / party skill UI on `GamePhase` + `StoryEven
 
 Implemented in **`GridDungeon.UI`**: `GameBootstrap` calls `InputRouter.Bind(GameState)`; router subscribes to `GameState.PhaseChanged` (see [class design](../05-class-design.md)). HUD integrators: full runtime event list in [UI event contract](../04-dev/ui-event-contract.md).
 
+## Cold start (`CampaignStartConfig`)
+
+When no inn save exists on disk, `SaveSystem` builds an empty shell via `NewGameBootstrap` + `ContentDatabase.NewGameDefaults`, then `GameBootstrapPhase.ResolveStartPhase` picks the first macro phase from `ContentDatabase.CampaignStart`:
+
+| `CampaignStartType` | First phase | Exploration enter |
+|---------------------|-------------|-------------------|
+| **Hub** | Hub | N/A until player uses services |
+| **Spawn** | Exploration | `PartyEntrySpawnKind.SpawnStart` at floor `partyEntryPoint` |
+
+Hub re-entry from exploration uses `PartyEntrySpawnKind.HubReturn` — spawn/facing from `H` exit link (`FloorExitResolver` + `FloorPartyEntryBuilder`), not the cold-start spawn cell. `HubExitId` on `CampaignStartConfig` selects which hub-return link when multiple `H` markers exist.
+
+Dev **F1/F2** shortcuts bypass this table; production new-game follows the asset on `ContentDatabase`.
+
 ## Dev bootstrap HUD (UI Toolkit)
 
 at launch acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon ? Scenes ? Create Dev Bootstrap** in the game repo � run after clone).

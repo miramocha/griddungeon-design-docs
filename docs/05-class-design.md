@@ -122,6 +122,8 @@ All read-only at runtime. Created in the Unity editor and referenced by `Content
 | `SummonDefinition` | `Assets/Content/Summons/` | [summons & guests](02-systems/summons-and-guests.md), [ADR 016](../decisions/016-summon-control-mvp1.md) |
 | `ExplorationFloor` | `Assets/Content/Floors/` | [mapping](02-systems/mapping.md), [floor painter](02-systems/floor-editor.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md); `randomEncounterTableId` → shared table SO |
 | `StratumDefinition` | `ContentDatabase` | [dungeons & encounters](03-content/dungeons-and-encounters.md), [campaign S1 intro](03-content/campaign/s1-intro.md) |
+| `CampaignStartConfig` | `ContentDatabase` | Cold start: `CampaignStartType` Hub vs Spawn, `LocationId` / `FloorId` / `HubExitId` — `GameBootstrapPhase` picks initial macro phase |
+| `NewGameDefaults` | `ContentDatabase` | `DefaultNavigatorId` seeded by `NewGameBootstrap` on first save |
 
 **Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryPoint` (spawn start) + blockers; `s2+` adds `hasWarpGate`.
 
@@ -165,6 +167,8 @@ Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase
 | `DamageCalculator` | Physical, elemental, heal formulas |
 | `HitChanceCalculator` | Hit chance with blind mod |
 | `TurnQueueBuilder` | AGI sort with status effects |
+| `FloorExitResolver` | Hub-return / exit-link spawn and facing from `FloorExitLink[]` |
+| `EncounterEventEvaluator` | Combat encounter event predicates |
 | `StatusSystem` | Apply, refresh, tick, cleanse, skill block checks |
 | `ValidTargetCalculator` | Living targets per `TargetingRule` |
 | `CombatTargeting` | Player target requirement, resolve, stale check |
@@ -233,7 +237,7 @@ Pure C# phase orchestration. **Not** Unity Visual Scripting. Diagrams and Enter/
 | `EndOfRoundPipeline` | Status ticks and end-of-round log lines |
 | `CombatantFactory` | Build `Combatant` from save or `EnemyData` |
 
-S1 tutorial FOE: identify by `EncounterGroupId` (`grp_alley_stalker_tutorial`) via `CombatTutorialHudRules.IsS1FirstFoeTutorial` (Campaign). Floor spawn flag: `FoeSpawnConfig.TutorialFirstFoe`.
+S1 tutorial FOE: `EncounterGroupId` `grp_alley_stalker_tutorial` from story `start_combat` or floor FOE spawn; `NoFlee` on `CombatEntryContext` or encounter/enemy defs. Mid-fight unlock VN: `EncounterGroup.Events[]` → `EncounterEventScheduler` ([combat § Encounter events](02-systems/combat.md#encounter-events-combat--story)). Floor spawn metadata: `FoeSpawnConfig.TutorialFirstFoe`, `NoFlee`.
 
 ### Hub, codex, content, save
 
@@ -242,8 +246,10 @@ S1 tutorial FOE: identify by `EncounterGroupId` (`grp_alley_stalker_tutorial`) v
 | `HubController` | Inn, hospital, shop, guild, navigator office |
 | `InnService`, `HospitalService`, `ShopService`, `GuildService`, `NavigatorOffice` | Hub service rules |
 | `CodexSystem` | Enemy encounter / weakness / status knowledge |
-| `ContentDatabase` | SO lookup + `To*Data` DTO mapping |
+| `ContentDatabase` | SO lookup + `To*Data` DTO mapping; `CampaignStart`, `NewGameDefaults` |
 | `SaveSystem` | Inn save, incremental map/foe/exploration commits |
+| `GameBootstrapPhase` | Maps save load result + `CampaignStartConfig` → initial `GamePhase` |
+| `FloorPartyEntryBuilder` | Resolves hub-return spawn/facing from `FloorExitResolver` + floor `exitLinks[]` |
 
 ---
 
@@ -254,12 +260,12 @@ Lives in `GridDungeon.Campaign`. References Core only.
 | Type | Role |
 |------|------|
 | `S1CampaignResolver` | S1 floor keys, spawn cells, encounter suppress |
-| `S1GuildPartyRules` | S1 party-ready flag writes |
-| `StoryEventEffectExecutor`, `StoryEventRunner`, `StoryEventPlayback` | Story VN execution |
+| `HubStratumEntryRules` | Hub stratum entry eligibility (`GuildPartyRules`) |
+| `NewGameBootstrap` | Seeds `NewGameDefaults` on empty save (`SaveGameFactory` shell) |
 | `StoryEventIds`, `StoryEventTriggerCatalog` | Content IDs and trigger catalog (catalog fallback until floor rows migrated) |
 | `ExplorationStoryEventTriggers` | Floor-first resolver with `StoryEventTriggerCatalog` fallback |
-| `CombatTutorialHudRules` | Tutorial combat HUD policy |
-| `NewGameBootstrap` | New-game defaults on empty save shell (`SaveGameFactory` in Core) |
+
+**Core (not Campaign):** `StoryEventEffectExecutor`, `StoryEventPlayOnceRules` — effect dispatch + play-once checks. **Runtime:** `StoryEventRunner`, `StoryEventPlayback`.
 
 Authority: [story events](02-systems/story-events.md), [unity-core-campaign-assembly.mdc](../.cursor/rules/unity-core-campaign-assembly.mdc).
 

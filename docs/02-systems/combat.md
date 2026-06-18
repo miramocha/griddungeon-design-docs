@@ -242,7 +242,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | FOE join (optional) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
 | Combat log line | Newest entry **fade/slide in** on **preview** line; full history in log modal ([#181](https://github.com/miramocha/griddungeon-game/issues/181)) | Bundled with the beat above (same lock) |
 
-**Shipped presenters:** `CombatHudReactivePresenter` (log fade/slide, HP/Synchro lerp, hit/KO/status flashes, turn-strip handoff), `CombatHudLogView` (log format + preview/modal — [#181](https://github.com/miramocha/griddungeon-game/issues/181)), `CombatTutorialHudRules` (Core — S1 stalker command gating). `CombatController` / `CombatScenePresenter` stay authoritative for rules.
+**Shipped presenters:** `CombatHudReactivePresenter` (log fade/slide, HP/Synchro lerp, hit/KO/status flashes, turn-strip handoff), `CombatHudLogView` (log format + preview/modal — [#181](https://github.com/miramocha/griddungeon-game/issues/181)). `CombatController` / `CombatScenePresenter` stay authoritative for rules. S1 tutorial beats: story + encounter events — not a separate tutorial HUD rules type.
 
 ### Combat HUD frame layout
 
@@ -321,7 +321,7 @@ Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[
 
 **Roster vitals At launch:** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
 
-**Launch implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 protocol-only planning prompt: charging copy until `CanUseProtocol`, then Protocol Strike hint (`CombatTutorialHudRules.TutorialPlanningPrompt`). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**Launch implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 Protocol coach / planning prompt: deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
 
 ## Related docs
 

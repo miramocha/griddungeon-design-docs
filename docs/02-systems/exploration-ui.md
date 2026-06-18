@@ -189,7 +189,7 @@ Built under `map-view-grid-host` (siblings above `map-view-grid`):
 | `map-view-gather-markers` | `MapGatherMarkersPresenter` | `HasGatherNode` + visited (or dev reveal-all); `map-view__marker--gather` |
 | `map-view-hub-entrance-markers` | `MapHubEntranceMarkersPresenter` | B1F `stairsUp` gate when visited — `MapHubEntranceMarkerRules` |
 | `map-view-stairs-markers` | `MapStairsMarkersPresenter` | Stairs cells (down/up); `map-view__marker--stairs` |
-| `map-view-story-event-markers` | `MapStoryEventMarkersPresenter` | Active story event cells; `map-view__marker--story-event` |
+| `map-view-story-event-markers` | `MapStoryEventMarkersPresenter` | Pending story triggers at visited cells (`map-view__marker--story-event`); hidden when `MapStoryEventMarkerRules.ShouldShow` fails — play-once already played (`StoryEventPlayOnceRules` + content lookup), `RequiredFlagsFalse` / flag gates, or cell not visited (unless dev `revealAllMarkers`) |
 | `map-view-foe-markers` | `MapFoeMarkersPresenter` | FOE in LOS / last known; patrol slide via `MapGridMarkerAnimator` |
 | `map-view-party-markers` | `MapPartyMarkerPresenter` | Party cell + facing; lerp with step; resync on return from combat |
 
