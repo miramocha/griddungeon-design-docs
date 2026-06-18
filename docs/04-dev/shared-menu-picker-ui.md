@@ -337,19 +337,19 @@ flowchart LR
 | `TabbedPicker.uss` | Panel layout; **transparent** full-screen host (`tabbed-picker { background-color: rgba(0,0,0,0) }` — **no modal dim**); imports `RailMenu.uss` |
 | `WindowedList.uss` | `windowed-list`, `windowed-list__slots`, scroll bars |
 | `TabbedPickerShellClasses` | BEM constants (`Hidden`, `TabsHidden`, …) |
-| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss`. **`party-menu__dialog`** hosts quit confirm only — bag and character detail modals live on centralized services ([centralized UI services](centralized-ui-services.md)) |
+| `PartyMenu.uss` | **Opaque** full-screen party shell (`rgb(20, 22, 26)`); imports `CommandPanel.uss`. Quit confirm uses centralized `ConfirmModal` ([centralized UI services](centralized-ui-services.md)) |
 
 **Overlay contrast:**
 
 | Host | Root chrome | List panel |
 |------|-------------|------------|
 | Hub shop / combat pickers | `tabbed-picker` — transparent; stage/rail stay visible | `tabbed-picker__panel` — dim panel (`rgba(30, 34, 40, 0.97)`) |
-| Party menu shell | `party-menu` — opaque full-screen | `party-menu__dialog` — quit confirm only |
+| Party menu shell | `party-menu` — opaque full-screen | Section rail only; quit confirm on `ConfirmModal` (sort **252**) |
 | Party bag (menu Inventory) | `ItemListInventory` modal — transparent (sort **251**) | `tabbed-picker__panel` |
 
 **Rail inset (240px):** centralized item modals use `tabbed-picker--rail-offset` on [`ItemListInventoryOverlay.uss`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uss) (see [centralized UI services](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory)). Legacy embedded clones used `.combat-hud > .tabbed-picker { left: 240px }` (`CombatHud.uss`) — remove when phase HUDs migrate off local picker trees.
 
-**Panel layout:** `tabbed-picker__panel` and `party-menu__dialog` **shrink-wrap** content (`flex-grow: 0` — no fixed viewport-% height). **`tabbed-picker__body`** — horizontal row: windowed list (`flex-grow: 1`) + fixed-width detail column (`168px`). Fixed body height (`288px`) fits eight windowed rows + scroll chrome.
+**Panel layout:** `tabbed-picker__panel` **shrink-wrap** content (`flex-grow: 0` — no fixed viewport-% height). **`tabbed-picker__body`** — horizontal row: windowed list (`flex-grow: 1`) + fixed-width detail column (`168px`). Fixed body height (`288px`) fits eight windowed rows + scroll chrome.
 
 **UXML patterns:**
 

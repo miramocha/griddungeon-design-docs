@@ -126,6 +126,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **175** | Notice overlay (loot, skill unlock, …) | `NoticeOverlayPresenter` |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
+| **252** | Confirm modal (yes/no — exit, quit to title, …) | `ConfirmModalPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
 | **300** | Global input hint strip | `InputHintPresenter` |
 | **10000** | Full-screen fade | `ScreenFadePresenter` |
@@ -247,6 +248,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 | Party menu / pause | `PartyMenuOverlayView.RefreshMenuHint` |
 | Story modal | `StoryEventPresenter` → `TabbedPickerRailHints.ModalDismiss` |
 | Notice overlay | `NoticeOverlayPresenter` → `TabbedPickerRailHints.ModalDismiss` |
+| Confirm modal | `ConfirmModalPresenter` → `TabbedPickerRailHints.ConfirmModal` |
 | Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; map/hub republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter.RestoreGlobalInputHintForPhase` |
@@ -450,6 +452,36 @@ m_gameState.NoticeOverlay?.TryShowLoot(loot, id => m_gameState.Content.GetItem(i
 
 // UI layer / hub (when wired)
 Notice.TryShowSkillUnlock(gameState, "Protocol Strike");
+```
+
+---
+
+### Confirm modal — `ConfirmModalPresenter` + `ConfirmModal`
+
+**Job:** Phase-agnostic **yes/no confirm** — title, body, two buttons (confirm emphasis). Single active request (no queue). Blocks exploration via `PhasePresentationGateResolver` while open. Reuses shared `HudOverlay.uss` dim + panel chrome.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/ConfirmModalPresenter.cs` | `sortingOrder` **252**; `IConfirmModalService` + `IConfirmModalInput`; `ICentralizedUiSurface` |
+| Panel view | `Assets/Scripts/UI/Views/ConfirmModalPanelView.cs` | Title/body/buttons; `MenuFocusNavigator` |
+| Facade | `Assets/Scripts/UI/Views/ConfirmModal.cs` | `TryShow`, `IsActive`, lifecycle forward |
+| Runtime API | `Assets/Scripts/Runtime/UI/IConfirmModalService.cs`, `ConfirmModalRequest` | Registered on `GameState.ConfirmModal` |
+| Copy builder | `Assets/Scripts/Runtime/Exploration/ExitConfirmCopyBuilder.cs` | Hub return + floor exit + quit-to-title strings |
+| UXML / USS | `Assets/UI/Screens/Shared/ConfirmModal.uxml`, `ConfirmModal.uss` | BEM `confirm-modal-*`; `pop-in` on panel |
+| Bootstrap | `DevSceneComposition.WireConfirmModal` | Child `ConfirmModal` GO under game root |
+
+**Publishers:** `ExplorationPhaseController` (all `FloorExitLink` interact → confirm before transition), `PartyMenuOverlayView` (Quit section → quit-to-title confirm).
+
+**Input:** `InputRouter` priority story → **confirm modal** → notice → phase maps. `ConfirmModalInputHandler` on `MenuConfirm` / `MenuCancel` / `Navigate`.
+
+```csharp
+// Runtime (exploration exit)
+m_gameState.ConfirmModal?.TryShow(ExitConfirmCopyBuilder.ForExit(exit));
+
+// UI (party menu quit)
+ConfirmModalRequest request = ExitConfirmCopyBuilder.ForQuitToTitle();
+request.OnConfirmed = OnQuitConfirm;
+m_gameState.ConfirmModal?.TryShow(request);
 ```
 
 ---
@@ -714,6 +746,21 @@ Every **centralized UI service** (`GameState` child with its own `UIDocument` li
 | Phase HUDs (`HubHud`, `CombatHud`) | Not centralized services — phase-owned documents; exploration uses orchestrator + map/pause/floater docs |
 
 Passive copy rails (`CommandRailInfoPresenter`) should still implement the interface where visibility toggles exist; use immediate `Hide` when there is no settle animation.
+
+## Presentation bus
+
+**ADR:** [042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md) · **Contract:** [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus)
+
+Command rail and follow-on centralized chrome migrate from **direct `PanelHost` population** to:
+
+1. **Projectors** (`CommandRailPresentationProjector`, …) — read Runtime events, emit DTOs.
+2. **`UiPresentationBridge`** on `Game` — C# + `UnityEvent` for UVS.
+3. **`UiPresentationCatalog`** + **`PresentationShellHost`** — instantiate shell prefabs at Play Mode (default row = current screen UITK fallback).
+4. **Shell MonoBehaviours** (`CommandRailScreenShell`, …) — implement `ICommandRailShell.Apply`; only layer that knows UXML/BEM.
+
+`CommandRail.PanelHost` is **obsolete** during migration; phase HUDs publish menu state through projectors instead of `Q()` on the rail document. Presentation **lifecycle** (`ICentralizedUiSurface`, ADR 038) stays on shell/presenter — bus carries **content** snapshots.
+
+Dev Bootstrap: `EnsureUiPresentationCatalog()` + `WireUiPresentation()` — same pattern as `EnsureFloorTransitionCatalog()`.
 
 ### Problem (pre-#207)
 

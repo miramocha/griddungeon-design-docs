@@ -319,6 +319,43 @@ Subscribe in a bridge `MonoBehaviour`; forward to UVS **Custom Event** nodes if 
 
 ---
 
+## UI presentation hooks
+
+**ADR:** [042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md) · **Integrator:** [ui-event-contract § Presentation bus](../04-dev/ui-event-contract.md#presentation-bus)
+
+`UiPresentationBridge` on the bootstrap `Game` object mirrors presentation DTOs for graphs that should react to HUD chrome without referencing `GridDungeon.UI`.
+
+### Bridge fields (Play Mode)
+
+| Field / event | When fired | UVS use |
+|---------------|------------|---------|
+| `OnCommandRailChanged` (`UnityEvent`) | Hub/combat/party rail context or menu snapshot updates | Animator triggers, debug log, Timeline markers |
+| `OnCommandRailFocusBeat` | Focus index changed on rail menu | One-shot mesh highlight |
+| `OnCommandRailModalOpen` | Modal chip rail opened | Block secondary VFX |
+| `OnCommandRailInfoChanged` | Header / service copy updates | World-space title plate |
+
+C# subscribers use `IUiPresentationBus.CommandRailChanged` on the same component.
+
+### Example graph — rail change smoke test
+
+1. Add **Script Graph** to `Game` (or presentation rig).
+2. **Node library:** include `GridDungeon.Runtime` (Edit → Project Settings → Visual Scripting).
+3. **Start** → get `UiPresentationBridge` (`GetComponent` on `Game`).
+4. **Add Listener** → `OnCommandRailChanged` → **Debug Log** (`state.Context` or serialized fields).
+5. Play Mode **F1** hub / **F3** combat — log fires on rail context changes.
+
+### UVS boundaries (listen-only)
+
+| OK | Not OK |
+|----|--------|
+| Fade, camera, audio, Animator, Timeline on rail beats | `GameState.RequestTransition` |
+| Read `CommandRailPresentationState` fields | Rebuild UITK / `PanelHost` |
+| `PresentationGate.Acquire` / `Release` around beats | Save writes, combat adjudication |
+
+Sample graph asset (when shipped): `Assets/UVS/Samples/UiPresentationRailSmoke.asset`.
+
+---
+
 ## Examples — presentation gates
 
 Locks block hub menu focus, exploration HUD actions, and combat commands until UVS finishes mandatory motion ([04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity)).

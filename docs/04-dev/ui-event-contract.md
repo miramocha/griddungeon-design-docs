@@ -274,6 +274,26 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 
 ---
 
+## Presentation bus
+
+**ADR:** [042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md)
+
+Runtime **gameplay events** (above) remain the authority for rules. **Presentation DTOs** are display snapshots for UITK shells, world rigs, and UVS — built by **projectors** in `GridDungeon.Runtime.Presentation`, published on **`UiPresentationBridge`**.
+
+| Type | Location | Role |
+|------|----------|------|
+| `CommandRailPresentationState` | Runtime | Rail visibility, context, menu items, focus, modal flags |
+| `CommandRailInfoPresentationState` | Runtime | Header title, service lines, combat prompt |
+| `UiPresentationBridge` | `Game` bootstrap | C# `CommandRailChanged` + `UnityEvent` mirrors for UVS |
+| `UiPresentationCatalog` | `Assets/UI/Settings/` | Prefab-assigned shells; `PresentationShellHost` instantiates at Play Mode |
+| `ICommandRailShell` | Runtime interface, UI prefab | `Apply(state)`, `PlayBeat(beat)` — only layer that knows UXML/BEM |
+
+**Integrator rule:** subscribe to the bridge or gameplay events; do **not** push `VisualElement` trees from Runtime. Phase HUDs contribute menu **data** via projectors (command rail pilot); shells render.
+
+**UVS:** listen-only on `OnCommandRailChanged` / beat events — no `RequestTransition`, save writes, or `CommandRail.SwapPanelContent`. See [UVS phase presentation § UI presentation hooks](../02-systems/uvs-phase-presentation.md#ui-presentation-hooks).
+
+---
+
 ## Not wired at launch
 
 | Surface | Notes |
