@@ -762,6 +762,8 @@ Command rail and follow-on centralized chrome migrate from **direct `PanelHost` 
 
 Dev Bootstrap: `EnsureUiPresentationCatalog()` + `WireUiPresentation()` — same pattern as `EnsureFloorTransitionCatalog()`.
 
+**Implement a new shell:** [presentation shell implementation](presentation-shell-implementation.md) — prefab, `ICommandRailShell`, catalog row, bootstrap checklist.
+
 ### Problem (pre-#207)
 
 PopIn-style centralized services each reimplemented show/hide flags (`IsActive`, `IsClosing`, deferred `schedule.Execute`, …). [#207](https://github.com/miramocha/griddungeon-game/issues/207) shipped `ICentralizedUiSurface` + `CentralizedUiPresentation`. [#229](https://github.com/miramocha/griddungeon-game/issues/229) extracted `CentralizedUiPresenterBase` to eliminate repeated boilerplate across all 8 presenters; [#230](https://github.com/miramocha/griddungeon-game/issues/230) extracted `CentralizedUiFacade<T>` for the 6 static facades. **`ItemListInventory` / `ItemListPickerView`** remains the **reference consumer**; **`CharacterDetail`** ([#209](https://github.com/miramocha/griddungeon-game/issues/209)) is the second fixed PopIn consumer. Remaining traps (rapid reopen, context swap, domain flags vs `IsShown`): [centralized UI gotchas](centralized-ui-gotchas.md).

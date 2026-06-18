@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-06-18  
 **Epic:** Reactive presentation UI + UVS hooks (game)  
-**Docs:** [ui-event-contract § Presentation bus](../docs/04-dev/ui-event-contract.md#presentation-bus), [centralized-ui-services § Presentation bus](../docs/04-dev/centralized-ui-services.md#presentation-bus), [UVS phase presentation § UI presentation hooks](../docs/02-systems/uvs-phase-presentation.md#ui-presentation-hooks)
+**Docs:** [ui-event-contract § Presentation bus](../docs/04-dev/ui-event-contract.md#presentation-bus), [centralized-ui-services § Presentation bus](../docs/04-dev/centralized-ui-services.md#presentation-bus), [presentation shell implementation](../docs/04-dev/presentation-shell-implementation.md), [UVS phase presentation § UI presentation hooks](../docs/02-systems/uvs-phase-presentation.md#ui-presentation-hooks)
 
 ## Context
 

@@ -292,6 +292,8 @@ Runtime **gameplay events** (above) remain the authority for rules. **Presentati
 
 **UVS:** listen-only on `OnCommandRailChanged` / beat events — no `RequestTransition`, save writes, or `CommandRail.SwapPanelContent`. See [UVS phase presentation § UI presentation hooks](../02-systems/uvs-phase-presentation.md#ui-presentation-hooks).
 
+**New shell prefab:** [presentation shell implementation](presentation-shell-implementation.md).
+
 ---
 
 ## Not wired at launch
