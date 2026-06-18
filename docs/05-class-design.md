@@ -125,7 +125,7 @@ All read-only at runtime. Created in the Unity editor and referenced by `Content
 
 **Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryPoint` (spawn start) + blockers; `s2+` adds `hasWarpGate`.
 
-**Chest / gather:** `IsWalkable=false` + `HasChest` + `ChestConfig[]` on floor asset (adjacent interact, any player facing — [#105](https://github.com/miramocha/griddungeon-game/issues/105)); opened state in `CampaignSaveData.OpenedChestIds` (fixed item + quantity, not loot table); `HasGatherNode` + `lootTableId` on walkable gather cells.
+**Chest / gather:** `IsWalkable=false` + `HasChest` + `ChestConfig[]` on floor asset (orthogonally adjacent interact while **facing** chest — [#105](https://github.com/miramocha/griddungeon-game/issues/105)); opened state in `CampaignSaveData.OpenedChestIds` (fixed item + quantity, not loot table); `HasGatherNode` + `lootTableId` on walkable gather cells.
 
 ---
 
