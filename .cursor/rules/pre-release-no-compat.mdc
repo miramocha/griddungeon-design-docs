@@ -1,0 +1,29 @@
+---
+description: TEMP — pre-release; no save/API compat shims; replace obsolete patterns, not legacy layers
+alwaysApply: true
+---
+
+# Pre-release (TEMP — remove before public launch)
+
+Grid Dungeon is **not live**. Until first public release:
+
+## No backward-compatibility burden
+
+- **Do not** add migration shims, dual code paths, or alias layers only to preserve old saves, enum names, or serialized shapes.
+- **OK** to rename ids, re-serialize assets, and break local dev saves in the same change.
+- **Do not** defer refactors with "would break saves" or "needs migration" unless the user explicitly asks for compat.
+
+## Avoid obsolete / legacy
+
+- **Replace** obsolete patterns in the area you touch — do not add parallel legacy APIs "for now."
+- **Delete** dead types, enums, and compat branches; do not leave `[Obsolete]` stubs without a tracked removal.
+- **One authoritative representation** per concept (e.g. string flag ids — not enum + string + registry).
+
+## When matching legacy is still OK
+
+- Briefly match surrounding style only until you are **actively** replacing that subsystem — then finish the migration in the same PR when reasonable.
+- User explicitly scopes a minimal fix on old code without refactor.
+
+## Remove this rule
+
+Delete this file when locking save format / shipping — add a real save-version migration policy then if needed.
