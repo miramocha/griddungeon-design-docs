@@ -154,23 +154,25 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 
 ### Global command rail — `CommandRailPresenter` + `CommandPanelModalSupport`
 
-**Job:** One **vertical bookmark rail** (`CommandRail.uxml` → `command-rail-panel` / `CommandRail.PanelHost`) shared by hub root menu, hub service actions, combat command bar, and party menu section rail. Phase owners **populate** the panel in code (`CommandRailPanelBuilder` + `RailMenuPresenter`); they do not each own a duplicate rail document.
+**Job:** One **vertical bookmark rail** (`CommandRail.uxml` → `command-rail-panel`) shared by hub root menu, hub service actions, combat command bar, and party menu section rail. Phase owners **publish** menu snapshots via **`CommandRailPresentationProjector`** (and `PartySectionRailPresenter` for party sections); **`CommandRailScreenShell`** / **`PartySectionRailScreenShell`** render buttons — not direct `PanelHost` writes from phase HUDs ([#311](https://github.com/miramocha/griddungeon-game/pull/311), [#321](https://github.com/miramocha/griddungeon-game/pull/321)).
 
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/CommandRailPresenter.cs` | `sortingOrder` **25** (phase) / **255** (party menu); context: `Hub` / `Combat` / `PartyMenu` / `Hidden` |
-| Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | `PanelHost`, `Body`, `SetPartyMenuRailVisible`, `SyncPhaseOwnership` |
-| Modal chrome helper | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared **sibling-chip disable** + panel BEM cleanup on the **same** `PanelHost` |
+| Projector | `Assets/Scripts/Runtime/Presentation/CommandRailPresentationProjector.cs` | Menu items, modal flags, focus beat → `CommandRailPresentationState` |
+| Shell | `Assets/Scripts/UI/Views/CommandRailScreenShell.cs` | `ICommandRailShell.Apply` — only layer that mutates rail UXML |
+| Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | Visibility, `Body`, `SetPartyMenuRailVisible`, `SyncPhaseOwnership` |
+| Modal chrome helper | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared **sibling-chip disable** + panel BEM cleanup on shell panel host |
 | UXML / USS | `Assets/UI/Screens/Shared/CommandRail.uxml`, `CommandPanel.uss`, `RailMenu.uss` | `command-panel--disabled`, `command-panel--modal-open` |
 
-**Who populates `PanelHost`**
+**Who publishes menu state**
 
 | Phase / overlay | Owner | When |
 |-----------------|-------|------|
-| Hub root | `HubRootMenuPanel.Populate` | Hub bind + `RestoreCommandRailPanel` after party menu |
+| Hub root | `HubHudView` → `CommandRailPresentationProjector.SetMenuItems` | Hub bind + restore after party menu |
 | Hub service (Buy/Sell/Back) | `HubHudServicePanelView` | Shop / guild / inn panels |
 | Combat commands | `CommandPanelView.EnsureBuilt` | Combat phase |
-| Party menu sections | `PartyMenuOverlayView.PopulateSectionRail` | Tab / Esc overlay open |
+| Party menu sections | `PartyMenuOverlayView` → `PartySectionRail.SetMenuItems` | Tab / Esc overlay open |
 
 **Modal rail sibling disable**
 
@@ -334,6 +336,8 @@ Integrator detail (replace grid, events, combat chrome): [custom party UI](custo
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine: `HubShop` / `CombatItem` / `PartyBag` / `Hidden` |
+| Projector | `Assets/Scripts/Runtime/Presentation/ItemListInventoryPresentationProjector.cs` | Picker row/tab snapshots → `ItemListInventoryPresentationState` on `UiPresentationBridge` ([#322](https://github.com/miramocha/griddungeon-game/pull/322)) |
+| Shell | `Assets/Scripts/UI/Views/ItemListInventoryScreenShell.cs` | Applies bus DTOs to `ItemListPickerView`; presenter keeps `ICentralizedUiSurface` Show/Hide |
 | Facade | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Hub shop, combat item input, bag open/close |
 | UXML / USS | `Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml`, `ItemListInventoryOverlay.uss` | `item-list-inventory-overlay` + `tabbed-picker--modal-centered` + `tabbed-picker--rail-offset` (`left: 240px`); single `ItemListPickerShell` host |
 | Bootstrap | `DevSceneComposition.WireItemListInventory` | Child of `GameState` |
@@ -751,14 +755,16 @@ Passive copy rails (`CommandRailInfoPresenter`) should still implement the inter
 
 **ADR:** [042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md) · **Contract:** [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus)
 
-Command rail and follow-on centralized chrome migrate from **direct `PanelHost` population** to:
+Command rail and item-list modals publish **presentation DTOs** (not direct UITK tree writes from phase HUDs):
 
-1. **Projectors** (`CommandRailPresentationProjector`, …) — read Runtime events, emit DTOs.
+1. **Projectors** (`CommandRailPresentationProjector`, `ItemListInventoryPresentationProjector`, …) — read Runtime / presenter state, emit DTOs.
 2. **`UiPresentationBridge`** on `Game` — C# + `UnityEvent` for UVS.
 3. **`UiPresentationCatalog`** + **`PresentationShellHost`** — instantiate shell prefabs at Play Mode (default row = current screen UITK fallback).
-4. **Shell MonoBehaviours** (`CommandRailScreenShell`, …) — implement `ICommandRailShell.Apply`; only layer that knows UXML/BEM.
+4. **Shell MonoBehaviours** (`CommandRailScreenShell`, `ItemListInventoryScreenShell`, …) — implement shell `Apply`; only layer that knows UXML/BEM.
 
-`CommandRail.PanelHost` is **obsolete** during migration; phase HUDs publish menu state through projectors instead of `Q()` on the rail document. Presentation **lifecycle** (`ICentralizedUiSurface`, ADR 038) stays on shell/presenter — bus carries **content** snapshots.
+**Shipped on bus:** command rail + rail info + party section rail ([#311](https://github.com/miramocha/griddungeon-game/pull/311), [#321](https://github.com/miramocha/griddungeon-game/pull/321)); hub shop / combat item / party bag picker **content** via `ItemListInventoryPresentationProjector` while `ItemListInventoryPresenter` keeps `ICentralizedUiSurface` Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)).
+
+Presentation **lifecycle** (`ICentralizedUiSurface`, ADR 038) stays on shell/presenter — bus carries **content** snapshots.
 
 Dev Bootstrap: `EnsureUiPresentationCatalog()` + `WireUiPresentation()` — same pattern as `EnsureFloorTransitionCatalog()`.
 

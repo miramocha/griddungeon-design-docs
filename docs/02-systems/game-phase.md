@@ -409,7 +409,8 @@ at launch acceptance for macro phases is exercised in **`Assets/Scenes/DevBootst
 | Keyboard (save / campaign) | F5 / F6 / F8 | Inn save / `S1_PARTY_READY` / reset new game � mirrored in **Save Editor** ([#84](https://github.com/miramocha/griddungeon-game/pull/84)) |
 | Keyboard (combat) | U / M | Dev Protocol strike / mend when Synchro ready |
 | Editor — **Dev Tools** | `GridDungeon → Tools → Dev Tools` | Phase/combat/party shortcuts (`GridDungeonDevWindow`) — Play Mode actions; not top-menu duplicates |
-| Editor — **Save Editor** | `GridDungeon → Tools → Save Editor` | Inn save, delete/reset, Edit Mode JSON write, campaign flag toggles (`CampaignFlagId` / `CampaignFlagAccessor` in Core) — [#84](https://github.com/miramocha/griddungeon-game/pull/84) |
+| Editor — **Save Editor** | `GridDungeon → Tools → Save Editor` | Inn save, delete/reset, Edit Mode JSON write, campaign flag toggles (`CampaignFlagRegistry` ids + `CampaignFlagAccessor` in Core) — [#84](https://github.com/miramocha/griddungeon-game/pull/84), [#325](https://github.com/miramocha/griddungeon-game/pull/325) |
+| Editor — **Campaign flags** | `GridDungeon → Content → Ensure Campaign Flag Registry` | Creates/ensures `Assets/Content/Campaign/CampaignFlagRegistry.asset` — authoritative flag id list + Save Editor descriptions ([#325](https://github.com/miramocha/griddungeon-game/pull/325)) |
 | Editor — **Dev Tools Map** | `GridDungeon → Tools → Dev Tools Map` | Reveal-all floor preview in Exploration |
 | Editor menu policy | [unity-editor-grid-dungeon-menu.mdc](../../.cursor/rules/unity-editor-grid-dungeon-menu.mdc) | Edit Mode authoring on `GridDungeon/` menu; Play Mode dev actions in Dev Tools + F-keys only |
 

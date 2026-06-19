@@ -284,7 +284,10 @@ Runtime **gameplay events** (above) remain the authority for rules. **Presentati
 |------|----------|------|
 | `CommandRailPresentationState` | Runtime | Rail visibility, context, menu items, focus, modal flags |
 | `CommandRailInfoPresentationState` | Runtime | Header title, service lines, combat prompt |
-| `UiPresentationBridge` | `Game` bootstrap | C# `CommandRailChanged` + `UnityEvent` mirrors for UVS |
+| `ItemListInventoryPresentationState` | Runtime | Hub shop / combat item / party bag picker rows, tabs, engage flags |
+| `CommandRailPresentationProjector` | Runtime | Hub/combat/party menu → `CommandRailPresentationState` |
+| `ItemListInventoryPresentationProjector` | Runtime | `ItemListInventoryPresenter` adapters → `ItemListInventoryPresentationState` |
+| `UiPresentationBridge` | `Game` bootstrap | C# events + `UnityEvent` mirrors (`CommandRailChanged`, `ItemListInventoryChanged`, …) |
 | `UiPresentationCatalog` | `Assets/UI/Settings/` | Prefab-assigned shells; `PresentationShellHost` instantiates at Play Mode |
 | `ICommandRailShell` | Runtime interface, UI prefab | `Apply(state)`, `PlayBeat(beat)` — only layer that knows UXML/BEM |
 
@@ -310,6 +313,7 @@ Runtime **gameplay events** (above) remain the authority for rules. **Presentati
 
 | Date | Note |
 |------|------|
+| 2026-06-19 | Presentation bus: `ItemListInventoryPresentationState` + projectors ([#322](https://github.com/miramocha/griddungeon-game/pull/322)); command rail publish-only ([#321](https://github.com/miramocha/griddungeon-game/pull/321)) |
 | 2026-05-30 | Cross-links to [custom party UI](custom-party-ui.md); doc map + shipped entry points |
 | 2026-05-30 | mvp1-spec [#138](https://github.com/miramocha/griddungeon-game/issues/138) combat picker shipped; tech-notes party roster fix |
 | 2026-05-25 | Initial integrator contract at launch shipped events); doc dedup pass |

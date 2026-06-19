@@ -74,6 +74,8 @@ Executed synchronously when a step completes (or on `m_completionEffects`). Impl
 
 New effects require an ADR amendment or appendix — avoid ad-hoc string effects in scenes.
 
+**Editor authoring:** `SetCampaignFlag` completion effects, `ContentDatabase` hub-leave transition flags, and floor encounter gates / story triggers / exit `OnUseEffects` use **`CampaignFlagIdField`** popups backed by **`CampaignFlagRegistry`** (`GridDungeon → Content → Ensure Campaign Flag Registry`) — not free-text flag strings ([#325](https://github.com/miramocha/griddungeon-game/pull/325)).
+
 ---
 
 ## Act 1 — first hub (B1F)

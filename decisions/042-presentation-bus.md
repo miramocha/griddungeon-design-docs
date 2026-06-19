@@ -50,13 +50,18 @@ public interface ICommandRailShell
 
 Prefab components in `GridDungeon.UI` implement Runtime interfaces. Factory: `Instantiate(prefab)` → `GetComponent<ICommandRailShell>()`.
 
-### 5. Command rail pilot
+### 5. Command rail pilot (shipped)
 
 - `CommandRailPresentationProjector` subscribes to existing Runtime signals; emits `CommandRailPresentationState`.
 - `CommandRailScreenShell` is the only place that knows `command-rail-panel` / BEM classes.
-- Static `CommandRail` facade may forward to active shell during migration; `PanelHost` is **obsolete** until HUD migration completes ([# epic Child 6]).
+- Phase HUDs publish via `CommandRailPresentationProjector.SetMenuItems` / `SetModalOpen` — **no** `ResolvePanelHost` on phase views ([#321](https://github.com/miramocha/griddungeon-game/pull/321)).
 
-### 6. Asmdef placement
+### 6. Item list inventory on bus (shipped)
+
+- `ItemListInventoryPresentationProjector` carries picker row/tab snapshots; `ItemListInventoryPresenter` keeps `ICentralizedUiSurface` Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)).
+- Hub shop, combat item, and party bag adapters call `TryPublishContent` when `UiPresentationBridge` is present.
+
+### 7. Asmdef placement
 
 | Type | Assembly |
 |------|----------|
@@ -66,7 +71,7 @@ Prefab components in `GridDungeon.UI` implement Runtime interfaces. Factory: `In
 
 Core stays free of Unity presentation types.
 
-### 7. Out of scope
+### 8. Out of scope
 
 - Moving `GamePhase` authority to UVS.
 - Replacing `InputHints.Publish` with the bus.

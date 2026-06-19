@@ -31,7 +31,7 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 ## Save flags (campaign)
 
-**Implemented** (`CampaignFlags` in game — `SCREAMING_SNAKE_CASE` doc ids):
+**Implemented** (`CampaignFlagRegistry` asset in game — `SCREAMING_SNAKE_CASE` doc ids; Save Editor + story/floor/hub-leave authoring use registry-backed pickers):
 
 | Flag | Set when |
 |------|----------|
@@ -43,7 +43,7 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 | `S1_FIRST_FOE_TUTORIAL_COMPLETE` | Hub return VN + scripted warp from B2F tutorial; **B3F** unblocked |
 | `S1_STRATUM_CLEARED` | Stratum boss defeated (future win gate) |
 
-**Planned** (design only — not in `CampaignFlags` / save yet):
+**Planned** (design only — not in `CampaignFlagRegistry` / save yet):
 
 | Flag (planned id) | Set when |
 |-------------------|----------|

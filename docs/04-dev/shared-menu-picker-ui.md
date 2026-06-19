@@ -182,12 +182,14 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 ### Consumers (vertical)
 
-| Screen | Owner | UXML hook |
+| Screen | Owner | Data path |
 |--------|-------|-----------|
-| Combat command bar | `CommandPanelView` | `CommandRail.PanelHost` — buttons built in code |
-| Hub root menu | `HubHudView` / `HubRootMenuFocus` | `CommandRail.PanelHost` via `CommandRailPanelBuilder` |
-| Hub service back/actions | `HubHudServicePanelView` | `CommandRail.PanelHost` (buttons); service copy via `CommandRailInfo` |
-| Party section rail | `PartyMenuOverlayView` → `PartyMenuShellToolkitView` | `CommandRail.PanelHost` on Tab open |
+| Combat command bar | `CommandPanelView` | `CommandRailPresentationProjector.SetMenuItems` → `CommandRailScreenShell` |
+| Hub root menu | `HubHudView` / `HubRootMenuFocus` | `CommandRailPresentationProjector.SetMenuItems` |
+| Hub service back/actions | `HubHudServicePanelView` | `CommandRailPresentationProjector` (buttons); service copy via `CommandRailInfo` projector |
+| Party section rail | `PartyMenuOverlayView` → `PartySectionRailPresenter` | `PartySectionRail.SetMenuItems` → `PartySectionRailScreenShell` |
+
+Phase HUDs **publish menu DTOs** on `UiPresentationBridge` — they do **not** call `CommandRail.PanelHost` or `ResolvePanelHost` directly ([#311](https://github.com/miramocha/griddungeon-game/pull/311), [#321](https://github.com/miramocha/griddungeon-game/pull/321)).
 
 ### Consumers (horizontal)
 
@@ -196,13 +198,13 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | Tab strips (all pickers) | `PickerTabStripView` | Thin wrapper over `CreateHorizontal` |
 | Party equipment member select | `PartyEquipmentFloaterToolkitView` | Floater 2×4 grid focus → `PartyEquipmentCoordinator.SetActiveMemberListIndex` (no inline tabs) |
 
-**Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). Phase owners populate `CommandRail.PanelHost` through `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`. **Non-button copy** (phase header title, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade; **Credits balance** on `WalletHudPresenter` (`WalletHud.uxml`, `sortingOrder` 27) — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
+**Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). **`CommandRailScreenShell`** (catalog prefab or UITK fallback) materializes buttons from `CommandRailPresentationState` via `CommandRailMenuShellSupport` + `RailMenuPresenter.CreateVerticalFocus()`. **Non-button copy** (phase header title, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade + `CommandRailInfoPresentationProjector`; **Credits balance** on `WalletHudPresenter` (`WalletHud.uxml`, `sortingOrder` 27) — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
 
-**Extend:** New vertical rail → populate `PanelHost` with `CommandRailPanelBuilder` + `RailMenuPresenter.CreateVerticalFocus()`, bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
+**Extend:** New vertical rail → add projector publish + shell `Apply` (or extend `CommandRailPresentationProjector` menu items), bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
 
 ### Modal rail sibling disable (`CommandPanelModalSupport`)
 
-**Job:** `CommandRail.PanelHost` is **one shared DOM** across hub, combat, and party menu. When a modal child owns input, non-owner chips on that rail are `SetEnabled(false)` so W/S does not steal focus from the active picker or engaged pane. The **owner** chip keeps `rail-menu__item--selected` and full opacity (`CommandPanel.uss` + `RailMenu.uss` suppress `:disabled` hover on siblings).
+**Job:** `CommandRailScreenShell` hosts **one shared DOM** across hub, combat, and party menu (same `command-rail-panel` BEM). When a modal child owns input, non-owner chips on that rail are `SetEnabled(false)` so W/S does not steal focus from the active picker or engaged pane. The **owner** chip keeps `rail-menu__item--selected` and full opacity (`CommandPanel.uss` + `RailMenu.uss` suppress `:disabled` hover on siblings).
 
 | Helper | Role |
 |--------|------|
@@ -359,7 +361,7 @@ flowchart LR
 
 ## Item list inventory service
 
-**Job:** One [`ItemListInventoryPresenter`](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) + `ItemListInventory` facade — three contexts, one `ItemListPickerView` host, **standalone** `UIDocument` (never embedded in hub / combat / party menu UXML).
+**Job:** One [`ItemListInventoryPresenter`](centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) + `ItemListInventory` facade — three contexts, one `ItemListPickerView` host, **standalone** `UIDocument` (never embedded in hub / combat / party menu UXML). Row/tab **content** publishes via `ItemListInventoryPresentationProjector` when the presentation bus is wired; Show/Hide stays on the presenter ([#322](https://github.com/miramocha/griddungeon-game/pull/322)).
 
 | Context | `sortingOrder` | Facade | Input mode |
 |---------|----------------|--------|------------|

@@ -33,7 +33,7 @@ No `GridDungeon/Dev/` or `Tools/Play Mode/` menu commands for phase/combat/party
 |---|---|
 | **Tools** | Dev Tools, Dev Tools Map, Save Editor, Log MVP1 Save Path |
 | **Scenes** | Create Dev Bootstrap, Create Play Mode Exploration Scene |
-| **Content** | Floor Editor, Ensure MVP1 ContentDatabase, Ensure MVP1 S1 Story Events, Compact floor list, **Floor Connector/** |
+| **Content** | Floor Editor, Ensure MVP1 ContentDatabase, Ensure MVP1 S1 Story Events, Ensure Campaign Flag Registry, Compact floor list, **Floor Connector/** |
 | **Floor Art** | **Preview/**, **Templates/**, **Lighting/**, **Dev Prefabs/**, Sync S1 Stratum Defaults |
 | **Map** | Create catalog, Wire SVG textures |
 | **Hub** | Cinemachine brain, Greybox town prefab |
