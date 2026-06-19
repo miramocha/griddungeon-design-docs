@@ -184,7 +184,7 @@ SetPrivateField(gameState, "m_phases", phases);
 
 **Cause:** `PresentationShellHost.ApplyCurrentBridgeSnapshots` or bridge catch-up calls `Apply` before shell `Awake` cached its HUD reference.
 
-**Fix:** Call `PresentationShellHostRef.Ensure(ref m_host, this)` at the start of every shell entry point (`Apply`, public getters, `PlayBeat`) — see `Assets/Scripts/UI/Views/PresentationShellHostRef.cs`. Do not inline `??= GetComponent<T>()`.
+**Fix:** Call `PresentationShellHostRef.Ensure(ref m_host, this)` in `Awake` and `PresentationShellHostRef.Require(ref m_host, this)` on every shell entry point (`Apply`, public getters, `PlayBeat`) — see `Assets/Scripts/UI/Views/PresentationShellHostRef.cs`. Do not inline `??= GetComponent<T>()` or silently no-op in `Apply` while getters throw.
 
 **Rule:** Shell `Apply` must not assume `Awake`/`OnEnable` order relative to first bus publish. New `*ScreenShell` types must use `PresentationShellHostRef`; skip only shells with no co-located host component (e.g. `CommandRailWorldRigShell`).
 
