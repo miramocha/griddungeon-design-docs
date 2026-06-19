@@ -31,6 +31,7 @@ Swap or host **display chrome** via `UiPresentationBridge` → projector DTO →
 | `RefreshRosterChrome` from **live** `CombatController` for targeting | `bridge.Current*` highlights on `OnTargetingChanged` (stale one frame) |
 | Full `CombatRosterPresentationState.Clear()` on unwired publish | Partial DTO reset (slots cleared, flags linger) |
 | Lazy-init in `Apply` if host publishes before `Awake` | Assume shell `OnEnable` before first bus snapshot |
+| `PresentationShellHostRef.Ensure` on every shell entry point | Inline `??= GetComponent<T>()` in shells |
 | `Apply(bridge.Current*)` catch-up in shell `OnEnable` | Duplicate chrome refresh on HUD **and** shell without `IfNotOnBus` guard |
 
 ## Review checklist
