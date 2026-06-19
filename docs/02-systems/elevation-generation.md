@@ -1,7 +1,7 @@
 # Elevation generation — algorithm
 
 **Implementation:** `GridDungeon.Core.FloorArt.CellElevationGenerator`  
-**Related:** [Floor Editor](floor-editor.md) (authoring UI)
+**Related:** [Floor Editor](floor-editor.md) (authoring UI), [Terrain biomes](terrain-biomes.md) (splat painting from elevation + moisture)
 
 ## Problem
 
