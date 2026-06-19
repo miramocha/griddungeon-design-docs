@@ -131,6 +131,7 @@ void OnTargetingChanged() => RefreshTargetHighlights(); // reads m_combat.ValidT
 | `CommandRail` | Catalog prefab (+ optional scene instance) |
 | `CommandRailInfo` | Scene `CommandRailInfoScreenShell` |
 | `CombatRoster` | Scene `CombatRosterScreenShell` on `CombatHud` |
+| `SynchroBar` | Scene `SynchroBarScreenShell` on `CombatHud` |
 | `ItemListInventory` | Centralized presenter + `ItemListInventoryScreenShell` |
 
 ---
@@ -183,9 +184,9 @@ SetPrivateField(gameState, "m_phases", phases);
 
 **Cause:** `PresentationShellHost.ApplyCurrentBridgeSnapshots` or bridge catch-up calls `Apply` before shell `Awake` cached its HUD reference.
 
-**Fix:** Lazy-resolve in `Apply` (see `CommandRailInfoScreenShell.EnsurePresenter`). `CombatRosterScreenShell` uses `Awake` + `GetComponent<CombatHudView>()` — host should prefer scene shells discovered in `CacheSceneShells` before instantiate.
+**Fix:** Call `PresentationShellHostRef.Ensure(ref m_host, this)` in `Awake` and `PresentationShellHostRef.Require(ref m_host, this)` on every shell entry point (`Apply`, public getters, `PlayBeat`) — see `Assets/Scripts/UI/Views/PresentationShellHostRef.cs`. Do not inline `??= GetComponent<T>()` or silently no-op in `Apply` while getters throw.
 
-**Rule:** Shell `Apply` must not assume `Awake`/`OnEnable` order relative to first bus publish.
+**Rule:** Shell `Apply` must not assume `Awake`/`OnEnable` order relative to first bus publish. New `*ScreenShell` types must use `PresentationShellHostRef`; skip only shells with no co-located host component (e.g. `CommandRailWorldRigShell`).
 
 ---
 
@@ -203,6 +204,12 @@ SetPrivateField(gameState, "m_phases", phases);
 | Interactive chrome | HUD live combat **or** shell `Apply` trigger — not stale DTO |
 | Projector wire | Bridge + phase lifecycle |
 | Stats on action beat | HUD/reactive presenter; optional DTO sync later |
+
+---
+
+## Missing `using` on new type refs
+
+Presentation shell files are a frequent source of this trap (new projector/builder/shell `.cs` under `Runtime/Presentation/`). **General rule:** [unity-common-pitfalls.mdc](../../.cursor/rules/unity-common-pitfalls.mdc) § Handoff — missing `using`; handoff step in `format-before-handoff-and-commit.mdc`.
 
 ---
 
@@ -224,3 +231,4 @@ SetPrivateField(gameState, "m_phases", phases);
 | Date | Note |
 |------|------|
 | 2026-06-18 | Initial page from combat roster shell ship ([#314](https://github.com/miramocha/griddungeon-game/issues/314)) |
+| 2026-06-19 | § Missing `using` — pointer to general `unity-common-pitfalls` handoff rule ([#315](https://github.com/miramocha/griddungeon-game/issues/315)) |

@@ -1,0 +1,10 @@
+---
+description: Prettier on changed .uxml and .uss — see format-before-handoff-and-commit.mdc (handoff + commit).
+alwaysApply: true
+---
+
+# Prettier (`.uxml`, `.uss`)
+
+**Authority:** `format-before-handoff-and-commit.mdc` — run Prettier on changed `.uxml` and `.uss` before **handoff** and before **commit** (after CSharpier when `.cs` also changed).
+
+**Team formatter:** [Prettier](https://prettier.io) + [`@prettier/plugin-xml`](https://github.com/prettier/plugin-xml) (UXML); built-in CSS parser (USS) — extension `esbenp.prettier-vscode`; CLI via `package.json`. Config: `.prettierrc`. Skill: **prettier-uitk-format**.

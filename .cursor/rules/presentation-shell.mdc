@@ -1,6 +1,6 @@
 ---
 description: Presentation bus UITK shells — projector DTOs, I*Shell.Apply, phase-owned wire; read gotchas before implement
-globs: "Assets/Scripts/**/{Runtime/Presentation,UI/Views}/**/*{Shell,Projector,PresentationApplier,PresentationBridge,PresentationHost,CombatRoster}*.cs"
+globs: "Assets/Scripts/**/{Runtime/Presentation,UI/Views}/**/*{Shell,Projector,PresentationApplier,PresentationBridge,PresentationHost,CombatRoster,SynchroBar}*.cs"
 alwaysApply: false
 ---
 
@@ -31,6 +31,7 @@ Swap or host **display chrome** via `UiPresentationBridge` → projector DTO →
 | `RefreshRosterChrome` from **live** `CombatController` for targeting | `bridge.Current*` highlights on `OnTargetingChanged` (stale one frame) |
 | Full `CombatRosterPresentationState.Clear()` on unwired publish | Partial DTO reset (slots cleared, flags linger) |
 | Lazy-init in `Apply` if host publishes before `Awake` | Assume shell `OnEnable` before first bus snapshot |
+| `PresentationShellHostRef.Require` on every shell entry point and getter | Inline `??= GetComponent<T>()` or silent `Apply` no-op when host missing |
 | `Apply(bridge.Current*)` catch-up in shell `OnEnable` | Duplicate chrome refresh on HUD **and** shell without `IfNotOnBus` guard |
 
 ## Review checklist
@@ -58,9 +59,11 @@ Reject shell/bus PRs that still have:
 | Command rail | `CommandRailPresentationProjector` | `CommandRailScreenShell` |
 | Combat roster | `CombatRosterPresentationProjector` | `CombatRosterScreenShell` |
 | Item list inventory | `ItemListInventoryPresentationProjector` | `ItemListInventoryScreenShell` |
+| Synchro bar | `SynchroBarPresentationProjector` | `SynchroBarScreenShell` |
 
 ## Related rules
 
 - `centralized-ui-services.mdc` — standalone `UIDocument` services, `IsSettling`
 - `unity-ui-toolkit.mdc` — BEM, shared components
 - `uitk-bem-transition.mdc` — show/hide motion on shell chrome
+- `unity-common-pitfalls.mdc` — handoff import check on new `.cs`

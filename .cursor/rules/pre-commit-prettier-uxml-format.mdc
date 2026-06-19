@@ -1,0 +1,10 @@
+---
+description: Prettier on changed .uxml — see format-before-handoff-and-commit.mdc (handoff + commit).
+alwaysApply: true
+---
+
+# Prettier (`.uxml`)
+
+**Authority:** `format-before-handoff-and-commit.mdc` — run Prettier on changed `.uxml` before **handoff** and before **commit** (after CSharpier when both apply).
+
+**Team formatter:** [Prettier](https://prettier.io) + [`@prettier/plugin-xml`](https://github.com/prettier/plugin-xml) — extension `esbenp.prettier-vscode`; CLI via `package.json`. Config: `.prettierrc`. Skill: **prettier-uxml-format**.
