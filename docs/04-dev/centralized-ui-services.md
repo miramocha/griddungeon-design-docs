@@ -467,12 +467,16 @@ Notice.TryShowSkillUnlock(gameState, "Protocol Strike");
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/ConfirmModalPresenter.cs` | `sortingOrder` **252**; `IConfirmModalService` + `IConfirmModalInput`; `ICentralizedUiSurface` |
+| Projector | `Assets/Scripts/Runtime/Presentation/ConfirmModalPresentationProjector.cs` | Copy snapshot → `ConfirmModalPresentationState` on `UiPresentationBridge` ([#328](https://github.com/miramocha/griddungeon-game/pull/328)) |
+| Shell | `Assets/Scripts/UI/Views/ConfirmModalScreenShell.cs` | Applies bus DTOs to `ConfirmModalPanelView`; presenter keeps Show/Hide + gate |
 | Panel view | `Assets/Scripts/UI/Views/ConfirmModalPanelView.cs` | Title/body/buttons; `MenuFocusNavigator` |
 | Facade | `Assets/Scripts/UI/Views/ConfirmModal.cs` | `TryShow`, `IsActive`, lifecycle forward |
 | Runtime API | `Assets/Scripts/Runtime/UI/IConfirmModalService.cs`, `ConfirmModalRequest` | Registered on `GameState.ConfirmModal` |
 | Copy builder | `Assets/Scripts/Runtime/Exploration/ExitConfirmCopyBuilder.cs` | Hub return + floor exit + quit-to-title strings |
 | UXML / USS | `Assets/UI/Screens/Shared/ConfirmModal.uxml`, `ConfirmModal.uss` | BEM `confirm-modal-*`; `pop-in` on panel |
-| Bootstrap | `DevSceneComposition.WireConfirmModal` | Child `ConfirmModal` GO under game root |
+| Bootstrap | `DevSceneComposition.WireConfirmModal`, `EnsureConfirmModalScreenShellPrefab` | Child `ConfirmModal` GO under game root + catalog `screen_default` row |
+
+**Presentation bus:** `TryShow` builds a DTO (no delegates on snapshot) → `ConfirmModalPresentationProjector` → `UiPresentationBridge.OnConfirmModalChanged` → `PresentationShellHost` → `IConfirmModalShell.Apply`. Callers (`ExitConfirmCopyBuilder`, exploration exit, party quit) unchanged. Swap screen layout via catalog prefab — not presenter branches.
 
 **Publishers:** `ExplorationPhaseController` (all `FloorExitLink` interact → confirm before transition), `PartyMenuOverlayView` (Quit section → quit-to-title confirm).
 
@@ -755,14 +759,14 @@ Passive copy rails (`CommandRailInfoPresenter`) should still implement the inter
 
 **ADR:** [042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md) · **Contract:** [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus)
 
-Command rail and item-list modals publish **presentation DTOs** (not direct UITK tree writes from phase HUDs):
+Command rail, item-list modals, and confirm modal publish **presentation DTOs** (not direct UITK tree writes from phase HUDs):
 
-1. **Projectors** (`CommandRailPresentationProjector`, `ItemListInventoryPresentationProjector`, …) — read Runtime / presenter state, emit DTOs.
+1. **Projectors** (`CommandRailPresentationProjector`, `ItemListInventoryPresentationProjector`, `ConfirmModalPresentationProjector`, …) — read Runtime / presenter state, emit DTOs.
 2. **`UiPresentationBridge`** on `Game` — C# + `UnityEvent` for UVS.
 3. **`UiPresentationCatalog`** + **`PresentationShellHost`** — instantiate shell prefabs at Play Mode (default row = current screen UITK fallback).
-4. **Shell MonoBehaviours** (`CommandRailScreenShell`, `ItemListInventoryScreenShell`, …) — implement shell `Apply`; only layer that knows UXML/BEM.
+4. **Shell MonoBehaviours** (`CommandRailScreenShell`, `ItemListInventoryScreenShell`, `ConfirmModalScreenShell`, …) — implement shell `Apply`; only layer that knows UXML/BEM.
 
-**Shipped on bus:** command rail + rail info + party section rail ([#311](https://github.com/miramocha/griddungeon-game/pull/311), [#321](https://github.com/miramocha/griddungeon-game/pull/321)); hub shop / combat item / party bag picker **content** via `ItemListInventoryPresentationProjector` while `ItemListInventoryPresenter` keeps `ICentralizedUiSurface` Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)).
+**Shipped on bus:** command rail + rail info + party section rail ([#311](https://github.com/miramocha/griddungeon-game/pull/311), [#321](https://github.com/miramocha/griddungeon-game/pull/321)); hub shop / combat item / party bag picker **content** via `ItemListInventoryPresentationProjector` while `ItemListInventoryPresenter` keeps `ICentralizedUiSurface` Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)); confirm modal **copy** via `ConfirmModalPresentationProjector` while `ConfirmModalPresenter` keeps `TryShow` / gate ([#328](https://github.com/miramocha/griddungeon-game/pull/328)).
 
 Presentation **lifecycle** (`ICentralizedUiSurface`, ADR 038) stays on shell/presenter — bus carries **content** snapshots.
 
