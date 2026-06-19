@@ -217,9 +217,9 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` ï¿½ **no** `UIDocument`) +
 command-rail | center column (log-preview ? enemy ? arena-spacer ? synchro) + PartyFormationFloater overlay | turn-order-strip
 ```
 
-- **Left rail** ï¿½ `combat-hud__command-rail` ? `command-panel` (vertical column, centered in rail). Button order: Attack ? ï¿½ ? Flee ? **Protocol** ? **Back** (DOM matches focus navigator). **Protocol** visible only when `CombatController.CanUseProtocol` (`command-panel__btn--hidden`; protocol-only tutorial uses `command-panel__btn--protocol--available`).
+- **Left rail** ï¿½ `combat-hud__command-rail` ? `command-panel` (vertical column, centered in rail). Button order: Attack ? ï¿½ ? Flee ? **Back** (DOM matches focus navigator).
 - **Top center** ï¿½ `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** ï¿½ no MP on enemies).
-- **Bottom center** ï¿½ `synchro-bar` in center column; party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
+- **Bottom center** ï¿½ `synchro-bar` in center column (**Protocol** when Synchro 100% — `C` / LMB); party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
 - **Log** ï¿½ `combat-log-preview-row` (round + one line; no Log button); modal via **`V`** or preview click; title + scroll only; close via **`V`**, **`X`** / Back (`TryBack` ï¿½ log before pickers), or backdrop click (not scroll).
 - **Centralized UI services** ï¿½ cross-phase `UIDocument` overlays (`InputHintPresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** ï¿½ bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
 - **Right rail** ï¿½ `turn-order-strip` vertical flat AGI queue (top ? bottom = soonest ? latest).

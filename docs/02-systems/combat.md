@@ -250,9 +250,9 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 | Zone | UITK element | Layout |
 |------|--------------|--------|
-| **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → **Protocol** → **Back**); Protocol shown only when `CanUseProtocol` |
+| **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → **Back**) |
 | **Top center** | `combat-log-preview-row` then `enemy-roster` | Log preview (round + latest line) above enemy formation — [§ Combat log](#combat-log-preview--modal) |
-| **Bottom center** | `synchro-bar` in center column; shared `PartyFormationFloaterPresenter` (combat-center inset) | Synchro in layout flow; party grid floats at bottom over center column ([custom party UI](../04-dev/custom-party-ui.md)) |
+| **Bottom center** | `synchro-bar` in center column; shared `PartyFormationFloaterPresenter` (combat-center inset) | Synchro meter + **Protocol** when 100% (`C` / LMB on bar); party grid floats at bottom ([custom party UI](../04-dev/custom-party-ui.md)) |
 | **Right rail** | `turn-order-strip` | **Vertical** flat AGI queue — [§ Turn order strip](#turn-order-strip-agi-queue-ui) |
 | **Center** | `combat-hud__arena-spacer` | Transparent flex-grow; no opaque full-width HUD panel |
 

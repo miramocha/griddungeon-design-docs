@@ -123,15 +123,14 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 |--------|-------|-------|
 | **Command** | LMB on bar button | **Instant** queue (no extra `Z`) — keyboard cursor unchanged |
 | **Back button** | LMB | Same as `X` when enabled |
-| **Protocol** | LMB | Instant when visible and ready |
 
-**Command bar items (focus order):** Attack → Guard → Skill → Item → Flee → Protocol (if visible) → **Back button**. Default focus when a core’s planning starts: **Attack**. Skip disabled/hidden entries.
+**Command bar items (focus order):** Attack → Guard → Skill → Item → Flee → **Back button**. Default focus when a core’s planning starts: **Attack**. Skip disabled/hidden entries.
 
 **Planning flow:** One command per living core in **formation order** ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)); auto-advance after each confirm. **No roster keyboard** — use **`X`** / **Back button** to LIFO undo ([game #61](https://github.com/miramocha/griddungeon-game/issues/61)). Roster LMB re-select ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) optional.
 
 ### Protocol (Synchro 100%)
 
-On command bar when **Synchro Charge = 100%** and **unlocked** ([synchro-protocol](synchro-protocol.md)). Confirm with **`Z`** (not a separate `U` one-shot). **`1`–`9` hotkey skill slots** on the Protocol bar deferred ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+) — not the tabbed **Skill** modal ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)).
+On the **synchro bar** (bottom center) when **Synchro Charge = 100%** and **unlocked** ([synchro-protocol](synchro-protocol.md)). **`C`** or **LMB** on the bar queues Protocol when rules allow — not on the command rail. Global hint adds **`[C] Protocol`** while ready during core command planning. **`1`–`9` hotkey skill slots** deferred ([#35](https://github.com/miramocha/griddungeon-game/issues/35)+) — not the tabbed **Skill** modal ([ADR 035](../../decisions/035-skill-use-picker.md), [custom skill picker UI](../04-dev/custom-skill-picker-ui.md)).
 
 ### Command planning — targeting
 

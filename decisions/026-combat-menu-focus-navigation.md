@@ -30,7 +30,7 @@ Product direction: **cursor navigation** on the command bar (and target list dur
 
 1. **Formation order:** `PartyCommandBatch.FirstUnassigned` walks `coreSlots`; highlight auto-advances to the next living core without a command ([#58](https://github.com/miramocha/griddungeon-game/issues/58)).
 2. **No roster keyboard:** player does not arrow-select cores on the party strip. Mistakes use **`X`** / **Back button** (LIFO undo) or mouse re-select when [#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up wires LMB.
-3. **Command bar focus:** default **Attack** when planning opens for a core. Focus order skips disabled/hidden entries (Flee off, Protocol hidden, etc.). Items include **Attack, Guard, Skill, Item, Flee, Protocol** (when visible), **Back button**.
+3. **Command bar focus:** default **Attack** when planning opens for a core. Focus order skips disabled/hidden entries (Flee off, etc.). Items include **Attack, Guard, Skill, Item, Flee, Back button**.
 4. **`Z` on focused command** queues that command (or enters targeting when required).
 5. **Back button** is focusable; **`Z`** on it runs the same logic as **`X`** when Back applies (see below).
 
@@ -56,7 +56,7 @@ After **Attack** or single-target **Skill** requires a target:
 
 ### Protocol
 
-**Protocol** is on the command bar focus list; confirm with **`Z`** when Synchro = 100% and unlocked. No instant **`U`** / **Enter** one-shot in this model (those binds may be removed or remapped in implementation).
+**Protocol** is on the **synchro bar** when Synchro = 100% and unlocked — **`C`** or **LMB** on the bar ([input bindings](../docs/02-systems/input-bindings.md#protocol-synchro-100)). Not on the command rail focus list.
 
 ### Summon / per-slot player turns
 

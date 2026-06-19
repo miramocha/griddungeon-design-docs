@@ -161,7 +161,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | Presenter | `Assets/Scripts/UI/Views/CommandRailPresenter.cs` | `sortingOrder` **25** (phase) / **255** (party menu); context: `Hub` / `Combat` / `PartyMenu` / `Hidden` |
 | Facade | `Assets/Scripts/UI/Views/CommandRail.cs` | `PanelHost`, `Body`, `SetPartyMenuRailVisible`, `SyncPhaseOwnership` |
 | Modal chrome helper | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared **sibling-chip disable** + panel BEM cleanup on the **same** `PanelHost` |
-| UXML / USS | `Assets/UI/Screens/Shared/CommandRail.uxml`, `CommandPanel.uss`, `RailMenu.uss` | `command-panel--disabled`, `command-panel--modal-open`, `command-panel--protocol-only` |
+| UXML / USS | `Assets/UI/Screens/Shared/CommandRail.uxml`, `CommandPanel.uss`, `RailMenu.uss` | `command-panel--disabled`, `command-panel--modal-open` |
 
 **Who populates `PanelHost`**
 
@@ -186,7 +186,7 @@ Helpers: `CommandPanelModalSupport.SetModalOpen`, `SetEnabledForModal` / `Resolv
 
 **Panel chrome reset (shared host)**
 
-Combat teardown must not leave `command-panel--disabled` on the shared host — hub/party buttons inherit the modifier and look dim. **`CommandPanelModalSupport.ResetPanelChrome`** clears `command-panel--modal-open`, `command-panel--disabled`, and `command-panel--protocol-only`.
+Combat teardown must not leave `command-panel--disabled` on the shared host — hub/party buttons inherit the modifier and look dim. **`CommandPanelModalSupport.ResetPanelChrome`** clears `command-panel--modal-open` and `command-panel--disabled`.
 
 | When | Who calls `ResetPanelChrome` |
 |------|------------------------------|
