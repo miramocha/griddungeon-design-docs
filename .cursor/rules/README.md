@@ -42,8 +42,10 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `uitk-bem-transition.mdc` | ADR 039 BEM motion + presenter sync |
 | `architecture-design-principles.mdc` | **Design-docs only** — maps principles → at launch architecture types |
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
+| `format-before-handoff-and-commit.mdc` | **Shared** — CSharpier + Prettier on changed `.cs` / `.uxml` / `.uss` before handoff and commit |
 | `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
-| `pre-commit-csharpier-format.mdc` | **Shared** — CSharpier (extension/CLI) on changed `.cs` before commit |
+| `pre-commit-csharpier-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.cs` |
+| `pre-commit-prettier-uitk-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.uxml` / `.uss` |
 | `git-commit-agent-workflow.mdc` | **Shared** — agent git commit order (format → commit → post-commit review → push) |
 | `unity-meta-files.mdc` | **Game** — `.meta` GUID policy (link from game repo via `scripts/link-cursor-rules.ps1`) |
 | `github-backlog-project.mdc` | **Shared** — read `.cursor/backlog-project.json` before backlog/ticket queries (project #3) |

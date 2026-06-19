@@ -35,5 +35,23 @@ Worth extra scrutiny in this project:
 | `tag == "Player"` | `CompareTag("Player")` |
 | Editor APIs in player builds | `#if UNITY_EDITOR` or Editor assemblies |
 | UI: per-frame `Q()`, inline styles | Cached queries; BEM in USS — `unity-ui-toolkit` |
+| New/touched `.cs` missing `using` | Mirror sibling file imports; Unity recompile — **Handoff — missing `using`** below |
 
 When touching legacy code, address smells in the area you are already changing — avoid unplanned repo-wide cleanups.
+
+## Handoff — missing `using` on new type references
+
+**Symptom:** Unity compile **CS0246** (`type or namespace name 'X' could not be found`) or **CS1503** (cannot convert `X?` to `GridDungeon....X?`) after adding a file or referencing types from another namespace or assembly.
+
+**Cause:** New `.cs` copied patterns from a sibling but **omitted `using`** for namespaces imported elsewhere. Cross-asmdef types need both an **asmdef reference** and a **`using`**. IDE may not flag until full Unity recompile; an unqualified name can resolve to the wrong type → CS1503 on the next line.
+
+**Fix — before handoff or commit** (every **new or touched** `.cs` in the change set):
+
+1. List **unqualified type names** in the file; add **`using`** at the top for each namespace (or fully qualify only when two namespaces collide — `unity-csharp-naming.mdc`).
+2. **Mirror imports** from the nearest sibling in the same folder (e.g. `*Builder` ↔ `*Projector`, fixture ↔ test).
+3. **Cross-assembly:** confirm `.asmdef` references (`unity-core-campaign-assembly.mdc`) **and** namespace imports — Core vs Campaign vs Runtime vs Tests each have distinct roots.
+4. Let Unity Editor refresh, or tail `Tools/read-unity-editor-log.ps1` for `CS0246` — do not assume green IDE squiggles alone.
+
+**Example ([#315](https://github.com/miramocha/griddungeon-game/issues/315)):** `SynchroBarPresentationProjector` used `CampaignSaveData` without `using GridDungeon.Core.SaveData;`.
+
+**Agents:** run this check in `format-before-handoff-and-commit.mdc` procedure when changed `.cs` exists (after CSharpier, before posting test plan or committing).

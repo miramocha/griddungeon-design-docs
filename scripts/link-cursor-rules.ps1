@@ -28,6 +28,8 @@ $ruleNames = @(
     "ticket-test-documentation.mdc",
     "post-commit-csharp-code-review.mdc",
     "pre-commit-csharpier-format.mdc",
+    "pre-commit-prettier-uitk-format.mdc",
+    "format-before-handoff-and-commit.mdc",
     "git-commit-agent-workflow.mdc",
     "code-review-no-story-edits.mdc",
     "github-backlog-project.mdc",

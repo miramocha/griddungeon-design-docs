@@ -1,6 +1,6 @@
 ---
 description: Presentation bus UITK shells — projector DTOs, I*Shell.Apply, phase-owned wire; read gotchas before implement
-globs: "Assets/Scripts/**/{Runtime/Presentation,UI/Views}/**/*{Shell,Projector,PresentationApplier,PresentationBridge,PresentationHost,CombatRoster}*.cs"
+globs: "Assets/Scripts/**/{Runtime/Presentation,UI/Views}/**/*{Shell,Projector,PresentationApplier,PresentationBridge,PresentationHost,CombatRoster,SynchroBar}*.cs"
 alwaysApply: false
 ---
 
@@ -58,9 +58,11 @@ Reject shell/bus PRs that still have:
 | Command rail | `CommandRailPresentationProjector` | `CommandRailScreenShell` |
 | Combat roster | `CombatRosterPresentationProjector` | `CombatRosterScreenShell` |
 | Item list inventory | `ItemListInventoryPresentationProjector` | `ItemListInventoryScreenShell` |
+| Synchro bar | `SynchroBarPresentationProjector` | `SynchroBarScreenShell` |
 
 ## Related rules
 
 - `centralized-ui-services.mdc` — standalone `UIDocument` services, `IsSettling`
 - `unity-ui-toolkit.mdc` — BEM, shared components
 - `uitk-bem-transition.mdc` — show/hide motion on shell chrome
+- `unity-common-pitfalls.mdc` — handoff import check on new `.cs`

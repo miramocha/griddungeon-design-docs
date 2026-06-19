@@ -131,6 +131,7 @@ void OnTargetingChanged() => RefreshTargetHighlights(); // reads m_combat.ValidT
 | `CommandRail` | Catalog prefab (+ optional scene instance) |
 | `CommandRailInfo` | Scene `CommandRailInfoScreenShell` |
 | `CombatRoster` | Scene `CombatRosterScreenShell` on `CombatHud` |
+| `SynchroBar` | Scene `SynchroBarScreenShell` on `CombatHud` |
 | `ItemListInventory` | Centralized presenter + `ItemListInventoryScreenShell` |
 
 ---
@@ -206,6 +207,12 @@ SetPrivateField(gameState, "m_phases", phases);
 
 ---
 
+## Missing `using` on new type refs
+
+Presentation shell files are a frequent source of this trap (new projector/builder/shell `.cs` under `Runtime/Presentation/`). **General rule:** [unity-common-pitfalls.mdc](../../.cursor/rules/unity-common-pitfalls.mdc) § Handoff — missing `using`; handoff step in `format-before-handoff-and-commit.mdc`.
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
@@ -224,3 +231,4 @@ SetPrivateField(gameState, "m_phases", phases);
 | Date | Note |
 |------|------|
 | 2026-06-18 | Initial page from combat roster shell ship ([#314](https://github.com/miramocha/griddungeon-game/issues/314)) |
+| 2026-06-19 | § Missing `using` — pointer to general `unity-common-pitfalls` handoff rule ([#315](https://github.com/miramocha/griddungeon-game/issues/315)) |

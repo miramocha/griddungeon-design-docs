@@ -1,49 +1,12 @@
 ---
-description: Before git commit, format changed C# with CSharpier (Cursor extension / CLI) when this repo has C#.
+description: CSharpier on changed .cs — see format-before-handoff-and-commit.mdc (handoff + commit).
 alwaysApply: true
 ---
 
-# Pre-commit CSharpier format
+# CSharpier (`.cs`)
 
-When the user asks you to **create a commit**, format C# changes first if this repository contains C# code.
+**Authority:** `format-before-handoff-and-commit.mdc` — run CSharpier on changed `.cs` before **handoff** and before **commit**.
 
-**Team formatter:** [CSharpier](https://csharpier.com) — **Cursor extension** for day-to-day edits; **repo-local CLI** (`.config/dotnet-tools.json`, pinned version) for agents and scripts. Style from `.editorconfig`.
+**Team formatter:** [CSharpier](https://csharpier.com) — extension for edits; CLI via `.config/dotnet-tools.json`. Style from `.editorconfig`. Skill: **csharpier-format**.
 
-## Does this repo have C#?
-
-Same gate as `post-commit-csharp-code-review.mdc`:
-
-- `**/*.cs` (exclude `Library/`, `obj/`, `bin/`)
-- or `*.csproj` / `*.sln`
-
-If **none** apply, skip and commit per user git instructions.
-
-## Required workflow (C# repos)
-
-1. Gather commit scope: `git status`, `git diff` — list every `.cs` path in the commit (staged + unstaged).
-2. If the commit includes **no** `.cs` changes, skip formatting.
-3. **Format before commit** (order: CSharpier → `git commit` → post-commit code review per `post-commit-csharp-code-review.mdc`):
-   - Follow the **csharpier-format** agent skill.
-   - From the **repository root** (Unity: folder with `Assets/` and `.config/dotnet-tools.json`), on **changed paths only**:
-     ```powershell
-     dotnet tool restore
-     dotnet csharpier format path/to/File.cs
-     ```
-   - Use the **local tool** first; fall back to global `csharpier format` only if the manifest is missing.
-   - CLI output should match **Format Document** with the CSharpier extension on the same files.
-4. Re-run `git diff` after formatting; include formatting-only changes in the commit unless the user excludes them.
-5. After commit, continue with `post-commit-csharp-code-review.mdc` if `.cs` was in the commit.
-
-## If CLI is unavailable
-
-Do not substitute another formatter. Tell the user to format the listed `.cs` files in Cursor (**Format Document** with CSharpier as default formatter), then re-check `git diff` before committing.
-
-## Exceptions
-
-- User explicitly requests **commit without formatting** or **skip format**.
-- Commit scope is **only** non-C# files in an otherwise C# repo.
-
-## Out of scope
-
-- `.uxml`, shaders, YAML — C# only.
-- PR-only workflows unless the user asks to format there too.
+After commit with `.cs` changes, continue with `post-commit-csharp-code-review.mdc`.
