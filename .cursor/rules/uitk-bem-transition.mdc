@@ -10,7 +10,7 @@ alwaysApply: false
 
 # UITK BEM transition standard (ADR 039)
 
-Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.md) (API + recipes), [ADR 039](../decisions/039-uitk-dotween-show-hide.md) §3 + §6, [centralized-ui-gotchas](../docs/04-dev/centralized-ui-gotchas.md) (symptoms).
+Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.md) (API + recipes), [ADR 039](../decisions/039-uitk-dotween-show-hide.md) §3 + §6, [centralized-ui-gotchas](../docs/04-dev/centralized-ui-gotchas.md) (symptoms), [presentation-shell-gotchas](../docs/04-dev/presentation-shell-gotchas.md) (bus shell chrome).
 
 ## Transition helpers (`*Transition.cs`)
 

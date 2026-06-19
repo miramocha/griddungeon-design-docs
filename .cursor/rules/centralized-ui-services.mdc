@@ -8,14 +8,15 @@ alwaysApply: false
 
 Cross-phase overlays (`InputHintPresenter`, `PartyFormationFloater`, `ItemListInventory`, `SkillUsePickerPresenter`, …) use **one scene `GameObject` + `UIDocument`** under `GameState`. Phase views **orchestrate** via static facades; they do **not** own duplicate picker trees.
 
-**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas:** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests). **Animation:** [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`.
+**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas (read before implement/review):** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests). **Presentation bus shells:** [presentation-shell-gotchas.md](../../docs/04-dev/presentation-shell-gotchas.md) + [presentation-shell.mdc](presentation-shell.mdc). **Animation:** [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`. **No hard cuts:** [uitk-bem-transition-guide § No hard cuts](../../docs/04-dev/uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ## `ICentralizedUiSurface` — required
 
 Every centralized service (`GameState` child with its own `UIDocument` — see doc § Scene graph) **must** implement `ICentralizedUiSurface` on the presenter (directly or via `CentralizedUiPresentation` + internal `IPresentationDriver`).
 
 - Facades expose `RequestedVisible`, `IsShown`, `IsSettling` — not misleading `IsOpen` / context-as-visible.
-- `HideImmediate()` on phase exit, context swap, competing overlay.
+- **`Hide()`** — default player-visible dismiss (may settle).
+- **`HideImmediate()`** — ownership / lifecycle only: context swap on shared picker, `OnDisable`, competing overlay, already steady-hidden. **Not** mid-beat snap while chrome is on screen.
 - **Exception:** `ScreenFadePresenter` (imperative beat fade on `GameState.ScreenFade`).
 
 Epic: [game#206](https://github.com/miramocha/griddungeon-game/issues/206). New services: reject PRs without the interface.
@@ -49,7 +50,17 @@ Reject migration PRs that still have:
 
 **Shared command rail:** `CommandRail.PanelHost` is repopulated per phase. Call `CommandPanelModalSupport.ResetPanelChrome` when leaving combat or before hub/party `Populate` so `command-panel--disabled` does not leak to hub buttons.
 
+## Agent audit
+
+Before migration PRs or when reviewing a presenter / facade / phase HUD wiring:
+
+1. Read [centralized-ui-gotchas](../../docs/04-dev/centralized-ui-gotchas.md) for the target concern.
+2. Run skill **`audit-centralized-ui-services`** (game repo [`.cursor/skills/audit-centralized-ui-services/SKILL.md`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/skills/audit-centralized-ui-services/SKILL.md)) — smell greps, `ICentralizedUiSurface` checklist, gotcha cross-check, report template.
+3. If the PR also touches **presentation bus** projectors/shells, read [presentation-shell-gotchas](../../docs/04-dev/presentation-shell-gotchas.md) and apply [presentation-shell.mdc](presentation-shell.mdc).
+
 ## Related rules
 
+- `presentation-shell.mdc` — bus DTO shells (`I*Shell.Apply`), projector wire lifecycle
 - `unity-ui-toolkit.mdc` — shared components table, BEM, no bind footers on panels
 - `unity-global-input-hints.mdc` — bind copy on `InputHintPresenter` only
+- `uitk-bem-transition.mdc` — BEM motion helpers

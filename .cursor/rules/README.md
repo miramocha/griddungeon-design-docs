@@ -37,6 +37,9 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `unity-csharp-comments.mdc` | Comment style |
 | `unity-common-pitfalls.mdc` | Unity gotchas |
 | `unity-ui-toolkit.mdc` | UI Toolkit bindings |
+| `centralized-ui-services.mdc` | Cross-phase UITK services + gotchas gate |
+| `presentation-shell.mdc` | Presentation bus shells + shell gotchas gate |
+| `uitk-bem-transition.mdc` | ADR 039 BEM motion + presenter sync |
 | `architecture-design-principles.mdc` | **Design-docs only** — maps principles → at launch architecture types |
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 | `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
@@ -53,8 +56,9 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | [validate-unity-meta](../skills/validate-unity-meta/SKILL.md) | Unity `.meta` validation — runs in **griddungeon-game** |
 | [blender-bone-remap](../skills/blender-bone-remap/SKILL.md) | VRoid/VRM bone rename + mirror pairs (Blender MCP) |
 | [vroid-shapekey-remap](../skills/vroid-shapekey-remap/SKILL.md) | VRoid `Fcl_*` shape key → `vroid*` naming (Blender MCP) |
+| [audit-centralized-ui-services](../skills/audit-centralized-ui-services/SKILL.md) | Centralized UI + presentation shell gotcha audits |
 
-**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `blender-bone-remap`, `vroid-shapekey-remap`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script).
+**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `blender-bone-remap`, `vroid-shapekey-remap`, `audit-centralized-ui-services`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script).
 
 ## Agents
 

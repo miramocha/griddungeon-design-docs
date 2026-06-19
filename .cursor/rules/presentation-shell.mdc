@@ -1,0 +1,66 @@
+---
+description: Presentation bus UITK shells — projector DTOs, I*Shell.Apply, phase-owned wire; read gotchas before implement
+globs: "Assets/Scripts/**/{Runtime/Presentation,UI/Views}/**/*{Shell,Projector,PresentationApplier,PresentationBridge,PresentationHost,CombatRoster}*.cs"
+alwaysApply: false
+---
+
+# Presentation shell (UITK bus)
+
+Swap or host **display chrome** via `UiPresentationBridge` → projector DTO → `I*Shell.Apply` — without forking gameplay rules or phase HUD orchestration.
+
+**Authority:** [presentation shell implementation](../docs/04-dev/presentation-shell-implementation.md) · [ADR 042](../decisions/042-presentation-bus.md)
+
+**Gotchas (read before implement/review):** [presentation-shell-gotchas.md](../docs/04-dev/presentation-shell-gotchas.md) — stale bus snapshots, wire lifecycle, authority split, scene shell vs catalog prefab, projector tests.
+
+**Distinct from:** [centralized-ui-services.mdc](centralized-ui-services.mdc) — modal `ICentralizedUiSurface` services (`ItemListInventory`, PopIn lifecycle). Bus shells carry **DTO snapshots**; many surfaces still co-own formation bind on the phase HUD.
+
+## Before coding
+
+1. Read **presentation-shell-gotchas** (symptom → cause → fix for #314-class bugs).
+2. Confirm **surface delivery**: catalog prefab vs scene `I*Shell` on phase GO (bootstrap checklist).
+3. Split **formation bind** (live `BattleState`) from **interactive chrome** (live controller when input-sensitive).
+
+## Locked rules
+
+| Do | Do not |
+|----|--------|
+| Projector builds DTO from gameplay events | Adjudicate combat/hub rules in projector |
+| Shell `Apply` / `PlayBeat` — display + BEM from DTO | `RequestTransition`, save writes, `CommandRail.SwapPanelContent` in shell |
+| Wire projectors from `UiPresentationBridge` + **phase lifecycle** | `Unwire` global projector from phase HUD `OnDisable` |
+| Phase HUD `RefreshRosters()` / live chrome when targeting matters | Gate formation bind on `UiPresentationBridge.Instance != null` |
+| `RefreshRosterChrome` from **live** `CombatController` for targeting | `bridge.Current*` highlights on `OnTargetingChanged` (stale one frame) |
+| Full `CombatRosterPresentationState.Clear()` on unwired publish | Partial DTO reset (slots cleared, flags linger) |
+| Lazy-init in `Apply` if host publishes before `Awake` | Assume shell `OnEnable` before first bus snapshot |
+| `Apply(bridge.Current*)` catch-up in shell `OnEnable` | Duplicate chrome refresh on HUD **and** shell without `IfNotOnBus` guard |
+
+## Review checklist
+
+Reject shell/bus PRs that still have:
+
+| Smell | Example |
+|-------|---------|
+| Stale DTO targeting | `ApplyHighlightsAndStats(bridge.CurrentCombatRoster)` on `OnTargetingChanged` |
+| `UsesBus` kills direct refresh | `if (bridge != null) return` around `RefreshRosters()` |
+| HUD owns projector wire | `CombatHudView.OnDisable` → `CombatRosterProjector.Unwire()` |
+| Missing scene shell | `CombatRoster` catalog `shellPrefab: null` but no `CombatRosterScreenShell` on CombatHud |
+| Gameplay in shell | `Apply` calls `CombatController.SelectTarget` |
+| Projector test without phase | `Wire(combat, gameState: null)` when builder gates on `GamePhase.Combat` |
+
+## Agent workflow
+
+- **Shell / projector / bridge wiring PR:** read [presentation-shell-gotchas](../docs/04-dev/presentation-shell-gotchas.md) end-to-end before diff review.
+- **Touches centralized modal + bus:** also run skill **`audit-centralized-ui-services`** (game repo) — PopIn traps stay in [centralized-ui-gotchas](centralized-ui-gotchas.md).
+
+## Gold references (game repo)
+
+| Surface | Projector | Shell |
+|---------|-----------|-------|
+| Command rail | `CommandRailPresentationProjector` | `CommandRailScreenShell` |
+| Combat roster | `CombatRosterPresentationProjector` | `CombatRosterScreenShell` |
+| Item list inventory | `ItemListInventoryPresentationProjector` | `ItemListInventoryScreenShell` |
+
+## Related rules
+
+- `centralized-ui-services.mdc` — standalone `UIDocument` services, `IsSettling`
+- `unity-ui-toolkit.mdc` — BEM, shared components
+- `uitk-bem-transition.mdc` — show/hide motion on shell chrome

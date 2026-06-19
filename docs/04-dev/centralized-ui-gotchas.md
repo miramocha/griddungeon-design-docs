@@ -14,6 +14,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 |------|--------|
 | Hit a weird modal / picker bug | Search here before adding guards in phase HUDs |
 | Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
+| Wiring presentation bus shells / projectors | Read [presentation-shell-gotchas](presentation-shell-gotchas.md) — apply [presentation-shell.mdc](../../.cursor/rules/presentation-shell.mdc) |
 | Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |

@@ -17,6 +17,7 @@ Living list of **non-obvious bugs and review traps** when wiring **UITK presenta
 | Shell renders but input/chrome is wrong | Check **authority split** and **stale snapshot** sections first |
 | Migrating phase HUD chrome onto the bus | Read **hybrid refresh** + **wire lifecycle** before gating direct refresh on `UiPresentationBridge.Instance != null` |
 | New `PresentationSurfaceKind` row | Confirm **scene shell vs catalog prefab** and bootstrap checklist |
+| Agent implement/review on shell/projector/bridge | Apply [presentation-shell.mdc](../../.cursor/rules/presentation-shell.mdc); cross-check [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) for modal services |
 | Closed a shell/bus bug | Add symptom → cause → fix → test in the same PR or follow-up |
 
 ---
@@ -210,6 +211,7 @@ SetPrivateField(gameState, "m_phases", phases);
 | Topic | Doc |
 |-------|-----|
 | Shell recipe, catalog, checklist | [presentation-shell-implementation.md](presentation-shell-implementation.md) |
+| Cursor rule (agent gate) | [presentation-shell.mdc](../../.cursor/rules/presentation-shell.mdc) |
 | Bus contract, surfaces | [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus) |
 | Modal PopIn / `IsSettling` traps | [centralized-ui-gotchas.md](centralized-ui-gotchas.md) |
 | Combat roster custom UI | [custom-party-ui.md](custom-party-ui.md) |
