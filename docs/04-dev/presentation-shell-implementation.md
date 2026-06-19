@@ -32,7 +32,9 @@ A shell is **not** enough by itself. You also need:
 |------|-----|
 | New **look** for command rail (screen UITK, world rig, A/B art) | New shell prefab + catalog row — **same** `CommandRailPresentationState` |
 | New **menu content** or hub service flow | Extend **projector** + **phase HUD** (e.g. `HubHudView`) — shell unchanged |
-| New **cross-phase modal** (picker, bag, confirm) | [Centralized UI services](centralized-ui-services.md) — presentation bus is for **shell-swappable chrome**, not modal lifecycle |
+| New **cross-phase modal** lifecycle (show/hide, gate, input) | [Centralized UI services](centralized-ui-services.md) — `ICentralizedUiSurface` on presenter |
+| **Confirm modal** copy/chrome swap (screen vs future world rig) | `ConfirmModalScreenShell` + `ConfirmModalPresentationProjector` — presenter keeps `TryShow` / gate ([#328](https://github.com/miramocha/griddungeon-game/pull/328)) |
+| **Item-list modal** copy/chrome swap (shop / combat item / bag) | `ItemListInventoryScreenShell` + `ItemListInventoryPresentationProjector` — presenter keeps Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)) |
 | Combat roster on bus (party + enemy plates) | `CombatRosterScreenShell` + `CombatRosterPresentationProjector` — see [presentation shell gotchas](presentation-shell-gotchas.md) |
 | UVS fade / Animator on rail change | Listen on `UiPresentationBridge` — **no** shell required |
 
@@ -45,8 +47,10 @@ A shell is **not** enough by itself. You also need:
 | Screen command rail | `ICommandRailShell` | `Assets/UI/Prefabs/Presentation/CommandRailScreenShell.prefab` |
 | World rig spike (P2) | `ICommandRailShell` | `Assets/UI/Prefabs/Presentation/CommandRailWorldRigShell.prefab` |
 | Rail info copy | `ICommandRailInfoShell` | Scene `CommandRailInfo` GO + `CommandRailInfoScreenShell` |
+| Item list inventory modal | `IItemListInventoryShell` | `Assets/UI/Prefabs/Presentation/ItemListInventoryScreenShell.prefab` |
+| Confirm modal | `IConfirmModalShell` | `Assets/UI/Prefabs/Presentation/ConfirmModalScreenShell.prefab` (scene `ConfirmModal` GO also valid) |
 
-**Read first:**
+**Read first (command rail):**
 
 - `Assets/Scripts/UI/Views/CommandRailScreenShell.cs` — subscribe, `Apply`, render menu from DTO
 - `Assets/Scripts/UI/Views/CommandRailPresenter.cs` — rail **lifecycle** (show/hide, context, panel swap)
@@ -54,6 +58,62 @@ A shell is **not** enough by itself. You also need:
 - `Assets/Scripts/Runtime/Presentation/CommandRailPresentationProjector.cs` — DTO builder
 - `Assets/Scripts/Runtime/Presentation/PresentationShellHost.cs` — catalog resolve + instantiate
 - `Assets/Scripts/Editor/DevSceneComposition.cs` — `EnsureUiPresentationCatalog`, `EnsureCommandRailScreenShellPrefab`
+
+**Read first (centralized modal on bus — lifecycle on presenter, content on shell):**
+
+- `Assets/Scripts/UI/Views/ConfirmModalScreenShell.cs` — `Apply` → `ConfirmModalPanelView.SetContent` + emphasis
+- `Assets/Scripts/UI/Views/ConfirmModalPresenter.Presentation.cs` — `TryShow` → projector; fallback `ApplyPresentationShell` when no bridge
+- `Assets/Scripts/Runtime/Presentation/ConfirmModalPresentationProjector.cs` — DTO publish / `Clear` on dismiss
+- `Assets/Scripts/Runtime/Presentation/PresentationShellHost.cs` — host fan-out to `IConfirmModalShell` (no shell self-subscribe)
+
+---
+
+## Recipe D — Centralized modal on bus (confirm modal pilot)
+
+Use when a [centralized UI service](centralized-ui-services.md) already owns **modal lifecycle** (`ICentralizedUiSurface`, gate, input) but you want **catalog-swappable copy/chrome** without forking `TryShow` callers.
+
+**Pattern (matches item-list inventory [#322](https://github.com/miramocha/griddungeon-game/pull/322)):**
+
+```
+TryShow(ConfirmModalRequest)          ← ConfirmModalPresenter / IConfirmModalService (unchanged callers)
+        ↓
+ConfirmModalPresentationProjector → ConfirmModalPresentationState
+        ↓
+UiPresentationBridge.OnConfirmModalChanged
+        ↓
+PresentationShellHost → IConfirmModalShell.Apply(state)   ← only layer that knows UXML/BEM
+```
+
+| Layer | Keeps |
+|-------|--------|
+| **Presenter** | `ICentralizedUiSurface`, `PresentationGate`, `TryShow` / dismiss, `IConfirmModalInput`, callbacks on `ConfirmModalRequest` |
+| **DTO** | Title, body, confirm/cancel labels, emphasis flags — **no** `Action` delegates in snapshot |
+| **Shell** | Render copy + button emphasis; focus engage after `Show` in presenter |
+| **Catalog** | Default `screen_default` row; optional `world_*` follow-up ([#317](https://github.com/miramocha/griddungeon-game/issues/317)) |
+
+### 1. Runtime
+
+- `ConfirmModalPresentationState` — plain `{ get; set; }` properties
+- `IConfirmModalShell` — `Apply(state)`, optional `PlayBeat`
+- `ConfirmModalPresentationProjector` — `SyncSnapshot` on show, `Clear` on dismiss
+- `PresentationSurfaceKind.ConfirmModal` + bridge event `ConfirmModalChanged`
+
+### 2. UI
+
+- `ConfirmModalScreenShell` on scene `ConfirmModal` GO (bootstrap `WireConfirmModal` adds component) **or** catalog prefab
+- Presenter publishes via projector; **do not** call `SetContent` on show path when bridge + shell wired
+- Host delivers snapshots — shells do **not** self-subscribe to the bridge (avoids double `Apply`)
+
+### 3. Catalog + bootstrap
+
+- `DevSceneComposition.EnsureConfirmModalScreenShellPrefab` + catalog row `PresentationSurfaceKind.ConfirmModal`, `profileId: screen_default`
+- Re-run **Create Dev Bootstrap** if scene `ConfirmModal` GO missing shell component
+
+### 4. Verify
+
+**Edit Mode:** `ConfirmModalPresentationProjectorTests`, `ConfirmModalScreenShellTests`, `UiPresentationCatalogResolveTests.Resolve_ConfirmModal_FallsBackToDefaultRow`; existing `ConfirmModalPresenterTests` (no-bridge fallback).
+
+**Play Mode:** floor exit confirm + party quit confirm — parity with pre-bus copy and gate.
 
 ---
 
@@ -192,7 +252,7 @@ Not required for command-rail art swaps. Use when adding a **new bus surface** (
    - Bridge event + optional `UnityEvent`
 2. **UI** — shell prefab implementing `IYourShell`
 3. **Catalog** — row with new `Surface`
-4. **`PresentationShellHost`** — extend resolve/spawn for that surface (today: `CommandRail`, `CommandRailInfo`)
+4. **`PresentationShellHost`** — extend resolve/spawn for that surface (today: `CommandRail`, `CommandRailInfo`, `ItemListInventory`, `CombatRoster`, `ConfirmModal`)
 5. **Docs** — [ui-event-contract](ui-event-contract.md), this file
 
 Command rail pilot is the template; do not grow `ICommandRailShell` for unrelated UI.
@@ -257,5 +317,6 @@ sequenceDiagram
 
 | Date | Note |
 |------|------|
+| 2026-06-19 | Recipe D — confirm modal on bus ([#328](https://github.com/miramocha/griddungeon-game/pull/328)); reference table + when-to-shell rows |
 | 2026-06-18 | Link presentation shell gotchas; combat roster surface shipped (#314) |
 | 2026-06-18 | Initial guide — command rail pilot, catalog, bootstrap |

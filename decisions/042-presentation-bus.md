@@ -61,7 +61,12 @@ Prefab components in `GridDungeon.UI` implement Runtime interfaces. Factory: `In
 - `ItemListInventoryPresentationProjector` carries picker row/tab snapshots; `ItemListInventoryPresenter` keeps `ICentralizedUiSurface` Show/Hide ([#322](https://github.com/miramocha/griddungeon-game/pull/322)).
 - Hub shop, combat item, and party bag adapters call `TryPublishContent` when `UiPresentationBridge` is present.
 
-### 7. Asmdef placement
+### 7. Confirm modal on bus (shipped)
+
+- `ConfirmModalPresentationProjector` carries title/body/label snapshots; `ConfirmModalPresenter` keeps `TryShow` / dismiss, gate, and `IConfirmModalInput` ([#328](https://github.com/miramocha/griddungeon-game/pull/328)).
+- `ExitConfirmCopyBuilder` and callers unchanged; `ConfirmModalScreenShell` is the only layer that calls `ConfirmModalPanelView.SetContent` when the bridge is wired.
+
+### 8. Asmdef placement
 
 | Type | Assembly |
 |------|----------|
@@ -71,7 +76,7 @@ Prefab components in `GridDungeon.UI` implement Runtime interfaces. Factory: `In
 
 Core stays free of Unity presentation types.
 
-### 8. Out of scope
+### 9. Out of scope
 
 - Moving `GamePhase` authority to UVS.
 - Replacing `InputHints.Publish` with the bus.
