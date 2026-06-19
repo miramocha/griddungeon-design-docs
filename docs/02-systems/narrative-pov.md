@@ -43,7 +43,7 @@ At **new game** the Navigator:
 | Act 1 B1F | **Solo**; map/kit sense waking; topside report “feels” mandatory | Movement, gather, gate → hub |
 | Act 2 hub | Recruit **six cores**; Navigator Office / kit tools; still light on backstory | Party build, `guild_handler` assigned |
 | B2F approach VN | Threat on board; contract says engage; **something** on their side is locked | Tutorial combat, Synchro **rules** locked |
-| Post-crisis unlock VN | First **conscious** use of kit burst power; hears “Synchro” / “Protocol” as labels | `s1_synchro_unlocked`, meter, guided Protocol |
+| Post-crisis unlock VN | First **conscious** use of kit burst power; hears “Synchro” / “Protocol” as labels | `S1_SYNCHRO_UNLOCKED`, meter, guided Protocol |
 | Hub return VN | Target down; pulse is real; topside rest — **not** full origin story | Hub warp, repeat dives |
 
 Later strata / Navigator unlocks add **memory chips**, office files, and `s2_navigator_unlock_*` scenes — out of S1 scope.

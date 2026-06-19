@@ -207,7 +207,7 @@ flowchart LR
 | **In-world once** | Do not re-trigger Act 1 blocks if `s1_intro_movement_complete` (etc.) |
 | **Codex** | Unlocked entries remain readable from **pause menu → Tutorial codex** |
 | **Mid-fight reload** | Out of scope — inn save at hub only |
-| **Re-fight tutorial FOE** | Blocked — B3F gate requires `s1_first_foe_tutorial_complete` |
+| **Re-fight tutorial FOE** | Blocked — B3F gate requires `S1_FIRST_FOE_TUTORIAL_COMPLETE` |
 
 ---
 

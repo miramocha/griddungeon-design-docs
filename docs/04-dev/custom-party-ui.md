@@ -18,7 +18,7 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 | **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → **`CharacterDetail`** facade (sort **251**) + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
 | **Map party marker** | Exploration map open | `DungeonExplorer` cell + facing | `MapPartyMarkerPresenter` |
 
-**Out of scope for this doc:** Hub guild roster / party-ready gate (`s1_party_ready`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
+**Out of scope for this doc:** Hub guild roster / party-ready gate (`S1_PARTY_READY`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
 
 **Do not** read `PartyRuntime` for HP/MP during an active fight — use `BattleState` on `CombatController` ([UI event contract — Combat](ui-event-contract.md#combat-phase)). After `BattleEnded`, exploration strip refreshes from `PartyRuntime` (often with `forceRebuild` when returning from combat).
 

@@ -10,7 +10,7 @@
 
 **Effects on final dismiss:**
 
-- `set_campaign_flag` → `s1_first_foe_tutorial_complete = true`
+- `set_campaign_flag` → `S1_FIRST_FOE_TUTORIAL_COMPLETE = true`
 - `teleport_to_hub` — scripted **`Combat → Hub`** (player does not walk out on B2F)
 
 ---

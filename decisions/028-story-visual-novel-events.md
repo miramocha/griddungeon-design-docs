@@ -68,7 +68,7 @@ Authoring format: **YAML or ScriptableObject** referencing text keys — **TBD**
 
 | Effect (draft id) | Example use |
 |-------------------|-------------|
-| `set_campaign_flag` | `s1_synchro_unlocked` |
+| `set_campaign_flag` | `S1_SYNCHRO_UNLOCKED` |
 | `set_synchro_charge` | Force 100% at Protocol tutorial unlock |
 | `combat_tutorial_phase` | **Target** — advance S1 tutorial beat (campaign flags + `CombatController`; game #10 rules). Supersedes early `TutorialCombatKind` sketch on `CombatEntryContext`. |
 | `unlock_input_hint` | Show combat HUD callout (may delegate to #35) |
@@ -90,10 +90,10 @@ Full sequence: [story events § S1 tutorial flow](../docs/02-systems/story-event
 | **A** Opening | Synchro locked; FOE `tutorialUnbeatable` | — |
 | **B** Crisis trigger | **2 core turns** OR **FOE at HP floor** (first) | — |
 | **C** Crisis AOE | FOE scripted attack → **all living core HP = 1** (fake wipe, no KO) | After AOE UI beat |
-| **D** Unlock VN | `s1_synchro_unlocked`, Synchro 100% | **`s1_synchro_protocol_unlock`** |
+| **D** Unlock VN | `S1_SYNCHRO_UNLOCKED`, Synchro 100% | **`s1_synchro_protocol_unlock`** |
 | **E** Guided Protocol | Only `protocol_strike` allowed | HUD highlights ([#35](https://github.com/miramocha/griddungeon-game/issues/35)) — [guided-tutorial § combat](../docs/02-systems/guided-tutorial.md#combat-guided-tutorial-s1--protocol) |
-| **F** Finisher | Protocol **kills** FOE; `s1_synchro_protocol_tutorial_done` | — |
-| **G** Hub outro | Script **`Combat → Hub`** | **`s1_tutorial_hub_return`** → `s1_first_foe_tutorial_complete` |
+| **F** Finisher | Protocol **kills** FOE; `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` | — |
+| **G** Hub outro | Script **`Combat → Hub`** | **`s1_tutorial_hub_return`** → `S1_FIRST_FOE_TUTORIAL_COMPLETE` |
 
 **Not used:** FOE scripted **retreat** after Protocol; player does **not** resume exploration on B2F after this fight.
 

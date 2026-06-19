@@ -34,7 +34,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 **Campaign:** [S1 intro — flags & beats](../03-content/campaign/s1-intro.md) · **Narrative:** [narrative POV](narrative-pov.md) — Navigator has **no** Synchro/Protocol vocabulary until unlock VN after crisis AOE · **Implementation:** [game #10](https://github.com/miramocha/griddungeon-game/issues/10) (combat rules — done) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) Synchro HUD + Protocol-only gate (done) · [#87](https://github.com/miramocha/griddungeon-game/issues/87) story VN (done) · [#88](https://github.com/miramocha/griddungeon-game/issues/88) Protocol **coach** (later)
 
-**Campaign flags:** `s1_synchro_unlocked` (mid-fight), `s1_synchro_protocol_tutorial_done`, `s1_first_foe_tutorial_complete` (see table below).
+**Campaign flags:** `S1_SYNCHRO_UNLOCKED` (mid-fight), `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE`, `S1_FIRST_FOE_TUTORIAL_COMPLETE` (see table below).
 
 | State | Synchro Charge | Gain in combat | Protocol (`U` / core turn) | Hub → labyrinth |
 |-------|----------------|--------------|----------------------------|-----------------|
@@ -45,7 +45,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 **First FOE (locked):** `foe_alley_stalker` on `s1_B2F` — mandatory tutorial fight ([campaign S1](../03-content/campaign/s1-intro.md) · [archive — B2F (draft)](../03-content/../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)).
 
-1. **Act 3 path** — block B3F until `s1_first_foe_tutorial_complete`.
+1. **Act 3 path** — block B3F until `S1_FIRST_FOE_TUTORIAL_COMPLETE`.
 2. **`noFlee: true`** — cannot skip the lesson.
 3. **Unbeatable FOE** — until Protocol resolve, enemies **cannot be killed** (HP floor at 1 / `tutorialUnbeatable`); normal damage does not end the fight.
 4. **Scripted beat order (locked)** — full sequence in [story events § S1 tutorial flow](story-events.md#s1-tutorial-flow-foe_alley_stalker); summary:
@@ -55,15 +55,15 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 | **0 — Approach** | B2F **Event** cell → **`s1_b2f_stalker_briefing`** VN → tutorial combat starts (before any hub return). |
 | **A — Opening** | Synchro locked; normal tutorial combat (FOE on HP floor if player focuses it). |
 | **B — Crisis trigger** | When **2 completed core turns** OR **FOE at HP floor** (first): scripted **FOE crisis AOE** — party-wide hit reduces **all living core HP to 1** (fake wipe; **no** game over, cores stay up). |
-| **C — Unlock VN** | After crisis UI beat: **`s1_synchro_protocol_unlock`** — Navigator briefing; set `s1_synchro_unlocked`, Synchro **100%**. |
+| **C — Unlock VN** | After crisis UI beat: **`s1_synchro_protocol_unlock`** — Navigator briefing; set `S1_SYNCHRO_UNLOCKED`, Synchro **100%**. |
 | **D — Guided Protocol** | [Guided tutorial](guided-tutorial.md#combat-guided-tutorial-s1--protocol) — HUD highlights **Protocol**; player must confirm **`protocol_strike`** (only allowed command). |
-| **E — Protocol finisher** | `protocol_strike` resolves; FOE **dies** (tutorial unbeatable lifted for this hit); set `s1_synchro_protocol_tutorial_done`. |
-| **F — Exit VN + hub** | **`s1_tutorial_hub_return`** — short outro; **scripted warp to hub** (not normal combat → exploration on B2F); set `s1_first_foe_tutorial_complete`. |
+| **E — Protocol finisher** | `protocol_strike` resolves; FOE **dies** (tutorial unbeatable lifted for this hit); set `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE`. |
+| **F — Exit VN + hub** | **`s1_tutorial_hub_return`** — short outro; **scripted warp to hub** (not normal combat → exploration on B2F); set `S1_FIRST_FOE_TUTORIAL_COMPLETE`. |
 
 5. **Crisis AOE** — authored scripted enemy action (display-only or minimal rules damage); must not KO cores — clamp living core HP to **1**. FOE HP may stay at floor through crisis.
 6. **Hub return** — exceptional `Combat → Hub` transition ([game phase](game-phase.md)); player re-enters stratum from hub when ready (gate spawn per [S1 intro](../03-content/campaign/s1-intro.md)).
 
-Random fights before this FOE contact: Synchro **locked** until `s1_synchro_unlocked`. S1 tutorial FOE: encounter group `grp_alley_stalker_tutorial`; mid-fight unlock via `EncounterGroup.Events[]` → `EncounterEventScheduler` ([combat § Encounter events](combat.md#encounter-events-combat--story)).
+Random fights before this FOE contact: Synchro **locked** until `S1_SYNCHRO_UNLOCKED`. S1 tutorial FOE: encounter group `grp_alley_stalker_tutorial`; mid-fight unlock via `EncounterGroup.Events[]` → `EncounterEventScheduler` ([combat § Encounter events](combat.md#encounter-events-combat--story)).
 
 **Protocol-only command rail (phase D):** **Design target** — `CommandPanelView` supports `command-panel--protocol-only` (hides Attack/Guard/Skill/Item/Flee). **S1 wiring deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); until then player uses full command bar with Synchro at 100% after unlock VN. Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182).
 
@@ -86,7 +86,7 @@ While charge is below 100%, **core formation members** add to the shared pool:
 - **No gain** from aux summons/guests or enemy actions.
 - Charge cannot exceed 100%.
 - **Between battles** on the same floor: charge **persists** (if unlocked).
-- **Return to hub:** charge reset to **100%** when unlocked; **0%** and locked when `s1_synchro_unlocked` false.
+- **Return to hub:** charge reset to **100%** when unlocked; **0%** and locked when `S1_SYNCHRO_UNLOCKED` false.
 
 Exploration steps do **not** charge Synchro.
 

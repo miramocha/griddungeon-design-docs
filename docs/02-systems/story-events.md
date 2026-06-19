@@ -82,7 +82,7 @@ New effects require an ADR amendment or appendix — avoid ad-hoc string effects
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
-| **`s1_b1f_gate_briefing`** | Exploration Event cell **`!` `(10, 9)`** on gate approach — **before** first **`^` → hub** | `s1_b1f_gate_briefing_seen` |
+| **`s1_b1f_gate_briefing`** | Exploration Event cell **`!` `(10, 9)`** on gate approach — **before** first **`^` → hub** | `S1_B1F_GATE_BRIEFING_SEEN` |
 
 **Trigger (locked):** `ExplorationPhaseController` / tile script → `StoryEventRunner.Play` on `OnPartyEnteredCell`; overlay lock until dismiss; then player walks to **`^`** for `Exploration → Hub`.
 
@@ -119,7 +119,7 @@ sequenceDiagram
   P->>CC: protocol_strike
   CC->>FOE: Protocol kill
   CC->>VN: s1_tutorial_hub_return (encounter victory row or scheduler)
-  VN->>CC: TeleportToHub, s1_first_foe_tutorial_complete
+  VN->>CC: TeleportToHub, S1_FIRST_FOE_TUTORIAL_COMPLETE
 ```
 
 | Step | Systems | Story / UI |
@@ -127,9 +127,9 @@ sequenceDiagram
 | **Approach (exploration)** | Event cell on `s1_B2F` | **`s1_b2f_stalker_briefing`** → `StartCombat` (`grp_alley_stalker_tutorial`, `NoFlee`) |
 | **Mid-fight unlock** | `EncounterGroup.Events[]` → `EncounterEventScheduler` | **`s1_synchro_protocol_unlock`** when predicates match (e.g. FOE HP at floor) — shipped row on tutorial encounter asset |
 | **Crisis AOE** | **Design target** — scripted FOE action → party HP **1** (no wipe) | **Not** a dedicated C# tutorial type; author via encounter AI / skill row when crisis beat returns |
-| **Unlock VN** | Story event overlay during combat | Navigator lines; completion effects set `s1_synchro_unlocked`, Synchro **100%** |
+| **Unlock VN** | Story event overlay during combat | Navigator lines; completion effects set `S1_SYNCHRO_UNLOCKED`, Synchro **100%** |
 | **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) coach + `command-panel--protocol-only` | **Deferred** — player uses normal command bar; only **Protocol → `protocol_strike`** is required by design |
-| **Finisher** | `protocol_strike` kills FOE | Sets `s1_synchro_protocol_tutorial_done` via content flags |
+| **Finisher** | `protocol_strike` kills FOE | Sets `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` via content flags |
 | **Hub outro** | `s1_tutorial_hub_return` | VN lines → **`TeleportToHub`** (scripted `Combat → Hub`) |
 
 ### Guided tutorial (HUD)
@@ -142,9 +142,9 @@ Summary: Synchro at **100%** after unlock VN completion effects; **Protocol-only
 
 | `storyEventId` | When | Effects (on complete) |
 |----------------|------|------------------------|
-| **`s1_b2f_stalker_briefing`** | Exploration Event cell on B2F (before tutorial fight / hub) | `s1_b2f_stalker_briefing_seen`, `start_combat` → `grp_alley_stalker_tutorial` |
-| **`s1_synchro_protocol_unlock`** | After crisis AOE UI beat | `s1_synchro_unlocked`, Synchro 100%, enter guided phase |
-| **`s1_tutorial_hub_return`** | After Protocol kills FOE | `s1_first_foe_tutorial_complete`, `teleport_to_hub` |
+| **`s1_b2f_stalker_briefing`** | Exploration Event cell on B2F (before tutorial fight / hub) | `S1_B2F_STALKER_BRIEFING_SEEN`, `start_combat` → `grp_alley_stalker_tutorial` |
+| **`s1_synchro_protocol_unlock`** | After crisis AOE UI beat | `S1_SYNCHRO_UNLOCKED`, Synchro 100%, enter guided phase |
+| **`s1_tutorial_hub_return`** | After Protocol kills FOE | `S1_FIRST_FOE_TUTORIAL_COMPLETE`, `teleport_to_hub` |
 
 Mid-fight intro / separate retreat scene: **not** used — approach VN + crisis AOE + hub outro cover the arc. FOE grid contact remains a **fallback** if the player reaches the stalker without the Event cell.
 
@@ -168,7 +168,7 @@ Example index row:
 
 | storyEventId | once | prerequisite | trigger |
 |--------------|------|--------------|---------|
-| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` | Combat: `EncounterGroup.Events[]` on `grp_alley_stalker_tutorial` (e.g. FOE HP predicate) |
+| `s1_synchro_protocol_unlock` | yes | `s1_tutorial_dive_started` *(planned)* | Combat: `EncounterGroup.Events[]` on `grp_alley_stalker_tutorial` (e.g. FOE HP predicate) |
 
 ---
 

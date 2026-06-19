@@ -12,7 +12,7 @@
 
 **Effects on final dismiss:**
 
-- `set_campaign_flag` → `s1_synchro_unlocked = true`
+- `set_campaign_flag` → `S1_SYNCHRO_UNLOCKED = true`
 - `set_synchro_charge` → `100`
 - `start_guided_protocol` → `protocol_strike` only
 

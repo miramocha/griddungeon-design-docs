@@ -4,7 +4,7 @@
 
 **When:** **Exploration Act 1** — Navigator enters the authored **Event** cell **`!` `(10, 9)`** on `s1_B1F` (gate camp threshold), **solo**, **before** first **hub** via gate `^` `(10, 11)`.
 
-**Prerequisite:** Act 1 movement path (not `s1_intro_movement_complete`); not already `s1_b1f_gate_briefing_seen`.
+**Prerequisite:** Act 1 movement path (not `s1_intro_movement_complete` *(planned)*); not already `S1_B1F_GATE_BRIEFING_SEEN`.
 
 **Narrative job:** **Solo** recon — no crew yet (recruitment is Act 2 hub). Kit has **sealed tools** / latent power not usable yet. Instinct to report topside — **no** Synchro / Protocol / role title; **no** comms-or-“line” diction.
 
@@ -12,7 +12,7 @@
 
 **Effects on final dismiss:**
 
-- `set_campaign_flag` → `s1_b1f_gate_briefing_seen = true`
+- `set_campaign_flag` → `S1_B1F_GATE_BRIEFING_SEEN = true`
 - *(none)* — player continues on foot to **`^`** → hub ([game phase § return](../../02-systems/game-phase.md#return-to-hub-exploration-only))
 
 **Act 3:** same cell **`(10, 9)`** is **skipped** (`once` + flag); dive spawns at gate **`(10, 11)`** without re-playing.

@@ -159,7 +159,7 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
 
 Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03-content/campaign/s1-intro.md)**.
 
-**Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable **Enter Stratum 1** when `s1_party_ready`. Hub only — no labyrinth grid, no combat.
+**Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable **Enter Stratum 1** when `S1_PARTY_READY`. Hub only — no labyrinth grid, no combat.
 
 **Act 3 from hub:** **Enter Stratum 1** → always **B1F gate** `(10, 11)` (`stairsUp`); Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 

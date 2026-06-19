@@ -31,16 +31,24 @@ Act 1 and Act 3 use **one** `s1_B1F` asset; behavior differs by save flags and t
 
 ## Save flags (campaign)
 
+**Implemented** (`CampaignFlags` in game — `SCREAMING_SNAKE_CASE` doc ids):
+
 | Flag | Set when |
 |------|----------|
-| `s1_b1f_gate_briefing_seen` | Act 1: Event cell VN before first hub (`s1_b1f_gate_briefing`) |
+| `S1_B1F_GATE_BRIEFING_SEEN` | Act 1: Event cell VN before first hub (`s1_b1f_gate_briefing`) |
+| `S1_PARTY_READY` | Act 2: guild party requirement met |
+| `S1_B2F_STALKER_BRIEFING_SEEN` | After B2F Event-cell approach VN (`s1_b2f_stalker_briefing`) |
+| `S1_SYNCHRO_UNLOCKED` | After unlock VN (`s1_synchro_protocol_unlock`), post-crisis AOE |
+| `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` | `protocol_strike` finisher killed FOE |
+| `S1_FIRST_FOE_TUTORIAL_COMPLETE` | Hub return VN + scripted warp from B2F tutorial; **B3F** unblocked |
+| `S1_STRATUM_CLEARED` | Stratum boss defeated (future win gate) |
+
+**Planned** (design only — not in `CampaignFlags` / save yet):
+
+| Flag (planned id) | Set when |
+|-------------------|----------|
 | `s1_intro_movement_complete` | Act 1: first `stairsUp` → hub at gate |
-| `s1_party_ready` | Act 2: guild party requirement met |
 | `s1_tutorial_dive_started` | Act 3: first **Enter Stratum 1** after Act 2 |
-| `s1_b2f_stalker_briefing_seen` | After B2F Event-cell approach VN (`s1_b2f_stalker_briefing`) |
-| `s1_synchro_unlocked` | After unlock VN (`s1_synchro_protocol_unlock`), post-crisis AOE |
-| `s1_synchro_protocol_tutorial_done` | `protocol_strike` finisher killed FOE |
-| `s1_first_foe_tutorial_complete` | Hub return VN + scripted warp from B2F tutorial; **B3F** unblocked |
 
 ---
 
@@ -62,7 +70,7 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 ## Progression gates (required slice)
 
 - **`v` B1F → B2F:** blocked until Act 3 (`s1_tutorial_dive_started`).
-- **B3F / north path:** blocked until `s1_first_foe_tutorial_complete` (tutorial FOE on B2F).
+- **B3F / north path:** blocked until `S1_FIRST_FOE_TUTORIAL_COMPLETE` (tutorial FOE on B2F).
 - **Win:** defeat `foe_s1_warden` on B3F ([dungeons § floor summary](../dungeons-and-encounters.md#required-slice-floor-summary)).
 
 ---

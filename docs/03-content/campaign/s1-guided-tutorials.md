@@ -35,7 +35,7 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 | 1 | `s1_explore_intro_move` | Act 1 spawn at **E** `(4, 2)` | last page dismiss | p1: “The map reveals tiles as you move.” p2: “Move **north** toward the camp marker.” (+ still: compass / passage) |
 | 2 | `s1_explore_wall_bump` | First wall bump | last page dismiss | “Blocked. **Strafe** or **turn**, then step forward.” |
 | 3 | `s1_explore_route_features` | First enter **G** or **C** | `interact` if triggered on **C**; else last page dismiss | p1: “New tiles are added to the map as you explore.” p2: “Cache on the grid. **Interact** on **C** to open it.” |
-| 4 | `s1_explore_gate_stairs` | On **^** before hub (skip if `s1_b1f_gate_briefing_seen`) | `interact` | If briefing skipped: “Stairs lead topside. **Interact** to go up.” Else: “**Interact** — stairs up.” |
+| 4 | `s1_explore_gate_stairs` | On **^** before hub (skip if `S1_B1F_GATE_BRIEFING_SEEN`) | `interact` | If briefing skipped: “Stairs lead topside. **Interact** to go up.” Else: “**Interact** — stairs up.” |
 
 **Story VN (Act 1):** [s1_b1f_gate_briefing](../story-events/s1/s1_b1f_gate_briefing.md) on Event cell **`!` `(10, 9)`** — fires before row 4; Navigator copy owns hub report fiction.
 
@@ -81,13 +81,13 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 | `mode` | `combat` |
 | `codexCategory` | `synchro` |
 | `once` | yes (per save) |
-| `prerequisiteFlags` | `s1_synchro_unlocked` |
+| `prerequisiteFlags` | `S1_SYNCHRO_UNLOCKED` |
 | `highlight` | `combat.command.protocol`, `combat.synchro_meter` |
 | `completion` | `combat_command` → `protocol_strike` queued and confirmed |
 | **Pages (draft)** | p1: “Synchro is full.” p2: “Open **Protocol** → **Protocol Strike**.” (+ still: meter screenshot) |
 
 **Start:** story effect `start_guided_protocol` on last step of `s1_synchro_protocol_unlock`.  
-**End:** clear highlight when `protocol_strike` begins resolve; set `s1_synchro_protocol_tutorial_done` on kill.
+**End:** clear highlight when `protocol_strike` begins resolve; set `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` on kill.
 
 **Pre-fight:** **story VN** on Event cell (phase **0**); no guided HUD until post-crisis. Player may use normal commands in combat until crisis (**phase A**). FOE grid contact still starts the same tutorial if the Event was skipped.
 
@@ -97,14 +97,14 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 
 | Flag | Guided / story relevance |
 |------|--------------------------|
-| `s1_b1f_gate_briefing_seen` | Act 1 gate VN done; shortens `s1_explore_gate_stairs` |
-| `s1_intro_movement_complete` | Suppresses all Act 1 explore hints |
-| `s1_party_ready` | Enables `s1_hub_enter_stratum` |
-| `s1_tutorial_dive_started` | Act 3 B1F blockers cleared |
-| `s1_b2f_stalker_briefing_seen` | B2F approach VN done; optional analytics / bypass guard |
-| `s1_synchro_unlocked` | Prerequisite for `s1_combat_guided_protocol` |
-| `s1_synchro_protocol_tutorial_done` | Protocol coach done |
-| `s1_first_foe_tutorial_complete` | Hub return VN done; B3F unblocked |
+| `S1_B1F_GATE_BRIEFING_SEEN` | Act 1 gate VN done; shortens `s1_explore_gate_stairs` |
+| `s1_intro_movement_complete` *(planned)* | Suppresses all Act 1 explore hints |
+| `S1_PARTY_READY` | Enables `s1_hub_enter_stratum` |
+| `s1_tutorial_dive_started` *(planned)* | Act 3 B1F blockers cleared |
+| `S1_B2F_STALKER_BRIEFING_SEEN` | B2F approach VN done; optional analytics / bypass guard |
+| `S1_SYNCHRO_UNLOCKED` | Prerequisite for `s1_combat_guided_protocol` |
+| `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` | Protocol coach done |
+| `S1_FIRST_FOE_TUTORIAL_COMPLETE` | Hub return VN done; B3F unblocked |
 
 ---
 
