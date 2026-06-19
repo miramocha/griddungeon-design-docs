@@ -768,7 +768,7 @@ Presentation **lifecycle** (`ICentralizedUiSurface`, ADR 038) stays on shell/pre
 
 Dev Bootstrap: `EnsureUiPresentationCatalog()` + `WireUiPresentation()` — same pattern as `EnsureFloorTransitionCatalog()`.
 
-**Implement a new shell:** [presentation shell implementation](presentation-shell-implementation.md) — prefab, `ICommandRailShell`, catalog row, bootstrap checklist.
+**Implement a new shell:** [presentation shell implementation](presentation-shell-implementation.md) — prefab, `ICommandRailShell`, catalog row, bootstrap checklist. **Bus/shell traps:** [presentation shell gotchas](presentation-shell-gotchas.md).
 
 ### Problem (pre-#207)
 
@@ -874,6 +874,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | **Presentation lifecycle** (shipped API, migration index) | **Here § Presentation lifecycle** + [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) + [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | BEM transition helpers (`BemMotionCompletion`, `VisualPresentationSync`) | [UITK BEM transition guide](uitk-bem-transition-guide.md) |
 | Implementation gotchas (exit races, flags, map fade vs screen fade, review traps) | [centralized UI gotchas](centralized-ui-gotchas.md) |
+| Presentation bus / shell traps (stale DTO, wire lifecycle, scene shell) | [presentation shell gotchas](presentation-shell-gotchas.md) |
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |

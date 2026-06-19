@@ -32,7 +32,8 @@ A shell is **not** enough by itself. You also need:
 |------|-----|
 | New **look** for command rail (screen UITK, world rig, A/B art) | New shell prefab + catalog row — **same** `CommandRailPresentationState` |
 | New **menu content** or hub service flow | Extend **projector** + **phase HUD** (e.g. `HubHudView`) — shell unchanged |
-| New **cross-phase modal** (picker, bag, confirm) | [Centralized UI services](centralized-ui-services.md) — **not** presentation bus yet (Child 9 backlog) |
+| New **cross-phase modal** (picker, bag, confirm) | [Centralized UI services](centralized-ui-services.md) — presentation bus is for **shell-swappable chrome**, not modal lifecycle |
+| Combat roster on bus (party + enemy plates) | `CombatRosterScreenShell` + `CombatRosterPresentationProjector` — see [presentation shell gotchas](presentation-shell-gotchas.md) |
 | UVS fade / Animator on rail change | Listen on `UiPresentationBridge` — **no** shell required |
 
 ---
@@ -248,10 +249,13 @@ sequenceDiagram
 | Second parallel menu path (Populate + bus) | One path: `SetMenuItems` → shell `Apply` |
 | UVS graph calls `SwapPanelContent` | Listen on bridge; C# owns transitions |
 
+**Implementation traps:** [presentation shell gotchas](presentation-shell-gotchas.md) — stale bus snapshots, wire lifecycle, scene shell vs catalog prefab.
+
 ---
 
 ## Changelog
 
 | Date | Note |
 |------|------|
+| 2026-06-18 | Link presentation shell gotchas; combat roster surface shipped (#314) |
 | 2026-06-18 | Initial guide — command rail pilot, catalog, bootstrap |
