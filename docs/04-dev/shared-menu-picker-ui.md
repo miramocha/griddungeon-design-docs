@@ -210,7 +210,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 | `SetEnabledForModal(button, baseEnabled, modalOpen, isActiveOwner)` | Per-chip enable while modal open |
 | `SyncModalChipRail(railMenu, chips, modalOpen, activeOwnerIndex, selectedIndex, resolveBaseEnabled?)` | **Hub service pair** — bind `rail-menu__item--selected`, disable siblings, highlight owner |
 | `ApplyModalChipEnables(modalOpen, activeOwnerIndex, chipsByIndex, resolveBaseEnabled?)` | **Index-stable multi-chip** — party section rail (nullable slots skipped) |
-| `ResetPanelChrome(host)` | Clears `command-panel--modal-open`, `command-panel--disabled`, `command-panel--protocol-only` — **required** when combat ends or a non-combat owner repopulates the host |
+| `ResetPanelChrome(host)` | Clears `command-panel--modal-open`, `command-panel--disabled` — **required** when combat ends or a non-combat owner repopulates the host |
 
 **Recipe — hub service chip opens a child modal (Buy/Sell, Heal/Revive):**
 

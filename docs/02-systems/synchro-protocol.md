@@ -65,7 +65,7 @@ C# uses `SynchroBar` / `SynchroBarDelta` for this pool ([ADR 020](../../decision
 
 Random fights before this FOE contact: Synchro **locked** until `S1_SYNCHRO_UNLOCKED`. S1 tutorial FOE: encounter group `grp_alley_stalker_tutorial`; mid-fight unlock via `EncounterGroup.Events[]` → `EncounterEventScheduler` ([combat § Encounter events](combat.md#encounter-events-combat--story)).
 
-**Protocol-only command rail (phase D):** **Design target** — `CommandPanelView` supports `command-panel--protocol-only` (hides Attack/Guard/Skill/Item/Flee). **S1 wiring deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); until then player uses full command bar with Synchro at 100% after unlock VN. Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182).
+**Protocol on synchro bar (phase D):** When Synchro is **100%** and unlocked, the **synchro bar** becomes the Protocol affordance — label **Protocol**, glow, **`C`** / LMB ([input bindings](input-bindings.md#protocol-synchro-100)). Command rail stays Attack / Guard / Skill / Item / Flee / Back only. Frame layout: [combat § Combat HUD](combat.md#combat-hud-frame-layout).
 
 ### During combat
 

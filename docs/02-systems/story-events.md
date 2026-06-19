@@ -67,7 +67,7 @@ Executed synchronously when a step completes (or on `m_completionEffects`). Impl
 | `SetCampaignFlag` | `flagId`, `value` | `CampaignSaveData.SetFlag` |
 | `SetSynchroCharge` | `percent` | `StoryEventRunner.SetSynchroCharge` → combat / party session |
 | `StartCombat` | `encounterGroupId`, `noFlee?` | `GameState.RequestCombat(CombatEntryContext)` — S1 tutorial: `grp_alley_stalker_tutorial` |
-| `StartGuidedProtocol` | `protocolSkillId`, optional `synchroPercent` | Sets bar full + `OnGuidedProtocolStarted` — **Protocol-only HUD coach deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)); `CommandPanelView` supports `command-panel--protocol-only` when wired |
+| `StartGuidedProtocol` | `protocolSkillId`, optional `synchroPercent` | Sets bar full + `OnGuidedProtocolStarted` — player uses **synchro bar** (`C` / LMB) when coach ships ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | `TeleportToHub` | — | `GamePhaseController` scripted `Combat → Hub` |
 
 **Deferred / not in enum:** `combat_tutorial_phase`, `show_combat_hint` — use encounter `Events[]`, story completion effects, or [#88](https://github.com/miramocha/griddungeon-game/issues/88) guided coach instead of per-event C# switches.
@@ -128,7 +128,7 @@ sequenceDiagram
 | **Mid-fight unlock** | `EncounterGroup.Events[]` → `EncounterEventScheduler` | **`s1_synchro_protocol_unlock`** when predicates match (e.g. FOE HP at floor) — shipped row on tutorial encounter asset |
 | **Crisis AOE** | **Design target** — scripted FOE action → party HP **1** (no wipe) | **Not** a dedicated C# tutorial type; author via encounter AI / skill row when crisis beat returns |
 | **Unlock VN** | Story event overlay during combat | Navigator lines; completion effects set `S1_SYNCHRO_UNLOCKED`, Synchro **100%** |
-| **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) coach + `command-panel--protocol-only` | **Deferred** — player uses normal command bar; only **Protocol → `protocol_strike`** is required by design |
+| **Guided Protocol** | [#88](https://github.com/miramocha/griddungeon-game/issues/88) synchro-bar coach | **Deferred** — player uses **synchro bar** (`C` / LMB) when bar full; **Protocol → `protocol_strike`** required by design |
 | **Finisher** | `protocol_strike` kills FOE | Sets `S1_SYNCHRO_PROTOCOL_TUTORIAL_DONE` via content flags |
 | **Hub outro** | `s1_tutorial_hub_return` | VN lines → **`TeleportToHub`** (scripted `Combat → Hub`) |
 
@@ -136,7 +136,7 @@ sequenceDiagram
 
 Between unlock VN and Protocol resolve — **authority:** [guided-tutorial § combat](guided-tutorial.md#combat-guided-tutorial-s1--protocol) · content: [`s1_combat_guided_protocol`](../03-content/campaign/s1-guided-tutorials.md#guided-hint--protocol-coach).
 
-Summary: Synchro at **100%** after unlock VN completion effects; **Protocol-only command rail and coach UI deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) — `CommandPanelView` already supports `--protocol-only` when a presenter passes `protocolOnly: true`.
+Summary: Synchro at **100%** after unlock VN completion effects; **synchro-bar coach UI deferred** ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) — player queues Protocol via **`C`** / LMB on the bar when rules allow.
 
 ### Story events at launch
 
