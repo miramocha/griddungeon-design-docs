@@ -71,7 +71,7 @@ Authoring legend: [dungeons & encounters — Map legend](../03-content/dungeons-
 | `F` | FOE **overlay** (not cell glyph) | `MapFoeMarkersPresenter` |
 | `C` | Solid mass (`#`-class) — **not walkable**; chest **overlay** when feature wired | `map-view__cell--chest` (planned) |
 | `G` | Walkable floor + gather **overlay** when visited | `map-view__marker--gather` |
-| `D` | *(not wired)* | Door overlay + state tint |
+| `D` | Door overlay + state tint when `FeatureType.Door` revealed | `map-view__cell--door*` |
 | `E` / `M` | Party spawn only — not map icons | — |
 | Edge walls | `╵╷╶╴│—█` via `WallGlyph` | Rotated edge segment(s) + alcove fill |
 | Party | Facing arrow **overlay** | `MapPartyMarkerPresenter` · one `map_party` sprite, **rotate** per `FacingDirection` |
@@ -101,8 +101,8 @@ Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or at
 
 | Asset | Qty | Notes |
 |-------|-----|-------|
-| `map_door_closed` | 1 | Overlay; tint locked variant |
-| `map_door_open` | — | Hide overlay or desaturated floor |
+| `map_door_closed` | 1 | Cell overlay; copper tint for locked via catalog color |
+| `map_door_open` | 0–1 | Desaturated / low-alpha when open |
 
 ### optional+
 
@@ -149,10 +149,10 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 | `map-view__cell--alcove` | Walkable + 3+ revealed edges | Same floor fill as `.` (borders show alcove) |
 | `map-view__cell--stairs-up` | `FeatureType.StairsUp` | Utility cool (`#8A9BA8`) |
 | `map-view__cell--stairs-down` | `FeatureType.StairsDown` | Amber accent (`#C9A227`) |
-| `map-view__cell--door` | *(planned)* | Door overlay base |
-| `map-view__cell--door-closed` | *(planned)* | Default closed |
-| `map-view__cell--door-locked` | *(planned)* | Key-gated |
-| `map-view__cell--door-open` | *(planned)* | Open / desaturated |
+| `map-view__cell--door` | Door overlay base | With closed/open/locked state modifiers |
+| `map-view__cell--door-closed` | Default closed | Warm tint; optional `noun-hand` sprite |
+| `map-view__cell--door-locked` | Key-gated closed | Copper tint (`#B87333`) |
+| `map-view__cell--door-open` | Open | Floor-like / desaturated |
 | `map-view__cell--foe` | *(legacy cell class)* | FOE uses `map-view__marker` overlay, not cell `--foe` |
 | `map-view__cell--party` | *(legacy cell class)* | Party uses `map-view__marker` overlay |
 | `map-view__marker--gather` | Gather overlay | `MapGatherMarkersPresenter` |

@@ -79,7 +79,19 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 2. **Clear Generated Props** (when re-running either pass).
 3. **Populate Wall Blocks** — `#` cells (unchanged).
 4. **Populate Walkable Tiles** — `.` corridor / room cells.
-5. Optional: **Populate All** (Clear → wall blocks → walkable) in one Undo group.
+5. Optional: **Populate All** (Clear → wall blocks → walkable → chests → doors) in one Undo group.
+
+### Corridor doors (`D`) — FPV populate
+
+| Item | Rule |
+|------|------|
+| Prefab slot | `FloorArtGrid.Door Prefab` (single template like chest) |
+| Editor | **Populate Doors** + dev menu **Create Dev Door Template** |
+| Runtime | `FloorArtDoorProp` + `FloorArtDoorResolver`; `PopulateDoors` on floor load |
+| Open animation | C# fires Animator **`Open`** trigger once |
+| Close animation | **Animator-owned** (`DoorOpening` → `DoorClosing` → `DoorClosed`); cosmetic after `IsInteracted` |
+| Open-complete | Animation event **`NotifyOpenComplete`** on open clip (poll fallback like chest) |
+| Save revisit | Gameplay-open doors call `ApplyAlreadyOpen()` → closed idle mesh while cell stays passable |
 
 ## Locked decisions (Runtime v1)
 
