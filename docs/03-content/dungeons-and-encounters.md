@@ -97,6 +97,8 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 | `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
 | `X` | Blocked passage (Act 1 � opens Act 3) | Solid/gate tint � not edge wall |
 
+**Edge exits (step-on):** not an ASCII grid symbol — authored in Floor Editor **Edge Exits** tab (`ExplorationFloor.edgeExits[]`). Walk onto any walkable **perimeter** cell on an enabled side to load another floor (no `Interact`). Distinct from `^` / `v` / `H` / `E` interact exits. See [floor-editor § Edge exits](../02-systems/floor-editor.md#edge-exits-step-on-floor-to-floor).
+
 **Coordinates:** `(x, y)` with **x** west?east `0�19`, **y** south?north `0�19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
 
 Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only � runtime paints **0�4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell ? alcove fill (`�` glyph today), still walkable � distinct from impassable `#`.
