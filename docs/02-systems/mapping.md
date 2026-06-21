@@ -49,7 +49,7 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 |---------|----------------|
 | **Floor** | Party **enters** cell or **turns in place** ? chart cells in a **depth-1 facing cone** ahead of party; each lateral column walks forward until a non-walkable cell (blocker revealed + stamped) |
 | **Walls** | **Bump** blocked side ? stamp that wall; **enter cell / turn** ? solid perimeter edges for each newly charted cone cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
-| **Doors** | Party **opens** or **unlocks** door (closed vs open state tracked) |
+| **Doors** | Party **opens** walkable corridor door (`D`) on **forward step** when unlocked; `FeatureType.Door` + `IsInteracted` persists passability even if FPV mesh auto-closes |
 | **Stairs** | Party **steps on** stairs tile |
 | **Chest** | Party **Interact** from orthogonally adjacent walkable cell while **facing** the chest on impassable chest tile — fixed itemId + quantity once per globally unique chestId in CampaignSaveData.OpenedChestIds; cell stays blocked ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | **Gather** | Gather node **overlay when visited**; instant loot at launch ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
@@ -116,7 +116,7 @@ Locked **cell stack**, **composite walls** (edge segments + alcove � not 16 au
 
 **Overlay layers** (bottom ? top under `map-view-grid-host`): gather ? hub entrance (B1F `stairsUp` when visited) ? FOE ? party. `MapGridMarkerAnimator` handles fade/slide tweens; FOE patrol slides are **ambient** (do not block input).
 
-`FeatureType.Door` exists in data; **door glyph/overlay not wired** on cells. Campaign tutorial blockers (e.g. B1F `(10,13)`) are walkability gates ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)), not map icons.
+**Corridor doors (`D`):** map stamps `FeatureType.Door` on reveal/bump; closed doors use door overlay tints; `startsLocked` adds locked modifier ([map-cell-art.md](map-cell-art.md)). **`X` blocked passages** stay impassable layout tiles with no door system. Campaign tutorial blockers (e.g. B1F `(10,13)`) remain `X` + campaign walk rules ([game #33](https://github.com/miramocha/griddungeon-game/issues/33)).
 
 ---
 
