@@ -2,7 +2,7 @@
 
 launch exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
 
-**Implementation today (#38):** `MapView` paints visited cells with **USS background fills** and per-edge **wall border overlays** (`MapGridCellWallBorders` + `MapGridCellPaint`). Cell glyphs are hidden; **marker overlays** (party, FOE, gather, stairs, story) use `MapCellArtCatalog` **textures** anchored to cell layout (`MapGridOverlayAnchor`). Overlay art is authored as **`Assets/UI/Map/noun-*.svg`** raster imports assigned directly to catalog slots. Party/FOE shells can scale above cell size (`MarkerCellScale`); feature markers (stairs, gather, story) stay cell-sized. **Do not** ship 16-tile wall autotile PNGs — composite edges only ([game `MapView.cs`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/UI/Views/MapView.cs)).
+**Implementation today (#38):** `MapView` paints visited cells with **USS background fills** only (`MapGridCellPaint`). Per-edge **wall borders** and **feature markers** (party, FOE, gather, chest, stairs, story, doors) live on **marker overlay layers** anchored via `MapGridOverlayAnchor` — not as children of cell elements. Overlay art is authored as **`Assets/UI/Map/noun-*.svg`** raster imports assigned to `MapCellArtCatalog` slots. Party/FOE shells can scale above cell size (`MarkerCellScale`); feature markers (stairs, gather, story, doors) stay cell-sized.
 
 **Inspiration (other games):** [Refs — Map UI](../refs/map-ui.md) — screenshot board; locked art rules stay in this doc.
 
@@ -17,7 +17,7 @@ launch exploration map is a **read-only 2D schematic** in UI Toolkit — one vis
 | **Solid mass** | `FloorTileData.IsWalkable == false` | Visited | Authored `#` tiles — impassable rock |
 | **Edge walls** | `WallMask` N/E/S/W on **walkable** cell | Visited + mask ≠ `None` | Bump + enter reveal ([ADR 014](../../decisions/014-mvp1-exploration-map.md)); **not** the same as `#` |
 | **Alcove (3+ edges)** | Same `WallMask`, `count ≥ 3` | Visited | Walkable floor fill + edge borders (no separate alcove glyph) |
-| **Features** | `FeatureState` on cell | Visited + feature known | Stairs as **overlay sprites**; door overlay **deferred** (closed/open tint planned) |
+| **Features** | `FeatureState` on cell | Visited + feature known | Stairs / doors as **marker overlays** (`MapStairsMarkersPresenter`, `MapDoorMarkersPresenter`) |
 | **Gather** | `HasGatherNode` (ASCII `G`) | Visited (or dev reveal-all) | **Overlay** — `MapGatherMarkersPresenter` · `map-view__marker--gather` |
 | **Chest** | `ChestItemId` set / ASCII `C` — **impassable** | Visited + chest known | **Overlay** when wired ([#38](https://github.com/miramocha/griddungeon-game/issues/38)); interact from **adjacent** cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
 | **Stairs up/down** | `FeatureType.StairsUp` / `StairsDown` | Visited + feature known | **Overlay** — `MapStairsMarkersPresenter` ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
@@ -26,9 +26,9 @@ launch exploration map is a **read-only 2D schematic** in UI Toolkit — one vis
 
 ### Draw priority
 
-**Cell paint** (`MapGridCellPaint` / `MapView.PaintCellAt`): fog → solid mass → walkable floor/alcove fill → per-edge wall borders (`WallMask`).
+**Cell paint** (`MapGridCellPaint` / `MapGridPaintController`): fog → solid mass → walkable floor/alcove fill only.
 
-**Overlays** (sibling layers above the cell grid; see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)): gather → stairs → story → FOE → party. Anchored to cell `worldBound` when layout is resolved.
+**Overlays** (sibling layers above the cell grid; see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)): wall borders → doors → gather → chest → stairs → story → FOE → party. Anchored to cell `worldBound` when layout is resolved.
 
 **Campaign blockers** (e.g. B1F tutorial gate `(10,13)`) are **walkability / interaction** rules ([S1 campaign](https://github.com/miramocha/griddungeon-game/issues/33)) — not a separate map icon. ASCII `D` / `X` in blockouts mark designer intent; runtime may show a **door overlay** only after the player discovers/interacts with a `FeatureType.Door` on that cell.
 
@@ -51,8 +51,9 @@ Do **not** ship 16 PNG wall autotiles for UI; rotate/mirror one segment texture 
 | Piece | Role |
 |-------|------|
 | Floor underlay | Walkable cell |
-| Door icon overlay | On walkable cell when `FeatureType.Door` is revealed |
-| State | **Tint only** — closed / locked / open (open = hide overlay or desaturate) |
+| Door icon overlay | `MapDoorMarkersPresenter` on walkable cell when `FeatureType.Door` is visited |
+| Lock badge | Bottom-right corner on **closed** doors — locked vs unlocked tint/sprite |
+| Open | Shared door icon only (no badge) |
 
 Closed/open tracked in map state ([mapping — auto-reveal](mapping.md#auto-reveal-rules)); icon appears on interact/reveal, not on first floor step unless spec says otherwise.
 
@@ -71,7 +72,7 @@ Authoring legend: [dungeons & encounters — Map legend](../03-content/dungeons-
 | `F` | FOE **overlay** (not cell glyph) | `MapFoeMarkersPresenter` |
 | `C` | Solid mass (`#`-class) — **not walkable**; chest **overlay** when feature wired | `map-view__cell--chest` (planned) |
 | `G` | Walkable floor + gather **overlay** when visited | `map-view__marker--gather` |
-| `D` | Door overlay + state tint when `FeatureType.Door` revealed | `map-view__cell--door*` |
+| `D` | Door **marker overlay** when visited + `FeatureType.Door` | `map-view__marker--door` |
 | `E` / `M` | Party spawn only — not map icons | — |
 | Edge walls | `╵╷╶╴│—█` via `WallGlyph` | Rotated edge segment(s) + alcove fill |
 | Party | Facing arrow **overlay** | `MapPartyMarkerPresenter` · one `map_party` sprite, **rotate** per `FacingDirection` |
@@ -101,8 +102,9 @@ Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or at
 
 | Asset | Qty | Notes |
 |-------|-----|-------|
-| `map_door_closed` | 1 | Cell overlay; copper tint for locked via catalog color |
-| `map_door_open` | 0–1 | Desaturated / low-alpha when open |
+| `map_door` | 1 | Shared door icon (`MapCellArtCatalog.DoorArt`) |
+| `map_door_lock_badge` | 0–1 | Locked corner badge (tint fallback) |
+| `map_door_unlock_badge` | 0–1 | Unlocked corner badge on closed doors |
 
 ### optional+
 
@@ -149,10 +151,10 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 | `map-view__cell--alcove` | Walkable + 3+ revealed edges | Same floor fill as `.` (borders show alcove) |
 | `map-view__cell--stairs-up` | `FeatureType.StairsUp` | Utility cool (`#8A9BA8`) |
 | `map-view__cell--stairs-down` | `FeatureType.StairsDown` | Amber accent (`#C9A227`) |
-| `map-view__cell--door` | Door overlay base | With closed/open/locked state modifiers |
-| `map-view__cell--door-closed` | Default closed | Warm tint; optional `noun-hand` sprite |
-| `map-view__cell--door-locked` | Key-gated closed | Copper tint (`#B87333`) |
-| `map-view__cell--door-open` | Open | Floor-like / desaturated |
+| `map-view__marker--door` | Door overlay | `MapDoorMarkersPresenter` — shared icon + lock badge |
+| `map-view__marker__door-art--tint` | Door icon fallback | When catalog has no texture |
+| `map-view__marker__door-badge--locked-tint` | Closed + locked | Bottom-right corner |
+| `map-view__marker__door-badge--unlocked-tint` | Closed + unlocked | Bottom-right corner |
 | `map-view__cell--foe` | *(legacy cell class)* | FOE uses `map-view__marker` overlay, not cell `--foe` |
 | `map-view__cell--party` | *(legacy cell class)* | Party uses `map-view__marker` overlay |
 | `map-view__marker--gather` | Gather overlay | `MapGatherMarkersPresenter` |
@@ -164,7 +166,7 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 
 ## Implementation notes (game repo)
 
-- **Overlay textures vs cell grid:** party, FOE, and stairs art bind through `MapCellArtCatalog` on marker layers — **not** per-cell texture stacks (UITK texture-slot limit). Party marker **rotates** one north-up party texture per `FacingDirection`. Assign `Texture2D` sub-assets from `noun-*.svg` imports, or run **GridDungeon → Map → Wire Catalog Textures from SVG**.
+- **Overlay textures vs cell grid:** party, FOE, stairs, doors, and wall borders bind through `MapCellArtCatalog` / `MapGridCellWallBorders` on **marker layers** — **not** per-cell children (UITK texture-slot limit). Party marker **rotates** one north-up party texture per `FacingDirection`.
 - **Marker overlays:** exploration **minimap** clips a **10×10 window** over the full-floor grid at **32×32 px** cells (`MapMinimapViewport` + `map-minimap__viewport-clip`); **fullscreen** (`M`) panel box follows `MapGridLayoutMetrics.FullscreenPanelWidthPx` / `FullscreenPanelHeightPx` for the active floor grid. `MarkerCellScale` &gt; 1 centers an oversized party/FOE shell on the cell. Snapped via `MapGridOverlayAnchor` (layout `worldBound`) with metrics fallback; `left`/`top` are pixel-rounded to match `MapGridMarkerAnimator`.
 - **Fullscreen chrome:** wall border width and marker inset use `map-view--fullscreen-inset-N` modifier classes (2–6px, scales with cell size).
 - **Shared cell painter:** `MapGridPainter` used by `MapView` + dev map preview ([#85](https://github.com/miramocha/griddungeon-game/pull/85)).
