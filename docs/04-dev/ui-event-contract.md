@@ -73,7 +73,7 @@ All gates implement `IPresentationGate` and inherit `PresentationGateBase : Mono
 
 | Component | Location | `IsLocked` | Purpose |
 |-----------|----------|------------|---------|
-| `HubPresentationGate` | `HubController` | Yes | Block hub confirms during feedback tweens |
+| `HubPresentationGate` | `HubController` | Yes | Block hub confirms during panel and leave-stratum tweens |
 | `ExplorationPresentationGate` | `ExplorationHud` GO | Yes | Block exploration HUD actions during beats; adds `AcquireHudSuppress()` / `ReleaseHudSuppress()` |
 | `CombatPresentationGate` | `CombatController` | Yes | Combat playback waits; `CombatController.IsPresentationLocked` |
 
@@ -225,7 +225,7 @@ Hub has **fewer runtime events**; services mutate `PartyRuntime` / save and retu
 
 | API | Notes |
 |-----|-------|
-| `PresentationGate` | `HubPresentationGate` — lock during service feedback |
+| `PresentationGate` | `HubPresentationGate` — lock during panel and leave-stratum tweens |
 | `TryHealPartyAtHospital`, `TryReviveFirstFallenAtHospital`, … | Refresh credits/party UI **after** success |
 | `TryLeaveHub(stratumId, floorId)` | → Exploration (sets up floor) |
 | `HubCredits` | Wallet label refresh (display text from content/l10n) |

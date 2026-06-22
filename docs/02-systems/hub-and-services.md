@@ -24,9 +24,9 @@ Hub menus use the same **reactive, blocking** bar as combat and exploration ([te
 | Event | UI reaction at launch | Blocks until done |
 |-------|-------------------|-------------------|
 | Open / close service screen | Panel **fade/slide** | No — navigation only |
-| Inn save | Brief **confirm flash** + text | Yes — before another service action |
+| Inn save | Save completes (no text toast) | No |
 | Hospital heal / revive | HP/MP bars **lerp**; ailment icons **fade out** | Yes |
-| Shop buy / sell | **Credits** balance + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)) | Yes |
+| Shop buy / sell | **Credits** balance + stock row **pulse**; **bag slot** update ([items & inventory](items-and-inventory.md)); failures silent (no toast or notice overlay) | No |
 | Guild assign party / spend skill point | Portrait **slide** into slot; skill node **highlight** | Yes |
 | Party menu equip (Inventory/Equipment) | Bag slot / worn slot **pulse** (when wired) | Optional at launch |
 | Navigator Office pick active | Portrait **glow**; aura preview **fade in** on core-six preview strip — **2D list only** (no corner 3D; see [navigator § Office presentation](navigator.md#presentation-at-navigator-office-locked-direction-for-explore)) | Yes |
@@ -114,9 +114,9 @@ Anchors are **authored `CinemachineCamera` poses** in the hub town scene (one pe
 
 ### Presentation vs gameplay lock
 
-Camera pan on menu focus is **ambient presentation** — it must **not** take the global [UI presentation lock](../04-tech-notes.md#ui-reactivity) used for inn save, shop confirm, or hospital heal. The player can scroll the menu while the camera moves.
+Camera pan on menu focus is **ambient presentation** — it must **not** take the global [UI presentation lock](../04-tech-notes.md#ui-reactivity) used for service panel and leave-stratum tweens. The player can scroll the menu while the camera moves.
 
-Service screens may still use the **Service UI motion** table above for panel tweens and blocking confirms.
+Service screens may still use the **Service UI motion** table above for panel tweens (when wired).
 
 ### Implementation sketch (game repo)
 
