@@ -17,7 +17,7 @@ Implementation and tests live in **griddungeon-game**. The user typically has th
 
 1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo — expand `Tests → <Domain> → <Fixture>` ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
 2. Give **manual Play Mode** steps when closing tickets (see `ticket-test-documentation.mdc`).
-3. **Editor open, compile signal only:** `griddungeon-game/Tools/read-unity-editor-log.ps1` (read-only; no second Unity instance).
+3. **Editor open, compile check:** `griddungeon-game/Tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `griddungeon-game/Tools/read-unity-editor-log.ps1` (read-only; no second Unity instance). See `unity-compile-status-agent.mdc`.
 
 ## Exceptions
 
