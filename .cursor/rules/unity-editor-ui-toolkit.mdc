@@ -1,25 +1,179 @@
 ---
-description: New Unity Editor windows and tools — prefer UI Toolkit over IMGUI (game repo)
-globs: 
+description: Editor windows and custom SO UITK inspectors — layout, content-database scope, catalog pickers.
+globs:
+  - "**/Assets/Scripts/Editor/**/*.cs"
+  - "**/Assets/UI/Editor/**/*"
 alwaysApply: false
 ---
 
 # Editor tools — UI Toolkit first
 
-**Authoritative copy:** [griddungeon-game `.cursor/rules/unity-editor-ui-toolkit.mdc`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-editor-ui-toolkit.mdc).
+When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, `CustomEditor` + `CreateInspectorGUI`, UXML/USS under `Assets/UI/Editor/`, custom `VisualElement` panels) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
 
-When adding or rewriting **Editor** tools in **griddungeon-game**, use **UI Toolkit** (`CreateGUI`, UXML/USS under `Assets/UI/Editor/`, `*Panel` / custom `VisualElement`) instead of new `OnGUI` / `EditorGUILayout`, unless UITK cannot meet the requirement (comment why).
+Player-facing UITK rules still apply where relevant: **BEM** class names in UXML/USS (`unity-ui-toolkit.mdc`), **USS subset** limits (`unity-uitk-uss-limits.mdc`).
 
-Examples: `FloorEditorWindow`, `GridDungeonDevWindow`, `EncounterGroupEditor`, `RandomEncounterTableEditor`, `StoryEventEditor`.
+Examples: `FloorEditorWindow`, `GridDungeonSaveEditorWindow`, `EncounterGroupEditor`, `EnemySlotListInspector`.
 
-## Custom SO UITK inspector (summary)
+## Custom UITK inspector for ScriptableObjects (pattern)
 
-New `[CustomEditor]` for ScriptableObjects: **`CreateInspectorGUI`**, BEM root + USS in `Assets/UI/Editor/<Feature>/`, **`EditorContentDatabaseField`** at top when pickers read ContentDatabase catalogs, catalog-backed id fields (not raw string `PropertyField`), **`RefreshCatalogSources()`** on list panels, foldout-as-card for list rows. Full skeleton + checklist: game repo rule (`EncounterGroupEditor`).
+Use this when adding `[CustomEditor(typeof(YourScriptableObject))]` with `CreateInspectorGUI()` — not default IMGUI.
 
-## Foldout in bordered cards (summary)
+### Layout recipe
 
-Do **not** wrap a `Foldout` in a bordered parent — arrow sits outside box. Put **`editor-foldout-card`** on `Foldout` root; load **`Assets/UI/Editor/Shared/EditorFoldoutCard.uss`**. UXML: `<ui:Foldout class="editor-foldout-card">`. Full pattern: game repo rule.
+| Layer | Responsibility |
+|-------|----------------|
+| **Root `VisualElement`** | Block BEM class (e.g. `encounter-group-editor`), load feature USS + `Assets/UI/Editor/Shared/EditorFoldoutCard.uss` when using bordered foldout lists |
+| **`EditorContentDatabaseField`** | Top row when inspector uses **content-id dropdowns** (enemies, story events, encounters, items, …) |
+| **`PropertyField`** | Plain serialized fields with no catalog picker |
+| **Custom `VisualElement` panels** | Repeated lists, foldout cards, catalog-backed pickers (`*ListInspector`, `*DefinitionField`) |
+| **`root.Bind(serializedObject)`** | Once at end — binds all `PropertyField` descendants |
 
-## Content database scope (summary)
+### C# skeleton
 
-Catalog pickers use **`EditorContentDatabaseScope`** (EditorPrefs + default `DevSceneComposition.ContentPath`). Expose **`EditorContentDatabaseField`** when a tool owns dropdowns; refresh pickers on change. Shared with Floor Editor — one pick, all editor catalogs. Details: game repo rule.
+```csharp
+[CustomEditor(typeof(MyContentAsset))]
+public sealed class MyContentAssetEditor : UnityEditor.Editor
+{
+    const string k_StylePath = "Assets/UI/Editor/MyFeature/MyContentAssetInspector.uss";
+
+    public override VisualElement CreateInspectorGUI()
+    {
+        var root = new VisualElement();
+        root.AddToClassList("my-content-editor");
+
+        StyleSheet? sheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(k_StylePath);
+        if (sheet != null)
+        {
+            root.styleSheets.Add(sheet);
+        }
+
+        var catalogPanel = new MyCatalogListInspector(serializedObject);
+
+        // Catalog pickers: scope field first; refresh panels when database changes.
+        root.Add(new EditorContentDatabaseField(catalogPanel.RefreshCatalogSources));
+
+        root.Add(new PropertyField(serializedObject.FindProperty("m_plainField")));
+        root.Add(catalogPanel);
+
+        root.Bind(serializedObject);
+        return root;
+    }
+}
+```
+
+### Content-id pickers (required when inspector lists ContentDatabase entries)
+
+Do **not** bind content ids as raw string `PropertyField` when a registered catalog exists — use a `PopupField` / `ObjectField` backed by a catalog helper.
+
+| Do | Don't |
+|----|-------|
+| `EnemyDefinitionCatalog.GetRegisteredEnemyIds()` (defaults to scope) | `new PropertyField(enemyIdProp)` for pick-from-roster ids |
+| `EditorContentDatabaseScope.Resolve()` in catalog loaders | `LoadAssetAtPath<ContentDatabase>("Assets/Content/…")` per tool |
+| `RefreshCatalogSources()` on list/picker panels; call from scope field callback | Stale dropdown after user picks a different database |
+| Warning label when id missing from active database | Silent empty dropdown |
+
+Catalog panels expose **`public void RefreshCatalogSources()`** that rebuilds pickers (see `EnemySlotListInspector`, `EncounterEventsInspector`).
+
+### Foldout list rows
+
+See **Foldout inside bordered cards** below — apply to SO list inspectors (events, slots, table rows).
+
+### File layout
+
+```
+Assets/Scripts/Editor/Content/     — CustomEditor + *Inspector / *Field / *Catalog
+Assets/UI/Editor/<Feature>/        — *.uss (BEM), optional *.uxml
+```
+
+Match block name to SO domain (`encounter-group-editor`, not generic `inspector`).
+
+### Reference SO inspector
+
+- `EncounterGroupEditor.cs` — scope field + row/event panels
+- `EnemySlotListInspector.cs`, `EncounterEventsInspector.cs` — foldout cards + catalog refresh
+- `EnemyDefinitionField.cs`, `StoryEventDefinitionField.cs` — catalog-backed pickers
+- `EncounterGroupInspector.uss`
+
+## Foldout inside bordered cards (required)
+
+Unity `Foldout` toggle uses **negative left margin** (default inspector alignment). If you wrap a `Foldout` in a bordered/padded parent `VisualElement`, the **collapse arrow renders outside the box**.
+
+| Do not | Do instead |
+|--------|------------|
+| `card.Add(foldout)` where `card` owns border/padding/background | Apply card BEM classes **on the `Foldout` root** |
+| Assume `margin-left: 0` on the foldout alone fixes toggle bleed | Reset **toggle and content** child margins in USS |
+| `PropertyField` on **array/list** serialized props | Custom list inspector with **`editor-foldout-card`** foldout + per-row `PropertyField` for elements |
+
+### C# pattern
+
+```csharp
+var foldout = new Foldout { text = header, value = open };
+foldout.AddToClassList("editor-foldout-card");
+foldout.Add(content);
+return foldout; // not wrapped in a separate VisualElement card
+```
+
+### USS / UXML pattern
+
+Use shared **`Assets/UI/Editor/Shared/EditorFoldoutCard.uss`** — load on the inspector/window root alongside feature USS.
+
+```css
+/* EditorFoldoutCard.uss — apply class on Foldout root */
+.editor-foldout-card { … border/padding … margin-left: 0; }
+.editor-foldout-card > .unity-foldout__toggle { margin-left: 0; }
+.editor-foldout-card > .unity-foldout__content { margin-left: 0; }
+```
+
+```xml
+<!-- UXML editor tools: import shared sheet; class on Foldout, not a wrapper -->
+<Style src="../Shared/EditorFoldoutCard.uss" />
+<ui:Foldout text="Row title" class="editor-foldout-card">
+    <!-- fields -->
+</ui:Foldout>
+```
+
+Do **not** duplicate border/toggle-reset rules in feature USS — extend shared sheet only when a feature needs overrides.
+
+When both card and foldout modifiers apply to the same node (C#), one class `editor-foldout-card` on the `Foldout` is enough.
+
+### Reference implementation
+
+- `Assets/UI/Editor/Shared/EditorFoldoutCard.uss`
+- `Assets/Scripts/Editor/Content/EnemySlotListInspector.cs`
+- `Assets/Scripts/Editor/Content/EncounterEventsInspector.cs`
+- `Assets/Scripts/Editor/Content/EncounterEventPredicatesInspector.cs`
+- `Assets/UI/Editor/EncounterGroup/EncounterGroupInspector.uss`
+
+## PR / agent checklist
+
+### Any new Editor UITK surface
+
+- [ ] New Editor UI uses UITK, not IMGUI, unless documented exception
+- [ ] Editor styles live under `Assets/UI/Editor/` with BEM classes matching C# toggles
+
+### Custom SO inspector (`CreateInspectorGUI`)
+
+- [ ] `[CustomEditor(typeof(...))]` + `CreateInspectorGUI` — not `OnInspectorGUI` for new work
+- [ ] Root block BEM class + USS under `Assets/UI/Editor/<Feature>/`
+- [ ] Content-id dropdowns use **catalog helpers** + **`EditorContentDatabaseField`** at top when roster comes from ContentDatabase
+- [ ] List/picker panels implement **`RefreshCatalogSources()`** wired to scope field callback
+- [ ] Collapsible bordered rows: **`editor-foldout-card`** on `Foldout` root + load **`EditorFoldoutCard.uss`** (not wrapper `VisualElement`)
+- [ ] `root.Bind(serializedObject)` after building tree
+
+## Content database scope (catalog pickers)
+
+Editor catalog dropdowns (`EnemyDefinitionCatalog`, `StoryEventDefinitionCatalog`, Floor Editor choices) read the active database via **`EditorContentDatabaseScope.Resolve()`** — not hardcoded paths in each tool.
+
+| Piece | Role |
+|-------|------|
+| `EditorContentDatabaseScope` | EditorPrefs GUID persistence + fallback to `DevSceneComposition.ContentPath` |
+| `EditorContentDatabaseField` | Reusable UITK `ObjectField` that writes scope + raises refresh callback |
+| Catalog APIs | Optional `ContentDatabase? database = null`; default resolves scope |
+
+**Rules**
+
+- Do **not** add new `AssetDatabase.LoadAssetAtPath<ContentDatabase>(hardcodedPath)` in editor pickers — call scope or accept an injected `ContentDatabase`.
+- Tools with catalog pickers expose **`EditorContentDatabaseField`** (or call scope) and **refresh** child inspectors when it changes.
+- Floor Editor and Encounter Group editor share the **same** EditorPrefs key — one pick applies project-wide in the Editor session.
+
+Reference: `EditorContentDatabaseScope.cs`, `EncounterGroupEditor.cs`, `FloorEditorContentDatabaseBar.cs`.

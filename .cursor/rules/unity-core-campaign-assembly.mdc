@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Core vs Campaign assembly boundaries
 
-Authority: [core assembly improvement plan](../docs/plans/core-assembly-improvement-plan.md), [05-class-design](../docs/05-class-design.md), [ADR 025](../decisions/025-campaign-exploration-target.md), [story-events](../docs/02-systems/story-events.md).
+Authority: [core assembly improvement plan](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/plans/core-assembly-improvement-plan.md), [05-class-design](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/05-class-design.md), [ADR 025](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/025-campaign-exploration-target.md), [story-events](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/02-systems/story-events.md).
 
 ## Dependency (locked)
 

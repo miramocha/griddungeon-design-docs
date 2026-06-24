@@ -8,9 +8,9 @@ alwaysApply: false
 
 Swap or host **display chrome** via `UiPresentationBridge` → projector DTO → `I*Shell.Apply` — without forking gameplay rules or phase HUD orchestration.
 
-**Authority:** [presentation shell implementation](../docs/04-dev/presentation-shell-implementation.md) · [ADR 042](../decisions/042-presentation-bus.md)
+**Authority:** [presentation shell implementation](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-implementation.md) · [ADR 042](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/042-presentation-bus.md)
 
-**Gotchas (read before implement/review):** [presentation-shell-gotchas.md](../docs/04-dev/presentation-shell-gotchas.md) — stale bus snapshots, wire lifecycle, authority split, scene shell vs catalog prefab, projector tests.
+**Gotchas (read before implement/review):** [presentation-shell-gotchas.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-gotchas.md) — stale bus snapshots, wire lifecycle, authority split, scene shell vs catalog prefab, projector tests.
 
 **Distinct from:** [centralized-ui-services.mdc](centralized-ui-services.mdc) — modal `ICentralizedUiSurface` services (`ItemListInventory`, PopIn lifecycle). Bus shells carry **DTO snapshots**; many surfaces still co-own formation bind on the phase HUD.
 
@@ -49,8 +49,8 @@ Reject shell/bus PRs that still have:
 
 ## Agent workflow
 
-- **Shell / projector / bridge wiring PR:** read [presentation-shell-gotchas](../docs/04-dev/presentation-shell-gotchas.md) end-to-end before diff review.
-- **Touches centralized modal + bus:** also run skill **`audit-centralized-ui-services`** (game repo) — PopIn traps stay in [centralized-ui-gotchas](centralized-ui-gotchas.md).
+- **Shell / projector / bridge wiring PR:** read [presentation-shell-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-gotchas.md) end-to-end before diff review.
+- **Touches centralized modal + bus:** also run skill **`audit-centralized-ui-services`** — PopIn traps stay in [centralized-ui-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md).
 
 ## Gold references (game repo)
 
@@ -66,4 +66,4 @@ Reject shell/bus PRs that still have:
 - `centralized-ui-services.mdc` — standalone `UIDocument` services, `IsSettling`
 - `unity-ui-toolkit.mdc` — BEM, shared components
 - `uitk-bem-transition.mdc` — show/hide motion on shell chrome
-- `unity-common-pitfalls.mdc` — handoff import check on new `.cs`
+- `unity-common-pitfalls.mdc` — handoff `using` check (missing + duplicate) on new `.cs`

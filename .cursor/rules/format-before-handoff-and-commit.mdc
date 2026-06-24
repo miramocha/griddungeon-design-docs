@@ -42,7 +42,7 @@ Skip when the change set has **no** paths for that formatter.
      npx prettier --write path/to/Changed.uxml path/to/Changed.uss
      ```
 4. Re-run `git diff`. Include formatting-only changes in the handoff tree or commit unless the user excludes them.
-5. **Verify imports** on every changed `.cs` — `unity-common-pitfalls.mdc` § Handoff — missing `using` (mirror sibling `using` lines; run `griddungeon-game/Tools/request-compile-status.ps1` when Editor may be open — see `unity-compile-status-agent.mdc`).
+5. **Verify `using` directives** on every changed `.cs` — `unity-common-pitfalls.mdc` § Handoff — **missing** imports (mirror sibling `using` lines) and **duplicate** identical `using` lines (remove extras); run `Tools/request-compile-status.ps1` when Editor may be open — see `unity-compile-status-agent.mdc`.
 
 ## Editor parity
 

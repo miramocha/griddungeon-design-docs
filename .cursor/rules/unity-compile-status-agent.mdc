@@ -5,9 +5,9 @@ alwaysApply: true
 
 # Unity compile status (agent gate)
 
-Grid Dungeon game repo uses [`com.miraluna.editor-agent-compile`](../../com.miraluna.editor-agent-compile) for structured compile checks while the Editor stays open.
+Grid Dungeon uses [`com.miraluna.editor-agent-compile`](../../com.miraluna.editor-agent-compile) for structured compile checks while the Editor stays open.
 
-Authority: [griddungeon-game Tools/README.md](../../griddungeon-game/Tools/README.md).
+Authority: [Tools/README.md](../../Tools/README.md), package [README.md](../../com.miraluna.editor-agent-compile/README.md).
 
 ## When to run (agents)
 
@@ -20,7 +20,10 @@ cd <griddungeon-game>
 
 - Exit **0** required before claiming compile-clean or closing a C# ticket.
 - Exit **1** — fix reported `CS####` lines; re-run until green.
-- Do **not** run `Tools/ci-compile.ps1` while the Editor has this project open.
+- Exit **2** — timeout; confirm Editor is open on this project and package resolved.
+- Exit **3** — Editor did not claim request; open project in Unity.
+
+Do **not** run `Tools/ci-compile.ps1` while the Editor has this project open (project lock). See `unity-no-cli-tests-while-editor-open.mdc`.
 
 ## Fallbacks
 
@@ -30,4 +33,12 @@ cd <griddungeon-game>
 | Package/JSON unavailable | `.\Tools\read-unity-editor-log.ps1` |
 | Editor closed | `.\Tools\ci-compile.ps1` |
 
-See `griddungeon-game/.cursor/rules/unity-compile-status-agent.mdc` for full detail.
+## Output
+
+Structured errors live in `Logs/last-compile.json` (gitignored): `file`, `line`, `column`, `message`.
+
+Unity menu equivalent: **Tools → Miraluna → Request Compile Status**.
+
+## Other projects
+
+Install the same UPM package via `manifest.json`, copy/wrap `Tools/*.ps1`, add an equivalent cursor rule in that repo.

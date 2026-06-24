@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Universal PC UI input vocabulary
 
-**Authority:** [input-bindings.md § Universal PC UI vocabulary](../../docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary), [ADR 009 amendment](../../decisions/009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary).
+**Authority:** design-docs [input-bindings.md § Universal PC UI vocabulary](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/02-systems/input-bindings.md#universal-pc-ui-vocabulary), [ADR 009 amendment](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary).
 
 Hub, combat command UI, party menu, and tabbed pickers share one vocabulary. When a modal/overlay owns input, this table wins over exploration movement.
 
@@ -27,8 +27,8 @@ No overlay open: `WASD` = grid move, `Q`/`E` = turn — **not** tab cycle. `Inpu
 ## Handler checklist
 
 1. New menu surface → reuse `MenuNavigate` / `MenuConfirm` / `MenuCancel`; scope `Q`/`E` tab actions to overlay open only.
-2. Wire **RMB** on `MenuCancel` (Hub + Combat maps) — do not fork a separate cancel path.
-3. Hub **Tab** and **Esc** both toggle `PartyMenu` when safe.
+2. Wire **RMB** on `MenuCancel` (Hub + Combat maps in `Assets/Input/GridDungeon.inputactions`) — do not fork a separate cancel path.
+3. Hub **Tab** and **Esc** both toggle `PartyMenu` when safe (`PartyMenuInputHandler`).
 4. Combat **Esc** → pause only when pause UI ships — never LIFO Back.
 5. Global bind copy → `TabbedPickerRailHints` + `InputHints.Publish` — see `unity-global-input-hints.mdc`.
 
@@ -45,7 +45,7 @@ Prefer **Navigate** over **Command** / **Menu** / **Action** on hub and combat h
 
 ## Gamepad-ready layout (deferred)
 
-**Authority:** [input-bindings.md § Gamepad-ready keyboard layout](../../docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation), [ADR 009 § Gamepad-ready amendment](../../decisions/009-input-bindings-pc.md#amendment-2026-06--gamepad-ready-keyboard-layout).
+**Authority:** design-docs [input-bindings.md § Gamepad-ready keyboard layout](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation), [ADR 009 § Gamepad-ready amendment](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/009-input-bindings-pc.md#amendment-2026-06--gamepad-ready-keyboard-layout).
 
 Keyboard defaults should mirror future gamepad groups:
 
@@ -62,6 +62,6 @@ Keyboard defaults should mirror future gamepad groups:
 
 **System tier (outside face row):** `Tab` / `Esc` → **Menu** / **Options**; `M` (map) → Xbox **View** or DualSense **touchpad click** — not west face **`C`**, not **L3**. DualSense **Create** (`selectButton`) stays free when map uses touchpad.
 
-Full table: [input-bindings.md § PC vs console reference](../../docs/02-systems/input-bindings.md#pc-vs-console-reference-locked-intent).
+Full table: [input-bindings.md § PC vs console reference](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/02-systems/input-bindings.md#pc-vs-console-reference-locked-intent).
 
 **Before adding a bind outside this table:** document it in the input-bindings audit table.

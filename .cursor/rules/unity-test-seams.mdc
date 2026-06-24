@@ -1,0 +1,58 @@
+---
+description: Prefer Core/tests for logic; limit internal *ForTests seams in prod C#.
+globs:
+  - "**/Assets/Scripts/**/*.cs"
+  - "**/Assets/Tests/**/*.cs"
+alwaysApply: false
+---
+
+# Test seams in production C# (Grid Dungeon)
+
+`GridDungeon.Runtime` / `GridDungeon.UI` ship **internal** test helpers today (`*ForTests`, `InternalsVisibleTo("GridDungeon.Tests")`). That is allowed — not a license to grow prod types for every fixture.
+
+Authority: [Assets/Tests/README.md](../../Assets/Tests/README.md) (Edit Mode default), [ADR 039](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/039-uitk-dotween-show-hide.md) §5 (UITK tween simulators).
+
+## Decision order (before adding prod code for a test)
+
+1. **Core + Edit Mode** — generic simulators belong in `GridDungeon.Core` and `Assets/Tests/<Domain>/`. Campaign/story **behavior** belongs in `GridDungeon.Campaign` — see `unity-core-campaign-assembly.mdc`. Do not add presenter/runtime seams to test math or phase maps.
+2. **Public behavior** — assert through existing commands, events, steady BEM classes, `IsSettling`, `ICentralizedUiSurface` lifecycle. Prefer panel-attached presenter setup over detached shortcuts when testing exit races ([centralized-ui-gotchas § Edit Mode without panel](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md#edit-mode-tests-without-a-panel)).
+3. **Shared UITK simulators** — reuse `UiTransitionSession.CompleteImmediatelyForTests`, `*Transition.SimulateDue*ForTests` ([`uitk-bem-transition.mdc`](uitk-bem-transition.mdc)). Do not fork schedule/tween completion per presenter.
+4. **`internal *ForTests` on prod type** — last resort for UITK build wiring, deferred `schedule.Execute`, or state tests cannot reach without `InternalsVisibleTo`. One narrow method; name ends in `ForTests`.
+5. **Manual / Play Mode** — visual feel, scene wiring, or one-off layout when Edit Mode cannot own it ([`ticket-test-documentation.mdc`](ticket-test-documentation.mdc)).
+
+## Do not
+
+| Avoid | Use instead |
+|-------|-------------|
+| `public` methods/properties **only** for tests | `internal` + existing `InternalsVisibleTo`; or test via public API |
+| Business logic in `*ForTests` helpers | Core simulator or presenter path under test |
+| Duplicate seam per presenter (`FlushScheduledFooForTests` × N) | Shared transition helper or test fixture base in `Assets/Tests/` |
+| `#if UNITY_INCLUDE_TESTS` / test-only branches in prod | `internal` helpers (ship in player builds but not callable outside test asmdefs) |
+| `EnsureBuiltForTests` when normal `Show`/`OnEnable` builds tree | Call production entry point in test setup |
+| New seam to skip animation when ADR 039 helper exists | `SimulateDue*ForTests` on the transition target |
+
+## Allowed patterns (existing)
+
+```csharp
+// ✅ UITK — shared Runtime helper (ADR 039)
+PopInTransition.SimulateDueExitCompletionForTests(host);
+
+// ✅ Presenter — internal, test-only name, minimal surface
+internal void EnsureBuiltForTests() { … }
+internal VisualElement? HostRootForTests => m_hostRoot;
+```
+
+```csharp
+// ❌ Public test hook
+public void SetContextForTests(InventoryContext ctx) => …;
+
+// ❌ Prod method encodes test scenario
+internal void OpenCombatItemForTests(PartyBag bag) { … } // prefer public OpenCombatItem if real API
+```
+
+## PR / agent checklist
+
+- [ ] Rule under test could move to **Core** — move it before adding `*ForTests`
+- [ ] New `*ForTests` is **`internal`**, suffixed `ForTests`, smallest API
+- [ ] UITK motion uses **ADR 039** helpers before new presenter flush/advance methods
+- [ ] Test plan names **Edit Mode** path (`Tests → <Domain> → <Fixture>`)
