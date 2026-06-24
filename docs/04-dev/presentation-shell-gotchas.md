@@ -22,6 +22,28 @@ Living list of **non-obvious bugs and review traps** when wiring **UITK presenta
 
 ---
 
+## Dual-write — facade + shell re-apply (CommandRailInfo)
+
+**Symptom:** Hub service rail info **flashes then clears** — e.g. Shop sub copy disappears while a title stays; or phase header overwritten with service name.
+
+**Cause:** Facade wrote **both** `CommandRailInfoPresenter` and `CommandRailInfoPresentationProjector`; shell `Apply` re-applied DTO with **hand-rolled if/else** that drifted from presenter API (e.g. required `ServiceLines.Count > 0`, stored service heading in `HeaderTitle`).
+
+**Fix (shipped):**
+
+| Layer | Rule |
+|-------|------|
+| Facade `CommandRailInfo` | **Bus-first** — projector only when `UiPresentationBridge.Instance != null`; direct presenter only as no-bridge fallback |
+| Shell | One line: `Presenter.ApplyPresentationShell(state)` |
+| Presenter | **Single mapper** — `ApplyPresentationShell(CommandRailInfoPresentationState)` owns all DTO → view rules |
+| DTO | Fields 1:1: `HeaderTitle`, `ServiceHeading`, `ServiceLines`, `CombatPrompt`, `SyncContext`, `Visible`, `HubLeaveHidden` |
+| Rail context | `CommandRailPresenter.SyncCommandRailInfo` skips direct presenter when bus wired — `SyncRailContext` + shell apply owns visibility |
+
+**Rule:** New presentation surfaces follow **ConfirmModal / ItemListInventory** pattern — no dual-write; no conditional mapping in shell. Add round-trip test: projector snapshot → `ApplyPresentationShell` → DOM asserts.
+
+**Tests:** `CommandRailInfoScreenShellTests.ApplyPresentationShell_RoundTripFromProjector_MatchesDto`
+
+---
+
 ## Authority split — formation bind vs interactive chrome
 
 **Symptom:** Party/enemy plates show name/HP but **attack targeting** does not (`--targetable` missing, clicks ignored).
@@ -230,5 +252,7 @@ Presentation shell files are a frequent source of this trap (new projector/build
 
 | Date | Note |
 |------|------|
+| 2026-06-23 | § Dual-write — CommandRailInfo bus-first + `ApplyPresentationShell` (Shop rail info flash) |
+| 2026-06-23 | CommandRail menu shell — `CommandRailPresenter.ApplyPresentationShell`; thin `CommandRailScreenShell` |
 | 2026-06-18 | Initial page from combat roster shell ship ([#314](https://github.com/miramocha/griddungeon-game/issues/314)) |
 | 2026-06-19 | § Missing `using` — pointer to general `unity-common-pitfalls` handoff rule ([#315](https://github.com/miramocha/griddungeon-game/issues/315)) |

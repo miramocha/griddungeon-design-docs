@@ -283,7 +283,7 @@ Runtime **gameplay events** (above) remain the authority for rules. **Presentati
 | Type | Location | Role |
 |------|----------|------|
 | `CommandRailPresentationState` | Runtime | Rail visibility, context, menu items, focus, modal flags |
-| `CommandRailInfoPresentationState` | Runtime | Header title, service lines, combat prompt |
+| `CommandRailInfoPresentationState` | Runtime | Header title, service heading, service lines, combat prompt |
 | `ItemListInventoryPresentationState` | Runtime | Hub shop / combat item / party bag picker rows, tabs, engage flags |
 | `ConfirmModalPresentationState` | Runtime | Confirm title/body/labels, emphasis flags, visibility |
 | `CommandRailPresentationProjector` | Runtime | Hub/combat/party menu → `CommandRailPresentationState` |
