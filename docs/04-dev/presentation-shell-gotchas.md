@@ -253,6 +253,7 @@ Presentation shell files are a frequent source of this trap (new projector/build
 | Date | Note |
 |------|------|
 | 2026-06-23 | § Dual-write — CommandRailInfo bus-first + `ApplyPresentationShell` (Shop rail info flash) |
+| 2026-06-23 | Party section rail — `PartySectionRailPresenter.ApplyMenuPresentationShell`; thin shell |
 | 2026-06-23 | CommandRail menu shell — `CommandRailPresenter.ApplyPresentationShell`; thin `CommandRailScreenShell` |
 | 2026-06-18 | Initial page from combat roster shell ship ([#314](https://github.com/miramocha/griddungeon-game/issues/314)) |
 | 2026-06-19 | § Missing `using` — pointer to general `unity-common-pitfalls` handoff rule ([#315](https://github.com/miramocha/griddungeon-game/issues/315)) |
