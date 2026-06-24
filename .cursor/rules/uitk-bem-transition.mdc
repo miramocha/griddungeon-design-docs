@@ -10,7 +10,7 @@ alwaysApply: false
 
 # UITK BEM transition standard (ADR 039)
 
-Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.md) (API + recipes), [ADR 039](../decisions/039-uitk-dotween-show-hide.md) §3 + §6, [centralized-ui-gotchas](../docs/04-dev/centralized-ui-gotchas.md) (symptoms), [presentation-shell-gotchas](../docs/04-dev/presentation-shell-gotchas.md) (bus shell chrome).
+Authority: [UITK BEM transition guide](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/uitk-bem-transition-guide.md) (API + recipes), [ADR 039](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/039-uitk-dotween-show-hide.md) §3 + §6, [centralized-ui-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md) (symptoms), [presentation-shell-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-gotchas.md) (bus shell chrome).
 
 ## Transition helpers (`*Transition.cs`)
 
@@ -23,8 +23,16 @@ Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.
 
 - Gate on **steady hidden class** on the animation target + `IsSettling` via `VisualPresentationSync.ShouldCallShow` / `ShouldCallHide`.
 - Do **not** skip `Show()` only because `IsShown` is true — retracted/faded class may be off mid-dismiss tween.
-- Prefer deriving public `IsShown` from steady class when the animation target is the surface (`MinimapPanelView`, `ExpandedMapOverlayView`, `CommandRailInfoPresenter`).
+- Prefer deriving public `IsShown` from steady class when the animation target is the surface (`MapView`, `CommandRailInfoPresenter`).
 - One phase owner per chrome; avoid duplicate visibility apply in the same frame.
+
+## No hard cuts
+
+- **Player-visible dismiss** → `Hide()` / facade `Clear` + presentation driver (slide/fade/pop-in). Not `HideImmediate()` while chrome is on screen or dismiss is settling.
+- **`HideImmediate()`** → `OnDisable`, shared-picker **context enum swap**, competing overlay handoff, chrome already steady-hidden. Not mid-beat snap from Runtime (`FloorTransitionPresenter`, gates) while phase fade is in progress.
+- **One owner per beat** — phase host clears at transition **start**; cross-system code uses `Hide()` or skips if owner already cleared. Republish on `PresentationReleased`.
+- **No dual authority** — do not stack USS `display: none` on parent with slide/fade on child in `SyncPresentation` else branches.
+- Full policy: [UITK BEM transition guide § No hard cuts](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ## Exceptions (do not force this pattern)
 
@@ -40,3 +48,4 @@ Authority: [UITK BEM transition guide](../docs/04-dev/uitk-bem-transition-guide.
 - [ ] `BemMotionCompletion` or documented exception
 - [ ] `VisualPresentationSync` or visual `IsShown`
 - [ ] `UiToolkitTweensTests` + presenter settle test if behavior changed
+- [ ] No player-visible hard cut — `Hide`/`Clear` at beat start; `HideImmediate` only per guide § No hard cuts

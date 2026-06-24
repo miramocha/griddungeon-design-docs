@@ -26,8 +26,8 @@ Rare cases: preserving scene `fileID` refs before Unity import, scripted asset c
 4. Run validation before commit (skill **validate-unity-meta**):
 
 ```powershell
-python Tools/validate_unity_meta.py
-python Tools/validate_unity_meta.py path/to/NewScript.cs.meta
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py path/to/NewScript.cs.meta
 ```
 
 Exit code **0** required. Fix `[FAIL]` lines; do not commit broken meta.
@@ -43,4 +43,4 @@ Exit code **0** required. Fix `[FAIL]` lines; do not commit broken meta.
 ## Related
 
 - Skill: `.cursor/skills/validate-unity-meta/`
-- Tool: [Tools/validate_unity_meta.py](../../Tools/validate_unity_meta.py)
+- Script: [.cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py](../skills/validate-unity-meta/scripts/validate_unity_meta.py)

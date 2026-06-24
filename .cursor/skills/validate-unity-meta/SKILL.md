@@ -36,26 +36,26 @@ Task Progress:
 Full `Assets/` scan:
 
 ```powershell
-python Tools/validate_unity_meta.py
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py
 ```
 
 Changed paths only:
 
 ```powershell
-python Tools/validate_unity_meta.py Assets/Scripts/UI/Views/MyView.cs.meta
-python Tools/validate_unity_meta.py Assets/UI/Screens/Exploration
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py Assets/Scripts/UI/Views/MyView.cs.meta
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py Assets/UI/Screens/Exploration
 ```
 
 Strict (missing `.meta` warnings fail too — use after Unity import):
 
 ```powershell
-python Tools/validate_unity_meta.py --strict-warnings
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py --strict-warnings
 ```
 
 GUID + duplicates only (no pairing):
 
 ```powershell
-python Tools/validate_unity_meta.py --no-pairing path/to/file.meta
+python .cursor/skills/validate-unity-meta/scripts/validate_unity_meta.py --no-pairing path/to/file.meta
 ```
 
 ### 2. Interpret output
@@ -82,5 +82,5 @@ Follow [.cursor/rules/unity-meta-files.mdc](../../rules/unity-meta-files.mdc) wh
 
 ## Related
 
-- [Tools/README.md](../../Tools/README.md)
+- Script: [scripts/validate_unity_meta.py](scripts/validate_unity_meta.py)
 - Unity pitfall: broken script import → `unity-common-pitfalls.mdc`

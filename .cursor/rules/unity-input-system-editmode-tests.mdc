@@ -1,0 +1,25 @@
+---
+description: Edit Mode tests use action/logic paths, not simulated keyboards or devices
+globs: Assets/Tests/**/*.cs
+alwaysApply: false
+---
+
+# Input tests — device-agnostic
+
+Combat/exploration input is **device-agnostic**: gameplay and handlers consume `InputAction` values and callbacks (`MenuNavigate`, `MenuConfirm`, …) and stable IDs (`CombatInputIds`), not `<Keyboard>/z` or other hardware paths.
+
+## Do not
+
+- Simulate hardware in Edit Mode (`Keyboard`, `Gamepad`, `QueueStateEvent`, `KeyboardState`, `DeltaStateEvent`, `InputSystem.AddDevice`, `InputTestFixture` press helpers).
+- Assert that a specific key binding fired — bindings live in `GridDungeon.inputactions` and may change per platform/scheme.
+
+## Do
+
+- Test **behavior** through the same APIs the handler calls: `CommandPanelView.MoveFocusNext` / `ConfirmFocused`, `CombatPlayerCommandGate.TryBack`, `CombatController.SubmitPlayerAction`, etc. See `CommandPanelViewTests.ConfirmFocusedAfterMoveFocusNext_QueuesGuard`.
+- Test **gates and planning rules** in `CombatPlayerCommandGateTests`, `CombatControllerPlanningTests`.
+- Test **focus navigation** in `MenuFocusNavigatorTests` (UI domain).
+- Leave **binding → handler → UI** smoke checks to **manual Play Mode** (DevBootstrap F3: navigate/confirm/cancel) or a future dedicated Play Mode assembly with `InputTestFixture` if the team adds one.
+
+## Rationale
+
+Hardware simulation is brittle in Edit Mode, duplicates coverage when panel/controller tests already pass, and contradicts the project goal that keys are just one possible source for actions.

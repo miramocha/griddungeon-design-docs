@@ -8,7 +8,7 @@ alwaysApply: false
 
 Cross-phase overlays (`InputHintPresenter`, `PartyFormationFloater`, `ItemListInventory`, `SkillUsePickerPresenter`, …) use **one scene `GameObject` + `UIDocument`** under `GameState`. Phase views **orchestrate** via static facades; they do **not** own duplicate picker trees.
 
-**Authority:** [centralized-ui-services.md](../../docs/04-dev/centralized-ui-services.md). **Gotchas (read before implement/review):** [centralized-ui-gotchas.md](../../docs/04-dev/centralized-ui-gotchas.md) (pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests). **Presentation bus shells:** [presentation-shell-gotchas.md](../../docs/04-dev/presentation-shell-gotchas.md) + [presentation-shell.mdc](presentation-shell.mdc). **Animation:** [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`. **No hard cuts:** [uitk-bem-transition-guide § No hard cuts](../../docs/04-dev/uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
+**Authority:** [centralized-ui-services.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-services.md). **Gotchas (read before implement/review):** [centralized-ui-gotchas.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md) — pop-in exit races, `IsSettling`, context-switch `HideImmediate`, detached-host tests. **Presentation bus shells:** [presentation-shell-gotchas.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-gotchas.md) + [presentation-shell.mdc](presentation-shell.mdc). **Animation:** [ADR 039](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/039-uitk-dotween-show-hide.md) — DOTween via `UiToolkitTweens` + `UiTransitionSession`; BEM steady state, not USS `transition-duration`. **No hard cuts:** [uitk-bem-transition-guide § No hard cuts](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
 ## `ICentralizedUiSurface` — required
 
@@ -26,7 +26,7 @@ Epic: [game#206](https://github.com/miramocha/griddungeon-game/issues/206). New 
 When moving UI into this pattern, the **shipped** integration must **not**:
 
 - `CloneTree` the service UXML into `HubHud`, `CombatHud`, `PartyMenu`, or other phase roots
-- Reparent service `VisualElement` nodes into another document’s host (embedded party-menu pane hosts, `InventoryPaneHost`, …)
+- Reparent service `VisualElement` nodes into another document’s host (`InventoryPaneHost`, embedded party-menu pane hosts, …)
 - Use **`worldBound` / `GeometryChangedEvent`** to position a service panel inside another `UIDocument` (“geometry dock”)
 
 **Do instead:**
@@ -54,9 +54,9 @@ Reject migration PRs that still have:
 
 Before migration PRs or when reviewing a presenter / facade / phase HUD wiring:
 
-1. Read [centralized-ui-gotchas](../../docs/04-dev/centralized-ui-gotchas.md) for the target concern.
-2. Run skill **`audit-centralized-ui-services`** (game repo [`.cursor/skills/audit-centralized-ui-services/SKILL.md`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/skills/audit-centralized-ui-services/SKILL.md)) — smell greps, `ICentralizedUiSurface` checklist, gotcha cross-check, report template.
-3. If the PR also touches **presentation bus** projectors/shells, read [presentation-shell-gotchas](../../docs/04-dev/presentation-shell-gotchas.md) and apply [presentation-shell.mdc](presentation-shell.mdc).
+1. Read [centralized-ui-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md) for the target concern.
+2. Run skill **`audit-centralized-ui-services`** ([`.cursor/skills/audit-centralized-ui-services/SKILL.md`](../skills/audit-centralized-ui-services/SKILL.md)) — smell greps, `ICentralizedUiSurface` checklist, gotcha cross-check, report template.
+3. If the PR also touches **presentation bus** projectors/shells, read [presentation-shell-gotchas](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/presentation-shell-gotchas.md) and apply [presentation-shell.mdc](presentation-shell.mdc).
 
 ## Related rules
 

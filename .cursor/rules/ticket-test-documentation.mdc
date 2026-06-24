@@ -62,7 +62,7 @@ Full tree: [Assets/Tests/README.md](../../Assets/Tests/README.md).
 
 ## Agent / PR workflow
 
-1. **Before handoff:** format changed `.cs`, `.uxml`, and `.uss` per `format-before-handoff-and-commit.mdc` (CSharpier, Prettier, **import check** on changed `.cs` in **griddungeon-game**).
+1. **Before handoff:** format changed `.cs`, `.uxml`, and `.uss` per `format-before-handoff-and-commit.mdc` (CSharpier, Prettier, **`using` check** — missing + duplicate — on changed `.cs` in **griddungeon-game**).
 2. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules (expand `Tests → <Domain>` in Test Runner, or ask the user to).
 3. When C# or Unity assets changed, delegate **fresh-reviewer** (`.cursor/agents/fresh-reviewer.md`) after commits on the branch and before close-out — diff + issue AC only; fix Blockers in follow-up commits (see **test-plan-grid-dungeon** skill).
 4. After implementation, **post the filled template** to the issue via `gh issue comment` (or PR body).

@@ -1,25 +1,32 @@
 ---
-description: Do not run Unity batch/CLI tests on griddungeon-game — user keeps the Editor open
+description: Do not run Unity batch/CLI tests — user keeps the project open in the Editor
 alwaysApply: true
 ---
 
 # Unity tests — Editor open (no CLI batch runs)
 
-Implementation and tests live in **griddungeon-game**. The user typically has that Unity project **open in the Editor**. **Do not** run automated Unity tests from the terminal for now.
+The user typically has **this Unity project open** in the Editor. **Do not** run automated tests from the terminal for now.
 
 ## Do not run
 
-- `Unity.exe -batchmode … -runTests` against `griddungeon-game`
-- `griddungeon-game/Tools/ci-compile.ps1` (same `projectPath` lock)
-- Any shell command that opens the same Unity `projectPath` while the user may be editing
+- `Unity.exe -batchmode … -runTests`
+- `Tools/ci-compile.ps1` (same `projectPath` lock as tests)
+- Any shell/CI invocation that opens the same `projectPath` for Edit Mode or Play Mode tests
+
+Batch mode fails with *"another Unity instance is running with this project open"* and fights the user's session.
 
 ## Do instead
 
-1. **Ask the user** to run **Test Runner → Edit Mode** in the game repo — expand `Tests → <Domain> → <Fixture>` ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)).
-2. Give **manual Play Mode** steps when closing tickets (see `ticket-test-documentation.mdc`).
-3. **Editor open, compile check:** `griddungeon-game/Tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `griddungeon-game/Tools/read-unity-editor-log.ps1` (read-only; no second Unity instance). See `unity-compile-status-agent.mdc`.
+1. **Ask the user** to run tests in **Window → General → Test Runner → Edit Mode** — expand `Tests → <Domain> → <Fixture>` (or filter by category; see [Assets/Tests/README.md](../../Assets/Tests/README.md)).
+2. Provide a **manual Play Mode checklist** when the ticket needs it (see `ticket-test-documentation.mdc`).
+3. You may still **author or fix** test code under `Assets/Tests/`; verification is via the user's Test Runner, not agent-launched Unity.
+4. **Editor open, compile check:** `Tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `Tools/read-unity-editor-log.ps1` (read-only `Editor.log` tail — no second Unity instance). See `unity-compile-status-agent.mdc`.
 
 ## Exceptions
 
-- User explicitly requests CLI tests or `Tools/ci-compile.ps1` **and** confirms the Unity project is **not** open in the Editor.
-- Do not invent test results; rely on user-reported or CI output.
+- User explicitly asks to run CLI/batch tests **or** `Tools/ci-compile.ps1` **and** confirms the Editor is **closed** on this project.
+- Non-Unity test commands that do not open this project (e.g. future `dotnet test` on a standalone test project) — only if the repo actually has them.
+
+## Reporting results
+
+Do not claim Edit Mode or Play Mode tests passed unless the user reported green runs or CI output you were given.
