@@ -1,0 +1,118 @@
+---
+description: Grid Dungeon C# type suffix patterns — View, Presenter, Coordinator, Core simulators, etc.
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# C# class suffix patterns (Grid Dungeon)
+
+Authority: [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md), [05-class-design](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/05-class-design.md), [unity-csharp-naming](unity-csharp-naming.mdc), [unity-core-campaign-assembly](unity-core-campaign-assembly.mdc).
+
+**C# types:** PascalCase suffix = role. **UXML/USS:** BEM kebab-case — not these suffixes.
+
+## Assembly → suffix
+
+| Assembly | Use suffix | Avoid |
+|----------|----------|-------|
+| **Core** | `*Calculator`, `*Resolver`, `*Rules`, `*Builder`, `*Catalog`, `*Data`, `*Executor`, `*Evaluator` | `MonoBehaviour`, `*View`, `*Presenter`, campaign switches |
+| **Campaign** | `*Rules`, `*Resolver`, `*Catalog`, `*Ids` | Growing Core with stratum logic |
+| **Runtime** | `*Controller`, `*System`, `*Service`, `*Coordinator`, `*Host`, `*Factory`, `*Presenter`, `*Definition` | UI Toolkit bind logic |
+| **UI** | `*View`, `*Presenter`, `*Handler`, `*Picker`, `*Navigator`, `*Support`, `*Transition`, `*Builder`, `*Adapter` | Core simulators |
+| **Tests** | `*Tests` under `Assets/Tests/<Domain>/` | `public *ForTests` without `internal` + `InternalsVisibleTo` |
+
+## Locked distinctions (do not merge)
+
+### `*View` (UI Toolkit bind layer)
+
+- Owns **UXML queries**, BEM class toggles, labels/stats refresh on a **known tree**.
+- May be plain C# (no `MonoBehaviour`) when parent presenter owns `UIDocument`.
+- **Not** for types that only route keyboard focus with no markup (`TargetSelectionView` — rename tracked [#343](https://github.com/miramocha/griddungeon-game/issues/343)).
+
+### `*Presenter` (overlay / service lifecycle)
+
+- Owns **`UIDocument`**, `sortingOrder`, show/hide, `IsSettling`, often `CentralizedUiPresenterBase` + `ICentralizedUiSurface`.
+- Cross-phase services: `InputHintPresenter`, `ItemListInventoryPresenter`, `CommandRailPresenter` — see [centralized-ui-services](centralized-ui-services.mdc).
+
+### `*ReactivePresenter` (motion only — not overlay presenter)
+
+- Subscribes to controller/system events; runs **DOTween** beats + `IPresentationGate` lock.
+- **No** `UIDocument`; held by phase `*HudView`.
+- Examples: `CombatHudReactivePresenter`, `HubHudReactivePresenter`, `ExplorationHudReactivePresenter`.
+- Do **not** use for centralized overlay lifecycle — that stays `*Presenter`.
+
+### `*Coordinator` vs `*Host`
+
+| Suffix | Owns | Example |
+|--------|------|---------|
+| `*Coordinator` | One modal/pick **flow** (catalog → open → outcome) | `SkillPickerCoordinator`, `PartyMenuCoordinator` |
+| `*Host` | Phase wiring: coordinator + controller + input contract | `CombatSkillPickerHost`, `CombatItemPickerHost` |
+
+Pattern: **Host holds Coordinator**; phase HUD does not embed both roles in one type.
+
+### `*Controller` vs `*PhaseController`
+
+| Suffix | Scope |
+|--------|--------|
+| `*PhaseController` | Macro `GamePhase` enter/exit (`IPhaseController`) |
+| `*Controller` | Subsystem authority for a mode (`CombatController`, `HubController`, `DungeonExplorer` uses no suffix) |
+
+Do **not** use `*Controller` on internal focus helpers — prefer `*Focus` / `*Navigator` (`FormationGridFocusController` is internal only; public surface is `PartyFormationGridFocus`).
+
+### `*Picker` vs `*ToolkitView` vs `*View`
+
+| Suffix | Role |
+|--------|------|
+| `*Picker` | Keyboard/grid **selection** over roster or list (may wrap `*Focus`) | `PartyFormationGridTargetPicker`, `FieldItemCharacterPicker` |
+| `*ToolkitView` | Tabbed-picker **keyboard contract** (`ITabbedRowPickerKeyboardView`, etc.) | `SkillUsePickerToolkitView` |
+| `*View` | General UITK panel bind | `ItemListPickerView` |
+
+Thin domain wrappers (`HubHospitalCharacterPicker`, `FieldItemCharacterPicker`) delegate to shared `PartyFormationGridCharacterPicker` — OK; do not fork grid nav.
+
+### Core: `*Rules` vs `*Calculator` vs `*Resolver`
+
+| Suffix | Question it answers |
+|--------|---------------------|
+| `*Rules` | **Allowed?** Eligibility, validation, classification | `GuildPartyRules`, `CombatValidTargetRules` |
+| `*Calculator` | **What list/value?** Formula or filter from state | `ValidTargetCalculator`, `DamageCalculator` |
+| `*Resolver` | **Which outcome?** Multi-step pick from inputs | `ActionResolver`, `FloorExitResolver` |
+
+`ValidTargetCalculator` builds targets; `CombatValidTargetRules` classifies a list for UI — keep both.
+
+### Runtime: `*Service` vs `*System`
+
+| Suffix | Role |
+|--------|------|
+| `*Service` | Stateless or short **use-case** API (hub shop/heal, field item use) | `InnService`, `FieldItemUseService` |
+| `*System` | Long-lived **subsystem** state or scene service | `MapSystem`, `FoeSystem`, `SaveSystem` |
+
+Multiple `*Service` types may share one file (e.g. `HubServices.cs`) — prefer one type per file for new code.
+
+### Other UI / runtime
+
+| Suffix | Role |
+|--------|------|
+| `*InputHandler` | Input System → view/coordinator (`CombatInputHandler`) |
+| `*Transition` | DOTween show/hide helper on `VisualElement` (`SlideTransition`) |
+| `*Support` | Static shared UI chrome helpers (`CommandPanelModalSupport`) |
+| `*Builder` | Assemble rows/panels/copy from data (UI or presentation) |
+| `*Adapter` | Bridge two picker/list APIs |
+| `*Definition` | ScriptableObject content asset (`SkillDefinition`) |
+| `*Factory` | Construct domain/runtime models (`CombatantFactory`) |
+
+## New type checklist
+
+1. **Which assembly?** — [unity-core-campaign-assembly](unity-core-campaign-assembly.mdc)
+2. **Touches UXML?** — `*View` or `*Presenter`; if neither, not `*View`
+3. **Cross-phase `UIDocument`?** — `*Presenter` + centralized service rules
+4. **Only tweens on existing HUD?** — `*ReactivePresenter` on phase view, not new overlay
+5. **Orchestrates pick flow without tree?** — `*Coordinator` or `*Picker`, not `*View`
+6. **Pure math/eligibility?** — Core `*Calculator` / `*Rules` / `*Resolver`
+7. **File ≤300 lines target** — split before new suffix soup on one type ([unity-csharp-file-size-limits](unity-csharp-file-size-limits.mdc))
+
+## PR review — reject
+
+- New `*View` with no `VisualElement` / UXML bind responsibility
+- Second centralized overlay strip (use `InputHints` / existing presenter)
+- `*Controller` on UI focus/nav helper (use `*Focus`, `*Navigator`, `*Picker`)
+- Core type named `*View` or `*Presenter`
+- Duplicating `ValidTargetCalculator` logic in UI for “convenience”

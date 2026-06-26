@@ -21,7 +21,7 @@ Derived from [tech notes](04-tech-notes.md), [release scope](00-release-scope.md
 
 Phase diagrams, exploration/combat sequences, and Enter/Exit checklists: **[game phase](02-systems/game-phase.md)**.
 
-**Cursor rules:** Shared Unity principles from `griddungeon-game` (hard-linked under [`.cursor/rules/`](../.cursor/rules/)); architecture-specific mapping in [`architecture-design-principles.mdc`](../.cursor/rules/architecture-design-principles.mdc).
+**Cursor rules:** Shared Unity principles from `griddungeon-game` (hard-linked under [`.cursor/rules/`](../.cursor/rules/)); architecture-specific mapping in [`architecture-design-principles.mdc`](../.cursor/rules/architecture-design-principles.mdc). **Type suffix patterns** (`*View`, `*Presenter`, `*Coordinator`, Core simulators): [class naming patterns](04-dev/class-naming-patterns.md) + [`unity-csharp-class-suffix-patterns.mdc`](../.cursor/rules/unity-csharp-class-suffix-patterns.mdc).
 
 ---
 
