@@ -5,13 +5,14 @@ alwaysApply: true
 
 # Clean code principles (Unity style guide)
 
-From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Complements `unity-csharp-naming`, `unity-csharp-language`, `unity-csharp-formatting`, `unity-csharp-comments`, and `unity-common-pitfalls`.
+From [Unity's C# style guide](https://unity.com/resources/c-sharp-style-guide-unity-6). Complements `unity-csharp-naming`, `unity-csharp-language`, `unity-csharp-formatting`, `unity-csharp-comments`, `unity-csharp-file-size-limits`, and `unity-common-pitfalls`.
 
 ## Single responsibility (SRP)
 
 **Keep classes short.** Each module, class, or method should have **one reason to change** — one clear job.
 
-- Split by concept, not by file size alone: a Pong-style game gets `Paddle`, `Ball`, `Wall` — not one `GameManager` that moves paddles, bounces the ball, draws UI, and plays audio.
+- Split by concept first; **file length is a hard signal** — see [`unity-csharp-file-size-limits`](unity-csharp-file-size-limits.mdc) (≤300 target, >500 forbidden).
+- A Pong-style game gets `Paddle`, `Ball`, `Wall` — not one `GameManager` that moves paddles, bounces the ball, draws UI, and plays audio.
 - When a `MonoBehaviour` accumulates unrelated duties (input, scoring, VFX, save/load), **extract types** instead of growing sections or adding `#region` (see `unity-csharp-formatting` class organization).
 - Apply SRP to methods too: if a function name needs "And" in the middle, consider a second function or class.
 
