@@ -101,6 +101,17 @@ Orthogonal to grid `H` / `E` interact exits ([`FloorExitLink[]`](#multi-exit-mar
 
 Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (CI / regression — not in Floor Editor window).
 
+## TileWorldCreator (planned)
+
+**Epic:** [game #344](https://github.com/miramocha/griddungeon-game/issues/344). **No Phase 1 Floor Editor UI changes** — designers keep painting layout, elevation, FOE, and events as today. TWC builds FPV meshes at **runtime** from the saved `ExplorationFloor` asset.
+
+| Phase | Floor Editor impact |
+|-------|---------------------|
+| Phase 0–1 | None required — **FPV Preview** still opens legacy `FloorArtPreviewMenus` path |
+| Phase 2 (optional) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy may clarify blocky/ground mode vs TWC strata |
+
+Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes until legacy path removed ([#347](https://github.com/miramocha/griddungeon-game/issues/347)). See [floor-art-fpv.md — TWC runtime path](floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344).
+
 ## Not the same as
 
 | Item | What it is |
