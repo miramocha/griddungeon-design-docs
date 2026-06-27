@@ -17,7 +17,7 @@
 | Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
 | Save | `JsonUtility` or custom serializer at launch; ScriptableObjects for content DB |
 
-Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`).
+Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`). **TileWorldCreator v4** (planned FPV floor art — [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344)): import under `Assets/` or `Packages/`; Runtime adapter in `FloorArt/Twc/` references `GiantGrey.TileWorldCreator` only from `GridDungeon.Runtime` — not Core.
 
 ## Shaders (Shader Graph�first)
 
@@ -89,7 +89,7 @@ GameState (composition root)
 +-- HubServices          � explorers guild, navigator office, shop, hospital, inn save
 +-- DungeonExplorer      � grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp � see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
 +-- ExplorationGridMetrics (Core) � `WorldUnitsPerCell` (10), corner?world math shared with floor art
-+-- FloorArtPresenter    � load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102))
++-- FloorArtPresenter    � load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); TWC branch `FloorArtTwcBuilder` when stratum flag on ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
 +-- DungeonView          � FPV mount / visibility (hidden during combat); per-cell blobber deferred
 +-- CombatScenePresenter � battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 +-- MapSystem            � auto-reveal layer, fog, read-only UI
@@ -219,7 +219,7 @@ command-rail | center column (log-preview ? enemy ? arena-spacer ? synchro) + Pa
 
 - **Left rail** � `combat-hud__command-rail` ? `command-panel` (vertical column, centered in rail). Button order: Attack ? � ? Flee ? **Back** (DOM matches focus navigator).
 - **Top center** � `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** � no MP on enemies).
-- **Bottom center** � `synchro-bar` in center column (**Protocol** when Synchro 100% � `C` / LMB); party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
+- **Bottom center** � `synchro-bar` in center column (**Protocol** when Synchro 100% � `C` / LMB); party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
 - **Log** � `combat-log-preview-row` (round + one line; no Log button); modal via **`V`** or preview click; title + scroll only; close via **`V`**, **`X`** / Back (`TryBack` � log before pickers), or backdrop click (not scroll).
 - **Centralized UI services** � cross-phase `UIDocument` overlays (`InputHintPresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** � bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
 - **Right rail** � `turn-order-strip` vertical flat AGI queue (top ? bottom = soonest ? latest).

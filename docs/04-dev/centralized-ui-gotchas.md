@@ -17,6 +17,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Wiring presentation bus shells / projectors | Read [presentation-shell-gotchas](presentation-shell-gotchas.md) — apply [presentation-shell.mdc](../../.cursor/rules/presentation-shell.mdc) |
 | Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
+| Hover / click dead on a lower `UIDocument` (keyboard still works) | Read **Pointer dead — `sortingOrder` + `PickingMode`** — verify stack table + pass-through on full-screen chrome |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 
 ---
@@ -155,6 +156,48 @@ Do not bypass with hand-rolled delays or USS `transition-duration`. New animated
 **Cause:** `CloneTree` of service UXML into phase HUD, or `worldBound` / `GeometryChangedEvent` sync across two `UIDocument` roots.
 
 **Rule:** Phase views call facades (`ItemListInventory.OpenBag`, `SetHubShopMode`, …). Modal position comes from **USS** (`tabbed-picker--rail-offset`, full-bleed overlay), not reparenting. Review smell table: [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc).
+
+---
+
+## Pointer dead — `sortingOrder` stack + `PickingMode` pass-through
+
+**Symptom:** Mouse **hover** and **LMB** do nothing on a `UIDocument` below another panel — **keyboard** navigation / confirm on the same control still works. Often one surface in the stack works (e.g. enemy roster in combat HUD) while a sibling document does not (e.g. ally slots on `PartyFormationFloater`).
+
+**Cause (layered — check both):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Higher `sortingOrder` wins picks first** | UITK routes pointer events to the **topmost** panel at that screen position. A full-screen phase HUD (`CombatHud` **20**) above the party floater (**10**) intercepts hits before the lower document is tested. |
+| **Transparent chrome still picks** | Default `PickingMode.Position` on `position: absolute; left/right/top/bottom: 0` roots and flex **spacers** (`combat-hud__arena-spacer`) blocks clicks even when visually empty. Enemy slots inside the HUD still work; content on a **lower** document does not. |
+| **Handler / coordinator red herring** | Keyboard uses `MenuFocusNavigator` / `TryConfirm()` — no hit-test. A broken `m_onPointerConfirm` looks like “click dead” but **hover also dead** usually means **picking**, not confirm wiring. |
+| **Wrong document owns the grid** | Party combat roster is on **`PartyFormationFloater`**, not `CombatHud` UXML. Debugging only `CombatHudView` misses the floater document. |
+
+**Reference stack (launch):** [centralized UI services § `sortingOrder` stack](centralized-ui-services.md#sortingorder-stack-at-launch) — e.g. floater **10**, `CombatHud` **20**, command rail **25**, skill/item pickers **200**.
+
+**Fix (shipped — combat ally targeting, ADR 026 pointer parity):**
+
+1. **Confirm stack** — list every `UIDocument` that overlaps the interactive region; note each presenter’s `sortingOrder` constant. If the interactive surface is **below** opaque or full-bleed chrome, either **raise** its sort while active (formation edit uses **260**) or pass picks through the blocker.
+2. **Pass-through ambient chrome** — on full-screen / spacer nodes that should not steal input: `pickingMode = PickingMode.Ignore`. Re-enable `PickingMode.Position` only on **interactive** descendants (roster slots, log preview row, synchro bar when actionable).
+3. **Lower document hygiene** — `PartyFormationFloaterPresenter` sets document root + floater shell + grid mount to `Ignore`; `PartyFormationGridView` sets `Position` per slot when targetable (`IsSlotClickable`).
+4. **Do not “fix” with handler-only patches** when hover is also dead — fix hit-test first, then verify `PartyFormationGridPointerCoordinator` claim / confirm handlers.
+
+```csharp
+// ❌ BAD — full-screen combat HUD root blocks party floater (sort 10) underneath
+// Default PickingMode.Position on combat-hud + arena-spacer
+
+// ✅ GOOD — ambient chrome ignores picks; interactive children opt in
+documentRoot.pickingMode = PickingMode.Ignore;
+combatHud.pickingMode = PickingMode.Ignore;
+arenaSpacer.pickingMode = PickingMode.Ignore;
+logPreviewRow.pickingMode = PickingMode.Position;
+// Enemy slots: CombatRosterView.ApplySlotPickingMode when targetable
+```
+
+**Shipped in:** `CombatHudView.ConfigurePassThroughPicking`, `PartyFormationFloaterPresenter.ConfigurePassThroughPicking`.
+
+**Tests:** `TargetSelectionViewTests` (ally pointer confirm after planning handoff); manual F3 — medic heal → hover + LMB on ally; enemy mouse targeting regression.
+
+**Rule for new cross-document pointer (ADR 026):** When adding hover = focus / LMB = confirm on a centralized surface, **double-check `sortingOrder`** against overlapping phase HUDs and set **pass-through picking** on non-interactive full-bleed nodes. If mouse is dead but keyboard works, suspect stack + `PickingMode` before coordinator handlers.
 
 ---
 
@@ -410,3 +453,4 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 | Agent review smells (embed/dock) | [centralized-ui-services.mdc](../../.cursor/rules/centralized-ui-services.mdc) |
 | Floor transition + map panel fade timing | [authoring-floor-transition-beats.md § Screen fade](authoring-floor-transition-beats.md#screen-fade-uitk) |
 | **Gotchas (this page)** | **Here** |
+| Pointer / `sortingOrder` / `PickingMode` pass-through | [§ Pointer dead](#pointer-dead--sortingorder-stack--pickingmode-pass-through) |

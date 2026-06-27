@@ -13,7 +13,7 @@ Clean code is **deliberate teamwork**, not accident. Unclean code still happens 
 | Smell | What to check | See |
 |-------|----------------|-----|
 | **Enigmatic naming** | Names should state intent without a comment | `unity-csharp-naming` |
-| **Needless complexity** | God types, long methods, over-anticipating future needs | Split into focused classes — SRP in `unity-clean-code-principles` |
+| **Needless complexity** | God types, long methods, over-anticipating future needs | Split into focused classes — SRP in `unity-clean-code-principles`; line caps in `unity-csharp-file-size-limits` |
 | **Inflexibility** | One small change forces edits everywhere | Often multiple responsibilities on one type — SRP |
 | **Fragility** | Tiny change breaks unrelated systems | Hidden coupling; missing tests; shared mutable state |
 | **Immobility** | Code cannot be reused without dragging many dependencies | Inject or narrow interfaces; decouple from scene singletons |

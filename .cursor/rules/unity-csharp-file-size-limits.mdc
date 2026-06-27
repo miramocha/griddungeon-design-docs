@@ -1,0 +1,53 @@
+---
+description: C# file length caps — split before monoliths (agent context + SRP)
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# C# file size limits
+
+Grid Dungeon targets **modular agent context** (~32k tokens ≈ **2,100 lines** of dense C#). Monolithic files block review, search, and local inference slices.
+
+**Epic:** [griddungeon-game #341](https://github.com/miramocha/griddungeon-game/issues/341)
+
+## Caps (`Assets/Scripts/**/*.cs`)
+
+| Threshold | Action |
+|-----------|--------|
+| **≤300 lines** | Default target for new types |
+| **301–400 lines** | OK if single responsibility; do not add unrelated features |
+| **401–500 lines** | **Stop and split** before landing new behavior — extract helper, presenter, or `partial` |
+| **>500 lines** | **Forbidden** for new/edited first-party code except documented Editor exception below |
+| **>800 lines** | **Forbidden** everywhere — split required before merge |
+
+**Editor tools** (`Assets/Scripts/Editor/**`): soft cap **800 lines**; still split by panel/tool domain when practical.
+
+**Tests** (`Assets/Tests/**`): prefer **≤400 lines** per fixture; extract shared builders to `GridDungeon.TestShared`.
+
+## Agent / PR rules
+
+1. **Do not create** a new `.cs` file expected to exceed **300 lines** — sketch seams first (shell vs presenter vs coordinator).
+2. **Do not append** large features to a file already **>400 lines** — extract first, then implement.
+3. **No `#region` as a split substitute** — extract a real type or `partial` file ([`unity-csharp-formatting`](unity-csharp-formatting.mdc)).
+4. **Prefer existing homes** — presenters under `UI/Views/`, simulators in `Core/`, phase logic in `*PhaseController`, Editor panels beside domain folder.
+5. **Touching a legacy god file** — budget a split in the same PR or file a child of #341; do not grow line count without team intent.
+
+## Split patterns (prefer in order)
+
+| Pattern | When |
+|---------|------|
+| **Extract presenter / coordinator** | `MonoBehaviour` mixes bind, input, and layout |
+| **`partial class`** | One public type, file-per-concern (e.g. `Foo.Wiring.cs`) |
+| **Static helper** | Pure formatting, catalog build, focus rules |
+| **Interface + host** | Cross-phase contracts (`ICombatSkillPickerHost`, `IPartyFormationKeyboardView`) |
+
+Respect asmdef boundaries — `Core` never references `Runtime` or `UI` ([`unity-core-campaign-assembly`](unity-core-campaign-assembly.mdc)).
+
+```csharp
+// ❌ BAD — 200 lines added to HubHudView for hospital picker
+// ✅ GOOD — HubHospitalCharacterPicker + thin bind in HubHudView
+```
+
+## Review smell
+
+File name contains **And** duties (`OverlayView` doing menu + bag + formation + hints) → split before next ticket.
