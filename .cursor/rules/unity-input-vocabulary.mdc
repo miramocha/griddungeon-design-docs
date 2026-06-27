@@ -18,7 +18,7 @@ Hub, combat command UI, party menu, and tabbed pickers share one vocabulary. Whe
 | Tab cycle | `Q` / `E` | LMB on tab chip | `*TabPrev` / `*TabNext` (scoped) |
 | Menu / pause | `Tab` / `Esc` | — | `PartyMenu` / `Pause` |
 
-**Mouse:** LMB on UITK `Button` = instant activate. `Z` = focus-then-confirm on same control. Combat LMB on command/target = instant queue (ADR 026).
+**Mouse:** LMB on UITK `Button` = instant activate. `Z` = focus-then-confirm on same control. Combat focus-nav: **hover** shares highlight with keyboard; LMB on command/target = instant queue ([ADR 026 amendment](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/026-combat-menu-focus-navigation.md#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)).
 
 ## Exploration FPV exception
 

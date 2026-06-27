@@ -24,12 +24,12 @@ Product direction: **cursor navigation** on the command bar (and target list dur
 | **`Esc`** | **Pause** in any combat phase when pause UI ships ([ADR 015](015-mvp1-combat.md)); **no-op** until then |
 | **`R`** | **Dropped** for Back (no alias) |
 
-**Mouse:** LMB on a command or valid target **queues immediately** (today’s behavior). Keyboard focus is **independent** — clicks do not move the keyboard cursor.
+**Mouse:** LMB on a command or valid target **queues immediately** (no second confirm step). On focus-nav surfaces, **pointer hover** shares the same highlight index as keyboard focus ([amendment (2026-06)](#amendment-2026-06--pointer-parity-menu-surfaces-within-combat), [ADR 009 amendment](009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary)).
 
 ### Command planning (round start)
 
 1. **Formation order:** `PartyCommandBatch.FirstUnassigned` walks `coreSlots`; highlight auto-advances to the next living core without a command ([#58](https://github.com/miramocha/griddungeon-game/issues/58)).
-2. **No roster keyboard:** player does not arrow-select cores on the party strip. Mistakes use **`X`** / **Back button** (LIFO undo) or mouse re-select when [#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up wires LMB.
+2. **No roster arrow-nav during planning:** player does not **`W`/`A`/`S`/`D`**-select cores on the party strip; formation order still auto-advances ([#58](https://github.com/miramocha/griddungeon-game/issues/58)). Mistakes use **`X`** / **Back button** (LIFO undo). **Pointer** hover / LMB on a living core may **re-select** that core for planning or refresh the skill picker when Skill flow is active ([amendment (2026-06)](#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)).
 3. **Command bar focus:** default **Attack** when planning opens for a core. Focus order skips disabled/hidden entries (Flee off, etc.). Items include **Attack, Guard, Skill, Item, Flee, Back button**.
 4. **`Z` on focused command** queues that command (or enters targeting when required).
 5. **Back button** is focusable; **`Z`** on it runs the same logic as **`X`** when Back applies (see below).
@@ -52,7 +52,7 @@ After **Attack** or single-target **Skill** requires a target:
 3. **Arrow keys** or **`W` / `A` / `S` / `D`** move target highlight among valid slots only (same mapping as command bar).
 4. **`Z`** confirms the highlighted target, sets `TargetId`, queues the command, advances planning.
 5. **`X`** or **Back button** (or **`Z`** on focused **Back button**) cancels targeting only.
-6. **LMB** on a valid slot confirms immediately (no **`Z`**).
+6. **LMB** on a valid slot confirms immediately (no **`Z`**). **Pointer hover** on a valid slot moves target highlight to match keyboard focus ([amendment (2026-06)](#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)).
 
 ### Protocol
 
@@ -91,6 +91,30 @@ Hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), 
 **Implementation:** [game #80](https://github.com/miramocha/griddungeon-game/issues/80) — add four composite parts to `Combat.MenuNavigate` in `GridDungeon.inputactions`; `CombatInputHandler` unchanged if it already reads `Vector2` from `MenuNavigate`.
 
 **Rebind note:** When settings rebind ships, `W`/`A`/`S`/`D` and arrows may be remapped independently unless product chooses a single “menu navigate” binding group.
+
+## Amendment (2026-06) — Pointer parity (menu surfaces within combat)
+
+**Motivation:** [ADR 009 amendment (2026-06)](009-input-bindings-pc.md#amendment-2026-06--universal-ui-vocabulary) locks **hover = navigate/focus** and **LMB = confirm** for menu surfaces. Combat shipped with LMB **instant queue** on commands and targets (no extra **`Z`**), but an older note in this ADR said keyboard focus was fully **independent** of mouse — that blocked parity on pickers, target grids, and command-rail hover. Align combat **focus-nav** surfaces with the universal vocabulary while keeping **one-shot** LMB outcomes on commands and targets.
+
+**Decision:**
+
+| Surface | Pointer hover | LMB | Keyboard equivalent |
+|---------|---------------|-----|---------------------|
+| **Command bar** (`Button`s) | Moves focus highlight | **Instant** activate (= **`Z`** on focused item) | Arrows / WASD + **`Z`** |
+| **Target list** (enemy roster + party grid, Path B) | Moves focus highlight among **valid** slots only | **Instant** confirm (= **`Z`** on focused target) | Arrows / WASD + **`Z`** |
+| **Skill / item picker rows** (modal) | Moves row focus | Confirm row (= **`Z`**) | Arrows / WASD + **`Z`**; **`Q`/`E`** tabs unchanged ([ADR 035](035-skill-use-picker.md)) |
+| **Planning party grid** (optional) | Moves highlight on living cores | Re-select core; when Skill picker open or Skill command focused, open/refresh picker for that actor | No arrow-nav on roster strip — undo still **`X`** / Back (LIFO) |
+
+**Clarifications (locked):**
+
+1. **Shared focus index** — keyboard and pointer use one `MenuFocusNavigator` (or grid picker) index on focus-nav surfaces. “Independent” in the 2026-05-23 text meant **LMB does not require a second confirm after hover**, not that mouse and keyboard never share highlight state.
+2. **Instant queue unchanged** — LMB on a command or valid target still queues in **one click**; hover does not add a confirm step.
+3. **Disabled / invalid slots** — pointer hover and click are no-ops (same as keyboard skip rules); invalid targets use non-pickable chrome during Path B.
+4. **Out of scope** — Protocol synchro bar (**`C`** / LMB one-shot), exploration movement, map pan/zoom, battle-log toggle (**`V`**), dev HUD.
+
+**Implementation:** `MenuFocusPointerHover`, `MenuFocusNavigator.SetItems`, `CommandRailButtonRowInput`, `PartyFormationGridTargetPicker` / `EnemyFormationGridTargetPicker`, `CombatPlanningPartyPicker`, `WindowedListPaneView` / `ItemListPickerView` pointer activate. Dev reference: [shared menu & picker UI](../docs/04-dev/shared-menu-picker-ui.md).
+
+**Tests:** extend Edit Mode coverage — `TargetSelectionViewTests`, `CombatPlanningPartyPickerTests`, `MenuFocusNavigatorTests`, `ItemListPickerViewTests`; Play Mode — command bar hover+click, target hover+click, skill picker row click, planning roster click when Skill flow open.
 
 ## Consequences
 

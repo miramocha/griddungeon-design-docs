@@ -18,7 +18,7 @@ Bindings use **Unity 6** + **Input System** (`com.unity.inputsystem`) action map
 
 **Gamepad-ready clustering:** new binds should prefer **`WASD`**, face row **`Z` / `X` / `C` / `V`**, and **`Q` / `E`** ([§ Gamepad-ready layout](#gamepad-ready-keyboard-layout-deferred-implementation)). **`V`** = combat log. **`C`** = expanded-map autopilot. **`Tab` / `Esc`** → **Menu** / **Options**; **`M`** → **View** (Xbox) / **touchpad click** (DualSense). No **`Space`** / **`Enter`** in `GridDungeon.inputactions` — use **`Z`**. Full PC vs pad table: [§ PC vs console reference](#pc-vs-console-reference-locked-intent).
 
-**Mouse parity:** UITK `Button` controls activate on **LMB** without an extra `Z`. Keyboard **`Z`** is the **focus-then-confirm** path on the same control. LMB on a combat command or valid target still **instant-queues** (no extra confirm) per [ADR 026](../../decisions/026-combat-menu-focus-navigation.md).
+**Mouse parity:** UITK `Button` controls activate on **LMB** without an extra `Z`. Keyboard **`Z`** is the **focus-then-confirm** path on the same control. Combat focus-nav surfaces share **hover highlight** with keyboard focus; LMB on a command or valid target still **instant-queues** (no extra confirm) per [ADR 026](../../decisions/026-combat-menu-focus-navigation.md) ([2026-06 pointer amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)).
 
 ### Overlay ownership
 
@@ -121,12 +121,13 @@ Map does not capture `W/A/S/D` while fullscreen unless focus explicitly on map-o
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
-| **Command** | LMB on bar button | **Instant** queue (no extra `Z`) — keyboard cursor unchanged |
+| **Move focus** | Hover command button | Shares highlight with keyboard focus ([ADR 026 amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)) |
+| **Command** | LMB on bar button | **Instant** queue (no extra `Z`) |
 | **Back button** | LMB | Same as `X` when enabled |
 
 **Command bar items (focus order):** Attack → Guard → Skill → Item → Flee → **Back button**. Default focus when a core’s planning starts: **Attack**. Skip disabled/hidden entries.
 
-**Planning flow:** One command per living core in **formation order** ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)); auto-advance after each confirm. **No roster keyboard** — use **`X`** / **Back button** to LIFO undo ([game #61](https://github.com/miramocha/griddungeon-game/issues/61)). Roster LMB re-select ([#58](https://github.com/miramocha/griddungeon-game/issues/58) follow-up) optional.
+**Planning flow:** One command per living core in **formation order** ([game #58](https://github.com/miramocha/griddungeon-game/issues/58)); auto-advance after each confirm. **No roster arrow-nav** — use **`X`** / **Back button** to LIFO undo ([game #61](https://github.com/miramocha/griddungeon-game/issues/61)). **Pointer** hover / LMB on a living core may re-select that core or refresh the skill picker when Skill flow is active ([ADR 026 amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)).
 
 ### Protocol (Synchro 100%)
 
@@ -146,6 +147,7 @@ After **Attack** or single-target **Skill** ([#60](https://github.com/miramocha/
 
 | Action | Mouse | Notes |
 |--------|-------|-------|
+| **Move target focus** | Hover valid slot | Shares highlight with keyboard focus ([ADR 026 amendment](../../decisions/026-combat-menu-focus-navigation.md#amendment-2026-06--pointer-parity-menu-surfaces-within-combat)) |
 | **Pick target** | LMB on valid slot | Instant confirm ([#60](https://github.com/miramocha/griddungeon-game/issues/60), keyboard [#70](https://github.com/miramocha/griddungeon-game/issues/70)) |
 
 ### AGI turn phase (default at launch)
