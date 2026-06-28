@@ -276,7 +276,7 @@ Replace party only by forking `PartyFormationFloaterPresenter` or injecting a cu
 
 - Resolves `PartyFormationFloater.Grid` → `m_partyRoster` + `m_enemyRoster`; `SetCombatSlotClickHandler(OnRosterSlotClicked)` for planning/targeting.
 - Subscribes to `CombatController`: `OnQueueRebuilt`, `OnTurnStart`, `OnCommandTargetChanged`, `OnPartyCommandsChanged`, `OnTargetingChanged`, `OnActionResolved`, `BattleEnded`, etc.
-- `TargetSelectionView` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and `CombatRosterView` for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace party DOM, implement the same highlight/focus surface or fork `TargetSelectionView`.
+- `CombatTargetSelectionCoordinator` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and `CombatRosterView` for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace party DOM, implement the same highlight/focus surface or fork `CombatTargetSelectionCoordinator`.
 
 ### Combat events (party roster)
 
@@ -303,7 +303,7 @@ Full table: [UI event contract — Combat](ui-event-contract.md#combat-phase).
 | Approach | Notes |
 |----------|-------|
 | **Reskin slots** | Change `PartyFormationSlot.uss` or fork `PartyFormationSlotBinder` |
-| **Custom party panel only** | Replace `m_partyRoster` (`PartyFormationGridView`); keep `m_enemyRoster` + `TargetSelectionView` unchanged |
+| **Custom party panel only** | Replace `m_partyRoster` (`PartyFormationGridView`); keep `m_enemyRoster` + `CombatTargetSelectionCoordinator` unchanged |
 | **Full combat HUD fork** | Duplicate `CombatHudView` event subscriptions; must preserve acting-on-roster vs strip rule and stale-target styling at launch parity |
 
 Motion (HP lerp, hit flash, synchro bar): `CombatHudReactivePresenter` — optional to reuse or replace; does not change combat rules.
@@ -344,7 +344,7 @@ Manual: **F2** exploration with **F6** full guild party — strip shows six core
 3. In `CombatHudView`-equivalent bootstrap:
    - Pass `CombatController` into subscriptions.
    - On planning: `BindParty(state.CoreSlots, aux, PartyFormationBindOptions.Combat)`; call highlight setters when events fire.
-   - Wire `TargetSelectionView(partyRoster, enemyRoster, combat)` if keyboard targeting stays enabled.
+   - Wire `CombatTargetSelectionCoordinator(partyRoster, enemyRoster, combat)` if keyboard targeting stays enabled.
 4. Keep `CommandPanelView` + skill picker host unchanged — party roster is independent of ADR 035 modal.
 
 Manual: **F3** dev combat — acting highlight on **party roster** for core turns; **F9** for two-row enemy + party formation QA ([Assets/Scripts/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md)).
@@ -362,7 +362,7 @@ Manual: **F3** dev combat — acting highlight on **party roster** for core turn
 | `CombatRosterViewTests` | Enemy bind only |
 | `PartyFormationCoordinatorTests` | Core swap / move semantics |
 | `ExplorationPartyStripFormatterTests` | Status summary strings |
-| `TargetSelectionViewTests` | Roster focus + `CombatController` targeting |
+| `CombatTargetSelectionCoordinatorTests` | Roster focus + `CombatController` targeting |
 | `MapPartyMarkerPresenterTests` | Map glyph position |
 
 Prefer testing **highlight state** and **bind** through `PartyFormationGridView` public methods or Edit Mode UI harnesses.

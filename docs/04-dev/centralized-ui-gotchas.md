@@ -195,7 +195,7 @@ logPreviewRow.pickingMode = PickingMode.Position;
 
 **Shipped in:** `CombatHudView.ConfigurePassThroughPicking`, `PartyFormationFloaterPresenter.ConfigurePassThroughPicking`.
 
-**Tests:** `TargetSelectionViewTests` (ally pointer confirm after planning handoff); manual F3 — medic heal → hover + LMB on ally; enemy mouse targeting regression.
+**Tests:** `CombatTargetSelectionCoordinatorTests` (ally pointer confirm after planning handoff); manual F3 — medic heal → hover + LMB on ally; enemy mouse targeting regression.
 
 **Rule for new cross-document pointer (ADR 026):** When adding hover = focus / LMB = confirm on a centralized surface, **double-check `sortingOrder`** against overlapping phase HUDs and set **pass-through picking** on non-interactive full-bleed nodes. If mouse is dead but keyboard works, suspect stack + `PickingMode` before coordinator handlers.
 

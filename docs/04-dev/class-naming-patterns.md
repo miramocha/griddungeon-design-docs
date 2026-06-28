@@ -28,7 +28,7 @@ GridDungeon.Tests      → *Tests per domain folder
 |--------|----------------|----------|
 | `*PhaseController` | `IPhaseController` — macro phase enter/exit | `CombatPhaseController`, `ExplorationPhaseController` |
 | `*Controller` | Subsystem authority | `CombatController`, `HubController`, `GamePhaseController` |
-| `*Coordinator` | Wire views + services for one flow | `SkillPickerCoordinator`, `ExplorationMapCoordinator`, `PartyMenuCoordinator` |
+| `*Coordinator` | Wire views + services for one flow | `SkillPickerCoordinator`, `CombatTargetSelectionCoordinator`, `ExplorationMapCoordinator`, `PartyMenuCoordinator` |
 | `*Host` | Phase-owned modal/picker + input contract | `CombatSkillPickerHost`, `FieldSkillPickerHost` |
 | `GameState` | Composition root (exception — no suffix) | Scene refs, `RequestTransition` |
 
@@ -144,7 +144,6 @@ flowchart TD
 
 | Symbol | Issue | Target suffix |
 |--------|-------|----------------|
-| `TargetSelectionView` | [#343](https://github.com/miramocha/griddungeon-game/issues/343) | `CombatTargetSelectionCoordinator` |
 | `HubServices.cs` (multi-type file) | naming only | split or `HubServiceTypes.cs` |
 | `FormationGridFocusController` | internal; file `FormationGridFocus.cs` | keep internal |
 

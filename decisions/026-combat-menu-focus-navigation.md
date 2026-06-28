@@ -114,13 +114,13 @@ Hub service UI ([#13](https://github.com/miramocha/griddungeon-game/issues/13), 
 
 **Implementation:** `MenuFocusPointerHover`, `MenuFocusNavigator.SetItems`, `CommandRailButtonRowInput`, `PartyFormationGridTargetPicker` / `EnemyFormationGridTargetPicker`, `CombatPlanningPartyPicker`, `WindowedListPaneView` / `ItemListPickerView` pointer activate. Dev reference: [shared menu & picker UI](../docs/04-dev/shared-menu-picker-ui.md).
 
-**Tests:** extend Edit Mode coverage — `TargetSelectionViewTests`, `CombatPlanningPartyPickerTests`, `MenuFocusNavigatorTests`, `ItemListPickerViewTests`; Play Mode — command bar hover+click, target hover+click, skill picker row click, planning roster click when Skill flow open.
+**Tests:** extend Edit Mode coverage — `CombatTargetSelectionCoordinatorTests`, `CombatPlanningPartyPickerTests`, `MenuFocusNavigatorTests`, `ItemListPickerViewTests`; Play Mode — command bar hover+click, target hover+click, skill picker row click, planning roster click when Skill flow open.
 
 ## Consequences
 
 - **Breaking change** for players used to `Z`/`X`/`C`/`V`/`B` direct commands and `R`/`Esc` Back.
 - **Combat HUD** labels: remove per-button `(Z)` hints; show global **Z Confirm · X Cancel · Esc Pause**.
-- **Tests:** Edit Mode for navigator (`MenuFocusNavigatorTests`), command bar (`CommandPanelViewTests`), target list (`TargetSelectionViewTests`, `CombatPlayerCommandGateTests`); Play Mode checklist for planning, targeting Path B, LIFO, mouse instant queue. `CombatInputHandlerTests` removed — routing covered by panel/gate fixtures per [unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc).
+- **Tests:** Edit Mode for navigator (`MenuFocusNavigatorTests`), command bar (`CommandPanelViewTests`), target list (`CombatTargetSelectionCoordinatorTests`, `CombatPlayerCommandGateTests`); Play Mode checklist for planning, targeting Path B, LIFO, mouse instant queue. `CombatInputHandlerTests` removed — routing covered by panel/gate fixtures per [unity-input-system-editmode-tests](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/rules/unity-input-system-editmode-tests.mdc).
 - **Gamepad (later):** map [gamepad-ready layout](../docs/02-systems/input-bindings.md#gamepad-ready-keyboard-layout-deferred-implementation) — **`Z`/`X`/`V`** → A/B/Y; combat log on **`V`**; **`Tab`/`Esc`** → **Start**; map **`M`** → **View** / **Select** (locked).
 
 ## Related
