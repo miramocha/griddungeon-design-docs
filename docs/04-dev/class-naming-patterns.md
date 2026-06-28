@@ -170,6 +170,46 @@ Do **not** treat these as patterns to copy for new code.
 - Target **≤300 lines**; split by suffix before god class ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
 - Namespace mirrors folders: `GridDungeon.UI.Views`, `GridDungeon.Core.Simulators`.
 
+### Partial class file naming (locked)
+
+When a type exceeds file caps, prefer **`partial class`** over `#region` or a second public type. **Do not** invent new C# type names for orchestration slices — one public type, multiple files.
+
+**Pattern:** `{TypeName}.{Concern}.cs` — PascalCase concern segment after the dot.
+
+| Layer | Concern suffix = | Examples |
+|-------|------------------|----------|
+| **Runtime `*Controller`** | Loop / orchestration **seam** (planning → turn → dispatch → round-end) | `CombatController.Planning.cs`, `CombatController.TurnDriver.cs`, `CombatController.ActionDispatch.cs`, `CombatController.RoundEnd.cs` ([#352](https://github.com/miramocha/griddungeon-game/issues/352)) |
+| **UI `*Presenter` / `*Coordinator`** | Screen, overlay, or chrome **feature** | `ItemListInventoryPresenter.Combat.cs`, `ExplorationMapCoordinator.Autopilot.cs` |
+| **Editor tools** | Content or panel **domain** | `ContentDatabaseAuthoring.Skills.cs` |
+
+**Host file (`{TypeName}.cs`)** — keep in the primary file only:
+
+- `[SerializeField]` and shared instance fields
+- Public properties, events, and stable public API
+- Lifecycle entry points callers depend on (`StartBattle`, `OnEnable`, `Show`, …)
+- Target **≤500 lines** for edited Runtime controllers ([#341](https://github.com/miramocha/griddungeon-game/issues/341))
+
+**Partial files** — private implementation for one seam; no duplicate fields; each file **≤400 lines** when practical.
+
+**Runtime controller seam vocabulary** (pick names that match [architecture-design-principles](../../.cursor/rules/architecture-design-principles.mdc) — do not copy UI feature labels):
+
+| Suffix | Typical contents |
+|--------|------------------|
+| `.Planning` | Player command queue, targeting, commit-to-AGI |
+| `.TurnDriver` | Turn queue advance, coroutine/step delay, `BeginCurrentTurn` |
+| `.ActionDispatch` | Resolve handoff to Core simulators, protocol/deploy/item side effects |
+| `.RoundEnd` | End-of-round hooks, victory/defeat transitions, party sync |
+
+Other controllers may use domain-specific concern names (e.g. `.Input`, `.Persistence`) when those seams are clearer than the combat set.
+
+**Do not:**
+
+- Add new public types named `*TurnDriver`, `*Dispatcher`, etc. — slices stay `partial` on the existing `*Controller`
+- Move Core simulators into Runtime partials to shrink files
+- Split only for line count with meaningless suffixes (`.Part2.cs`)
+
+Authority for caps: [unity-csharp-file-size-limits](../../.cursor/rules/unity-csharp-file-size-limits.mdc).
+
 ---
 
 ## See also
