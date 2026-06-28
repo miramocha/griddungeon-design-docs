@@ -26,7 +26,7 @@ Authority: [class naming patterns](https://github.com/miramocha/griddungeon-desi
 
 - Owns **UXML queries**, BEM class toggles, labels/stats refresh on a **known tree**.
 - May be plain C# (no `MonoBehaviour`) when parent presenter owns `UIDocument`.
-- **Not** for types that only route keyboard focus with no markup (`TargetSelectionView` — rename tracked [#343](https://github.com/miramocha/griddungeon-game/issues/343)).
+- **Not** for types that only route keyboard focus with no markup — use `*Coordinator` (e.g. `CombatTargetSelectionCoordinator`).
 
 ### `*Presenter` (overlay / service lifecycle)
 
