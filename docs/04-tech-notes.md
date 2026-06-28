@@ -1,4 +1,4 @@
-# Tech Notes (Unity 6 / URP)
+﻿# Tech Notes (Unity 6 / URP)
 
 **Engine:** **Unity 6** (6000.x) + **URP** ([ADR 012](../decisions/012-unity-6-stack.md)).  
 **Platform:** PC Standalone ([ADR 008](../decisions/008-campaign-defaults.md), [input bindings](02-systems/input-bindings.md)).
@@ -17,7 +17,7 @@
 | Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
 | Save | `JsonUtility` or custom serializer at launch; ScriptableObjects for content DB |
 
-Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`). **TileWorldCreator v4** (planned FPV floor art — [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344)): import under `Assets/` or `Packages/`; Runtime adapter in `FloorArt/Twc/` references `GiantGrey.TileWorldCreator` only from `GridDungeon.Runtime` — not Core.
+Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`). **Plugin asmdefs:** optional `GridDungeon.FloorArt.TileWorldCreator` (+ Editor sibling) references vendor TWC; `GridDungeon.Runtime` uses `IFloorArtMeshBackend` registry only — see [floor-art-fpv.md — TWC runtime path](floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344).
 
 ## Shaders (Shader Graph�first)
 
@@ -89,8 +89,8 @@ GameState (composition root)
 +-- HubServices          � explorers guild, navigator office, shop, hospital, inn save
 +-- DungeonExplorer      � grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp � see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
 +-- ExplorationGridMetrics (Core) � `WorldUnitsPerCell` (10), corner?world math shared with floor art
-+-- FloorArtPresenter    � load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); TWC branch `FloorArtTwcBuilder` when stratum flag on ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
-+-- DungeonView          � FPV mount / visibility (hidden during combat); per-cell blobber deferred
++-- FloorArtPresenter    load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); MeshBackend registry Default or TWC plugin ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
++-- DungeonView          FPV mount / visibility (hidden during combat); per-cell blobber deferred
 +-- CombatScenePresenter � battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 +-- MapSystem            � auto-reveal layer, fog, read-only UI
 +-- FoeSystem            � spawn, visibility, step patrol, contact

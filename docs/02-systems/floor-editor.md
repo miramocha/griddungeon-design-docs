@@ -107,10 +107,10 @@ Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-che
 
 | Phase | Floor Editor impact |
 |-------|---------------------|
-| Phase 0–1 | None required — **FPV Preview** still opens legacy `FloorArtPreviewMenus` path |
-| Phase 2 (optional) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy may clarify blocky/ground mode vs TWC strata |
+| Phase 0–1 | None required — **FPV Preview** still opens built-in `FloorArtPreviewMenus` path |
+| Phase 2 (optional) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy may clarify blocky/ground mode vs `MeshBackend = TileWorldCreator` strata |
 
-Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes until legacy path removed ([#347](https://github.com/miramocha/griddungeon-game/issues/347)). See [floor-art-fpv.md — TWC runtime path](floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344).
+Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes while `MeshBackend = Default` ([#347](https://github.com/miramocha/griddungeon-game/issues/347) retires built-in mesh path after full TWC rollout). See [floor-art-fpv.md — TWC runtime path](floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344).
 
 ## Not the same as
 

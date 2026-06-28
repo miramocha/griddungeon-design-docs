@@ -18,7 +18,7 @@ Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core*
 
 **Status:** Draft stub — implementation not started. **Docs:** [design-docs #55](https://github.com/miramocha/griddungeon-design-docs/issues/55).
 
-Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v4](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/api) at **runtime** when `FloorArtStratumDefaults.UseTileWorldCreator` is enabled. `ExplorationFloor` stays layout authority; adapter translates walkable / solid cells to TWC blueprint layers (`AddCellsToLayer` → `GenerateCompleteMap`).
+Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v4](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/api) at **runtime** when `FloorArtStratumDefaults.MeshBackend` is `TileWorldCreator`. Installations **without** the TWC asset use **`MeshBackend = Default`** (built-in prefab populate + blocky terrain/cube) — always supported, not deprecated. `ExplorationFloor` stays layout authority; adapter translates walkable / solid cells to TWC blueprint layers (`AddCellsToLayer` → `GenerateCompleteMap`).
 
 | Topic | Decision |
 |-------|----------|
@@ -26,12 +26,14 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 | Workflow | Runtime from floor SO — not edit-time-only bake |
 | Grid | TWC **20×20**, **cell size 10** — match `ExplorationGridMetrics` |
 | Phase 1 interactables | Keep `FloorArtRuntimePopulate` chest/door paths |
-| Phase 1 elevation | Flat floors on TWC; blocky terrain legacy until [#347](https://github.com/miramocha/griddungeon-game/issues/347) |
-| Legacy populate | `PopulateWallBlocks` / `PopulateWalkableTiles` / blocky terrain remain when flag **off** until rollout complete |
+| Phase 1 elevation | Flat floors on TWC; built-in blocky terrain until [#347](https://github.com/miramocha/griddungeon-game/issues/347) |
+| Built-in populate | `PopulateWallBlocks` / `PopulateWalkableTiles` / blocky terrain when `MeshBackend = Default` |
 | Floor Editor | **No Phase 1 UI change** — see [floor-editor.md](floor-editor.md#tileworldcreator-planned) |
-| Map authority | **`ExplorationFloor` → TWC only** — do not use TWC CA/BSP/maze generators as gameplay layout source ([generators docs](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/configuration/blueprint-layers)) |
+| Map authority | **`ExplorationFloor` → TWC only** — do not use TWC CA/BSP/maze generators as gameplay layout source |
+| Mesh backends | **`Default`** (built-in, all installs) \| **`TileWorldCreator`** (optional plugin asmdef) |
+| Plugin asmdef | **`GridDungeon.FloorArt.TileWorldCreator`** — omit folder if no asset; Runtime never references vendor TWC asm |
 
-**New types (planned):** `FloorArtTwcSettings`, `FloorArtTwcBlueprintTranslator`, `FloorArtTwcBuilder`, `FloorArtTwcHost` under `Assets/Scripts/Runtime/Exploration/FloorArt/Twc/`.
+**New types (planned):** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcBlueprintTranslator`, `FloorArtTwcHost`).
 
 **Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
 
