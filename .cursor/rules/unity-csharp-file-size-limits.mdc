@@ -37,7 +37,7 @@ Grid Dungeon targets **modular agent context** (~32k tokens ≈ **2,100 lines** 
 | Pattern | When |
 |---------|------|
 | **Extract presenter / coordinator** | `MonoBehaviour` mixes bind, input, and layout |
-| **`partial class`** | One public type, file-per-concern (e.g. `Foo.Wiring.cs`) |
+| **`partial class`** | One public type, `{TypeName}.{Concern}.cs` — see [class naming patterns § Partial class file naming](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md#partial-class-file-naming-locked) |
 | **Static helper** | Pure formatting, catalog build, focus rules |
 | **Interface + host** | Cross-phase contracts (`ICombatSkillPickerHost`, `IPartyFormationKeyboardView`) |
 

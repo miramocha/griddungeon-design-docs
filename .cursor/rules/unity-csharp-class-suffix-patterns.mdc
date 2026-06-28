@@ -58,6 +58,8 @@ Pattern: **Host holds Coordinator**; phase HUD does not embed both roles in one 
 
 Do **not** use `*Controller` on internal focus helpers — prefer `*Focus` / `*Navigator` (`FormationGridFocusController` is internal only; public surface is `PartyFormationGridFocus`).
 
+**God `*Controller` split:** use `partial class` + `{TypeName}.{Concern}.cs` orchestration seams (`.Planning`, `.TurnDriver`, `.ActionDispatch`, `.RoundEnd`) — not new `*TurnDriver` types. Host file keeps fields + public API; see [class naming patterns § Partial class file naming](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md#partial-class-file-naming-locked).
+
 ### `*Picker` vs `*ToolkitView` vs `*View`
 
 | Suffix | Role |
