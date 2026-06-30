@@ -355,6 +355,23 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Party section rail policy (`PartyMenuSectionPolicies`)
+
+**Symptom:** New party-menu section (e.g. Use Skill) keeps sibling section chips enabled after **Z** reveal — player can Tab/Q/E to another section while a child modal is open.
+
+**Cause:** Sibling disable is policy-driven (`PartyMenuSectionPolicies` → `PartyMenuSectionRailFocusRules.TryEvaluate`), not automatic per section. A missing policy row defaults to siblings staying enabled (same class of bug as Use Skill before `OnPaneRevealed` was registered).
+
+**Fix:**
+
+1. Add `PartyMenuSection` enum value + `PartyMenuSections.ForPhase` entry.
+2. Register **`PartyMenuSectionModalPolicy`** in `PartyMenuSectionPolicies` (`PartyMenuSectionRailFocusRules.cs`) — match Equipment / Formation / Inventory patterns in [shared menu § Party section modal](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport).
+3. Extend `PartyMenuSectionRailFocusRulesTests.EveryPartyMenuSection_HasRegisteredModalPolicy` — fails if policy missing.
+4. Overlay builds one `PartyMenuSectionRailSnapshot` in `SyncSectionRailFocus`; `PartyMenuSectionRailCoordinator.Sync` applies both rails.
+
+**Rule:** Do not add per-section bool parameters to the overlay — extend the policy map and snapshot fields only when a new signal is required.
+
+---
+
 ## Slide retract dismiss order (`SlideTransition` / input hint / wallet)
 
 **Symptom:** Input hint or wallet strip **double-slides** or **one-frame snap** on hide/show; re-publishing hint text retriggers slide while strip already expanded.
