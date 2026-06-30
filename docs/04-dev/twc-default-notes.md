@@ -1,6 +1,6 @@
-# TWC spike notes ([#345](https://github.com/miramocha/griddungeon-game/issues/345))
+# TWC default notes ([#345](https://github.com/miramocha/griddungeon-game/issues/345))
 
-Phase 0 spike: `ExplorationFloor` walkables → TWC `AddCellsToLayer` → `GenerateCompleteMap`.
+Phase 0 default path: `ExplorationFloor` walkables → TWC `AddCellsToLayer` → `GenerateCompleteMap`.
 
 **Authority:** [floor art FPV — TileWorldCreator runtime path](../02-systems/floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344) · **Issue:** [griddungeon-game #345](https://github.com/miramocha/griddungeon-game/issues/345)
 
