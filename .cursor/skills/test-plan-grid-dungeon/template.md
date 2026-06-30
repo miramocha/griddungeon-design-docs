@@ -22,11 +22,11 @@ Optional: **F8** or **GridDungeon → Tools → Save Editor** (delete save) when
 
 ### Automated (Edit Mode)
 
-**Test Runner → Edit Mode** — expand `Tests → <Domain>` (not flat `Assets/Tests/*.cs`):
+**Test Runner → Edit Mode** — expand `Tests → <Domain>` (fixture inventory is in Test Runner, not README):
 
-1. **Tests → <Domain>** → Run all — expect green
-2. (Add domains touched by the PR)
-3. (Optional) Category filter: `<Category>` per [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)
+1. **Tests → `<Domain>`** → `<TestClass>` — expect green (list classes **touched by this PR**)
+2. (Add domains from the diff)
+3. (Optional) Category filter: `<Category>` — constants in `TestCategories.cs`; domain table in [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md)
 
 ---
 

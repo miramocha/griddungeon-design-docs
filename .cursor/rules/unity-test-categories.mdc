@@ -10,19 +10,34 @@ When you **add or edit** a test fixture under `Assets/Tests/<Domain>/`:
 
 ## Required
 
-1. Put the fixture in the domain folder (`Combat`, `UI`, `Exploration`, `Foe`, `Map`, `GameFlow`) with namespace **`GridDungeon.Tests.<Domain>`** and **`using GridDungeon.Tests;`** for `TestCategories`.
-2. Add **`[Category(TestCategories.<Domain>)]`** on the test class (fixture), using a constant from `TestCategories.cs` — **not** a raw string. Category must match folder/namespace segment.
+1. Put the fixture in the domain folder with namespace **`GridDungeon.Tests.<Domain>`** (match folder segment) and **`using GridDungeon.Tests;`** for `TestCategories`.
+2. Add **`[Category(TestCategories.<Domain>)]`** on the test class (fixture), using a constant from `TestCategories.cs` — **not** a raw string. Category must match the primary system under test.
 3. Pick **one primary domain** that matches the system under test (see table below).
-4. Update the fixture table in [Assets/Tests/README.md](../../Assets/Tests/README.md) when you add a new class or a **new** domain constant.
+
+## README updates (domain only)
+
+Do **not** add every new `*Tests` class to [Assets/Tests/README.md](../../Assets/Tests/README.md). Test Runner is the fixture inventory.
+
+Update README **only** when you add:
+
+- a **new domain folder** or top-level test area,
+- a **new test asmdef** (e.g. optional plugin tests),
+- or a **new** `TestCategories` constant.
+
+Add or adjust **one example row** in the domain table — not an exhaustive class list.
 
 | Domain constant | Use for |
 |-----------------|---------|
 | `Combat` | Damage, actions, protocol, turn queue, combat sim |
+| `Core` | Core simulators with no Runtime scene |
+| `Content` | Editor content DB / flag validation |
 | `UI` | UI Toolkit views, menu focus navigator, input presentation |
-| `Exploration` | Grid movement, step events, dungeon navigation rules |
+| `Exploration` | Grid movement, step events, floor art rules |
 | `Foe` | FOE patrol, retreat, contact / flee grid rules |
-| `Map` | Floor layout, tiles, map reveal / content layout |
-| `GameFlow` | `GamePhaseController`, phase transitions |
+| `Map` | Floor layout, tiles, map reveal, Floor Editor grid |
+| `Inventory` | Bag, equipment, party menu rules |
+| `GameFlow` | `GamePhaseController`, save, hub, story runner |
+| `Progression` | Loot, notices, encounter rewards |
 
 ## Already applied (do not duplicate on each class)
 
@@ -30,10 +45,10 @@ The assembly in `TestCategories.cs` applies **`EditMode`** and **`Fast`** to eve
 
 ## New domain or slow / Play Mode tests
 
-- Add a new `public const string` on `TestCategories` and document it in `Assets/Tests/README.md`.
+- Add a new `public const string` on `TestCategories` and one README domain row.
 - Prefer a **separate test asmdef** for Play Mode instead of mixing `Fast` and scene-heavy tests in one assembly (`Assets/PlayModeTests/`, `GridDungeon.PlayModeTests.asmdef`, assembly category `PlayMode` — not nested under `Assets/Tests/`).
 
 ## Verification
 
 - Test Runner → expand `Tests → <Domain>` or filter by domain category before closing combat/exploration tickets.
-- Ticket test plans may name domain + fixture, e.g. `Edit Mode → Tests → Combat → DamageCalculatorTests` (see `ticket-test-documentation.mdc`).
+- Ticket test plans name domain + fixture, e.g. `Edit Mode → Tests → Combat → DamageCalculatorTests` (see `ticket-test-documentation.mdc`).

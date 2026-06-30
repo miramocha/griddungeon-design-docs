@@ -24,6 +24,7 @@ Complements [.cursor/rules/ticket-test-documentation.mdc](../../rules/ticket-tes
 4. Mark steps **N/A** with reason + follow-up issue (e.g. instant enemy AI → #35), not as failures.
 5. Use **tables** for manual steps: `| Step | Action | Expected |` with stable step numbers across edits.
 6. **Local drafts only under `.cursor/local/`** — never write `test-plan-issue-*.md` at `.cursor/` root or anywhere else tracked by git (in **griddungeon-game**, add the same `.gitignore` entry).
+7. **Automated section:** name `Tests → <Domain> → <Fixture>` from the **PR/diff** — not a README class inventory ([Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) is domains/conventions only).
 
 ## Local draft path (optional)
 
@@ -41,7 +42,7 @@ Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game r
 
 1. Read the issue/PR scope and touched domains (`Combat`, `Exploration`, `Map`, `Foe`, `GameFlow`).
 2. Pick a preset from [template.md](template.md) (full skeleton) or [examples.md](examples.md).
-3. Fill **Setup**, **Automated** (Test Runner tree paths), **Manual** sections (A/B…), **Regressions**, **Spec/ADRs**.
+3. Fill **Setup**, **Automated** (Test Runner: domains + **fixture classes from the PR diff** — not README inventory), **Manual** sections (A/B…), **Regressions**, **Spec/ADRs**.
 4. If a local file is needed, write only to `.cursor/local/test-plans/…` (game repo).
 5. **Before close-out** on implementation tickets: in **griddungeon-game**, run **fresh-reviewer** after commits on the branch (see [game `.cursor/agents/fresh-reviewer.md`](https://github.com/miramocha/griddungeon-game/blob/main/.cursor/agents/fresh-reviewer.md)) with diff + issue AC only; fix Blockers in follow-up commits before posting the plan / merging.
 6. Post via `gh issue comment` or edit existing test-plan comment (`gh api` PATCH).
@@ -56,7 +57,7 @@ Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game r
 | Exploration timing | Normal: step **0.28s**, turn **0.26s** ([ADR 018](../../decisions/018-exploration-animation-speed.md)) |
 | F3 dev roster | 2 cores + slime when party empty — [game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md) |
 | Combat highlight | Core command pick → **party roster**, not AGI strip ([combat.md](../../docs/02-systems/combat.md#turn-order-strip-agi-queue-ui)) |
-| Edit Mode tree | `Tests → <Domain> → <Fixture>` — [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) |
+| Edit Mode | Test Runner → `Tests → <Domain> → <Fixture>` — name classes from the ticket diff; domain map in [Assets/Tests/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Tests/README.md) (not a full class list) |
 | Exploration **Esc** (map not fullscreen) | Pause: **Resume** / **Quit to title** (confirm). **No** hub from pause ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7) |
 | Exploration **Esc** (map fullscreen) | Closes fullscreen map only ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | Return to **hub** from exploration | In-world only: stairs (gate), items, exits/gates, events, defeat — not pause ([game phase](../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
