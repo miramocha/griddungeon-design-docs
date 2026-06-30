@@ -228,16 +228,19 @@ Phase HUDs **publish menu DTOs** on `UiPresentationBridge` — they do **not** c
 | `CommandPanelView` | Skill/item picker, target select, combat log | Command slot that opened the modal (`CombatController.PendingTargetCommand` for targeting) |
 | `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service chip (`ItemListInventory.HubMode` + `HubShopServiceFocus`) |
 | `HubHudView` | Hub hospital heal/revive pick open | Heal or Revive service chip (`HubHospitalMode` + `HubHospitalServiceFocus`) |
-| `PartyMenuOverlayView` | Section pane modal per signal below (Inventory bag open, Equipment pane revealed, Formation swap engaged, Quit focused) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+| `PartyMenuOverlayView` | Section pane modal per `PartyMenuSectionPolicies` (see table below) | Active section chip (`PartyMenuSectionRailFocusRules.TryEvaluate`) |
 
-**Party section modal** — siblings disable only when:
+**Party section modal** — code authority: `PartyMenuSectionPolicies` + `PartyMenuSectionRailSnapshot` in game repo `Assets/Scripts/UI/Views/`. Siblings disable when:
 
-| Section | Engaged signal |
-|---------|----------------|
-| Inventory | Bag picker open (`inventoryBagOpen`) |
-| Equipment | Equipment pane revealed (`paneRevealed` — first **Z** after section select; `PartyMenuSectionRailFocusRules`) — floater member focus alone does not need its own modal signal |
-| Formation | Swap mode engaged (`formationPaneEngaged`) |
-| Quit | Quit pane has menu focus (`quitPaneFocused`) |
+| Section | Policy | Signal |
+|---------|--------|--------|
+| Inventory | `OnSectionChildOpen` | Bag picker open (`inventoryBagOpen`) |
+| Equipment | `OnPaneRevealed` | Equipment pane revealed (`paneRevealed` — first **Z** after section select) — floater member focus alone does not gate sibling disable |
+| Formation | `OnPaneEngaged` | Swap mode engaged (`formationPaneEngaged`) |
+| Use Skill | `OnPaneRevealed` | Use Skill pane revealed (`paneRevealed`) |
+| Quit | `OnSectionChildOpen` | Quit confirm modal active (`quitConfirmActive`) |
+
+New sections: register a row in `PartyMenuSectionPolicies` and add `EveryPartyMenuSection_HasRegisteredModalPolicy` coverage — unregistered sections leave siblings enabled.
 
 `HideActivePane` / section change → `ResetPaneEngagement()` (clears equipment floater `party-formation-grid__cell--focused`) → `SyncSectionRailFocus()`.
 
@@ -656,7 +659,7 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | `SkillUsePickerToolkitViewTests` | `Tests/UI/` — skill tabs + row confirm |
 | `MenuFocusNavigatorTests` | `Tests/UI/` — focus wrap/skip |
 | `CommandPanelViewTests` | `Tests/Combat/` — command rail focus, modal sibling disable, `ResetPanelChrome` on null actor |
-| `PartyMenuSectionRailFocusRulesTests` | `Tests/UI/` — section rail modal only when pane engaged |
+| `PartyMenuSectionRailFocusRulesTests` | `Tests/UI/` — `PartyMenuSectionPolicies` + `TryEvaluate` per policy kind |
 | `HubShopServiceFocusTests` | `Tests/UI/` — buy/sell rail index + service-rail W/S block when picker unengaged |
 | `PartyEquipmentFloaterToolkitViewTests` | `Tests/UI/` — `ClearMemberFocus` removes `party-formation-grid__cell--focused` |
 | `CharacterDetailPresenterTests` | `Tests/UI/` — party-menu context, sort 251, rail-offset modal chrome |
@@ -678,7 +681,7 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/UI/Screens/Shared/RailMenu.uss` | Chip + button rail styles |
 | `Assets/UI/Screens/Shared/CommandPanel.uss` | Vertical rail panel + modal/disable modifiers |
 | `Assets/Scripts/UI/Views/CommandPanelModalSupport.cs` | Shared rail sibling disable + `ResetPanelChrome` |
-| `Assets/Scripts/UI/Views/PartyMenuSectionRailFocusRules.cs` | Party section modal-open rules |
+| `Assets/Scripts/UI/Views/PartyMenuSectionRailFocusRules.cs` | Policy map, snapshot, `TryEvaluate`, `PartyMenuSectionRailCoordinator.Sync` |
 | `Assets/Scripts/UI/Navigation/HubShopServiceFocus.cs` | Hub shop buy/sell rail index + service-rail nav gate |
 | `Assets/UI/Screens/Shared/TabbedPicker.uss` | Modal shell |
 | `Assets/UI/Screens/Shared/WindowedList.uss` | Windowed list chrome |

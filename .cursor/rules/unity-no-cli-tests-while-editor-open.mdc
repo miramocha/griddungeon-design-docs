@@ -17,7 +17,7 @@ Batch mode fails with *"another Unity instance is running with this project open
 
 ## Do instead
 
-1. **Ask the user** to run tests in **Window → General → Test Runner → Edit Mode** — expand `Tests → <Domain> → <Fixture>` (or filter by category; see [Assets/Tests/README.md](../../Assets/Tests/README.md)).
+1. **Ask the user** to run tests in **Window → General → Test Runner → Edit Mode** — expand `Tests → <Domain> → <Fixture>` (or filter by category). Domain folders: [Assets/Tests/README.md](../../Assets/Tests/README.md); fixture names come from the ticket/diff or Test Runner tree.
 2. Provide a **manual Play Mode checklist** when the ticket needs it (see `ticket-test-documentation.mdc`).
 3. You may still **author or fix** test code under `Assets/Tests/`; verification is via the user's Test Runner, not agent-launched Unity.
 4. **Editor open, compile check:** `Tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `Tools/read-unity-editor-log.ps1` (read-only `Editor.log` tail — no second Unity instance). See `unity-compile-status-agent.mdc`.

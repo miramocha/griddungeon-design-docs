@@ -23,7 +23,8 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 ## Test plan (verified YYYY-MM-DD)
 
 ### Automated
-- [ ] Unity Test Runner → Edit Mode → `Tests` → `<Domain>` → `<TestClass>` — all green ([Assets/Tests/README.md](../../Assets/Tests/README.md); optional category filter e.g. `Combat`)
+- [ ] Unity Test Runner → Edit Mode → `Tests` → `<Domain>` → `<TestClass>` — all green (name fixtures from the PR/diff; domain map in [Assets/Tests/README.md](../../Assets/Tests/README.md))
+- [ ] (optional) Category filter e.g. `Combat` — see `TestCategories.cs`
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
@@ -49,16 +50,18 @@ Unless the ticket changes timings, assume **Normal** preset (design-docs [ADR 01
 
 ## Edit Mode paths
 
-| Domain | Namespace | Example fixture |
-|--------|-----------|-----------------|
-| `Combat` | `GridDungeon.Tests.Combat` | `DamageCalculatorTests`, `CombatEntryContextTests` |
+Test Runner is the **fixture inventory**. [Assets/Tests/README.md](../../Assets/Tests/README.md) documents **domain folders**, namespaces, and categories — not every `*Tests` class.
+
+| Domain | Namespace | Example |
+|--------|-----------|---------|
+| `Combat` | `GridDungeon.Tests.Combat` | `DamageCalculatorTests` |
 | `Exploration` | `GridDungeon.Tests.Exploration` | `GridMovementTests` |
-| `Foe` | `GridDungeon.Tests.Foe` | `RetreatCellCalculatorTests`, `FoeFleeRetreatPlacementTests` |
+| `Foe` | `GridDungeon.Tests.Foe` | `RetreatCellCalculatorTests` |
 | `Map` | `GridDungeon.Tests.Map` | `MapRevealCalculatorTests` |
-| `UI` | `GridDungeon.Tests.UI` | `MapPartyMarkerPresenterTests`, `MapFoeMarkersPresenterTests`, `CombatHudLogViewTests` |
+| `UI` | `GridDungeon.Tests.UI` | `CombatHudLogViewTests` |
 | `GameFlow` | `GridDungeon.Tests.GameFlow` | `GamePhaseControllerTests` |
 
-Full tree: [Assets/Tests/README.md](../../Assets/Tests/README.md).
+In test plans, list **`<Domain>` + fixture classes touched by the ticket`** (from the diff). Update README only when adding a **new domain folder**, test **asmdef**, or `TestCategories` constant ([unity-test-categories.mdc](../../rules/unity-test-categories.mdc)).
 
 ## Agent / PR workflow
 

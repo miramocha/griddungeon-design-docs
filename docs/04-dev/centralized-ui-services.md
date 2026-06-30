@@ -182,7 +182,7 @@ While a **modal child** owns input (picker open, target select, combat log, part
 |----------|-------------------|--------------|
 | `CommandPanelView` | Skill/item picker, target select, log modal | Command slot that opened the modal (`PendingTargetCommand` for targeting) |
 | `HubHudView` | Hub shop buy/sell picker open | Buy or Sell service button (`ItemListInventory.HubMode`) |
-| `PartyMenuOverlayView` | Section pane **engaged** (not merely revealed) | Active section chip (`PartyMenuSectionRailFocusRules`) |
+| `PartyMenuOverlayView` | Section pane modal per `PartyMenuSectionPolicies` (see [shared menu § Party section modal](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport)) | Active section chip (`PartyMenuSectionRailFocusRules.TryEvaluate`) |
 
 Helpers: `CommandPanelModalSupport.SetModalOpen`, `SetEnabledForModal` / `ResolveEnabled`.
 

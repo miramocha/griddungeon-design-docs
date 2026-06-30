@@ -10,7 +10,7 @@ alwaysApply: false
 
 `GridDungeon.Runtime` / `GridDungeon.UI` ship **internal** test helpers today (`*ForTests`, `InternalsVisibleTo("GridDungeon.Tests")`). That is allowed — not a license to grow prod types for every fixture.
 
-Authority: [Assets/Tests/README.md](../../Assets/Tests/README.md) (Edit Mode default), [ADR 039](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/039-uitk-dotween-show-hide.md) §5 (UITK tween simulators).
+Authority: [Assets/Tests/README.md](../../Assets/Tests/README.md) (Edit Mode domains and conventions; Test Runner is the fixture list), [ADR 039](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/039-uitk-dotween-show-hide.md) §5 (UITK tween simulators).
 
 ## Decision order (before adding prod code for a test)
 
