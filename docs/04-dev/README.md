@@ -16,5 +16,6 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | [Authoring floor transition beats](authoring-floor-transition-beats.md) | `stairs_default` vignette prefab, catalog, Cinemachine, Unity menu workflow |
 | [Layered UITK panels](layered-uitk-panels.md) | Split HUD into panel `UIDocument` components — [ADR 037](../../decisions/037-layered-uitk-panels.md) (draft) |
 | [Autopilot pathfinding](autopilot-pathfinding.md) | Expanded-map A* (`MapPathfinder`, `ExplorationPathGraph`), walker planner, `AutopilotController` flow, tests, vs layout connectivity |
+| [TWC spike notes](twc-spike-notes.md) | TileWorldCreator [#345](https://github.com/miramocha/griddungeon-game/issues/345) setup, parameters, tileset swaps, troubleshooting |
 
 Gameplay rules and phase authority stay in [02 — Systems](../02-systems/) and [05 — class design](../05-class-design.md).

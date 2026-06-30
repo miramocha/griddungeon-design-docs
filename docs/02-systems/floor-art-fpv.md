@@ -37,6 +37,8 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
 
+**#345 spike notes:** [TWC spike notes](../04-dev/twc-spike-notes.md) ([#345](https://github.com/miramocha/griddungeon-game/issues/345)) — editor setup, locked parameters, tileset swaps, troubleshooting.
+
 ## Context
 
 | Layer | Authority | Presentation |
