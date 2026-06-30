@@ -1,0 +1,43 @@
+---
+description: Use "default" / required-scope language — not MVP1, spike, or legacy launch jargon in new prose
+alwaysApply: true
+---
+
+# Default release-scope language
+
+Authority: [docs/00-release-scope.md](../docs/00-release-scope.md) (`required` / `optional` / `later`).
+
+Grid Dungeon no longer uses **MVP1**, **MVP**, or **spike** in new comments, READMEs, skills, rules, or design prose. Say **default** (or **required scope**) for the first-playable slice.
+
+## Use
+
+| Instead of | Write |
+|------------|--------|
+| MVP1 / MVP / mvp1 (scope) | **default**, **default build**, **default scope** |
+| MVP1 floors / launch floors | **default floors**, **default S1 floors** |
+| MVP1 guild roster / cores | **default guild roster**, **default guild cores** |
+| at launch / ships at launch (scope) | **in default build**, **required scope** |
+| spike / P2 spike | **deferred**, **optional P2**, **exploratory** |
+| MVP2 / MVP3 (scope) | **optional**, **later** (per release-scope table) |
+
+Link ADRs by number or title — not “MVP1 combat ADR”:
+
+- ✅ [ADR 014](../decisions/014-mvp1-exploration-map.md) (exploration map)
+- ❌ “MVP1 exploration map ADR”
+
+## Exceptions (do not “fix” blindly)
+
+| Keep as-is | Why |
+|------------|-----|
+| **File paths and URLs** with `mvp1` in the slug (`014-mvp1-exploration-map.md`, `mvp1-class-skills.md`, `docs/archive/mvp1-*`) | Historical filenames; renaming is a separate migration |
+| **GitHub label** `mvp1` | Legacy label; still counts as `required` in backlog config |
+| **`docs/archive/**`** and `00-release-scope.md` legacy note | Historical / glossary only |
+| C# **`default`** keyword, `default(T)`, Unity **default** presets (`Setup Default Lighting`, `defaultLayerHeight`, …) | Unrelated to release scope |
+| **Menu paths** in `GridDungeonEditorMenuHints` | Match shipped strings exactly (`Ensure ContentDatabase`, `Log Save Path`) |
+
+## Agent / PR checklist
+
+- [ ] New or touched prose uses **default** / **required** — not MVP1 or spike
+- [ ] README, XML `///`, `.cursor/skills`, `.cursor/rules` follow this rule
+- [ ] ADR and design-doc **links** may keep `mvp1` in the URL; **link text** should not say MVP1
+- [ ] Renaming an ADR or archive file is out of scope for a wording-only pass — track separately
