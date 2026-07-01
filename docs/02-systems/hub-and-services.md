@@ -10,6 +10,9 @@ tags:
 
 Exploration alternates with a **fixed hub** at the labyrinth entrance — not an open overworld. EO's town loop: prepare, dive one stratum, return before overextending.
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)  
+**ADR:** [034](../../decisions/034-skill-point-allocation-outside-combat.md) (skill trees), [033](../../decisions/033-hub-environment-cinemachine.md) (hub camera — later)
+
 ## Hub locations (launch slice)
 
 | Service | Function |

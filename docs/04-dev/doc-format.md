@@ -65,7 +65,7 @@ Optional — open questions only; link ADRs/issues.
 | `## Consider / explore` | When open questions exist |
 | Body `**Status:**` | **No** — use frontmatter |
 
-**Reference examples:** [foe-encounters](../02-systems/foe-encounters.md) (tight), [guided-tutorial](../02-systems/guided-tutorial.md) (rich links — migrate to scope line over time).
+**Reference examples (phase C):** [combat](../02-systems/combat.md), [game-phase](../02-systems/game-phase.md), [mapping](../02-systems/mapping.md), [hub-and-services](../02-systems/hub-and-services.md), [story-events](../02-systems/story-events.md), [centralized-ui-services](centralized-ui-services.md).
 
 ---
 

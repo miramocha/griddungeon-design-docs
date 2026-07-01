@@ -739,7 +739,7 @@ namespace GridDungeon.UI.Views
 
 ## Presentation lifecycle
 
-**Status:** Contract shipped (#207); abstract base `CentralizedUiPresenterBase` + generic `CentralizedUiFacade<T>` shipped ([#229](https://github.com/miramocha/griddungeon-game/issues/229), [#230](https://github.com/miramocha/griddungeon-game/issues/230)). **All** centralized services in [Scene graph](#scene-graph-dev-bootstrap) must inherit `CentralizedUiPresenterBase` on the presenter (migration tracked on [game#206](https://github.com/miramocha/griddungeon-game/issues/206)).
+**Shipped:** Contract shipped (#207); abstract base `CentralizedUiPresenterBase` + generic `CentralizedUiFacade<T>` shipped ([#229](https://github.com/miramocha/griddungeon-game/issues/229), [#230](https://github.com/miramocha/griddungeon-game/issues/230)). **All** centralized services in [Scene graph](#scene-graph-dev-bootstrap) must inherit `CentralizedUiPresenterBase` on the presenter (migration tracked on [game#206](https://github.com/miramocha/griddungeon-game/issues/206)).
 
 **Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — transition-agnostic show/hide for centralized UITK services (PopIn modals, slide strips, collapse floaters).  
 **ADR:** [038 — Centralized UI presentation lifecycle](../../decisions/038-centralized-ui-presentation-lifecycle.md) · [039 — UITK show/hide via DOTween](../../decisions/039-uitk-dotween-show-hide.md)  
@@ -893,3 +893,17 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | Runtime events for custom HUD | [UI event contract](ui-event-contract.md) |
 | Splitting monolith HUD into more documents | [layered UITK panels](layered-uitk-panels.md) |
 | Input bind design (player-facing) | [input bindings § Global input hints](../02-systems/input-bindings.md#global-input-hints) |
+
+---
+
+## Related
+
+- [doc format](doc-format.md) — dev doc profile (reference example)
+- [UITK BEM transition guide](uitk-bem-transition-guide.md)
+- [centralized UI gotchas](centralized-ui-gotchas.md)
+- [shared menu & picker UI](shared-menu-picker-ui.md)
+- [custom party UI](custom-party-ui.md)
+- [UI event contract](ui-event-contract.md)
+- [ADR 038 — Centralized UI lifecycle](../../decisions/038-centralized-ui-presentation-lifecycle.md)
+- [ADR 039 — UITK DOTween](../../decisions/039-uitk-dotween-show-hide.md)
+- [exploration UI](../02-systems/exploration-ui.md)
