@@ -5,14 +5,9 @@ tags:
   - scope/required
   - status/active
 ---
----
-tags:
-  - path/docs/04-dev
-  - type/dev
-  - scope/required
-  - status/active
----
 # Obsidian tags (design-docs)
+
+Authority: [doc-format.md](doc-format.md) (section chrome) · this file (tags only).
 
 Tag convention for this vault. Tags live in YAML **frontmatter** (`tags:` list) so Obsidian **Properties** and **Tag pane** stay in sync.
 
@@ -138,7 +133,9 @@ tags:
 ## Apply / refresh tags
 
 Registry: [`scripts/obsidian-tag-registry.json`](../../scripts/obsidian-tag-registry.json)  
-Script: `.\scripts\apply-obsidian-tags.ps1` (idempotent â€” skips files that already have `tags:` frontmatter)
+Script: `.\scripts\apply-obsidian-tags.ps1` (idempotent — skips files that already have `tags:` frontmatter)
+
+Format lint: `.\scripts\audit-doc-format.ps1` → `Logs/doc-format-audit.json`
 
 When adding a new doc:
 

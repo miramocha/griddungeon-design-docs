@@ -233,6 +233,10 @@
       "tags": ["path/docs/04-dev", "type/dev", "scope/required", "status/active"]
     },
     {
+      "path": "docs/04-dev/doc-format.md",
+      "tags": ["path/docs/04-dev", "type/dev", "scope/required", "status/active"]
+    },
+    {
       "path": "docs/04-dev/autopilot-pathfinding.md",
       "tags": ["path/docs/04-dev", "type/dev", "scope/optional", "status/active", "domain/exploration", "domain/map"]
     },

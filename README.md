@@ -116,6 +116,7 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 | [04 — Dev: Autopilot pathfinding](docs/04-dev/autopilot-pathfinding.md) | Active | Integrator pathfind rules |
 | [04 — Dev: Class naming patterns](docs/04-dev/class-naming-patterns.md) | Active | C# suffix conventions |
 | [04 — Dev: Obsidian tags](docs/04-dev/obsidian-tags.md) | Active | Vault tag taxonomy + registry |
+| [04 — Dev: Doc format](docs/04-dev/doc-format.md) | Active | Markdown profiles; format audit script |
 | [Plan — Core assembly](docs/plans/core-assembly-improvement-plan.md) | Active | Core vs Campaign boundary improvements |
 
 ### Reference & archive

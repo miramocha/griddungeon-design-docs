@@ -3,3 +3,6 @@
 
 # Obsidian — local vault UI, plugins, and machine-specific workspace state
 .obsidian/
+
+# Agent-generated audit output (regenerate via scripts/audit-doc-format.ps1)
+Logs/

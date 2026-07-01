@@ -13,6 +13,7 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | Doc | Purpose |
 |-----|---------|
 | [Obsidian tags](obsidian-tags.md) | Vault tag taxonomy + registry for Properties / graph filters |
+| [Doc format](doc-format.md) | Markdown profiles per folder; audit script for format debt |
 | [UI event contract](ui-event-contract.md) | Runtime `public event` + command APIs for custom UI; **edit when game repo APIs change** |
 | [Custom skill picker UI](custom-skill-picker-ui.md) | Replace combat skill modal (`ISkillUsePickerView`, host wiring, UITK hooks, tests) |
 | [Shared menu & picker UI](shared-menu-picker-ui.md) | Rail menu, `ItemListPickerView`, skill picker — shared UITK components, diagrams, extension guide |
