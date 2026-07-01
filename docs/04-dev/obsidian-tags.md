@@ -164,5 +164,4 @@ See audit in repo chat / issues. Summary:
 | P1 | Extend root README index (missing ADRs 019, 028—033, 036, 042—043; key system docs) |
 | P2 | MVP2/MVP3 â†’ optional/required wording in body (filenames unchanged) |
 | P2 | UTF-8 cleanup (mojibake in `04-tech-notes.md`, `dungeons-and-encounters.md`) |
-| P3 | Move `docs/04-dev/github-drafts/` to archive after issue close confirm |
 | P3 | Keep `docs/archive/mvp1-s1-floor-layouts-draft.md` until layout lock |

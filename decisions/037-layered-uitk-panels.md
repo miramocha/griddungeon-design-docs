@@ -112,4 +112,4 @@ Exact sort values are implementation tuning; order matters more than absolute nu
 - [UI event contract](../docs/04-dev/ui-event-contract.md)
 - [Exploration UI](../docs/02-systems/exploration-ui.md)
 - [Combat HUD frame layout](../docs/02-systems/combat.md#combat-hud-frame-layout)
-- [GitHub issue drafts (not filed)](../docs/04-dev/github-drafts/layered-uitk-panels-issues.md)
+- [Map panel POC (shipped)](https://github.com/miramocha/griddungeon-game/pull/244)

@@ -1,4 +1,4 @@
-﻿---
+---
 tags:
   - path/docs/03-content
   - type/content
@@ -17,12 +17,12 @@ Authoring drafts live in subfolders (`s1/`, …). **Game sync:** `griddungeon-ga
 
 ## Stratum 1 at launch
 
-| storyEventId | once | Prerequisite | Trigger | Copy |
-|--------------|------|--------------|---------|------|
-| `s1_b1f_gate_briefing` | yes | Act 1; not `s1_intro_movement_complete` | **Exploration:** Event cell on `s1_B1F` `(10, 9)` — before first hub | [synced](s1/s1_b1f_gate_briefing.md) |
-| `s1_b2f_stalker_briefing` | yes | `s1_tutorial_dive_started` *(planned)*; not `S1_FIRST_FOE_TUTORIAL_COMPLETE` | **Exploration:** Event cell on `s1_B2F` `(7, 11)` → VN → tutorial combat | [synced](s1/s1_b2f_stalker_briefing.md) |
-| `s1_synchro_protocol_unlock` | yes | not `S1_SYNCHRO_UNLOCKED` | **Combat:** after crisis AOE UI beat | [synced](s1/s1_synchro_protocol_unlock.md) |
-| `s1_tutorial_hub_return` | yes | tutorial FOE fight (`grp_alley_stalker_tutorial`) | **Combat:** victory after `protocol_strike` kill → hub warp | [synced](s1/s1_tutorial_hub_return.md) |
+| storyEventId                 | once | Prerequisite                                                                 | Trigger                                                                  | Copy                                       |
+| ---------------------------- | ---- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------ |
+| `s1_b1f_gate_briefing`       | yes  | Act 1; not `s1_intro_movement_complete`                                      | **Exploration:** Event cell on `s1_B1F` `(10, 9)` — before first hub     | [synced](s1/s1_b1f_gate_briefing.md)       |
+| `s1_b2f_stalker_briefing`    | yes  | `s1_tutorial_dive_started` *(planned)*; not `S1_FIRST_FOE_TUTORIAL_COMPLETE` | **Exploration:** Event cell on `s1_B2F` `(7, 11)` → VN → tutorial combat | [synced](s1/s1_b2f_stalker_briefing.md)    |
+| `s1_synchro_protocol_unlock` | yes  | not `S1_SYNCHRO_UNLOCKED`                                                    | **Combat:** after crisis AOE UI beat                                     | [synced](s1/s1_synchro_protocol_unlock.md) |
+| `s1_tutorial_hub_return`     | yes  | tutorial FOE fight (`grp_alley_stalker_tutorial`)                            | **Combat:** victory after `protocol_strike` kill → hub warp              | [synced](s1/s1_tutorial_hub_return.md)     |
 
 ## Later (placeholders)
 

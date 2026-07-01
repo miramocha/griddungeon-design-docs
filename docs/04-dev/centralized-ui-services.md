@@ -743,7 +743,7 @@ namespace GridDungeon.UI.Views
 
 **Epic:** [griddungeon-game#206](https://github.com/miramocha/griddungeon-game/issues/206) — transition-agnostic show/hide for centralized UITK services (PopIn modals, slide strips, collapse floaters).  
 **ADR:** [038 — Centralized UI presentation lifecycle](../../decisions/038-centralized-ui-presentation-lifecycle.md) · [039 — UITK show/hide via DOTween](../../decisions/039-uitk-dotween-show-hide.md)  
-**Issue index:** [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md).
+**Pull order:** Epic [#206](https://github.com/miramocha/griddungeon-game/issues/206); children [#207](https://github.com/miramocha/griddungeon-game/issues/207)–[#217](https://github.com/miramocha/griddungeon-game/issues/217); docs [#29](https://github.com/miramocha/griddungeon-design-docs/issues/29).
 
 ### Mandatory rule (new + migrated services)
 

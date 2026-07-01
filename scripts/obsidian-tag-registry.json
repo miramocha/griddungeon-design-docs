@@ -265,14 +265,6 @@
       "tags": ["path/docs/04-dev", "type/dev", "scope/required", "status/active", "domain/ui", "domain/combat"]
     },
     {
-      "path": "docs/04-dev/github-drafts/centralized-ui-lifecycle-issues.md",
-      "tags": ["path/docs/04-dev", "type/archive", "scope/required", "status/archived", "domain/ui"]
-    },
-    {
-      "path": "docs/04-dev/github-drafts/layered-uitk-panels-issues.md",
-      "tags": ["path/docs/04-dev", "type/archive", "scope/later", "status/archived", "domain/ui"]
-    },
-    {
       "path": "docs/04-dev/layered-uitk-panels.md",
       "tags": ["path/docs/04-dev", "type/dev", "scope/later", "status/proposed", "domain/ui"]
     },
