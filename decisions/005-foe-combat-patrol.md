@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/deferred
+  - domain/foe
+  - domain/combat
+---
 # ADR 005 — FOE Movement During Combat (Optional Later)
 
 > **Scope: Optional feature** — not required for initial release.

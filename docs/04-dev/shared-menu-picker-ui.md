@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Shared menu & picker UI (UITK)
 
 How **rail menus**, **item list pickers**, and **skill use pickers** share UITK building blocks in [griddungeon-game](https://github.com/miramocha/griddungeon-game). Use this when skinning hub/combat/party chrome, adding a new tabbed modal, or deciding whether to extend an existing view vs fork.

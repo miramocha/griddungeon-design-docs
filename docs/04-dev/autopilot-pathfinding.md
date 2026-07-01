@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/optional
+  - status/active
+  - domain/exploration
+  - domain/map
+---
 # Autopilot pathfinding (developer)
 
 Expanded-map autopilot: **A\*** over **revealed** exploration cells, then **turn/step** execution through `DungeonExplorer`. Player-facing rules: [02 — Autopilot](../02-systems/autopilot.md). Decision record: [ADR 021](../../decisions/021-autopilot-mvp2.md).

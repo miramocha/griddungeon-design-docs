@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/story-vn
+  - domain/campaign/s1
+---
 # Narrative POV — Navigator, blank state
 
 **Status:** Locked (S1 launch)  

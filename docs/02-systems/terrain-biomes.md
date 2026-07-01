@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/draft
+  - domain/exploration
+---
 # Terrain biomes (procedural splat painting)
 
 **Implementation:** `GridDungeon.Core.FloorArt.TerrainBiomePaintCalculator`, `GridDungeon.Runtime.Exploration.FloorArt.FloorArtBlockyTerrainBuilder`  

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Centralized UI — implementation gotchas
 
 Living list of **non-obvious bugs and review traps** when wiring cross-phase UITK services (`ItemListInventory`, `InputHints`, `CommandRail`, `PartyFormationFloater`, …). For the happy-path pattern, see [centralized UI services](centralized-ui-services.md). For picker APIs and rail focus, see [shared menu & picker UI](shared-menu-picker-ui.md).

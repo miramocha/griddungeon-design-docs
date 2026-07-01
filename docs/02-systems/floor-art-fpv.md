@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/shipped
+  - domain/exploration
+---
 # Floor art — FPV corridor props
 
 **Status:** Draft  

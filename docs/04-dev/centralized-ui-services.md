@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Centralized UI services (UITK)
 
 How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD — global input hints, the shared party formation floater, screen fade, and similar `UIDocument` roots. Use this when adding a new cross-phase panel or when deciding whether chrome belongs on a **centralized service** `UIDocument` vs embedding in a phase HUD shell (exploration has **no** phase HUD UXML — see [exploration UI](../02-systems/exploration-ui.md)).

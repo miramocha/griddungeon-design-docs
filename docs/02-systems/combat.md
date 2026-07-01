@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+---
 # Combat
 
 Turn-based battles: readable **AGI turn order**, **3+3 core rows** plus **+1+1 auxiliary** slots for summons/guests.

@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+  - domain/combat
+---
 # ADR 023 — Protocol Deploy (navigator sortie as summon)
 
 **Status:** Accepted  

@@ -1,3 +1,11 @@
+﻿---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/active
+  - domain/campaign/s1
+---
 # Campaign flow (content)
 
 Narrative progression, tutorials, and one-time gates � **not** floor grids or encounter tables.
@@ -9,9 +17,9 @@ Narrative progression, tutorials, and one-time gates � **not** floor grids or 
 | [../dungeons-and-encounters.md](../dungeons-and-encounters.md) | Floor layouts, FOE placement, random tables (authority for grids) |
 | [../enemy-roster.md](../enemy-roster.md) | Enemy stats, skills, encounter group compositions |
 
-**Story scenes (VN):** [story-events.md](../../02-systems/story-events.md) � [ADR 028](../../decisions/028-story-visual-novel-events.md) � [#87](https://github.com/miramocha/griddungeon-game/issues/87)
+**Story scenes (VN):** [story-events.md](../../02-systems/story-events.md) � [ADR 028](../../../decisions/028-story-visual-novel-events.md) � [#87](https://github.com/miramocha/griddungeon-game/issues/87)
 
-**Guided coaching (HUD):** [guided-tutorial.md](../../02-systems/guided-tutorial.md) � [ADR 029](../../decisions/029-guided-tutorial.md) � [#88](https://github.com/miramocha/griddungeon-game/issues/88) � distinct from VN; S1 beat table in [s1-guided-tutorials.md](s1-guided-tutorials.md).
+**Guided coaching (HUD):** [guided-tutorial.md](../../02-systems/guided-tutorial.md) � [ADR 029](../../../decisions/029-guided-tutorial.md) � [#88](https://github.com/miramocha/griddungeon-game/issues/88) � distinct from VN; S1 beat table in [s1-guided-tutorials.md](s1-guided-tutorials.md).
 
 **Launch S1:** four story events � B1F **Event cell** before first hub; B2F Event before tutorial fight; mid-combat unlock; hub outro ([story-events index](../story-events/README.md)).
 

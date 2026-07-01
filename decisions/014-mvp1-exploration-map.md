@@ -1,4 +1,13 @@
-﻿# ADR 014 — Exploration & Map
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+  - domain/map
+---
+# ADR 014 — Exploration & Map
 
 **Status:** Accepted  
 **Date:** 2026-05-20

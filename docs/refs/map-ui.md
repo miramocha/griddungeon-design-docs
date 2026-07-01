@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/refs
+  - type/ref
+  - scope/later
+  - status/draft
+  - domain/ui
+  - domain/map
+---
 # Map UI — inspiration (other games)
 
 **Scratchpad only** — screenshots and notes from other titles for map UI ideas. Does **not** override [mapping](../02-systems/mapping.md), [map-cell-art](../02-systems/map-cell-art.md), or ADRs.

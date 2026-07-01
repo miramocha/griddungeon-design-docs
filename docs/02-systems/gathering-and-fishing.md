@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/draft
+  - domain/exploration
+  - domain/hub
+---
 # Gathering & Fishing (optional)
 
 **Scope:** Optional — [release scope](../00-release-scope.md).

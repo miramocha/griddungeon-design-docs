@@ -1,4 +1,13 @@
-﻿# Dungeons & Encounters
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/draft
+  - domain/campaign/s1
+  - domain/foe
+---
+# Dungeons & Encounters
 
 Content structured like **Etrian Odyssey strata** � themed zones with multiple floors, FOE placements, and floor gimmicks.
 
@@ -91,7 +100,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 | `^` | `stairsUp` � gate: ? **hub** (all strata) | Stairs up icon / `^` |
 | `v` | `stairsDown` � next floor **in same stratum** | Stairs down icon / `v` |
 | `F` | FOE spawn | FOE marker when in LOS |
-| `!` | **Event** tile � story script on enter ([story events � S1](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; S1 B2F tutorial briefing |
+| `!` | **Event** tile � story script on enter ([story events � S1](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; S1 B2F tutorial briefing |
 | `C` | **Chest** � **non-walkable**; loot via **Interact** from adjacent cell while **facing** chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)); `ChestItemId` on tile | Solid block when visited; chest **overlay** when wired ([#38](https://github.com/miramocha/griddungeon-game/issues/38)) |
 | `G` | **Gather** � walkable; instant loot on interact ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) | Gather **overlay** when cell visited (`MapGatherMarkersPresenter`) |
 | `D` | Door / **tutorial blocker** (closed until `s1_tutorial_dive_started`) | Door overlay + tint; campaign may also gate **walk** without icon ([#33](https://github.com/miramocha/griddungeon-game/issues/33)) |
@@ -166,7 +175,7 @@ foes:
 
 ## Random encounter table
 
-**Shipped model ([game #288](https://github.com/miramocha/griddungeon-game/pull/288)):** reusable **`RandomEncounterTableDefinition`** SOs under `Assets/Content/RandomEncounterTables/`. Each floor stores **`randomEncounterTableId`** only on `ExplorationFloor`; rate and weighted groups live on the table asset. Author in Floor Editor **Random Encounters** mode or open the table inspector directly ([floor painter](02-systems/floor-editor.md)).
+**Shipped model ([game #288](https://github.com/miramocha/griddungeon-game/pull/288)):** reusable **`RandomEncounterTableDefinition`** SOs under `Assets/Content/RandomEncounterTables/`. Each floor stores **`randomEncounterTableId`** only on `ExplorationFloor`; rate and weighted groups live on the table asset. Author in Floor Editor **Random Encounters** mode or open the table inspector directly ([floor painter](../02-systems/floor-editor.md)).
 
 | Floor key | Table id | Base rate | Weighted groups (design) |
 |-----------|----------|-----------|--------------------------|

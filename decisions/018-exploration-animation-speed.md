@@ -1,4 +1,12 @@
-﻿# ADR 018 — Exploration Animation Speed
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+---
+# ADR 018 — Exploration Animation Speed
 
 **Status:** Accepted (amended 2026-05-26)  
 **Date:** 2026-05-21  

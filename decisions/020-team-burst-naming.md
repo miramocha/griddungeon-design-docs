@@ -1,4 +1,12 @@
-﻿# ADR 020 — Team burst naming (retire “Union”)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+---
+# ADR 020 — Team burst naming (retire “Union”)
 
 **Status:** Accepted  
 **Date:** 2026-05-21 (amended 2026-05-21 — **Synchro Charge** resource term)  

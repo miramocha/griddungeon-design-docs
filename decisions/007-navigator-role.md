@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+---
 # ADR 007 — Navigator Role
 
 **Status:** Accepted  

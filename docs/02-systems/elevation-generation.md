@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/draft
+  - domain/exploration
+---
 # Elevation generation — algorithm
 
 **Implementation:** `GridDungeon.Core.FloorArt.CellElevationGenerator`  

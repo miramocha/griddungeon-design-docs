@@ -1,4 +1,13 @@
-﻿# ADR 025 — Campaign exploration target (per-stratum policy)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/proposed
+  - domain/campaign/s1
+  - domain/phase
+---
+# ADR 025 — Campaign exploration target (per-stratum policy)
 
 **Status:** Proposed (stub)  
 **Date:** 2026-05-22  

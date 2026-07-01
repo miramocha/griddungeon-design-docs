@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+  - domain/phase
+---
 # Presentation shell — implementation gotchas
 
 Living list of **non-obvious bugs and review traps** when wiring **UITK presentation shells** on the [presentation bus](centralized-ui-services.md#presentation-bus) (`UiPresentationBridge` → projector DTO → `I*Shell.Apply`). Distinct from [centralized UI gotchas](centralized-ui-gotchas.md) (PopIn / `ICentralizedUiSurface` lifecycle on modal services).

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/map
+---
 # ADR 002 � Mapping Model
 
 **Status:** Accepted (amended 2026-05-21)  

@@ -1,3 +1,12 @@
+﻿---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/synced
+  - domain/campaign/s1
+  - domain/story-vn
+---
 # Draft — `s1_tutorial_hub_return`
 
 **Status:** **Synced** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; Launch = click-through block.
@@ -29,7 +38,7 @@ Speaker: **`navigator:guild_handler`** only.
 
 ## Related
 
-- [narrative POV](../../02-systems/narrative-pov.md)
+- [narrative POV](../../../02-systems/narrative-pov.md)
 - [s1_b2f_stalker_briefing](s1_b2f_stalker_briefing.md) — exploration Event cell before tutorial fight
-- [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
+- [S1 tutorial flow](../../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 - [S1 intro — flags](../../campaign/s1-intro.md#save-flags-campaign)

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/active
+  - domain/map
+---
 # Map reveal save format (floor packing)
 
 How **exploration map reveal** is stored in the save file: runtime grids in memory, **sparse packed lists** on disk. Implementation: `FloorMapStateCodec` in the game repo (`GridDungeon.Runtime.Map`).

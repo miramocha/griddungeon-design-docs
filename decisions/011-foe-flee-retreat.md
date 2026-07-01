@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/foe
+---
 # ADR 011 — FOE Flee & Retreat Cell
 
 **Status:** Accepted  

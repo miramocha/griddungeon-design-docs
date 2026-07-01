@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/campaign/s1
+---
 # ADR 008 — Campaign Defaults (FOE Respawn, Exploration, Platform)
 
 **Status:** Accepted  

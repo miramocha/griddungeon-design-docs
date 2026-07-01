@@ -1,3 +1,10 @@
+---
+tags:
+  - path/root
+  - type/vision
+  - scope/required
+  - status/active
+---
 # Grid Dungeon — Design Docs
 
 First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey** — mapping as gameplay, FOE threats, guild hub loop, and AGI-driven combat turns.
@@ -7,6 +14,7 @@ First-person, grid-based, turn-based labyrinth RPG aligned with **Etrian Odyssey
 
 ## How to use these docs
 
+- **Obsidian** — tag taxonomy: [obsidian-tags](docs/04-dev/obsidian-tags.md)
 - **Cursor rules** — [`.cursor/rules/`](.cursor/rules/) — Unity clean-code rules (hard-linked from `griddungeon-game`) plus [architecture-design-principles](.cursor/rules/architecture-design-principles.mdc) for class/phase design in this repo
 - **Vision & loop** — why the game exists and what one session feels like
 - **Systems** — rules engines (movement, mapping, combat, party, hub)

@@ -1,4 +1,13 @@
-﻿# ADR 036 — Party inventory & equipment model
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/proposed
+  - domain/hub
+  - domain/combat
+---
+# ADR 036 — Party inventory & equipment model
 
 **Status:** Proposed  
 **Date:** 2026-06-03  

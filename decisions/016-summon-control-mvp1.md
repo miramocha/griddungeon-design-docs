@@ -1,4 +1,12 @@
-﻿# ADR 016 — Summon Control (Player)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
+# ADR 016 — Summon Control (Player)
 
 **Status:** Accepted (required slice)  
 **Date:** 2026-05-20  

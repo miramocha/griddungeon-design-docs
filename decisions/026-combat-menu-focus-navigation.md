@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+  - domain/combat
+---
 # ADR 026 — Combat menu focus navigation (PC)
 
 **Status:** Accepted  

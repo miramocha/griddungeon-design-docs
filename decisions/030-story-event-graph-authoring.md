@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+  - domain/story-vn
+---
 # ADR 030 — Story Event Graph Authoring (follow-up)
 
 > **Scope: Optional feature** — not required for initial release.

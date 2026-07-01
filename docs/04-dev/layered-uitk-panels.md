@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/later
+  - status/proposed
+  - domain/ui
+---
 # Layered UITK panels (dev / integrator)
 
 **Status:** Draft — pairs with [ADR 037](../../decisions/037-layered-uitk-panels.md).  

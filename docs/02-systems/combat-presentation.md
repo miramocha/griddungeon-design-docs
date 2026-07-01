@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/draft
+  - domain/combat
+---
 # Combat Presentation (Spells & Skills)
 
 How skills look and feel in battle — camera, animation, VFX, and **cinematic participation**. Combat runs on the **battle arena** (backdrop + enemy slots), not in dungeon FPV — see [combat scene](combat-scene.md) ([ADR 013](../../decisions/013-combat-scene-rendering.md)).

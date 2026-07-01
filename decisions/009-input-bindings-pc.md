@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+---
 # ADR 009 — PC Input Bindings
 
 **Status:** Accepted (combat UI input amended by [ADR 026](026-combat-menu-focus-navigation.md))  

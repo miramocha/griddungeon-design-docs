@@ -1,3 +1,12 @@
+﻿---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/synced
+  - domain/campaign/s1
+  - domain/story-vn
+---
 # Draft — `s1_b2f_stalker_briefing`
 
 **Status:** **Synced** with game `Assets/Content/StoryEvents/s1_b2f_stalker_briefing.asset` — **Navigator-only** (no `npc:*` yet), **blank state**; Launch = click-through block.
@@ -35,9 +44,9 @@ Speaker: **`navigator:guild_handler`** only.
 
 ## Related
 
-- [narrative POV](../../02-systems/narrative-pov.md)
+- [narrative POV](../../../02-systems/narrative-pov.md)
 - [s1_b1f_gate_briefing](s1_b1f_gate_briefing.md) — Act 1 Event cell before first hub
-- [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
-- [archive — s1_B2F Event cell (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
+- [S1 tutorial flow](../../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
+- [archive — s1_B2F Event cell (draft)](../../../archive/mvp1-s1-floor-layouts-draft.md#s1_b2f--collapsed-avenues-bind--poison--patrol-foe)
 - [s1_synchro_protocol_unlock](s1_synchro_protocol_unlock.md)
 - [s1_tutorial_hub_return](s1_tutorial_hub_return.md)

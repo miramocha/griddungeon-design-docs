@@ -1,4 +1,12 @@
-﻿# Combat Scene & Enemy Rendering
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
+# Combat Scene & Enemy Rendering
 
 How encounters **leave exploration FPV** and present **enemies** during AGI combat. Locked: **battle arena + fixed backdrop** ([ADR 013](../../decisions/013-combat-scene-rendering.md)), not fighting inside the live dungeon geometry.
 

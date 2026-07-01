@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+---
 # Combat Status, Buffs & Debuffs
 
 Rules for **ailments**, **stat modifiers**, and **battle modifiers** during AGI combat. EO-first: limb **binds**, turn-skipping control, timed **Boost/Down** stats, end-of-round ticks. **Boost/Break** (EO2 Force) remains out of scope — see [Synchro Protocol](synchro-protocol.md).

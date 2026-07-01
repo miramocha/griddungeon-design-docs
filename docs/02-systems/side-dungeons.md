@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/draft
+  - domain/exploration
+  - domain/hub
+---
 # Side dungeons (non-strata)
 
 **Optional** � optional grid zones outside the main **stratum** ladder. Same exploration and combat subsystems as the labyrinth; different hub entry, save keys, and progression rules.

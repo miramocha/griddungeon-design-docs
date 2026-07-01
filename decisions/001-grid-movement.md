@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+---
 # ADR 001 — Grid Movement Feel
 
 **Status:** Accepted  

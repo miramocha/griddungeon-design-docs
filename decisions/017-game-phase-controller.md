@@ -1,4 +1,12 @@
-﻿# ADR 017 — Game Phase Controller (C#)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/phase
+---
+# ADR 017 — Game Phase Controller (C#)
 
 **Status:** Accepted (required slice)  
 **Date:** 2026-05-21

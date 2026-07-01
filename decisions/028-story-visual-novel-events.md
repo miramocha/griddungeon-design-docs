@@ -1,4 +1,12 @@
-﻿# ADR 028 — Story Events (Visual Novel Presentation)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/proposed
+  - domain/story-vn
+---
+# ADR 028 — Story Events (Visual Novel Presentation)
 
 **Status:** Proposed (decisions locked 2026-05-23 — UI-retract detail open; implementation [#87](https://github.com/miramocha/griddungeon-game/issues/87))  
 **Date:** 2026-05-23  

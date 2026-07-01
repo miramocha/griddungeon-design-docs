@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/synchro
+  - domain/combat
+---
 # Synchro Protocol (Team Bar)
 
 **Locked name** ([ADR 020](../../decisions/020-team-burst-naming.md)). Replaces working name **Union**.

@@ -1,4 +1,13 @@
-﻿# ADR 021 — Autopilot (optional)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/accepted
+  - domain/exploration
+  - domain/map
+---
+# ADR 021 — Autopilot (optional)
 
 > **Scope: Optional feature** — not required for initial release.
 

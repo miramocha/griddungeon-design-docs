@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+  - domain/phase
+---
 # ADR 042 — Runtime presentation bus + shell catalog
 
 **Status:** Accepted  

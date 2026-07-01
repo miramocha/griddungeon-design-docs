@@ -1,4 +1,13 @@
-﻿# Floor transition vignette
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/exploration
+  - domain/phase
+---
+# Floor transition vignette
 
 **Status:** Locked ([ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md))  
 **Implementation:** [game epic #114](https://github.com/miramocha/griddungeon-game/issues/114) ([#115](https://github.com/miramocha/griddungeon-game/issues/115)–[#118](https://github.com/miramocha/griddungeon-game/issues/118)); builds on [#102](https://github.com/miramocha/griddungeon-game/issues/102)  

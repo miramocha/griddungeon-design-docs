@@ -1,4 +1,11 @@
-﻿# Game references
+---
+tags:
+  - path/docs
+  - type/vision
+  - scope/later
+  - status/draft
+---
+# Game references
 
 Curated titles for **future design and tone checks**. **Launch authority** stays **Etrian Odyssey–first** ([00 — Vision](00-vision.md)); entries here inform optional systems, UX, and later ideas — they do not override locked ADRs unless we explicitly amend one.
 
@@ -34,7 +41,7 @@ From **Etrian Odyssey IV** onward, enemy lines use the same **front + back row**
 | **Service loop** | Guild, shop, hospital, inn/save, then **re-enter** stratum | launch menu tree: Explorers Guild, Navigator Office, shop, hospital, inn ([hub table](02-systems/hub-and-services.md#hub-locations-launch-slice)) |
 | **No marathon in the maze** | Heal, equip, save at hub; push depth deliberately | Inn primary save; no labyrinth save at launch; Return thread / gate stairs up |
 | **Item bag** | Fixed slots; categorized browse in EO Nexus–style titles | Fixed **party bag** (default 30 slots), **category tabs** (All / Consumables / Equipment) — [items & inventory](02-systems/items-and-inventory.md) · [ADR 036](../decisions/036-party-inventory-model.md) |
-| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 gate spawn; S2+ warp gates ([dungeons § entry](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
+| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 gate spawn; S2+ warp gates ([dungeons § entry](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
 | **Hub navigation (EO titles vary)** | Older: **menu / icon** hubs; newer (e.g. Nexus): **walkable** 3D districts | **Menu-first** (EO classic) — **no** avatar walk; later **camera pan** on root-menu focus ([hub environment](02-systems/hub-and-services.md#hub-environment-presentation)) |
 | **Presentation** | Often **static** illustration or simple 3D with direct facility pick | Full-screen 3D backdrop + UI overlay; pans **later** |
 

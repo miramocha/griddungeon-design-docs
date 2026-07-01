@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/phase
+---
 # Game Phase (Hub / Exploration / Combat)
 
 Macro runtime modes at launch. **Locked:** pure C# orchestration ([ADR 017](../../decisions/017-game-phase-controller.md)). Unity Visual Scripting state graphs are **not** used for phase authority at launch.

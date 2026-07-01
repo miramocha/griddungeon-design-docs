@@ -1,13 +1,22 @@
-﻿# S1 — Guided tutorial beats (later target)
+﻿---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/later
+  - status/active
+  - domain/campaign/s1
+  - domain/story-vn
+---
+# S1 — Guided tutorial beats (later target)
 
 **Required slice:** S1 teaching uses story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story combat beats (`EncounterGroup.Events[]`, `StoryEventEffectExecutor`) — full coach + Protocol-only rail deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88), [release scope § Later](../../00-release-scope.md#later)).
 
-**System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted)  
+**System:** [guided-tutorial.md](../../02-systems/guided-tutorial.md) · **ADR:** [029](../../../decisions/029-guided-tutorial.md) (Accepted)  
 **Campaign acts & flags:** [s1-intro.md](s1-intro.md)  
 **Floor layout:** [archive — s1_B1F (draft)](../../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)  
 **Combat + VN sequence:** [story events § S1 flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 
-Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** at launch). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../decisions/029-guided-tutorial.md)).
+Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with `textKey` + optional `imageId` (**stills only** at launch). Draft English below is per-page body (`textEn`). **Codex:** pause menu (`Esc`) → Tutorial codex ([ADR 029](../../../decisions/029-guided-tutorial.md)).
 
 **Voice:** **No character speaker** — impersonal coach copy only (system / second-person imperative). No `speakerId`, no portrait. Fiction and emotion live in **story VN** ([narrative POV](../../02-systems/narrative-pov.md)); tutorials teach **controls and UI**. **Act 1** fiction (solo Navigator) is **not** stated in guided rows — only in VN.
 
@@ -49,7 +58,7 @@ Each row is a **`tutorialEntryId`** (codex + in-world). Author **pages[]** with 
 
 ## Act 2 — Party (Hub)
 
-**Launch:** no guided entries — guild UI + service motion only ([ADR 029](../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
+**Launch:** no guided entries — guild UI + service motion only ([ADR 029](../../../decisions/029-guided-tutorial.md#stakeholder-decisions-2026-05-23)). Revisit if playtest shows Act 2 confusion.
 
 **Navigator framing (S1 copy pass):** Launch presents **one** Navigator identity (`guild_handler`) on the sideline with the crew. **Navigator Office** teaches **tool / Protocol kit** options (different Synchro skills), not a roster of alternate Navigator characters — see [navigator § Active Navigator](../../02-systems/navigator.md#active-navigator). Optional 1–2 hub asides TBD when Act 2 lines are drafted.
 

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs
+  - type/dev
+  - scope/required
+  - status/accepted
+  - domain/phase
+---
 # Class Design
 
 Type catalog and assembly map for the launch implementation. **Authoritative C#** lives in [griddungeon-game](https://github.com/miramocha/griddungeon-game) under `Assets/Scripts/` and `Assets/Content/`. Behavior, flows, and acceptance criteria live in [system docs](02-systems/) and [ADRs](../decisions/).

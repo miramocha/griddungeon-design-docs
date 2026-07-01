@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/accepted
+  - domain/exploration
+  - domain/hub
+---
 # ADR 022 � Side dungeons (optional)
 
 **Status:** Accepted (optional scope)  

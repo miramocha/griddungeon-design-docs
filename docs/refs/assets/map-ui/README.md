@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/refs
+  - type/ref
+  - scope/later
+  - status/active
+  - domain/map
+---
 # Map UI inspiration screenshots
 
 Drop images here from other games. Link them from [map-ui.md](../../map-ui.md).

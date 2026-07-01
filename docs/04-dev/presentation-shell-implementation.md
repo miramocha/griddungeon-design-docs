@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+  - domain/phase
+---
 # Implementing a presentation shell
 
 How to add a **new UI shell** on the [presentation bus](centralized-ui-services.md#presentation-bus) — swap art/layout or host world-space chrome without forking projectors or phase HUDs.

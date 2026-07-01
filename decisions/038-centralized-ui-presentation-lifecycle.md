@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+---
 # ADR 038 — Centralized UI presentation lifecycle
 
 **Status:** Accepted  

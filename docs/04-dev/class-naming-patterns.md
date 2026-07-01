@@ -1,3 +1,10 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+---
 # Class naming patterns (C# suffixes)
 
 Grid Dungeon uses **PascalCase type suffixes** to signal responsibility and assembly placement. This doc is the human-readable authority; agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc).

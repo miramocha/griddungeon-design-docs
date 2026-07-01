@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/ui
+---
 # ADR 037 — Layered UITK panels (HUD depth)
 
 **Status:** Proposed (draft)  

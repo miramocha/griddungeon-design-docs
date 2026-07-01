@@ -1,4 +1,12 @@
-﻿# Navigator
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/synchro
+---
+# Navigator
 
 **Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
@@ -156,7 +164,7 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 
 ## Launch content (locked)
 
-Matches [synchro-protocol § Launch content](02-systems/synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
+Matches [synchro-protocol § Launch content](synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
 
 | Navigator | `navigator_id` | Unlock | Aura at launch | Protocol kit |
 |-----------|----------------|--------|-------------|--------------|

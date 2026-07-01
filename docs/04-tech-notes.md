@@ -1,4 +1,13 @@
-﻿# Tech Notes (Unity 6 / URP)
+---
+tags:
+  - path/docs
+  - type/dev
+  - scope/required
+  - status/draft
+  - domain/exploration
+  - domain/map
+---
+# Tech Notes (Unity 6 / URP)
 
 **Engine:** **Unity 6** (6000.x) + **URP** ([ADR 012](../decisions/012-unity-6-stack.md)).  
 **Platform:** PC Standalone ([ADR 008](../decisions/008-campaign-defaults.md), [input bindings](02-systems/input-bindings.md)).
@@ -17,7 +26,7 @@
 | Combat cinematics | **Timeline** / Animation clips per skill asset (`Cinematic`, `CinematicQTE`) |
 | Save | `JsonUtility` or custom serializer at launch; ScriptableObjects for content DB |
 
-Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`). **Plugin asmdefs:** optional `GridDungeon.FloorArt.TileWorldCreator` (+ Editor sibling) references vendor TWC; `GridDungeon.Runtime` uses `IFloorArtMeshBackend` registry only — see [floor-art-fpv.md — TileWorldCreator runtime path](floor-art-fpv.md#tileworldcreator-runtime-path) and [ADR 043](../decisions/043-twc-fpv-presentation-layer.md).
+Third-party plugins and asset store packs must declare **Unity 6 + URP** compatibility before use. **DOTween** is a required dependency (Asset Store import under `Assets/Plugins/Demigiant/DOTween/`). **Plugin asmdefs:** optional `GridDungeon.FloorArt.TileWorldCreator` (+ Editor sibling) references vendor TWC; `GridDungeon.Runtime` uses `IFloorArtMeshBackend` registry only — see [floor-art-fpv.md — TileWorldCreator runtime path](02-systems/floor-art-fpv.md#tileworldcreator-runtime-path) and [ADR 043](../decisions/043-twc-fpv-presentation-layer.md).
 
 ## Shaders (Shader Graph�first)
 

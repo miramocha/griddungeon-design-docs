@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+---
 # ADR 043 — TileWorldCreator as FPV presentation layer
 
 **Status:** Accepted  

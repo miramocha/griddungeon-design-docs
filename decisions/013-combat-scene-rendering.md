@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
 # ADR 013 — Combat Scene Rendering (Battle Arena vs World Space)
 
 **Status:** Accepted  

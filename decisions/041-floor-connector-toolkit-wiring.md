@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+---
 # ADR 041 — Floor Connector (Graph Toolkit wiring)
 
 **Status:** Proposed  

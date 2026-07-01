@@ -1,4 +1,12 @@
-﻿# ADR 029 — Guided Tutorial (player coaching)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/accepted
+  - domain/story-vn
+---
+# ADR 029 — Guided Tutorial (player coaching)
 
 > **Scope: Optional feature** — not required for initial release.
 

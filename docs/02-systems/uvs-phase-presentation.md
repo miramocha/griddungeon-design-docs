@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/draft
+  - domain/phase
+---
 # UVS — Phase & Presentation Hooks
 
 **Authority:** [ADR 017](../../decisions/017-game-phase-controller.md) (macro phases stay in C#) · [game phase](game-phase.md) (transition table, lifecycle)  

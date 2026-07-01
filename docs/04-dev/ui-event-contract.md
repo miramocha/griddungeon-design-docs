@@ -1,4 +1,12 @@
-﻿# UI event contract (integrator / external HUD)
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
+# UI event contract (integrator / external HUD)
 
 Forward-facing reference for **replacing or extending Grid Dungeon HUD** without reading every shipped view. Describes **runtime events and command entry points** that custom UI in `GridDungeon.UI` (or a sibling assembly) should use.
 

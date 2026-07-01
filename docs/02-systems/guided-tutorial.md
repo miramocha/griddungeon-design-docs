@@ -1,4 +1,12 @@
-﻿# Guided Tutorial (player coaching)
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/accepted
+  - domain/story-vn
+---
+# Guided Tutorial (player coaching)
 
 **Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Launch (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story-driven combat beats (`EncounterEventScheduler`, `StoryEventEffectExecutor`). **Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex, Protocol-only command rail ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 

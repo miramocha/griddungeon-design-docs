@@ -1,3 +1,10 @@
+---
+tags:
+  - path/docs/refs
+  - type/ref
+  - scope/later
+  - status/active
+---
 # Visual & UX references
 
 Scratchpad pages for **screenshots from other games** and inspiration notes — not spec authority. Locked rules stay in [02 — Systems](../02-systems/) and [decisions/](../../decisions/).

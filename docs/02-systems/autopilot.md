@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/draft
+  - domain/exploration
+  - domain/map
+---
 # Autopilot
 
 **Scope:** Optional — [release scope](../00-release-scope.md).

@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+  - domain/exploration
+---
 # ADR 040 — Floor exit topology graph (multi-exit floors)
 
 **Status:** Proposed  

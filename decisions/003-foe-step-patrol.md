@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/foe
+---
 # ADR 003 — FOE Step-Based Patrol
 
 **Status:** Accepted  

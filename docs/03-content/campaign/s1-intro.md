@@ -1,4 +1,12 @@
-﻿# Stratum 1 — Campaign intro
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/draft
+  - domain/campaign/s1
+---
+# Stratum 1 — Campaign intro
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Floor layouts (ASCII, FOE YAML — draft):** [archive — S1 floor layouts](../../archive/mvp1-s1-floor-layouts-draft.md) — do not duplicate grids here.  

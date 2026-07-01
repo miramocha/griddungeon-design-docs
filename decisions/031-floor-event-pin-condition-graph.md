@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+---
 # ADR 031 — Floor Event & Pin Condition Graph (Graph Toolkit)
 
 **Status:** Proposed (idea — does not block launch)  

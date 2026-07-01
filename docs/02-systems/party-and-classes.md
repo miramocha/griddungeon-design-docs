@@ -1,4 +1,13 @@
-﻿# Party & Classes
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+  - domain/hub
+---
+# Party & Classes
 
 ## Party size & formation
 

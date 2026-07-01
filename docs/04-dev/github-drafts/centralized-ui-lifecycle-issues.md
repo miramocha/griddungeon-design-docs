@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/archive
+  - scope/required
+  - status/archived
+  - domain/ui
+---
 # GitHub index — Centralized UI presentation lifecycle
 
 **Filed on GitHub.** Authoritative API + **mandatory `ICentralizedUiSurface` rule:** [centralized-ui-services.md § Presentation lifecycle](../centralized-ui-services.md#presentation-lifecycle).

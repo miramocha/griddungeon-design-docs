@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/accepted
+  - domain/hub
+---
 # ADR 033 — Hub environment camera (Cinemachine)
 
 > **Scope: Optional feature** — not required for initial release.

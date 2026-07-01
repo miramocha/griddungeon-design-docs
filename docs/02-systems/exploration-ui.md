@@ -1,4 +1,13 @@
-﻿# Exploration UI (UI Toolkit)
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/ui
+  - domain/exploration
+---
+# Exploration UI (UI Toolkit)
 
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, party menu / pause overlay, party strip floater) without re-tracing the scene graph.
 

@@ -1,4 +1,12 @@
-﻿# launch class skills (content kit)
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
+# launch class skills (content kit)
 
 **Status:** Locked at launch ContentDB ([design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12))  
 **Authority:** Skill IDs and targeting here; implementation types in [05 — class design](../05-class-design.md).

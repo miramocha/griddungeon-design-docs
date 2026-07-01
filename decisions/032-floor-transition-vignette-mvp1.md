@@ -1,4 +1,13 @@
-﻿# ADR 032 — Floor transition vignette
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+  - domain/phase
+---
+# ADR 032 — Floor transition vignette
 
 **Status:** Accepted  
 **Date:** 2026-05-28  

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/exploration
+---
 # Authoring floor transition beats (stairs vignette)
 
 **Scope:** 3D **transition prefabs** played when the party changes exploration floor via stairs or hub stratum entry — **not** dungeon grid markers (`^` / `v` on `ExplorationFloor`). For layout stairs, see [Floor Editor](../02-systems/floor-editor.md) and [dungeons & encounters](../03-content/dungeons-and-encounters.md#map-legend-ascii-blockouts).

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/archive
+  - scope/later
+  - status/archived
+  - domain/ui
+---
 # GitHub drafts — Layered UITK panels epic
 
 **Not filed on GitHub yet.** Copy bodies into `gh issue create` when ready.  

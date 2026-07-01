@@ -1,4 +1,12 @@
-﻿# ADR 019 — Floor Verticality (Doom-style)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/accepted
+  - domain/exploration
+---
+# ADR 019 — Floor Verticality (Doom-style)
 
 **Status:** Accepted  
 **Date:** 2026-05-21

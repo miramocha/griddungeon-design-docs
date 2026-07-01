@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+---
 # ADR 006 — Team burst bar (Synchro Protocol)
 
 **Status:** Accepted  
