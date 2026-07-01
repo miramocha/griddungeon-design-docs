@@ -108,7 +108,8 @@ Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-che
 | Phase | Floor Editor impact |
 |-------|---------------------|
 | Shipped (0–2) | None required — **FPV Preview** still opens built-in `FloorArtPreviewMenus` path |
-| Optional ([#370](https://github.com/miramocha/griddungeon-game/issues/370)) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy for `MeshBackend = TileWorldCreator` strata |
+| Optional ([#371](https://github.com/miramocha/griddungeon-game/issues/371)) | **FPV Preview** branches to TWC-built preview when stratum `MeshBackend = TileWorldCreator` |
+| Optional ([#370](https://github.com/miramocha/griddungeon-game/issues/370)) | Retire built-in mesh populate after full TWC rollout |
 
 Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes while `MeshBackend = Default`. Optional built-in mesh retirement: [#370](https://github.com/miramocha/griddungeon-game/issues/370). See [floor-art-fpv.md — TileWorldCreator runtime path](floor-art-fpv.md#tileworldcreator-runtime-path).
 

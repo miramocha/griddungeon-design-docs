@@ -28,7 +28,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 | Interactables | Chest/door populate on `FloorArtGrid` lists (Phase 1 path; optional TWC Objects layer later) |
 | Elevation | `cellElevationSteps` → runtime `Level_sN` layers ([#347](https://github.com/miramocha/griddungeon-game/issues/347)); see [twc-default-notes § Elevation bridge](../04-dev/twc-default-notes.md#elevation-bridge-347) |
 | Built-in populate | `PopulateWallBlocks` / `PopulateWalkableTiles` / blocky terrain when `MeshBackend = Default` |
-| Floor Editor | **No required UI change** — optional FPV Preview / elevation copy tracked on [#370](https://github.com/miramocha/griddungeon-game/issues/370) |
+| Floor Editor | **No required UI change** — FPV Preview for TWC: [#371](https://github.com/miramocha/griddungeon-game/issues/371); mesh retirement: [#370](https://github.com/miramocha/griddungeon-game/issues/370) |
 | Map authority | **`ExplorationFloor` → TWC only** — do not use TWC CA/BSP/maze generators as gameplay layout source |
 | Mesh backends | **`Default`** (built-in, all installs) \| **`TileWorldCreator`** (optional plugin asmdef) |
 | Plugin asmdef | **`GridDungeon.FloorArt.TileWorldCreator`** — omit folder if no asset; Runtime never references vendor TWC asm |

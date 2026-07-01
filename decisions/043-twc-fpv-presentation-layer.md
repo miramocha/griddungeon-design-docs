@@ -34,6 +34,7 @@ TWC also ships procedural blueprint generators (cellular automata, BSP, maze). U
 - Runtime builds TWC configuration clone per floor load; committed TWC assets are templates, not layout authority.
 - Elevation uses runtime-provisioned `Level_sN` layers ([#347](https://github.com/miramocha/griddungeon-game/issues/347)); `cellElevationSteps` schema unchanged.
 - Built-in populate/terrain path remains until optional [#370](https://github.com/miramocha/griddungeon-game/issues/370) after full strata rollout.
+- Floor Editor FPV Preview for TWC strata tracked on [#371](https://github.com/miramocha/griddungeon-game/issues/371) (optional; not blocked on #370).
 
 ## Implementation references
 

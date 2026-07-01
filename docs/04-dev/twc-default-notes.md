@@ -159,4 +159,4 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 
 **Assembly:** `GridDungeon.FloorArt.TileWorldCreator` uses `autoReferenced: false` — TWC is optional; only explicit asmdef refs (tests, prefab host) pull it in.
 
-Follow-up (out of epic #344): [#370](https://github.com/miramocha/griddungeon-game/issues/370) optional built-in mesh retirement after full TWC rollout.
+Follow-up (out of epic #344): [#371](https://github.com/miramocha/griddungeon-game/issues/371) Floor Editor FPV Preview for TWC; [#370](https://github.com/miramocha/griddungeon-game/issues/370) optional built-in mesh retirement after full rollout.
