@@ -10,7 +10,7 @@
 Artists author **3D corridor props** on the same **20×20** grid as exploration logic (`ExplorationFloor`). **`FloorArtGrid`** (Editor) aligns overlays and snap to `ExplorationWorldSpace.CellCornerToWorld` (10 u/cell). This spec adds:
 
 1. **Populate** — inspector list of wall/block prefabs + button to place one random full-cell prop on each **non-walkable** logic cell (with skips).
-2. **Runtime presentation** — load the authored floor art scene (or prefab) during exploration so Play Mode shows the same meshes artists built (not per-cell spawn from `ExplorationFloor` in v1).
+2. **Runtime presentation** — instantiate stratum template or custom floor art prefab during exploration so Play Mode shows authored meshes (not per-cell spawn from `ExplorationFloor` in v1).
 
 Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core** only ([ADR 002](../../decisions/002-mapping-model.md)).
 
@@ -45,13 +45,13 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 |-------|-----------|----------------|
 | Grid rules | `ExplorationFloor` SO, layout builders | — |
 | 2D map HUD | `MapSystem` + `MapView` | Sprites / composite walls ([#38](https://github.com/miramocha/griddungeon-game/issues/38)) |
-| FPV dungeon | Same walkability as SO | `Assets/Scenes/Floors/{floorKey}.unity` under `FloorArtRoot/Props` |
+| FPV dungeon | Same walkability as SO | Stratum template prefab or per-floor custom prefab under `FloorArtCatalog` |
 
 **Grid model:** `cell.X` → world **X**, `cell.Y` → world **Z**, north **+Z**; anchor = **cell corner** `(x, 0, z)` ([02 — Dungeon navigation](../02-dungeon-navigation.md)). When the floor asset has `cellElevationSteps`, party/camera **Y** follows step × `elevationStepUnits` via `DungeonExplorer` — not the flat `y = 0` default.
 
 **World scale at launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art scenes use **`FloorArtGrid.Cell Size = 10`**; legacy scenes authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
 
-**Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template scene, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonView.RenderCell` remains a stub — runtime FPV is **scene load**, not blobber cell rendering.
+**Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template prefab workflow, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonView.RenderCell` remains a stub — runtime FPV is **prefab instantiate**, not blobber cell rendering.
 
 ## Locked decisions (Populate v1)
 
@@ -122,20 +122,31 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 
 | Topic | Decision |
 |-------|----------|
-| Source | **Authored floor art** the artist built in Editor (scene or exported prefab) |
+| Source | **Authored floor art prefab** (stratum template or custom `FloorArtRoot` per floor key) |
 | Not in v1 | `DungeonView` spawning wall prefabs per cell from `ExplorationFloor` at runtime |
-| Load trigger | When `ExplorationPhaseController` activates a floor matching `floorKey` |
-| Unload | Previous floor art instance unloaded/hidden on floor change or leaving exploration |
-| Catalog | `FloorArtCatalog` (or similar) SO: `floorKey` → scene asset **or** `FloorArtRoot` prefab |
+| Load trigger | `FloorTransitionPresenter` → `FloorArtPresenter.LoadFloorArt` when floor commits |
+| Unload | Previous floor art instance destroyed on floor change or leaving exploration |
+| Catalog | `FloorArtCatalog`: `floorKey` → **DefaultTemplate** (stratum prefab + runtime build) or **CustomPrefab** (`FloorArtRoot` prefab) |
 | Missing art | Log warning; exploration continues (map + movement); FPV may be empty |
 | Alignment | Art root at world origin; corner math matches `ExplorationWorldSpace` / `FloorArtGrid.GridToWorld` |
 | Cell size | **`10`** world units per logic cell on new floors; `FloorArtLayoutSpacing` expands legacy **1** u/cell **generated** props at load |
-| Stale load | Cancel in-flight additive scene load when floor changes before load completes |
-| Build | Shipped floors’ art scenes/prefabs must be **included in player build** (see game README — differs from #92 template-only note) |
+| In-flight load | Cancel pending load when floor changes before mount completes |
+| Build | Shipped custom prefabs referenced from `FloorArtCatalog`; stratum template prefab on stratum defaults — **no per-floor scenes in Build Settings** |
+
+## Custom floor art prefab (hero floors)
+
+| Step | Action |
+|------|--------|
+| Create | **GridDungeon → Floor Art → Templates → Create Custom Floor Art Prefab…** → `{floorKey}.prefab` under `Assets/Content/FloorArt/Prefabs/Floors/` |
+| Author | Assign `ExplorationFloor` on **Floor Art Grid**; populate / hand-place under **Props**; **Setup Default Lighting** |
+| Register | Accept catalog prompt or add `FloorArtCatalog` row: **Presentation = Custom Prefab**, **Floor art prefab** = asset |
+| Runtime | `FloorArtPresenter` instantiates prefab; logic still from `ExplorationFloor` SO only |
+
+Most floors skip this — use **Default template** + TWC/runtime populate with no catalog row.
 
 ## Editor — Populate workflow
 
-1. Open **FPV preview** (**GridDungeon → Floor Art → Preview → Open Preview For Floor…**) or a floor art scene for hand-editing.
+1. Open **FPV preview** (**GridDungeon → Floor Art → Preview → Open Preview For Floor…**) or edit a **custom floor art prefab** (`Assets/Content/FloorArt/Prefabs/Floors/{floorKey}.prefab`).
 2. Assign `ExplorationFloor` on **Floor Art Grid**; enable **Show Blocked Overlay** to verify alignment.
 3. Assign **Wall Block Prefabs** list on `FloorArtGrid`.
 4. Click **Populate Wall Blocks** (name TBD).
@@ -162,21 +173,21 @@ sequenceDiagram
     participant EPC as ExplorationPhaseController
     participant Cat as FloorArtCatalog
     participant DV as DungeonView
-    participant Scene as Floor art scene/prefab
+    participant Prefab as Floor art prefab
 
     EPC->>EPC: Load ExplorationFloor (logic)
     EPC->>Cat: Resolve(floorKey)
     alt art registered
-        Cat->>DV: LoadFloorArt(scene or prefab)
-        DV->>Scene: Instantiate or additive load
+        Cat->>DV: LoadFloorArt(prefab)
+        DV->>Prefab: Instantiate under DungeonView
     else missing
         EPC->>DV: Clear / warn
     end
 ```
 
-- **Additive scene** or **prefab instance** under `DungeonView` transform — pick one in implementation; prefab avoids duplicating lighting per scene if desired.
+- **Prefab instance** under `DungeonView` transform — stratum template or catalog **CustomPrefab** row.
 - **Combat:** `CombatPhaseController` hides `DungeonView` (existing); floor art root hides with it.
-- **Alignment:** Art root at world origin `(0,0,0)`; same as Editor floor scenes.
+- **Alignment:** Art root at world origin `(0,0,0)`; same as Editor preview and prefab authoring.
 
 ## Floor transitions
 
@@ -198,7 +209,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 | Rule | Why |
 |------|-----|
 | **Single owner** (`FloorTransitionPresenter`) per floor change | Avoid `LoadFloorArt` from both transition and `ExplorationPhaseController` on the same frame. |
-| **No overlapping additive loads** | Prevents stale `s1_B*n*F` scenes and wrong mounted `FloorArtRoot`. |
+| **No overlapping loads** | Prevents stale floor art and wrong mounted `FloorArtRoot`. |
 | **Play Mode tests** via `FloorTransitionPlayModeTests` | Transition enter → unload → commit → load; not raw double `LoadFloorArt` on one frame. |
 | **Fade-only fallback** if beat asset missing | Floor change must still complete. |
 
@@ -233,8 +244,8 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 
 - [x] `FloorArtCatalog` SO under `Assets/Content/FloorArt/`
 - [x] `FloorArtPresenter`: load/unload by `floorKey` under `DungeonView`
-- [x] `ExplorationPhaseController`: load after floor SO ready; cancel in-flight additive loads on floor change
-- [x] Register `s1_B1F` / `B2F` / `B3F` in catalog + **Build Settings**
+- [x] `ExplorationPhaseController`: load after floor SO ready; cancel in-flight prefab mount on floor change
+- [x] S1 floors use shared stratum template prefab — no per-floor Build Settings entries
 - [ ] DevBootstrap F2 manual: visible walls match blocked overlay
 
 ## Acceptance criteria
@@ -254,7 +265,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 
 ### Manual (Editor)
 
-1. `s1_B1F.unity` + blocked overlay → **Populate** → compare outer ring to red gizmo cells; confirm no prop at tutorial **X**.
+1. FPV preview or custom prefab + blocked overlay → **Populate** → compare outer ring to red gizmo cells; confirm no prop at tutorial **X**.
 2. Hand-place extra prop under `Props` → **Populate** again → hand prop remains.
 
 ### Manual (Play Mode)
