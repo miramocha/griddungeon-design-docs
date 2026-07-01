@@ -27,9 +27,11 @@ Phase 0 default path: `ExplorationFloor` walkables → TWC `AddCellsToLayer` →
 | Layer     | Blueprint input           | Build output                                                                         |
 | --------- | ------------------------- | ------------------------------------------------------------------------------------ |
 | **Floor** | `BuildWalkableFloorCells` | Grass dual-grid **fill** — builds **first**, mesh colliders for wall stacking        |
-| **Walls** | `BuildSolidMassCells`     | BaseBlock dual-grid **edges** — fixed `layerYOffset = +cellSize/2` (no `placeOnTop`) |
+| **Walls** | `BuildSolidMassCells`     | BaseBlock dual-grid **edges** — `layerYOffset = -twcCellSize/2` for center-pivot tiles (no `placeOnTop`) |
 
-Center-pivot TWC tiles: floor `layerYOffset = -twcCellSize/2`; walls `layerYOffset = +twcCellSize/2` (2.5 u when sub-grid cellSize is 5). Fixed offsets avoid door/chest raycast misalignment from `placeOnTop`.
+Center-pivot TWC tiles: floor and walls both `layerYOffset = -twcCellSize/2` (2.5 u when sub-grid cellSize is 5). Fixed offsets avoid door/chest raycast misalignment from `placeOnTop`.
+
+**Runtime:** `FloorArtTwcTileLayerYOffset` sets floor `layerYOffset = -maxY × twcCellSize`. Walls use the same `-twcCellSize/2` when the edge mesh is center-pivot (`minY ≤ 0`); asymmetric edges (`minY > 0`) use `-minY × twcCellSize`.
 
 ## Sub-grid resolution (default 2×2)
 
@@ -87,11 +89,13 @@ Applied at runtime to both **Floor** and **Walls** build layers (`scaleTileToCel
 | Corridors            | Unpainted void — edge tiles form walls at mass boundary                                                         | Same                                                    |
 | Fit for Grid Dungeon | **Yes** — matches legacy wall-block populate cells; do **not** paint walkable (fills corridor with solid cubes) | Heavier art set; defer unless art needs NRMGRD variants |
 
-## Elevation (Phase 0)
+## Elevation bridge (#347)
 
-- **Flat only.** `FloorArtGrid.TryGetElevationY` still reads `ExplorationFloor.cellElevationSteps` — unchanged authority.
-- TWC build uses `defaultLayerHeight = 0` on blueprint layer; per-cell Y from elevation bridge is **#347**.
-- B1F uses stratum template with **TwcFloorArt**; blocky terrain off via floor/stratum resolve when bound.
+- **Authority:** `ExplorationFloor.cellElevationSteps` + `elevationStepUnits` → party/camera Y via `FloorArtGrid.TryGetElevationY` (unchanged).
+- **FPV mesh:** `FloorArtTwcElevationTranslator` buckets walkable/solid blueprint cells by **elevation step layer**. Walkable terraces paint **solid foundation** on layers `0 .. surfaceStep-1` then walkable on `surfaceStep`. Layout `#` walls paint **solid on every layer** `baseStep .. baseStep + terrainWallHeight` (one TWC block per layer — no single boosted cliff bucket). **TWC blueprint Y:** `layerStep × TwcElevationBlockStepUnits` (0.5 u). Party/camera Y still uses floor `elevationStepUnits`. `FloorArtTwcElevationLayerProvisioner` orders **floor build layers before walls** per step (sibling index — draw order only).
+- **Flat floors** (single step `0`): canonical `WalkableFloor` / `SolidMass` layers — same as Phase 0.
+- **No per-floor TWC config authoring** — elevation is not stored on `GridDungeonTwcConfiguration.asset`.
+- **Floor key gate:** empty `m_enabledFloorKeys` or legacy single `s1_B1F` entry → TWC build runs for all floors on the stratum template.
 
 ## Build time
 
@@ -126,7 +130,7 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 | Walls fill corridor / on walkable cells        | Solid-mass mask on walkable blueprint                                        | Floor uses `WalkableFloor` + `BuildWalkableFloorCells`; walls use `SolidMass` + `BuildSolidMassCells` |
 | Only floating walls, no ground                 | Single build layer on solid mass only                                        | Re-run **Setup B1F** for `WalkableFloor` + `Floor` build layer                                        |
 | Floor renders above walls                      | Build layer order / hierarchy                                                | Floor build runs first; host moves floor layer below walls                                            |
-| Floor top at mid-wall height                   | Center-pivot cube tiles at y=0                                               | Floor `layerYOffset = -twcCellSize/2`; walls `layerYOffset = +twcCellSize/2`                          |
+| Floor top at mid-wall height                   | Center-pivot cube tiles at y=0                                               | Floor and walls `layerYOffset = -twcCellSize/2`                                                        |
 | Hole in floor at chest                         | Chest cells are not walkable                                                 | `BuildWalkableFloorCells` includes `HasChest` pads                                                    |
 | Door-adjacent walls raised                     | `placeOnTop` raycast hits door/floor colliders                               | Fixed wall `layerYOffset` — `placeOnTop` off                                                          |
 | `FloorArtGrid or ExplorationFloor not bound`   | TWC build before floor bind                                                  | Fixed: `FloorArtRuntimeBuilder` calls `TryBuildFromBoundFloor` after populate                         |
@@ -138,6 +142,8 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 | -------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `FloorArtTwcSubGrid`             | Cells-per-logic-cell math + clamp (1 or 2)                                                      |
 | `FloorArtTwcWalkableMaskBuilder` | `ExplorationFloor` → `HashSet<Vector2>` (+ `ExpandToTwcBlueprint`)                              |
+| `FloorArtTwcElevationTranslator` | Per-step walkable/solid buckets from `cellElevationSteps` (#347)                               |
+| `FloorArtTwcElevationLayerProvisioner` | Runtime clone: per-step blueprint/build layers + Y offsets (#347)                            |
 | `FloorArtTwcFloorHost`           | Runtime build + timing log (clones Configuration at play — does not mutate the committed asset)   |
 | `FloorArtTwcTilesetProfile`      | Floor + wall preset pair for tileset swaps                                                      |
 | `FloorArtTwcDefaultBootstrap`    | Editor: config asset + template **TwcFloorArt** host                                            |
