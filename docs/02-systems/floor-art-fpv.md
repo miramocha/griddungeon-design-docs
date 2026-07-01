@@ -33,7 +33,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 | Mesh backends | **`Default`** (built-in, all installs) \| **`TileWorldCreator`** (optional plugin asmdef) |
 | Plugin asmdef | **`GridDungeon.FloorArt.TileWorldCreator`** — omit folder if no asset; Runtime never references vendor TWC asm |
 
-**New types (planned):** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcBlueprintTranslator`, `FloorArtTwcHost`).
+**New types (planned):** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcWalkableMaskBuilder`, `FloorArtTwcElevationTranslator`, `FloorArtTwcHost`).
 
 **Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
 

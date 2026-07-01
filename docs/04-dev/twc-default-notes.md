@@ -105,13 +105,15 @@ Applied at runtime to both **Floor** and **Walls** build layers (`scaleTileToCel
 `FloorArtTwcFloorHost` logs wall-clock ms after `GenerateCompleteMap` on each load, e.g.:
 
 ```text
-[FloorArtTwc] Built 's1_B1F' — N walkable cells, XX.X ms ...
+[FloorArtTwc] Built 's1_B1F' — N level cells, XX.X ms ...
 ```
+
+Alignment sample (when enabled) logs `Level_sN yOffset=… height=…` for elevation floors, or flat `Floor`/`Walls` offsets for step-0 interiors.
 
 Record Play Mode numbers here after verification:
 
-| Floor  | Walkable cells | Blueprint + build (ms) | Notes            |
-| ------ | -------------- | ---------------------- | ---------------- |
+| Floor  | Level cells | Blueprint + build (ms) | Notes            |
+| ------ | ----------- | ---------------------- | ---------------- |
 | s1_B1F | (from log)     | (from log)             | F2 Dev Bootstrap |
 
 ## Alignment check
@@ -130,7 +132,8 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 | ---------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Only chests/doors, no corridor meshes          | TWC `cellSize` wrong (tiny map at origin)                                    | Re-run Setup B1F or play once — `ApplyConfigurationDefaults` sets sub-grid `cellSize` at build        |
 | Hallways shifted / walls overlap wrong cells   | Dual-grid spans `[x±0.5]` in TWC coords — needs **+halfCell** manager offset | `AlignManagerWithGrid` adds `(cellSize/2, 0, cellSize/2)` to `FloorArtGrid.Origin`                    |
-| Walls fill corridor / on walkable cells        | Solid-mass mask on walkable blueprint                                        | Floor uses `WalkableFloor` + `BuildWalkableFloorCells`; walls use `SolidMass` + `BuildSolidMassCells` |
+| Walls fill corridor / on walkable cells        | Solid-mass mask on walkable blueprint                                        | **Flat mode:** `WalkableFloor` + `BuildWalkableFloorCells`; `SolidMass` + `BuildSolidMassCells`. **Elevation mode:** `FloorArtTwcElevationTranslator` paints per `Level_sN` |
+| Elevated floor shows flat mesh or missing tiers | Elevation layers not provisioned on runtime clone                             | Check build log for `elevationSteps=N`; `Level_s0`…`Level_sN` created by `FloorArtTwcElevationLayerProvisioner` |
 | Only floating walls, no ground                 | Single build layer on solid mass only                                        | Re-run **Setup B1F** for `WalkableFloor` + `Floor` build layer                                        |
 | Floor renders above walls                      | Build layer order / hierarchy                                                | Floor build runs first; host moves floor layer below walls                                            |
 | Floor top at mid-wall height (flat blueprint) | Center-pivot cube tiles at y=0                                               | Floor and walls `layerYOffset = -twcCellSize/2`                                                        |
@@ -145,14 +148,14 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 | Type                             | Role                                                                                            |
 | -------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `FloorArtTwcSubGrid`             | Cells-per-logic-cell math + clamp (1 or 2)                                                      |
-| `FloorArtTwcWalkableMaskBuilder` | `ExplorationFloor` → `HashSet<Vector2>` (+ `ExpandToTwcBlueprint`)                              |
-| `FloorArtTwcElevationTranslator` | Per-step `LevelCells` paint from `cellElevationSteps` (#347)                               |
+| `FloorArtTwcWalkableMaskBuilder` | `ExplorationFloor` → `HashSet<Vector2>` (`BuildWalkableFloorCells`, `BuildSolidMassCells`, `ExpandToTwcBlueprint`) |
+| `FloorArtTwcElevationTranslator` | Per-step `LevelCells` paint from `cellElevationSteps` (#347); terrace lip via `TerrainWallElevation.ResolveLayoutWallTerraceLipStep` |
 | `FloorArtTwcElevationLayerProvisioner` | Runtime clone: `Level_sN` blueprint + build per step (#347)                            |
 | `FloorArtTwcFloorHost`           | Runtime build + timing log (clones Configuration at play — does not mutate the committed asset)   |
 | `FloorArtTwcTilesetProfile`      | Floor + wall preset pair for tileset swaps                                                      |
 | `FloorArtTwcDefaultBootstrap`    | Editor: config asset + template **TwcFloorArt** host                                            |
 
-**Committed `GridDungeonTwcConfiguration.asset`:** default bootstrap output (~large YAML). Regenerate via **Setup B1F** after TWC import; Play Mode uses a runtime clone so the asset stays clean.
+**Committed `GridDungeonTwcConfiguration.asset`:** slim bootstrap template (`Floor`, `Walls`, flat blueprints — no pre-authored `Level_sN`). Regenerate via **Setup B1F** after TWC import; Play Mode clones at runtime and provisions elevation layers in code.
 
 **Assembly:** `GridDungeon.FloorArt.TileWorldCreator` uses `autoReferenced: false` — TWC is optional; only explicit asmdef refs (tests, prefab host) pull it in.
 
