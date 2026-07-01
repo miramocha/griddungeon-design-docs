@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/ui
+---
 # ADR 037 — Layered UITK panels (HUD depth)
 
 **Status:** Proposed (draft)  
@@ -7,7 +15,7 @@
 
 ## Context
 
-at launch HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
+The default-build HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
 
 Within exploration and combat, phase chrome splits across documents at different maturity:
 
@@ -18,7 +26,7 @@ Within exploration and combat, phase chrome splits across documents at different
 
 Legacy `MapView` shim delegates to `ExplorationMapCoordinator` until scenes refresh. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
 
-Product direction: HUD should feel **more dimensional** — layered plates, slide/tilt depth, independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
+Product direction: add **layered plates**, slide/tilt depth, and independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
 
 This is **not** full diegetic UI (map as in-world prop, command rail in dungeon cell). It is **presentation layering** on top of the existing Runtime event contract ([ui-event-contract](../docs/04-dev/ui-event-contract.md)).
 
@@ -104,4 +112,4 @@ Exact sort values are implementation tuning; order matters more than absolute nu
 - [UI event contract](../docs/04-dev/ui-event-contract.md)
 - [Exploration UI](../docs/02-systems/exploration-ui.md)
 - [Combat HUD frame layout](../docs/02-systems/combat.md#combat-hud-frame-layout)
-- [GitHub issue drafts (not filed)](../docs/04-dev/github-drafts/layered-uitk-panels-issues.md)
+- [Map panel POC (shipped)](https://github.com/miramocha/griddungeon-game/pull/244)

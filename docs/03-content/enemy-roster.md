@@ -1,4 +1,13 @@
-﻿# Stratum 1 enemy roster
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/draft
+  - domain/combat
+  - domain/campaign/s1
+---
+# Stratum 1 enemy roster
 
 **Tracking:** [design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2) · **Implementation:** [game #12](https://github.com/miramocha/griddungeon-game/issues/12) (`ContentDatabase` + `EnemyDefinition` / `EncounterGroup` SOs)
 
@@ -152,8 +161,7 @@ Wire floor **`randomEncounterTableId`** → shared table SO (rate + weighted `gr
 
 ---
 
-## Related
-
+## Related docs
 - [release scope — required slice](../00-release-scope.md#required-first-playable)
 - [combat scene — enemy slots](../02-systems/combat-scene.md)
 - [synchro — S1 first FOE](../02-systems/synchro-protocol.md#s1-tutorial-gating-first-foe)

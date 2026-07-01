@@ -1,4 +1,14 @@
-﻿# Navigator
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/synchro
+---
+# Navigator
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
 **Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
@@ -156,7 +166,7 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 
 ## Launch content (locked)
 
-Matches [synchro-protocol § Launch content](02-systems/synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
+Matches [synchro-protocol § Launch content](synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
 
 | Navigator | `navigator_id` | Unlock | Aura at launch | Protocol kit |
 |-----------|----------------|--------|-------------|--------------|
@@ -187,7 +197,7 @@ Additional Navigators unlock via strata/quests later.
 
 ## Consider / explore — Navigator 3D presence
 
-**Status:** Design idea — **not locked**. Launch keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
+**Open:** Design idea — **not locked**. Launch keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
 
 ### Default — corner presence (exploration + combat)
 

@@ -1,4 +1,12 @@
-﻿# ADR 018 — Exploration Animation Speed
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/exploration
+---
+# ADR 018 — Exploration Animation Speed
 
 **Status:** Accepted (amended 2026-05-26)  
 **Date:** 2026-05-21  
@@ -6,7 +14,7 @@
 
 ## Context
 
-Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-movement.md)). The original ~0.2s step default feels slightly fast for EO-style pacing. Players should be able to choose a comfortable animation speed without changing FOE patrol, encounters, or grid logic (still committed at step/turn start).
+Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-movement.md)). The original ~0.2s step default runs fast for EO-style pacing. Players should be able to choose a comfortable animation speed without changing FOE patrol, encounters, or grid logic (still committed at step/turn start).
 
 ## Decision
 

@@ -1,4 +1,15 @@
-﻿# Exploration UI (UI Toolkit)
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/ui
+  - domain/exploration
+---
+# Exploration UI (UI Toolkit)
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, party menu / pause overlay, party strip floater) without re-tracing the scene graph.
 
@@ -308,7 +319,7 @@ For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix 
 
 ## Appendix — future map read-model refactor
 
-**Status:** Design sketch (not locked ADR). **Not a blocker** for custom HUD skins — subscribe per [UI event contract](../04-dev/ui-event-contract.md) and reuse shipped `ExplorationMapCoordinator` today.
+**Open:** Design sketch (not locked ADR). **Not a blocker** for custom HUD skins — subscribe per [UI event contract](../04-dev/ui-event-contract.md) and reuse shipped `ExplorationMapCoordinator` today.
 
 | Shipped (use as-is) | Future extract ([#26](https://github.com/miramocha/griddungeon-game/issues/26)) |
 |---------------------|----------------------------------------------------------------------------------|
@@ -327,7 +338,7 @@ For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix 
 
 **Rules unchanged:** `ExplorationPhaseController`, `MapSystem`, `InputRouter` handlers; presenters never call `TryStepForward` or reveal calculators. Map input still goes through `ExplorationMapCoordinator` (`ToggleExpandedFromInput`, hint publish).
 
-**Gate policy:** at launch — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+**Gate policy (at launch):** movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
 Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design.md#ui-layer).
 

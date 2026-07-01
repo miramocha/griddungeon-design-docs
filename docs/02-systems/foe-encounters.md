@@ -1,6 +1,16 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/accepted
+  - domain/foe
+---
 # FOE Encounters
 
-Grid **FOEs** — visible on the labyrinth, fought on contact or via [mid-battle join](chain-foe-battle.md). This doc covers **contact, flee, and grid position** rules.
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
+Grid **FOEs** — visible on the labyrinth, fought on contact or via [mid-battle join](chain-foe-battle.md). **Contact, flee, and grid position** rules below.
 
 ## Starting an FOE fight
 

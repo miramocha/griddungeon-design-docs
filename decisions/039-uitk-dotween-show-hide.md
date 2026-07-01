@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+---
 # ADR 039 — UITK show/hide motion via DOTween
 
 **Status:** Accepted  

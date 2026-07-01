@@ -1,4 +1,11 @@
-﻿# 00 — Vision
+---
+tags:
+  - path/docs
+  - type/vision
+  - scope/required
+  - status/draft
+---
+# Vision
 
 ## Elevator pitch
 

@@ -1,4 +1,12 @@
-﻿# Stratum 1 — Campaign intro
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/draft
+  - domain/campaign/s1
+---
+# Stratum 1 — Campaign intro
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
 **Floor layouts (ASCII, FOE YAML — draft):** [archive — S1 floor layouts](../../archive/mvp1-s1-floor-layouts-draft.md) — do not duplicate grids here.  
@@ -75,11 +83,9 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 
 ---
 
-## Related
-
+## Related docs
 - [s1-guided-tutorials.md](s1-guided-tutorials.md) — Act 1 / hub / combat coach beats
 - [guided-tutorial.md](../../02-systems/guided-tutorial.md) — system (modes, schema, runtime)
 - [01 — Core loop](../../01-core-loop.md) — player-facing loop
-- [01 — Core loop](../../01-core-loop.md)
 - [game-phase](../../02-systems/game-phase.md) — new game bootstrap, `LeaveHub`
 - [foe-encounters — tutorial FOE](../../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)

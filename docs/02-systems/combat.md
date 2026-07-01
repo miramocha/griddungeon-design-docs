@@ -1,8 +1,20 @@
-﻿# Combat
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+---
+# Combat
 
 Turn-based battles: readable **AGI turn order**, **3+3 core rows** plus **+1+1 auxiliary** slots for summons/guests.
 
 Encounters **transition** from exploration FPV to a **battle arena** (fixed stratum backdrop, enemies on slot rig) — not in-world corridor combat ([combat scene](combat-scene.md), [ADR 013](../../decisions/013-combat-scene-rendering.md)).
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)  
+**ADR:** [013](../../decisions/013-combat-scene-rendering.md) (battle arena), [015](../../decisions/015-mvp1-combat.md) (rules)  
+**Game issues:** [#179](https://github.com/miramocha/griddungeon-game/issues/179) (combat HUD frame)
 
 ## Battle layout
 
@@ -246,7 +258,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 ### Combat HUD frame layout
 
-**Status:** Shipped — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) closed via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Full-screen frame replaces the bottom-stacked panel ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so the 3D battle arena stays visible in the center.
+**Shipped:** epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) closed via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame · [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Full-screen frame replaces the bottom-stacked panel ([#34](https://github.com/miramocha/griddungeon-game/issues/34)) so the 3D battle arena stays visible in the center.
 
 | Zone | UITK element | Layout |
 |------|--------------|--------|
@@ -262,7 +274,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 ### Combat log (preview + modal)
 
-**Status:** Shipped — [#181](https://github.com/miramocha/griddungeon-game/issues/181) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) under epic [#179](https://github.com/miramocha/griddungeon-game/issues/179).
+**Shipped:** [#181](https://github.com/miramocha/griddungeon-game/issues/181) · [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) under epic [#179](https://github.com/miramocha/griddungeon-game/issues/179).
 
 | Surface | Behavior |
 |---------|----------|

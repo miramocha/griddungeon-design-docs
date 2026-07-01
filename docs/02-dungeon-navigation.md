@@ -1,4 +1,12 @@
-# 02 — Dungeon Navigation
+---
+tags:
+  - path/docs
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/exploration
+---
+# Dungeon Navigation
 
 ## Camera & presentation
 

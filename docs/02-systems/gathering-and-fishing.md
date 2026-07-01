@@ -1,10 +1,17 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/draft
+  - domain/exploration
+  - domain/hub
+---
 # Gathering & Fishing (optional)
 
 **Scope:** Optional — [release scope](../00-release-scope.md).
 
-> **Scope: Optional feature** — not required for initial release.
-
-Dungeon **interact nodes** where the party plays a short **minigame** to earn **materials** for [synthesis](character-progression.md) and [gather quests](../03-content/dungeons-and-encounters.md). EO parallel: chop/mining points; fishing adds a pacing break and stratum-flavored loot.
+Dungeon **interact nodes** where the party plays a short **minigame** to earn **materials** for [synthesis](character-progression.md) and [gather quests](../03-content/dungeons-and-encounters.md). EO parallel: chop/mining points; fishing uses a longer timing minigame and stratum-flavored loot tables.
 
 ## Design goals
 

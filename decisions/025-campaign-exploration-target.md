@@ -1,4 +1,13 @@
-﻿# ADR 025 — Campaign exploration target (per-stratum policy)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/proposed
+  - domain/campaign/s1
+  - domain/phase
+---
+# ADR 025 — Campaign exploration target (per-stratum policy)
 
 **Status:** Proposed (stub)  
 **Date:** 2026-05-22  
@@ -6,7 +15,7 @@
 
 ## Context
 
-at launch exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
+In the default build, exploration spawn and floor transitions are implemented in **`S1CampaignResolver`** and carried as **`S1ExplorationTarget`** (`stratumId`, `floorId`, `floorKey`, `spawnCell`, `spawnFacing`). The struct fields are already generic; the **`S1` prefix** marks **campaign policy** (intro spawn, gate → hub, tutorial gates, B1F↔B2F↔B3F stair pairing), not a lack of `stratumId` on the DTO.
 
 Macro flow already anticipates **different hub → exploration rules per stratum**:
 
@@ -46,7 +55,7 @@ Macro flow already anticipates **different hub → exploration rules per stratum
 - `CanAscendToHub` (surface exit — S1 gate only today)
 - Walkability / encounter-rate overrides (today: `S1ExplorationWalkability` + resolver helpers)
 
-at launch may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
+The default build may keep **direct `S1CampaignResolver` calls** until a second stratum ships; this ADR records the intended seam.
 
 ### 4. Optional interface (defer)
 

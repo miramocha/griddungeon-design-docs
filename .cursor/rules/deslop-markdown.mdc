@@ -1,0 +1,47 @@
+---
+description: Run deslop pass on authored markdown prose before handoff
+globs: "**/*.md"
+alwaysApply: false
+---
+
+# Deslop markdown
+
+Authority: [deslop skill](../skills/deslop/SKILL.md), [tells catalog](../skills/deslop/references/tells.md), [register guide](../skills/deslop/references/voices.md).
+
+## When to run
+
+After you **draft or materially edit prose** in a `.md` file (design docs, ADRs, README narrative, issue/PR bodies saved as markdown), **before handoff or commit**:
+
+1. Read and follow **deslop** — Phase 0 (genre/register) → Phase 1 scan → Phase 2 rewrite → Phase 3 verify loop → Phase 4 register check.
+2. Apply fixes to the **changed sections** (or full doc if you rewrote most of it).
+3. Deliver a brief change log when the user asked for a deslop pass or the edit was agent-authored publishable prose.
+
+## Skip (do not deslop)
+
+| Case | Why |
+|------|-----|
+| Link-only, heading moves, anchor fixes | No prose change |
+| Typo / single-word fix in otherwise human text | Noise |
+| Mechanical tables (IDs, checkboxes, step tables with no narrative) | Structure, not voice |
+| User explicitly asked to keep wording | Respect intent |
+| **Review-only** pass on story/dialogue | [code-review-no-story-edits.mdc](code-review-no-story-edits.mdc) — report slop, do not rewrite VN copy unless asked |
+| Editing `.cursor/skills/**/SKILL.md` or agent instructions | Meta; don't loop-deslop the deslop skill |
+
+## Genre defaults (design-docs)
+
+| Path | Register |
+|------|----------|
+| `docs/02-systems/**`, `docs/04-dev/**`, `decisions/**` | Technical docs / essay — precise claims, no puffery |
+| `docs/03-content/**` (non-story) | Content reference — concrete IDs and facts |
+| `docs/03-content/story-events/**` | Story authoring skill + narrative rules win on dialogue; deslop only when user requests prose polish |
+| Root `README.md` | Technical docs — imperative where appropriate |
+
+## Triggers
+
+User says **deslop**, **de-slop**, `/deslop`, **remove AI tells**, or **humanize** — run the full skill on the named file or selection.
+
+## Do not
+
+- Invent facts, citations, or specifics to sound human — use `[ADD: …]` placeholders per skill.
+- Replace locked IDs, ADR decisions, or spec numbers with vaguer wording.
+- Trade technical precision for casual voice in system docs.

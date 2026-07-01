@@ -1,4 +1,12 @@
-﻿# ADR 028 — Story Events (Visual Novel Presentation)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/proposed
+  - domain/story-vn
+---
+# ADR 028 — Story Events (Visual Novel Presentation)
 
 **Status:** Proposed (decisions locked 2026-05-23 — UI-retract detail open; implementation [#87](https://github.com/miramocha/griddungeon-game/issues/87))  
 **Date:** 2026-05-23  
@@ -7,7 +15,7 @@
 
 ## Context
 
-Grid Dungeon needs **scripted narrative beats** that:
+**Scripted narrative beats** must:
 
 - Pause normal input and show **character-forward dialogue** (visual-novel / ADV style): portraits, name plates, line-by-line text, optional choices.
 - Run in **multiple contexts** — hub, exploration, and **mid-combat** (tutorial FOE is the first requirement).

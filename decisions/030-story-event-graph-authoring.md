@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+  - domain/story-vn
+---
 # ADR 030 — Story Event Graph Authoring (follow-up)
 
 > **Scope: Optional feature** — not required for initial release.
@@ -11,7 +20,7 @@
 
 [ADR 028](028-story-visual-novel-events.md) locks **launch** story delivery to a **linear step list** (`line`, `effect`) with **`choice` / branching deferred** but schema reserved (`gotoStep`, `branchId`). Runtime triggers stay in C# phase controllers ([#87](https://github.com/miramocha/griddungeon-game/issues/87)).
 
-Design and narrative want **branching scenes** (player choices, flag-gated paths, optional beats) without hand-maintaining fragile step indices in YAML. A **graph-UI** editor (nodes + edges) is a common authoring pattern (visual novel / quest tools) and matches how designers think about “if the player did X, go here.”
+Design and narrative want **branching scenes** (player choices, flag-gated paths, optional beats) without hand-maintaining fragile step indices in YAML. A **graph-UI** editor (nodes + edges) is the usual visual-novel / quest-tool pattern for “if the player did X, go here.”
 
 **Not in scope for this ADR**
 

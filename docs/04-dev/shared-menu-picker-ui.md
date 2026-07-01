@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Shared menu & picker UI (UITK)
 
 How **rail menus**, **item list pickers**, and **skill use pickers** share UITK building blocks in [griddungeon-game](https://github.com/miramocha/griddungeon-game). Use this when skinning hub/combat/party chrome, adding a new tabbed modal, or deciding whether to extend an existing view vs fork.
@@ -252,7 +260,7 @@ Service overview: [centralized UI services § Global command rail](centralized-u
 
 ## Global input hints
 
-**Status:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
+**Shipped:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
 
 **Architecture:** Part of the [centralized UI services](centralized-ui-services.md) pattern (`InputHintPresenter` + `InputHints` facade, `sortingOrder` 300).
 

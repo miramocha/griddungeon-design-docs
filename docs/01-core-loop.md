@@ -1,4 +1,13 @@
-# 01 — Core Loop
+---
+tags:
+  - path/docs
+  - type/loop
+  - scope/required
+  - status/draft
+  - domain/hub
+  - domain/exploration
+---
+# Core Loop
 
 ## Macro loop (EO-style)
 

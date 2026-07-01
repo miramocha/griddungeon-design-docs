@@ -1,4 +1,13 @@
-﻿# ADR 021 — Autopilot (optional)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/accepted
+  - domain/exploration
+  - domain/map
+---
+# ADR 021 — Autopilot (optional)
 
 > **Scope: Optional feature** — not required for initial release.
 
@@ -7,7 +16,7 @@
 
 ## Context
 
-Etrian Odyssey **auto-walk** follows **player-drawn paths** on the map. Grid Dungeon has **auto-reveal, read-only map** — no drawing ([ADR 002](002-mapping-model.md)). Players still need to **skip manual stepping** when crossing areas they already explored (hub return, gather routes, backtracking).
+Etrian Odyssey **auto-walk** follows **player-drawn paths** on the map. Grid Dungeon has an **auto-reveal, read-only map** with no player drawing ([ADR 002](002-mapping-model.md)). Players still need to **skip manual stepping** when crossing areas they already explored (hub return, gather routes, backtracking).
 
 At launch: **manual** grid steps + hold-to-repeat only ([ADR 001](001-grid-movement.md)).
 

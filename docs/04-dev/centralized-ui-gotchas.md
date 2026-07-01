@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Centralized UI — implementation gotchas
 
 Living list of **non-obvious bugs and review traps** when wiring cross-phase UITK services (`ItemListInventory`, `InputHints`, `CommandRail`, `PartyFormationFloater`, …). For the happy-path pattern, see [centralized UI services](centralized-ui-services.md). For picker APIs and rail focus, see [shared menu & picker UI](shared-menu-picker-ui.md).
@@ -15,7 +23,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Hit a weird modal / picker bug | Search here before adding guards in phase HUDs |
 | Adding a new centralized overlay with show/hide animation | Read **Pop-in exit vs reopen**, **Context switches**, and [centralized UI services § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | Wiring presentation bus shells / projectors | Read [presentation-shell-gotchas](presentation-shell-gotchas.md) — apply [presentation-shell.mdc](../../.cursor/rules/presentation-shell.mdc) |
-| Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)) + [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
+| Public lifecycle vocabulary (`Show` / `Hide` / `IsSettling`) | [ICentralizedUiSurface](centralized-ui-services.md#public-contract-transition-agnostic) ([#207](https://github.com/miramocha/griddungeon-game/issues/207)); epic [#206](https://github.com/miramocha/griddungeon-game/issues/206) |
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Hover / click dead on a lower `UIDocument` (keyboard still works) | Read **Pointer dead — `sortingOrder` + `PickingMode`** — verify stack table + pass-through on full-screen chrome |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
@@ -463,7 +471,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 | Service pattern, sort stack, bootstrap | [centralized-ui-services.md](centralized-ui-services.md) |
 | Presentation lifecycle (shipped API, migration index) | [centralized-ui-services.md § Presentation lifecycle](centralized-ui-services.md#presentation-lifecycle) |
 | BEM transition helpers (API, recipes, registry) | [uitk-bem-transition-guide.md](uitk-bem-transition-guide.md) |
-| GitHub issue index (lifecycle epic) | [github-drafts/centralized-ui-lifecycle-issues.md](github-drafts/centralized-ui-lifecycle-issues.md) |
+| Lifecycle epic (pull order) | [game#206](https://github.com/miramocha/griddungeon-game/issues/206) |
 | ADR (team-locked API) | [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md), [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | Picker layout, rail focus, cancel layering | [shared-menu-picker-ui.md](shared-menu-picker-ui.md) |
 | Presentation bus / UITK shell traps | [presentation-shell-gotchas.md](presentation-shell-gotchas.md) |

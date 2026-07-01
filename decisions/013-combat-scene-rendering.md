@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
 # ADR 013 — Combat Scene Rendering (Battle Arena vs World Space)
 
 **Status:** Accepted  
@@ -6,10 +14,7 @@
 
 ## Context
 
-On encounter, the game must show **enemies** (and party feedback) somehow. Two families of approach:
-
-1. **World space** — fight in the live dungeon cell; camera re-frames in-place.
-2. **Battle arena** — leave FPV; dedicated combat view with **fixed backdrop** and slot-based enemy placement.
+On encounter, the game must show **enemies** and party feedback. **World-space** combat fights in the live dungeon cell with a re-framed camera. **Battle-arena** combat leaves FPV for a dedicated view with a **fixed backdrop** and slot-based enemy placement.
 
 Exploration is **FPV grid** ([02 — Dungeon navigation](../docs/02-dungeon-navigation.md)). Combat already assumes a **fixed battle camera** per skill ([combat presentation](../docs/02-systems/combat-presentation.md)), not per-room dungeon angles.
 

@@ -1,4 +1,13 @@
-﻿# Custom skill use picker UI (dev / integrator)
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+  - domain/combat
+---
+# Custom skill use picker UI (dev / integrator)
 
 How to replace or extend the **combat skill selection modal** without changing catalog rules, combat queue logic, or `CombatController`. Locked behavior: [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md). Player bindings: [input bindings § Skill use picker](../02-systems/input-bindings.md#skill-use-picker-modal).
 
@@ -241,8 +250,7 @@ ADR 035 reserves `FieldSkillPickerHost` + Field UI scope for hub/exploration **U
 
 ---
 
-## Related
-
+## Related docs
 - [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md)
 - [UI event contract — Combat](ui-event-contract.md#combat--commands) — `SubmitPlayerAction`, gates
 - [Combat § UI](../02-systems/combat.md)

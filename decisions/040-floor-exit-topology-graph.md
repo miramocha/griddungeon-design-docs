@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+  - domain/exploration
+---
 # ADR 040 — Floor exit topology graph (multi-exit floors)
 
 **Status:** Proposed  
@@ -10,7 +19,7 @@
 
 ## Context
 
-at launch `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#content-definitions-runtime-scriptableobjects)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
+In the default build, `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#content-definitions-runtime-scriptableobjects)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
 
 **Problems:**
 

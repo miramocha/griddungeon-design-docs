@@ -1,10 +1,20 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/active
+  - domain/story-vn
+---
 # Story Events (Visual Novel Presentation)
 
-**Authority:** [ADR 028](../../decisions/028-story-visual-novel-events.md) (Proposed — stakeholder decisions 2026-05-23) · Coaching layer: [ADR 029](../../decisions/029-guided-tutorial.md)  
-**Implementation:** [game #87](https://github.com/miramocha/griddungeon-game/issues/87) · HUD coach: [#88](https://github.com/miramocha/griddungeon-game/issues/88) · Synchro chrome: [#35](https://github.com/miramocha/griddungeon-game/issues/35) (done)  
-**Status:** Draft — combat UI retract during mid-fight story still open.
-
 Scripted **story scenes** with visual-novel-style presentation: character portraits, dialogue lines, optional choices, and **side effects** (campaign flags, combat tutorial phase, UI hints). One pipeline for hub briefings, exploration tile events, and **mid-combat** tutorials (first use: S1 Synchro / Protocol on `foe_alley_stalker`).
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)  
+**ADR:** [028](../../decisions/028-story-visual-novel-events.md), [029](../../decisions/029-guided-tutorial.md) (coach layer)  
+**Game issues:** [#87](https://github.com/miramocha/griddungeon-game/issues/87) (VN playback) · [#88](https://github.com/miramocha/griddungeon-game/issues/88) (HUD coach) · [#35](https://github.com/miramocha/griddungeon-game/issues/35) (Synchro chrome — done)
+
+**Open:** combat UI retract during mid-fight story still undecided.
 
 **Not the same as:** combat skill **cinematics** ([combat presentation](combat-presentation.md), [ADR 027](../../decisions/027-combat-cinematic-timeline-events.md)).
 
@@ -266,7 +276,7 @@ Designers author **one graph per `storyEventId`** (nodes = steps, edges = branch
 
 ---
 
-## Related
+## Related docs
 
 - [Guided tutorial](guided-tutorial.md) — HUD coaching (exploration + combat); distinct from VN
 - [ADR 028 — Story events](../../decisions/028-story-visual-novel-events.md)

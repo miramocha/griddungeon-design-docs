@@ -1,4 +1,13 @@
-﻿# ADR 035 — Skill use picker (modal + tabs)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+  - domain/combat
+---
+# ADR 035 — Skill use picker (modal + tabs)
 
 **Status:** Accepted (required slice)  
 **Date:** 2026-05-30  
@@ -97,6 +106,6 @@ While picker open: command-bar confirm blocked (same class of gate as targeting 
 ## Related
 
 - [Custom skill picker UI (dev)](../docs/04-dev/custom-skill-picker-ui.md) — implement `ISkillUsePickerView`, wire `CombatSkillPickerHost`
-- [Combat](combat.md), [character progression § Skill points](../docs/02-systems/character-progression.md#skill-points)
+- [Combat](../docs/02-systems/combat.md), [character progression § Skill points](../docs/02-systems/character-progression.md#skill-points)
 - [05 — class design](../docs/05-class-design.md) — `SkillType`, `SkillDefinition`
 - [Game #52](https://github.com/miramocha/griddungeon-game/issues/52) — skill rules; [#12](https://github.com/miramocha/griddungeon-game/issues/12) — ContentDB

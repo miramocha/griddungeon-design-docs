@@ -1,4 +1,13 @@
-﻿# ADR 034 — Skill point allocation outside combat
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+  - domain/hub
+---
+# ADR 034 — Skill point allocation outside combat
 
 **Status:** Accepted (required slice)  
 **Date:** 2026-05-30  

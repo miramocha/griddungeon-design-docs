@@ -1,4 +1,15 @@
-﻿# Character Progression
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/hub
+  - domain/combat
+---
+# Character Progression
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
 ## Stats at launch
 
@@ -56,7 +67,7 @@ Exact names can mirror EO or be renamed; **AGI for turn order** is mandatory.
 
 ### launch equipment (locked)
 
-Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([release scope](00-release-scope.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § content IDs](../05-class-design.md#content-ids-locked).
+Minimal **hub shop stock** and ContentDatabase slice: **1 weapon + 3 armor + 1 accessory** ([release scope](../00-release-scope.md), [game #12](https://github.com/miramocha/griddungeon-game/issues/12)). String IDs are locked in [05 — Class design § content IDs](../05-class-design.md#content-ids-locked).
 
 **Display names** use municipal-underworks flavor (contract crew gear); **`equipId` strings stay locked** for saves and ContentDatabase.
 

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # Custom party UI (dev / integrator)
 
 How to replace or extend **party-facing HUD plates** — exploration strip, combat party roster, and (optionally) the map party glyph — without moving roster rules, combat planning, or phase authority into UI.
@@ -384,8 +392,7 @@ Do not run Unity CLI batch tests while the Editor has the project open ([unity-n
 
 ---
 
-## Related
-
+## Related docs
 - [UI event contract](ui-event-contract.md) — exploration + combat event tables
 - [Exploration UI](../02-systems/exploration-ui.md) — phase visibility, party strip checklist
 - [Combat § UI](../02-systems/combat.md#ui-requirements) — roster vs strip, enemy rows

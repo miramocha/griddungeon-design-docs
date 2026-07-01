@@ -1,3 +1,10 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+---
 # ADR 012 — Unity 6 Tech Stack
 
 **Status:** Accepted  

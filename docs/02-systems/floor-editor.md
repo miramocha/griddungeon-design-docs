@@ -1,13 +1,24 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/active
+  - domain/content-pipeline
+  - domain/exploration
+---
 # Floor Editor (Unity Editor)
 
-**Status:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)  
-**Authority:** [ADR 002 — Floor Editor](../decisions/002-mapping-model.md#authoring--floor-editor-primary)
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
-Design-time tool only. Players never draw on the map ([ADR 002](../decisions/002-mapping-model.md) — auto-chart on explore).
+**Tracking:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)
+**Authority:** [ADR 002 — Floor Editor](../../decisions/002-mapping-model.md#authoring--floor-editor-primary)
+
+Design-time tool only. Players never draw on the map ([ADR 002](../../decisions/002-mapping-model.md) — auto-chart on explore).
 
 ## Goal
 
-Paint launch dungeon floors in Unity and export **`ExplorationFloor`** assets.
+Paint default-build dungeon floors in Unity and export **`ExplorationFloor`** assets.
 
 **Layout authority (2026-06):** **Draft — not locked.** During iteration, serialized `Assets/Content/Floors/s1_B*n*F.asset` (Floor Editor **Save** / Load) is runtime truth. Design ASCII lives in [archive — at launch S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). `S1B*FLayoutBuilder` is dev reset only — not spec authority.
 
@@ -33,7 +44,7 @@ Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_
 | `.` | Yes | Open floor |
 | `D` | Yes | **Corridor door** — `DoorConfig` (`doorId`, facing for FPV art, `startsLocked`); walkable cell; **forward step** auto-opens when unlocked; locked doors block movement |
 | `C` | No | **Chest** — `ChestConfig` (`chestId`, facing for FPV art, fixed `itemId` + `quantity`); party **cannot enter** the cell; **Interact** (`Space` / `Z`) from an orthogonally adjacent walkable cell while **facing** the chest ([#105](https://github.com/miramocha/griddungeon-game/issues/105)) |
-| `G` | Yes | **Gather** — `HasGatherNode`; instant loot at launch on interact when on cell ([ADR 014](../decisions/014-mvp1-exploration-map.md)) |
+| `G` | Yes | **Gather** — `HasGatherNode`; instant loot at launch on interact when on cell ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
 | `H`, `E`, `M`, `S` | Yes | **Role markers** — spawn start (`S`), story gate (`M`), hub return (`H`), inter-floor exit (`E`); direction + floor target live on **exit bindings** in the cell inspector ([#107](https://github.com/miramocha/griddungeon-game/issues/107), [ADR 040](../../decisions/040-floor-exit-topology-graph.md)). **`H` and `S`/`M` are unique per floor**; **multiple `E` per floor** allowed — one `FloorExitLink` row per `H`/`E` cell. **`H`** and **`S`** (B1F) expose **Target facing** in Edit Cell (same rotate UX as **`E`**); hub **`Direction`** stays internal **`Up`** — not authorable. Spawn facing persists on `ExplorationFloor.partyEntrySpawnFacing`. |
 
 **Walkability (shipped):** impassable `#`, `X`, and `C` only; all other palette symbols walkable — same rule as `FloorEditorLayoutSymbols` export ([#105](https://github.com/miramocha/griddungeon-game/issues/105), [#77](https://github.com/miramocha/griddungeon-game/issues/77)).
@@ -137,8 +148,7 @@ Wall/walkable **Populate** buttons remain on **Floor Art Grid** in prefab/previe
 
 **Exit topology (parallel track):** stratum **connectivity graph** compiles `FloorExitLink[]` — see [ADR 040](../../decisions/040-floor-exit-topology-graph.md) and [game #249](https://github.com/miramocha/griddungeon-game/issues/249). Distinct from ADR 031 event gating.
 
-## Related
-
+## Related docs
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
 - [05-class-design — `FloorEditorWindow`](05-class-design.md)
 - [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)

@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/archive
+  - type/archive
+  - scope/required
+  - status/archived
+  - domain/campaign/s1
+---
 # Launch — Stratum 1 floor layouts (draft archive)
 
 **Status:** **Draft — not locked** (archived 2026-06-14)  

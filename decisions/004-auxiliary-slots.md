@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
 # ADR 004 — Auxiliary Combat Slots (+1 Front / +1 Back)
 
 **Status:** Accepted  

@@ -1,3 +1,12 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/accepted
+  - domain/foe
+  - domain/combat
+---
 # ADR 010 — FOE Mid-Battle Join
 
 > **Scope: Optional feature** — not required for initial release.

@@ -1,4 +1,11 @@
-﻿# Release Scope
+---
+tags:
+  - path/docs
+  - type/vision
+  - scope/required
+  - status/active
+---
+# Release Scope
 
 Feature delivery for **Grid Dungeon**. **Implementation status** lives on the [Codename: GridDungeon project board](https://github.com/users/miramocha/projects/3) — filter by `required` / `optional` issue labels.
 

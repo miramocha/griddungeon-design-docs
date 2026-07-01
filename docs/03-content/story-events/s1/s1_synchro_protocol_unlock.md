@@ -1,6 +1,16 @@
+---
+tags:
+  - path/docs/03-content
+  - type/content
+  - scope/required
+  - status/synced
+  - domain/campaign/s1
+  - domain/story-vn
+  - domain/synchro
+---
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; Launch = click-through block.
+**Synced:** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; Launch = click-through block.
 
 **When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 
@@ -35,8 +45,8 @@ Speaker: **`navigator:guild_handler`** only.
 
 ## Related
 
-- [narrative POV](../../02-systems/narrative-pov.md#blank-state-locked)
+- [narrative POV](../../../02-systems/narrative-pov.md#blank-state-locked)
 - [s1_b2f_stalker_briefing](s1_b2f_stalker_briefing.md) — exploration Event cell before this fight
-- [S1 tutorial flow](../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
+- [S1 tutorial flow](../../../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)
 - [Guided Protocol coach](../../campaign/s1-guided-tutorials.md#guided-hint--protocol-coach) — HUD after this event
 - [s1_tutorial_hub_return](s1_tutorial_hub_return.md)

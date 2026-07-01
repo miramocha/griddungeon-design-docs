@@ -1,4 +1,15 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/optional
+  - status/accepted
+  - domain/foe
+  - domain/combat
+---
 # FOE Mid-Battle Join
+
+**Scope:** [Optional](../00-release-scope.md#optional)
 
 When [FOE combat patrol](combat.md#optional-later-foe-movement-during-combat) is on ([ADR 005](../../decisions/005-foe-combat-patrol.md)), a grid FOE can **enter the current fight** instead of waiting for a separate encounter after victory.
 

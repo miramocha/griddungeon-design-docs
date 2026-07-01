@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/ui
+---
 # ADR 009 — PC Input Bindings
 
 **Status:** Accepted (combat UI input amended by [ADR 026](026-combat-menu-focus-navigation.md))  
@@ -25,7 +33,7 @@ Combat **player command UI** (planning, targeting, summon/per-slot control): sup
 
 ## Amendment (2026-06) — Universal UI vocabulary
 
-**Motivation:** Menu, picker, and hub input rules were spread across ADR 026, party-menu docs, and per-screen hints. One **layered** vocabulary reduces drift.
+Input rules were scattered across ADR 026, party-menu docs, and per-screen hints. This amendment locks one **layered** vocabulary.
 
 **Decision:**
 
@@ -51,7 +59,7 @@ Exploration movement trial layout, map pan/zoom, and gamepad deferral unchanged.
 
 ## Amendment (2026-06) — Gamepad-ready keyboard layout
 
-**Motivation:** Future gamepad support should not require redesigning every action. Keyboard defaults should cluster on keys that map 1:1 to stick / face / shoulder groups.
+Keyboard defaults should map cleanly to future gamepad groups so we do not redesign every action later.
 
 **Decision:**
 

@@ -1,4 +1,12 @@
-﻿# ADR 020 — Team burst naming (retire “Union”)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+---
+# ADR 020 — Team burst naming (retire “Union”)
 
 **Status:** Accepted  
 **Date:** 2026-05-21 (amended 2026-05-21 — **Synchro Charge** resource term)  
@@ -6,7 +14,7 @@
 
 ## Context
 
-Launch team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). We want a high-tech / JRPG label that fits the **Navigator** commander fantasy.
+Launch team burst uses a shared 0–100% bar and Navigator-executed skills ([synchro-protocol.md](../docs/02-systems/synchro-protocol.md), implemented in griddungeon-game #10). **Union** was a placeholder (EO-inspired). The replacement label should read high-tech / JRPG and match the **Navigator** commander role.
 
 ## Shortlist (evaluated)
 

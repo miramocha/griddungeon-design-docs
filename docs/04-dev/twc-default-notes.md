@@ -1,3 +1,11 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/exploration
+---
 # TWC default notes ([#345](https://github.com/miramocha/griddungeon-game/issues/345))
 
 Phase 0 default path: `ExplorationFloor` walkables → TWC `AddCellsToLayer` → `GenerateCompleteMap`.

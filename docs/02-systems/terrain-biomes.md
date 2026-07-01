@@ -1,4 +1,14 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/draft
+  - domain/exploration
+---
 # Terrain biomes (procedural splat painting)
+
+**Scope:** [Later](../00-release-scope.md#later)
 
 **Implementation:** `GridDungeon.Core.FloorArt.TerrainBiomePaintCalculator`, `GridDungeon.Runtime.Exploration.FloorArt.FloorArtBlockyTerrainBuilder`  
 **Related:** [Elevation generation](elevation-generation.md), [Floor Editor](floor-editor.md), [Red Blob — biomes from noise](https://www.redblobgames.com/maps/terrain-from-noise/#biomes)
@@ -80,3 +90,12 @@ Alphamap resolution: `max(16, max(gridWidth, gridHeight))` when biomes enabled; 
 - Floor Editor biome heatmap
 - Procedural `TerrainLayer` asset creation at runtime
 - Custom `TerrainGround.shadergraph` splat path
+
+---
+
+## Related docs
+
+- [Elevation generation](elevation-generation.md)
+- [Floor Editor](floor-editor.md)
+- [Floor art FPV](floor-art-fpv.md)
+- [ADR 019 — Floor verticality](../../decisions/019-floor-verticality.md)

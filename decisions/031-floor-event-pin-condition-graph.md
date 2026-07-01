@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/proposed
+  - domain/content-pipeline
+---
 # ADR 031 — Floor Event & Pin Condition Graph (Graph Toolkit)
 
 **Status:** Proposed (idea — does not block launch)  
@@ -15,7 +23,7 @@ Exploration content is authored as **grid pins** — story **Event** cells (`!`)
 
 **Launch today:** triggers are wired in C# phase controllers (`ExplorationPhaseController` → `StoryEventRunner.Play(storyEventId)` on hard-coded cells) while floor layout lives in assets ([#109](https://github.com/miramocha/griddungeon-game/issues/109) will move Event metadata onto `ExplorationFloor`).
 
-**Design need:** designers and narrative should express **“this pin / event only when …”** without a programmer edit per beat, and without fragile duplicated flag checks scattered across controllers.
+Designers need to express **“this pin / event only when …”** without a programmer edit per beat or duplicated flag checks across controllers.
 
 [ADR 030](030-story-event-graph-authoring.md) covers **inside** a single `storyEventId` (VN lines, choices, `gotoStep`). This ADR covers **floor-level placement and gating** — which cell, which save state, which handler fires — not dialogue step order.
 

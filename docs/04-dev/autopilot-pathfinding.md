@@ -1,3 +1,12 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/optional
+  - status/active
+  - domain/exploration
+  - domain/map
+---
 # Autopilot pathfinding (developer)
 
 Expanded-map autopilot: **A\*** over **revealed** exploration cells, then **turn/step** execution through `DungeonExplorer`. Player-facing rules: [02 — Autopilot](../02-systems/autopilot.md). Decision record: [ADR 021](../../decisions/021-autopilot-mvp2.md).
@@ -210,8 +219,7 @@ Use **FloorLayoutConnectivity** when validating floor painter output; use **Expl
 
 ---
 
-## Related
-
+## Related docs
 - [02 — Autopilot](../02-systems/autopilot.md) — player-facing rules and shipped vs spec table
 - [04 — Tech notes § Autopilot](../04-tech-notes.md#autopilot-mvp2)
 - [Mapping](../02-systems/mapping.md) — reveal model (ADR 002)

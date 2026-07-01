@@ -1,6 +1,14 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/required
+  - status/active
+  - domain/ui
+---
 # UITK BEM transition implementation guide
 
-**Status:** Shipped — [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) · [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) · [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240)  
+**Shipped:** Shipped — [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) · [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) · [game PR #240](https://github.com/miramocha/griddungeon-game/pull/240)
 **Namespace:** `GridDungeon.Runtime.UI` under `Assets/Scripts/Runtime/UI/`  
 **Symptom catalog:** [centralized UI gotchas](centralized-ui-gotchas.md) (map fade, slide retract, party floater collapse)
 

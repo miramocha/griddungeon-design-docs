@@ -1,4 +1,12 @@
-﻿# ADR 027 — Combat Cinematic Timeline Events
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/optional
+  - status/accepted
+  - domain/combat
+---
+# ADR 027 — Combat Cinematic Timeline Events
 
 > **Scope: Optional feature** — not required for initial release.
 

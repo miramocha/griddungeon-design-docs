@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/synchro
+---
 # ADR 006 — Team burst bar (Synchro Protocol)
 
 **Status:** Accepted  
@@ -6,7 +14,7 @@
 
 ## Context
 
-Need a party-wide burst/coordination mechanic distinct from per-character MP skills and deferred Boost/Break. *Etrian Odyssey V* Union skills inspire timing and participant rules; UI uses one **team meter** (**Synchro**) for **Synchro Charge** instead of six personal gauges ([ADR 020](020-team-burst-naming.md)).
+Need a party-wide burst/coordination mechanic separate from per-character MP skills and deferred Boost/Break. *Etrian Odyssey V* Union skills inspire timing and participant rules. UI uses one **team meter** (**Synchro**) for **Synchro Charge** ([ADR 020](020-team-burst-naming.md)).
 
 ## Decision
 

@@ -1,4 +1,15 @@
-﻿# Party & Classes
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+  - domain/hub
+---
+# Party & Classes
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
 ## Party size & formation
 

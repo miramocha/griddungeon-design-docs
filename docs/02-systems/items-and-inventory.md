@@ -1,4 +1,13 @@
-﻿# Items & inventory
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/hub
+  - domain/combat
+---
+# Items & inventory
 
 Party **bag** (shared, fixed slots) and **worn equipment** (per core member). **Credits** (hub wallet) stay on save — not a bag slot.
 

@@ -1,4 +1,14 @@
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/required
+  - status/draft
+  - domain/combat
+---
 # Combat Status, Buffs & Debuffs
+
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
 
 Rules for **ailments**, **stat modifiers**, and **battle modifiers** during AGI combat. EO-first: limb **binds**, turn-skipping control, timed **Boost/Down** stats, end-of-round ticks. **Boost/Break** (EO2 Force) remains out of scope — see [Synchro Protocol](synchro-protocol.md).
 
@@ -131,7 +141,7 @@ EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 | `fire_res_up` / `fire_res_down` | ±25% fire damage taken |
 | `ice_res_up`, `volt_res_up`, … | Per element |
 
-launch combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
+At launch, combat uses **3 elements** (fire, ice, volt) in the damage pipeline; resistance buffs can ship after core ailments.
 
 ---
 

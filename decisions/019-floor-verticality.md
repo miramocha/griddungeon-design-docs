@@ -1,11 +1,19 @@
-﻿# ADR 019 — Floor Verticality (Doom-style)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/accepted
+  - domain/exploration
+---
+# ADR 019 — Floor Verticality (Doom-style)
 
 **Status:** Accepted  
 **Date:** 2026-05-21
 
 ## Context
 
-Some floors need **height bands** (upper walkways, pits, jump pads) while keeping **discrete grid** exploration ([ADR 001](001-grid-movement.md)). Player fantasy: *Doom*-like maps — multiple walkable **levels** at the same `(x, y)` are allowed, but the party **never walks under** an upper floor (no crawl space, no “under the bridge” routing).
+Some floors need **height bands** (upper walkways, pits, jump pads) while keeping **discrete grid** exploration ([ADR 001](001-grid-movement.md)). Layout target: *Doom*-like maps — multiple walkable **levels** at the same `(x, y)` are allowed, but the party **never walks under** an upper floor (no crawl space, no “under the bridge” routing).
 
 ## Decision
 

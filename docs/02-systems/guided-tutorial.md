@@ -1,6 +1,17 @@
-﻿# Guided Tutorial (player coaching)
+---
+tags:
+  - path/docs/02-systems
+  - type/system
+  - scope/later
+  - status/accepted
+  - domain/story-vn
+---
+# Guided Tutorial (player coaching)
 
-**Status:** Locked — **ADR:** [029](../../decisions/029-guided-tutorial.md) (Accepted). **Launch (shipped):** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story-driven combat beats (`EncounterEventScheduler`, `StoryEventEffectExecutor`). **Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex, Protocol-only command rail ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
+**Scope:** [Later](../00-release-scope.md#later)  
+**ADR:** [029](../../decisions/029-guided-tutorial.md)  
+**Shipped:** S1 story VN ([#87](https://github.com/miramocha/griddungeon-game/issues/87)) + encounter/story-driven combat beats (`EncounterEventScheduler`, `StoryEventEffectExecutor`).  
+**Later:** Act 1 coach, `GuidedTutorialController`, pause-menu codex, Protocol-only command rail ([#88](https://github.com/miramocha/griddungeon-game/issues/88)).
 
 **Authority for S1 beats:** [S1 guided tutorials](../03-content/campaign/s1-guided-tutorials.md)  
 **Campaign flags & acts:** [s1-intro](../03-content/campaign/s1-intro.md)  
@@ -226,8 +237,7 @@ Deferred: map (`M`) coach, shared panel UXML with story layer, authoring format 
 
 ---
 
-## Related
-
+## Related docs
 - [ADR 029 — Guided tutorial](../../decisions/029-guided-tutorial.md)
 - [S1 guided tutorials (content)](../03-content/campaign/s1-guided-tutorials.md)
 - [S1 campaign intro](../03-content/campaign/s1-intro.md)

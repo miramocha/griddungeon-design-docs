@@ -1,6 +1,14 @@
-﻿# Core assembly — improvement plan (Unity-only)
+---
+tags:
+  - path/docs/plans
+  - type/plan
+  - scope/required
+  - status/active
+  - domain/phase
+---
+# Core assembly — improvement plan (Unity-only)
 
-**Status:** Draft  
+**Draft:** Draft
 **Last updated:** 2026-06-15  
 **Scope:** `GridDungeon.Core` boundaries inside `griddungeon-game`; no non-Unity extraction, no second-repo split unless a second Unity project appears.
 
@@ -71,7 +79,7 @@
 | `Campaign/` (`GridDungeon.Campaign`) | S1 resolvers, story executor, triggers, bootstrap | Generic engine simulators; save schema stays in Core |
 | `Core/SaveData/` | Save DTOs + mappers used by both layers | File I/O paths (Runtime `SaveSystem`) |
 
-**Action:** When adding S2+ campaign code, use `Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts. Neutral spawn DTO: `ExplorationTarget` in Core ([ADR 025](../decisions/025-campaign-exploration-target.md)).
+**Action:** When adding S2+ campaign code, use `Campaign/S2/` (or similar) rather than expanding `S1CampaignResolver` with unrelated acts. Neutral spawn DTO: `ExplorationTarget` in Core ([ADR 025](../../decisions/025-campaign-exploration-target.md)).
 
 ### 0.3 Tests (Unity Edit Mode)
 

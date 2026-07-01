@@ -1,7 +1,15 @@
+---
+tags:
+  - path/docs/04-dev
+  - type/dev
+  - scope/later
+  - status/proposed
+  - domain/ui
+---
 # Layered UITK panels (dev / integrator)
 
-**Status:** Draft — pairs with [ADR 037](../../decisions/037-layered-uitk-panels.md).  
-**Epic (draft):** game repo `#TBD` — see [github-drafts/layered-uitk-panels-issues.md](github-drafts/layered-uitk-panels-issues.md).
+**Draft:** Draft — pairs with [ADR 037](../../decisions/037-layered-uitk-panels.md).
+**Tracking:** Map POC shipped ([#244](https://github.com/miramocha/griddungeon-game/pull/244)); remaining Tier 1 splits optional — [ADR 037](../../decisions/037-layered-uitk-panels.md).
 
 ## Goal
 

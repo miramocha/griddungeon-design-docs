@@ -1,4 +1,12 @@
-﻿# ADR 016 — Summon Control (Player)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/combat
+---
+# ADR 016 — Summon Control (Player)
 
 **Status:** Accepted (required slice)  
 **Date:** 2026-05-20  
@@ -7,7 +15,7 @@
 
 ## Context
 
-Aux slots ([ADR 004](004-auxiliary-slots.md)) can hold **summons** with their own AGI turns. Summons need a command model at launch that matches the long-term UX (player picks actions) without building scripted AI that will be removed.
+Aux slots ([ADR 004](004-auxiliary-slots.md)) can hold **summons** with their own AGI turns. At launch, summons need player-picked commands that match the long-term UX, without a scripted-AI path we'd discard later.
 
 ## Decision
 

@@ -1,4 +1,12 @@
-﻿# ADR 029 — Guided Tutorial (player coaching)
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/later
+  - status/accepted
+  - domain/story-vn
+---
+# ADR 029 — Guided Tutorial (player coaching)
 
 > **Scope: Optional feature** — not required for initial release.
 
@@ -9,7 +17,7 @@
 
 ## Context
 
-Grid Dungeon needs **short, actionable coaching** that teaches controls without autoplaying the game:
+Grid Dungeon needs **short, actionable coaching** for controls the player runs themselves:
 
 - **Exploration (S1 Act 1):** movement, wall bump, optional gather/signage, gate stairs — map stays visible; player keeps (or regains) movement between dismissible lines.
 - **Combat (S1 B2F):** after Navigator **story** lines, pulse **Protocol** and **gate** commands until the player confirms `protocol_strike`.
@@ -83,7 +91,7 @@ While a **blocking** combat hint is active:
 
 **Unlock rule:** completing (or fully paging through) an in-world tutorial adds `tutorialEntryId` to save (`unlockedCodexTutorialIds` or equivalent). Codex does **not** re-run `set_campaign_flag` / `start_guided_protocol`.
 
-**Story events vs codex:** Navigator **story** scenes ([ADR 028](028-story-visual-novel-events.md)) may optionally add a codex entry later — **not required at launch S1 unlock/outro**. launch codex content = **guided tutorial entries** from [s1-guided-tutorials](../docs/03-content/campaign/s1-guided-tutorials.md).
+**Story events vs codex:** Navigator **story** scenes ([ADR 028](028-story-visual-novel-events.md)) may optionally add a codex entry later — **not required for S1 unlock/outro in the default build**. Default-build codex content = **guided tutorial entries** from [s1-guided-tutorials](../docs/03-content/campaign/s1-guided-tutorials.md).
 
 **Hub Act 2:** guild / Enter Stratum coach hints **cut at launch** unless playtest fails ([stakeholder](#stakeholder-decisions-2026-05-23)).
 

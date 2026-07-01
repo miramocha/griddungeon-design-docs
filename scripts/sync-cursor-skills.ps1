@@ -24,6 +24,7 @@ $canonical = @{
     "pull-next-backlog-ticket" = "game"
     "blender-bone-remap"       = "game"
     "vroid-shapekey-remap"     = "game"
+    "deslop"                   = "design-docs"
 }
 
 function Get-RepoSkillsRoot([string]$repo) {

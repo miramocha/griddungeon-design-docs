@@ -1,3 +1,11 @@
+---
+tags:
+  - path/decisions
+  - type/adr
+  - scope/required
+  - status/accepted
+  - domain/foe
+---
 # ADR 003 — FOE Step-Based Patrol
 
 **Status:** Accepted  
@@ -6,7 +14,7 @@
 
 ## Context
 
-FOEs are visible on the grid before combat. Patrol creates routing puzzles (wait for gap, bait, avoid). Patrol must stay **deterministic** and tied to exploration pace — not a background real-time simulation.
+FOEs are visible on the grid before combat. Patrol creates routing puzzles (wait for gap, bait, avoid). Patrol stays **deterministic** and tied to exploration pace; no background real-time simulation.
 
 ## Decision
 
