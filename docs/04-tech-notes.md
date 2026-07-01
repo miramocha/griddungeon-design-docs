@@ -89,7 +89,7 @@ GameState (composition root)
 +-- HubServices          � explorers guild, navigator office, shop, hospital, inn save
 +-- DungeonExplorer      � grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp � see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
 +-- ExplorationGridMetrics (Core) � `WorldUnitsPerCell` (10), corner?world math shared with floor art
-+-- FloorArtPresenter    load authored FPV scenes/prefabs by `floorKey` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); MeshBackend registry Default or TWC plugin ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
++-- FloorArtPresenter    load FPV prefabs by `floorKey` via `FloorArtCatalog` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); MeshBackend registry Default or TWC plugin ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
 +-- DungeonView          FPV mount / visibility (hidden during combat); per-cell blobber deferred
 +-- CombatScenePresenter � battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 +-- MapSystem            � auto-reveal layer, fog, read-only UI
@@ -124,7 +124,7 @@ GameState (composition root)
 | Concern | Approach |
 |---------|----------|
 | **Authoring (primary)** | **Floor Editor** (Unity Editor) ? exports **`ExplorationFloor`** SO: tiles, **edge walls**, features, FOE spawns/patrol � epic [#75](https://github.com/miramocha/griddungeon-game/issues/75), spec [floor-editor.md](02-systems/floor-editor.md) |
-| **Authoring (FPV)** | Separate floor scene/prefab for corridor art; same grid alignment; does not drive HUD map � [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
+| **Authoring (FPV)** | Stratum template or custom floor art prefab per `floorKey`; same grid alignment; does not drive HUD map — [floor-art-fpv.md](02-systems/floor-art-fpv.md) ([#102](https://github.com/miramocha/griddungeon-game/issues/102)) |
 | **Runtime HUD (primary)** | **`ExplorationMapCoordinator`** + `MapGridPaintController` � 2D UI Toolkit grid from `ExplorationFloor` + `FloorMapState` reveal; refresh on dirty |
 | **Fog** | Unrevealed cells/edges hidden in 2D view from `Visited` / `WallMask` |
 | **Party / FOE** | Icons on 2D map at `(x, y, level)`; patrol updates view without RT |
@@ -132,7 +132,7 @@ GameState (composition root)
 | **Collision** | Same `ExplorationFloor` truth as painter output � `MapSystem` / `FloorCollisionQuery`, not HUD drawables |
 | **Deferred** | MapProxy + minimap camera ? RT (optional 3D debug preview only) |
 
-**Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; optional `Assets/.../Scenes/Floors/` for FPV. Editor: `GridDungeon.Editor` floor painter when implemented.
+**Game repo folders:** `Assets/Content/Floors/{stratum}_{floorId}.asset`; custom FPV prefabs under `Assets/Content/FloorArt/Prefabs/Floors/`. Editor: `GridDungeon.Editor` floor painter when implemented.
 
 ### Map cell art assets
 

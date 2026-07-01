@@ -51,7 +51,7 @@ flowchart TB
 
 **Catalog (not under Transitions/):** `Assets/Content/FloorTransition/FloorTransitionCatalog.asset`
 
-Transition prefabs are **referenced by the catalog**; they do **not** need a row in **Build Settings** (unlike FPV floor scenes — [floor art FPV](../02-systems/floor-art-fpv.md)).
+Transition prefabs are **referenced by the catalog**; they do **not** need a row in **Build Settings** (same as FPV floor art prefabs — [floor art FPV](../02-systems/floor-art-fpv.md)).
 
 ---
 

@@ -94,7 +94,7 @@ Orthogonal to grid `H` / `E` interact exits ([`FloorExitLink[]`](#multi-exit-mar
 10. **Random Encounters mode:** pick or create a `RandomEncounterTableDefinition` in the side panel (table **ObjectField**, **New**, **Open**). Floor asset stores **`randomEncounterTableId` only** — edit **base rate** and **weighted encounter groups** on the table asset (UITK inspector mirrors Loot Table pattern). **Save** writes the floor assignment; register table + floor rows via header **Content database** + **Register**. Runtime: `ExplorationPhaseController` loads table from `ContentDatabase`; S1 Act 1 B1F movement tutorial forces rate **0** via `S1CampaignResolver.GetEffectiveEncounterRate` ([enemy-roster § FOE vs random](../03-content/enemy-roster.md#foe-vs-random-placement-per-floor)).
 11. **Target spawn picker:** with an **`E`** cell selected in Edit Cell, set **Target = Floor** and choose the destination floor key, then **Pick on target floor**. The map pane loads that floor asset (read-only); click a walkable cell and **Confirm spawn** to stage **Target spawn X/Y** on that exit. **Cancel pick** restores the source floor grid without losing unsaved edits. Exit field edits stage immediately; **Save** writes bindings to the asset. **Pick-spawn** disables the mode TabView until confirm/cancel ([#300](https://github.com/miramocha/griddungeon-game/pull/300)).
 12. **FPV Preview / lenient save:** **FPV Preview** opens walkability overlay without requiring `^` on every WIP floor; **Validate** tool remains strict for missing hub-up markers. B1F intro still requires spawn marker `S` on save when policy applies ([#298](https://github.com/miramocha/griddungeon-game/pull/298)).
-13. **3D walls (optional):** open `Assets/Scenes/Floors/s1_B*n*F.unity` → **Floor Art Grid → Populate Wall Blocks** → save scene ([floor-art-fpv.md](floor-art-fpv.md)).
+13. **3D walls (optional):** FPV preview or custom floor art prefab → **Floor Art Grid → Populate Wall Blocks** ([floor-art-fpv.md](floor-art-fpv.md)).
 14. Play Mode: **DevBootstrap F2** + `MapView` / exploration movement. **Save during Play Mode** refreshes runtime walkability via Floor Editor sync; exit/re-enter Play Mode after Edit Mode Save.
 
 **Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). Edit or reset layouts in **GridDungeon → Content → Floor Editor** — destructive repaints overwrite the committed floor asset.
@@ -111,7 +111,7 @@ Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-che
 | Optional ([#371](https://github.com/miramocha/griddungeon-game/issues/371)) | **FPV Preview** branches to TWC-built preview when stratum `MeshBackend = TileWorldCreator` |
 | Optional ([#370](https://github.com/miramocha/griddungeon-game/issues/370)) | Retire built-in mesh populate after full TWC rollout |
 
-Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes while `MeshBackend = Default`. Optional built-in mesh retirement: [#370](https://github.com/miramocha/griddungeon-game/issues/370). See [floor-art-fpv.md — TileWorldCreator runtime path](floor-art-fpv.md#tileworldcreator-runtime-path).
+Wall/walkable **Populate** buttons remain on **Floor Art Grid** in prefab/preview authoring while `MeshBackend = Default`. Optional built-in mesh retirement: [#370](https://github.com/miramocha/griddungeon-game/issues/370). See [floor-art-fpv.md — TileWorldCreator runtime path](floor-art-fpv.md#tileworldcreator-runtime-path).
 
 ## Not the same as
 
@@ -119,7 +119,7 @@ Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art sce
 |------|------------|
 | [#26](https://github.com/miramocha/griddungeon-game/issues/26) | Runtime **HUD** grid refactor (`MapView` + `MapDevPreviewView`) |
 | `MapView` | Read-only player map from reveal state |
-| FPV floor scenes | Corridor art; optional; does not author collision — [floor-art-fpv.md](floor-art-fpv.md) |
+| FPV floor art prefabs | Corridor art; optional; does not author collision — [floor-art-fpv.md](floor-art-fpv.md) |
 
 ## Epic tracker
 
