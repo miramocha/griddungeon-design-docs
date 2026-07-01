@@ -1,4 +1,4 @@
-﻿# Combat
+# Combat
 
 Turn-based battles: readable **AGI turn order**, **3+3 core rows** plus **+1+1 auxiliary** slots for summons/guests.
 

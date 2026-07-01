@@ -1,4 +1,4 @@
-﻿# Synchro Protocol (Team Bar)
+# Synchro Protocol (Team Bar)
 
 **Locked name** ([ADR 020](../../decisions/020-team-burst-naming.md)). Replaces working name **Union**.
 

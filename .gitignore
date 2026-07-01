@@ -1,2 +1,5 @@
 # Agent-local test plan drafts (post to GitHub; see .cursor/skills/test-plan-grid-dungeon)
 .cursor/local/
+
+# Obsidian — local vault UI, plugins, and machine-specific workspace state
+.obsidian/

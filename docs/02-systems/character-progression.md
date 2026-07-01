@@ -1,4 +1,4 @@
-﻿# Character Progression
+# Character Progression
 
 ## Stats at launch
 
