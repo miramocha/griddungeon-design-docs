@@ -250,8 +250,7 @@ ADR 035 reserves `FieldSkillPickerHost` + Field UI scope for hub/exploration **U
 
 ---
 
-## Related
-
+## Related docs
 - [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md)
 - [UI event contract — Combat](ui-event-contract.md#combat--commands) — `SubmitPlayerAction`, gates
 - [Combat § UI](../02-systems/combat.md)

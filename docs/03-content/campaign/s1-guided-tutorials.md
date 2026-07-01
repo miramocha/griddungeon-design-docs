@@ -1,4 +1,4 @@
-﻿---
+---
 tags:
   - path/docs/03-content
   - type/content
@@ -128,8 +128,7 @@ VN scripts: [s1_b2f_stalker_briefing](../story-events/s1/s1_b2f_stalker_briefing
 
 ---
 
-## Related
-
+## Related docs
 - [guided-tutorial.md](../../02-systems/guided-tutorial.md)
 - [s1-intro.md](s1-intro.md)
 - [story-events index](../story-events/README.md)

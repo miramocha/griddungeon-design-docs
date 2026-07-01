@@ -9,6 +9,8 @@ tags:
 ---
 # Character Progression
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 ## Stats at launch
 
 | Stat | Affects |

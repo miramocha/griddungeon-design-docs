@@ -8,9 +8,11 @@ tags:
 ---
 # UVS — Phase & Presentation Hooks
 
+**Scope:** [Later](../00-release-scope.md#later)
+
 **Authority:** [ADR 017](../../decisions/017-game-phase-controller.md) (macro phases stay in C#) · [game phase](game-phase.md) (transition table, lifecycle)  
 **Implementation:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — `GameState`, `GamePhaseController`, phase controllers  
-**Status:** Draft — optional later presentation layer; APIs below match the game repo as of 2026-05.
+**Draft:** Draft — optional later presentation layer; APIs below match the game repo as of 2026-05.
 
 Unity **Visual Scripting (UVS)** may drive **presentation** (fades, camera, audio, Timeline) around macro phases **Hub / Exploration / Combat**. It must **not** own transition rules, combat math, or save writes.
 

@@ -8,6 +8,8 @@ tags:
 ---
 # FOE Encounters
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 Grid **FOEs** — visible on the labyrinth, fought on contact or via [mid-battle join](chain-foe-battle.md). This doc covers **contact, flee, and grid position** rules.
 
 ## Starting an FOE fight

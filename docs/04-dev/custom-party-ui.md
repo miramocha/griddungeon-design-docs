@@ -392,8 +392,7 @@ Do not run Unity CLI batch tests while the Editor has the project open ([unity-n
 
 ---
 
-## Related
-
+## Related docs
 - [UI event contract](ui-event-contract.md) — exploration + combat event tables
 - [Exploration UI](../02-systems/exploration-ui.md) — phase visibility, party strip checklist
 - [Combat § UI](../02-systems/combat.md#ui-requirements) — roster vs strip, enemy rows

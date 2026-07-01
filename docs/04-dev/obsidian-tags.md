@@ -1,4 +1,4 @@
-﻿---
+---
 tags:
   - path/docs/04-dev
   - type/dev
@@ -42,7 +42,7 @@ Tag convention for this vault. Tags live in YAML **frontmatter** (`tags:` list) 
 | `#type/dev` | Integrator / UITK / implementation notes |
 | `#type/adr` | Architecture decision records |
 | `#type/plan` | Improvement plans |
-| `#type/ref` | Scratchpads â€” not spec authority |
+| `#type/ref` | Scratchpads — not spec authority |
 | `#type/archive` | Historical snapshots |
 
 ### Release scope (board labels)
@@ -53,7 +53,7 @@ Tag convention for this vault. Tags live in YAML **frontmatter** (`tags:` list) 
 | `#scope/optional` | Shippable later; does not block required slice |
 | `#scope/later` | Deferred polish or content |
 
-Authority: [00 â€” Release scope](../00-release-scope.md).
+Authority: [00 — Release scope](../00-release-scope.md).
 
 ### Status
 
@@ -70,7 +70,7 @@ Authority: [00 â€” Release scope](../00-release-scope.md).
 
 ### Domain (cross-cutting)
 
-Use 1â€“3 per note. Omit when type/path is enough.
+Use 1—3 per note. Omit when type/path is enough.
 
 | Tag | Topics |
 |-----|--------|
@@ -147,7 +147,7 @@ When adding a new doc:
 
 ## Graph tips
 
-- Prefer wikilinks with readable alias: `[[decisions/014-mvp1-exploration-map|ADR 014 â€” default exploration map]]` (link text avoids legacy MVP wording).
+- Prefer wikilinks with readable alias: `[[decisions/014-mvp1-exploration-map|ADR 014 — default exploration map]]` (link text avoids legacy MVP wording).
 - Filter graph: `tag:#scope/required` + `tag:#type/system`.
 - Archive notes: always `#status/archived` + `#path/docs/archive`.
 
@@ -161,7 +161,7 @@ See audit in repo chat / issues. Summary:
 |----------|--------|
 | P0 | Fix broken relative links under `docs/03-content/story-events/s1/` |
 | P1 | Reconcile Protocol Deploy/Transform in release scope vs ADR 023/024 |
-| P1 | Extend root README index (missing ADRs 019, 028â€“033, 036, 042â€“043; key system docs) |
+| P1 | Extend root README index (missing ADRs 019, 028—033, 036, 042—043; key system docs) |
 | P2 | MVP2/MVP3 â†’ optional/required wording in body (filenames unchanged) |
 | P2 | UTF-8 cleanup (mojibake in `04-tech-notes.md`, `dungeons-and-encounters.md`) |
 | P3 | Move `docs/04-dev/github-drafts/` to archive after issue close confirm |

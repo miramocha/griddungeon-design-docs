@@ -896,8 +896,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 
 ---
 
-## Related
-
+## Related docs
 - [doc format](doc-format.md) — dev doc profile (reference example)
 - [UITK BEM transition guide](uitk-bem-transition-guide.md)
 - [centralized UI gotchas](centralized-ui-gotchas.md)

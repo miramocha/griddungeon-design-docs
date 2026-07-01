@@ -9,6 +9,8 @@ tags:
 ---
 # Map cell art (2D schematic)
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 launch exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
 
 **Implementation today (#38):** `MapView` paints visited cells with **USS background fills** only (`MapGridCellPaint`). Per-edge **wall borders** and **feature markers** (party, FOE, gather, chest, stairs, story, doors) live on **marker overlay layers** anchored via `MapGridOverlayAnchor` — not as children of cell elements. Overlay art is authored as **`Assets/UI/Map/noun-*.svg`** raster imports assigned to `MapCellArtCatalog` slots. Party/FOE shells can scale above cell size (`MarkerCellScale`); feature markers (stairs, gather, story, doors) stay cell-sized.
@@ -186,8 +188,7 @@ Namespace: `map-view__cell` + modifiers. Today in [MapView.uss](https://github.c
 
 ---
 
-## Related
-
+## Related docs
 - [Mapping](mapping.md) · [Map reveal save format](map-reveal-save-format.md)
 - [ADR 014 — launch exploration map](../../decisions/014-mvp1-exploration-map.md)
 - [04 — Tech notes § Map assets](../04-tech-notes.md#map-cell-art-assets)

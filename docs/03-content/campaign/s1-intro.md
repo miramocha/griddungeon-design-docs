@@ -83,8 +83,7 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 
 ---
 
-## Related
-
+## Related docs
 - [s1-guided-tutorials.md](s1-guided-tutorials.md) — Act 1 / hub / combat coach beats
 - [guided-tutorial.md](../../02-systems/guided-tutorial.md) — system (modes, schema, runtime)
 - [01 — Core loop](../../01-core-loop.md) — player-facing loop

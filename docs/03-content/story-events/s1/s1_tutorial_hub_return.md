@@ -1,4 +1,4 @@
-﻿---
+---
 tags:
   - path/docs/03-content
   - type/content
@@ -9,7 +9,7 @@ tags:
 ---
 # Draft — `s1_tutorial_hub_return`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; Launch = click-through block.
+**Synced:** with game `Assets/Content/StoryEvents/s1_tutorial_hub_return.asset` — **Navigator-only** (no `npc:*` yet); post-discovery, still **no origin lore**; Launch = click-through block.
 
 **When:** Immediately after **`protocol_strike`** resolves and FOE is removed (tutorial kill).
 

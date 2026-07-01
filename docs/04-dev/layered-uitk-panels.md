@@ -8,7 +8,7 @@ tags:
 ---
 # Layered UITK panels (dev / integrator)
 
-**Status:** Draft — pairs with [ADR 037](../../decisions/037-layered-uitk-panels.md).  
+**Draft:** Draft — pairs with [ADR 037](../../decisions/037-layered-uitk-panels.md).
 **Epic (draft):** game repo `#TBD` — see [github-drafts/layered-uitk-panels-issues.md](github-drafts/layered-uitk-panels-issues.md).
 
 ## Goal

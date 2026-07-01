@@ -8,7 +8,7 @@ tags:
 ---
 # Core assembly — improvement plan (Unity-only)
 
-**Status:** Draft  
+**Draft:** Draft
 **Last updated:** 2026-06-15  
 **Scope:** `GridDungeon.Core` boundaries inside `griddungeon-game`; no non-Unity extraction, no second-repo split unless a second Unity project appears.
 

@@ -8,7 +8,9 @@ tags:
 ---
 # Floor art — FPV corridor props
 
-**Status:** Draft  
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
+**Draft:** Draft
 **Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor) · **TWC runtime (shipped):** [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344) ([#345](https://github.com/miramocha/griddungeon-game/issues/345) spike → [#346](https://github.com/miramocha/griddungeon-game/issues/346) adapter → [#347](https://github.com/miramocha/griddungeon-game/issues/347) elevation; docs [#55](https://github.com/miramocha/griddungeon-design-docs/issues/55))  
 **Follows:** [Editor floor art grid rig #92](https://github.com/miramocha/griddungeon-game/issues/92)  
 **Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [Floor Editor](floor-editor.md) (logic tiles / FOE / export)
@@ -24,7 +26,7 @@ Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core*
 
 ## TileWorldCreator runtime path
 
-**Status:** Shipped ([Epic #344](https://github.com/miramocha/griddungeon-game/issues/344), [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md)). **Setup:** [TWC default notes](../04-dev/twc-default-notes.md).
+**Shipped:** Shipped ([Epic #344](https://github.com/miramocha/griddungeon-game/issues/344), [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md)). **Setup:** [TWC default notes](../04-dev/twc-default-notes.md).
 
 Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v4](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/api) at **runtime** when `FloorArtStratumDefaults.MeshBackend` is `TileWorldCreator`. Installations **without** the TWC asset use **`MeshBackend = Default`** (built-in prefab populate + blocky terrain/cube) — always supported, not deprecated. `ExplorationFloor` stays layout authority; adapter translates walkable / solid cells to TWC blueprint layers (`AddCellsToLayer` → `GenerateCompleteMap`).
 
@@ -285,8 +287,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 
 - [ADR 002](../../decisions/002-mapping-model.md), [ADR 001](../../decisions/001-grid-movement.md), [02 — Dungeon navigation](../02-dungeon-navigation.md)
 
-## Related
-
+## Related docs
 - [Floor transition vignette](floor-transition.md) · [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
 - [04-tech-notes — Map authoring](../04-tech-notes.md#map-authoring--hud-adr-002)
 - [Exploration UI — DungeonView](exploration-ui.md#phase-system-vs-ui-visibility)

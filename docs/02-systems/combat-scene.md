@@ -8,6 +8,8 @@ tags:
 ---
 # Combat Scene & Enemy Rendering
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 How encounters **leave exploration FPV** and present **enemies** during AGI combat. Locked: **battle arena + fixed backdrop** ([ADR 013](../../decisions/013-combat-scene-rendering.md)), not fighting inside the live dungeon geometry.
 
 ## Two modes (exploration vs combat)

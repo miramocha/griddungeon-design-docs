@@ -1,4 +1,4 @@
-﻿---
+---
 tags:
   - path/docs/03-content
   - type/content
@@ -10,7 +10,7 @@ tags:
 ---
 # Draft — `s1_synchro_protocol_unlock`
 
-**Status:** **Synced** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; Launch = click-through block.
+**Synced:** with game `Assets/Content/StoryEvents/s1_synchro_protocol_unlock.asset` — **Navigator-only** (no `npc:*` yet); **first mechanic reveal**; Launch = click-through block.
 
 **When:** After FOE **crisis AOE** (party all at **1 HP**) UI beat completes — not on raw crisis trigger.
 

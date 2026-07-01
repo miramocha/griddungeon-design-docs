@@ -8,6 +8,8 @@ tags:
 ---
 # Elevation generation — algorithm
 
+**Scope:** [Later](../00-release-scope.md#later)
+
 **Implementation:** `GridDungeon.Core.FloorArt.CellElevationGenerator`  
 **Related:** [Floor Editor](floor-editor.md) (authoring UI), [Terrain biomes](terrain-biomes.md) (splat painting from elevation + moisture)
 
@@ -281,3 +283,12 @@ Same `(width, height, walkable, parameters)` → identical `steps[]`.
 ## Tests
 
 Edit Mode — `Assets/Tests/Map/CellElevationGeneratorTests.cs`, `CellElevationCliffSealerTests.cs`: determinism, chunk/plateau invariants, min/max bounds, wall-follow-floor, cliff delta threshold.
+
+---
+
+## Related docs
+
+- [Floor Editor](floor-editor.md)
+- [Terrain biomes](terrain-biomes.md)
+- [Floor art FPV](floor-art-fpv.md)
+- [ADR 019 — Floor verticality](../../decisions/019-floor-verticality.md)

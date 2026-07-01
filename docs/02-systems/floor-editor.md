@@ -9,7 +9,9 @@ tags:
 ---
 # Floor Editor (Unity Editor)
 
-**Status:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)  
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
+**Tracking:** Epic [#75](https://github.com/miramocha/griddungeon-game/issues/75) (game repo)
 **Authority:** [ADR 002 — Floor Editor](../../decisions/002-mapping-model.md#authoring--floor-editor-primary)
 
 Design-time tool only. Players never draw on the map ([ADR 002](../../decisions/002-mapping-model.md) — auto-chart on explore).
@@ -146,8 +148,7 @@ Wall/walkable **Populate** buttons remain on **Floor Art Grid** in prefab/previe
 
 **Exit topology (parallel track):** stratum **connectivity graph** compiles `FloorExitLink[]` — see [ADR 040](../../decisions/040-floor-exit-topology-graph.md) and [game #249](https://github.com/miramocha/griddungeon-game/issues/249). Distinct from ADR 031 event gating.
 
-## Related
-
+## Related docs
 - [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
 - [05-class-design — `FloorEditorWindow`](05-class-design.md)
 - [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)

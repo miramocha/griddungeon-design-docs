@@ -9,6 +9,8 @@ tags:
 ---
 # Exploration UI (UI Toolkit)
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 How the **exploration HUD** is composed, bound, and wired to runtime systems in **griddungeon-game**. Use this when replacing or extending exploration chrome (map panel, party menu / pause overlay, party strip floater) without re-tracing the scene graph.
 
 **Related:** [mapping — Map UI](mapping.md#map-ui) (player-facing behavior), [game phase](game-phase.md) (macro phases + input maps), [input bindings](input-bindings.md), [map cell art](map-cell-art.md), [ADR 014 — launch exploration map](../../decisions/014-mvp1-exploration-map.md). **Integrator:** [UI event contract](../04-dev/ui-event-contract.md), [custom party UI](../04-dev/custom-party-ui.md).
@@ -317,7 +319,7 @@ For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix 
 
 ## Appendix — future map read-model refactor
 
-**Status:** Design sketch (not locked ADR). **Not a blocker** for custom HUD skins — subscribe per [UI event contract](../04-dev/ui-event-contract.md) and reuse shipped `ExplorationMapCoordinator` today.
+**Open:** Design sketch (not locked ADR). **Not a blocker** for custom HUD skins — subscribe per [UI event contract](../04-dev/ui-event-contract.md) and reuse shipped `ExplorationMapCoordinator` today.
 
 | Shipped (use as-is) | Future extract ([#26](https://github.com/miramocha/griddungeon-game/issues/26)) |
 |---------------------|----------------------------------------------------------------------------------|

@@ -9,6 +9,8 @@ tags:
 ---
 # Party & Classes
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 ## Party size & formation
 
 **Locked — core party:** **6 guild members** in labyrinth (3 front / 3 back).

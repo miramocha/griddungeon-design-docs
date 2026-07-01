@@ -8,14 +8,16 @@ tags:
 ---
 # Map reveal save format (floor packing)
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 How **exploration map reveal** is stored in the save file: runtime grids in memory, **sparse packed lists** on disk. Implementation: `FloorMapStateCodec` in the game repo (`GridDungeon.Runtime.Map`).
 
 ## Why pack and unpack?
 
 | Layer | Shape | Used for |
 |-------|--------|----------|
-| **Runtime** | `FloorMapState` � dense `bool[,] Visited`, `WallMask[,] Walls`, plus dictionaries | Fast lookup: `IsVisited`, `GetWalls`, `MapView` paint |
-| **Save** | `FloorMapStateSave` � sparse `List<int>` + small structs | Only **non-default** cells are stored; JSON/binary stays small |
+| **Runtime** | `FloorMapState` — dense `bool[,] Visited`, `WallMask[,] Walls`, plus dictionaries | Fast lookup: `IsVisited`, `GetWalls`, `MapView` paint |
+| **Save** | `FloorMapStateSave` — sparse `List<int>` + small structs | Only **non-default** cells are stored; JSON/binary stays small |
 
 **Packing** (`ToSave`): walk the runtime grids ? append one packed `int` (or struct) per revealed cell / wall / feature / FOE icon.
 
@@ -43,7 +45,7 @@ flowchart LR
 
 ## What gets saved (authority)
 
-From [04 � Tech notes � Map system](../04-tech-notes.md#map-system) and [ADR 002](../../decisions/002-mapping-model.md):
+From [04 — Tech notes — Map system](../04-tech-notes.md#map-system) and [ADR 002](../../decisions/002-mapping-model.md):
 
 | Field | Runtime | Save list | Notes |
 |-------|---------|-----------|--------|
@@ -73,7 +75,7 @@ Example: bump north into a solid tile ? `North` set on the party's current cell.
 
 ## Packed `int` formats
 
-Two encodings share one `List<int>` type for visited vs walls. **Walls must be distinguishable from visited-only packs** � wall entries set **bit 31** (tag).
+Two encodings share one `List<int>` type for visited vs walls. **Walls must be distinguishable from visited-only packs** — wall entries set **bit 31** (tag).
 
 ### Visited-only pack
 
@@ -98,15 +100,15 @@ One record per cell that has **any** revealed wall segment. Includes cell coordi
 Bit layout (32-bit int):
   31     : 1 = wall entry (tag)
   30..24 : reserved (0)
-  23..16 : x  (8 bits, 0�255)
-  15..8  : y  (8 bits, 0�255)
+  23..16 : x  (8 bits, 0—255)
+  15..8  : y  (8 bits, 0—255)
   7..0   : WallMask (8 bits, flags enum)
 
 pack   = tag | ((x & 0xFF) << 16) | ((y & 0xFF) << 8) | ((int)mask & 0xFF)
 unpack = require tag; x,y from bytes; mask from low byte
 ```
 
-**Launch limit:** wall packs assume **x,y = 255** per floor (`FloorMapStateCodec.MaxWallPackExtent`; `IsGridPackable` / `LoadFloor` log error if exceeded). launch floors are 20�20 � safe. Visited-only packs still use 16-bit y for headroom.
+**Launch limit:** wall packs assume **x,y = 255** per floor (`FloorMapStateCodec.MaxWallPackExtent`; `IsGridPackable` / `LoadFloor` log error if exceeded). launch floors are 20—20 — safe. Visited-only packs still use 16-bit y for headroom.
 
 **Why the tag?** An earlier layout OR'd `mask << 24` into the same word as `x << 16`, which corrupted coordinates on unpack. Tag + fixed byte lanes avoids overlap.
 
@@ -147,7 +149,7 @@ Invalid or out-of-bounds entries are **skipped** (no throw) so corrupt saves deg
 | `MapSystem.Snapshot` | Exploration exit; `CommitMapState` into save |
 | `FloorMapStateCodecTests` / `MapSystemRevealTests` | Edit Mode regression |
 
-Reveal **rules** (when to set visited/walls) live in `MapRevealCalculator` + `MapSystem` � not in the codec. The codec only serializes state.
+Reveal **rules** (when to set visited/walls) live in `MapRevealCalculator` + `MapSystem` — not in the codec. The codec only serializes state.
 
 ## Tests (game repo)
 
@@ -160,8 +162,8 @@ Category: **Map** (see [Assets/Tests/README.md](https://github.com/miramocha/gri
 
 ## Related docs
 
-- [Mapping](mapping.md) � player-facing reveal rules and UI
-- [ADR 002 � Mapping model](../../decisions/002-mapping-model.md) � auto-reveal, no drawing
-- [ADR 014 � launch exploration map](../../decisions/014-mvp1-exploration-map.md) � bump, perimeter, persist
-- [05 � class design � Map data](../05-class-design.md#map-data-model) � type sketches
-- [04 � Tech notes � Map system](../04-tech-notes.md#map-system) � module overview
+- [Mapping](mapping.md) — player-facing reveal rules and UI
+- [ADR 002 — Mapping model](../../decisions/002-mapping-model.md) — auto-reveal, no drawing
+- [ADR 014 — launch exploration map](../../decisions/014-mvp1-exploration-map.md) — bump, perimeter, persist
+- [05 — class design — Map data](../05-class-design.md#map-data-model) — type sketches
+- [04 — Tech notes — Map system](../04-tech-notes.md#map-system) — module overview

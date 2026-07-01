@@ -260,7 +260,7 @@ Service overview: [centralized UI services § Global command rail](centralized-u
 
 ## Global input hints
 
-**Status:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
+**Shipped:** Shipped — single bottom-right strip for **input bind copy only** (keys + actions). Replaces per-panel bind footers on command rail, hub, party menu, tabbed pickers, exploration minimap, and victory overlay.
 
 **Architecture:** Part of the [centralized UI services](centralized-ui-services.md) pattern (`InputHintPresenter` + `InputHints` facade, `sortingOrder` 300).
 

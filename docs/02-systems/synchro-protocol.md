@@ -9,6 +9,8 @@ tags:
 ---
 # Synchro Protocol (Team Bar)
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 **Locked name** ([ADR 020](../../decisions/020-team-burst-naming.md)). Replaces working name **Union**.
 
 Party-wide **Synchro Charge** (team resource) for coordinated **Protocol** actions, executed by the active **[Navigator](navigator.md)**. Inspired by *Etrian Odyssey V* Union skills; shown as a **single shared meter** in combat UI.

@@ -8,6 +8,8 @@ tags:
 ---
 # Navigator
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 **Party lead** who sits **outside** the 3+3 combat formation. They command [Synchro Protocol](synchro-protocol.md) skills and provide **passive buffs** to the active core six.
 
 **Narrative:** The player **is** the active Navigator ([narrative POV](narrative-pov.md)) — *Amnesia*-style **blank state** at new game; Synchro / Protocol and role lore **unlock through play**, not upfront exposition.
@@ -195,7 +197,7 @@ Additional Navigators unlock via strata/quests later.
 
 ## Consider / explore — Navigator 3D presence
 
-**Status:** Design idea — **not locked**. Launch keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
+**Open:** Design idea — **not locked**. Launch keeps portrait + strip UI ([§ UI](#ui)). Rules for Deploy / Transform stay in [ADR 023](../../decisions/023-protocol-deploy-sortie-summon.md) and [ADR 024](../../decisions/024-protocol-transform.md); this section is **how the Navigator is shown**, not who is targetable or which slot owns combat stats.
 
 ### Default — corner presence (exploration + combat)
 

@@ -9,6 +9,8 @@ tags:
 ---
 # FOE Mid-Battle Join
 
+**Scope:** [Optional](../00-release-scope.md#optional)
+
 When [FOE combat patrol](combat.md#optional-later-foe-movement-during-combat) is on ([ADR 005](../../decisions/005-foe-combat-patrol.md)), a grid FOE can **enter the current fight** instead of waiting for a separate encounter after victory.
 
 > Formerly drafted as post-victory “chain FOE”; superseded by [ADR 010](../../decisions/010-chain-foe-battle.md).

@@ -219,8 +219,7 @@ Use **FloorLayoutConnectivity** when validating floor painter output; use **Expl
 
 ---
 
-## Related
-
+## Related docs
 - [02 — Autopilot](../02-systems/autopilot.md) — player-facing rules and shipped vs spec table
 - [04 — Tech notes § Autopilot](../04-tech-notes.md#autopilot-mvp2)
 - [Mapping](../02-systems/mapping.md) — reveal model (ADR 002)

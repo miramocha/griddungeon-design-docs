@@ -258,8 +258,7 @@ If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `
 
 ---
 
-## Related
-
+## Related docs
 - [Floor transition (system)](../02-systems/floor-transition.md)
 - [Floor art FPV — transitions](../02-systems/floor-art-fpv.md#floor-transitions)
 - [Hub and services](../02-systems/hub-and-services.md)

@@ -9,7 +9,9 @@ tags:
 ---
 # Narrative POV — Navigator, blank state
 
-**Status:** Locked (S1 launch)  
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
+**Shipped:** Locked (S1 launch)
 **Applies to:** [story events](story-events.md), [guided tutorial](guided-tutorial.md), hub copy, future Navigator unlock scenes  
 **Reference tone:** *Amnesia*-style blank state — the player **is** the active Navigator; they **do not** know their role, past, or full toolkit at new game.
 
@@ -100,8 +102,7 @@ Game copy should match design drafts; re-running **Ensure MVP1 S1 Story Events**
 
 ---
 
-## Related
-
+## Related docs
 - [Navigator](navigator.md#narrative-role-mvp1)
 - [Story events](story-events.md)
 - [Guided tutorial](guided-tutorial.md)

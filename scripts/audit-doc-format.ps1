@@ -157,7 +157,7 @@ foreach ($file in $files) {
         if ($body -notmatch '(?m)^## Context\s*$') {
             Add-Finding ([ref]$findings) $rel "adr-missing-context" "warning" "ADR missing ## Context"
         }
-        if ($body -notmatch '(?m)^## Decision\s*$') {
+        if ($body -notmatch '(?m)^## Decision\b') {
             Add-Finding ([ref]$findings) $rel "adr-missing-decision" "warning" "ADR missing ## Decision"
         }
         if ($null -eq $bodyStatus) {

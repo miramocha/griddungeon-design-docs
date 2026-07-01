@@ -126,7 +126,7 @@ Use `status/synced` in frontmatter when game asset matches.
 
 ## Gotchas
 
-## Related
+## Related docs
 ```
 
 Long guides may use `---` horizontal rules between major parts ([centralized-ui-services](centralized-ui-services.md)). Prefer `## Problem` over inline bold walls.
@@ -143,7 +143,7 @@ tags: …
 ---
 # ADR NNN — {Title}
 
-**Status:** Accepted | Proposed | Deferred
+**Shipped:** Accepted | Proposed | Deferred
 **Date:** YYYY-MM-DD
 **Triggers implementation:** (optional — when policy must land)
 
@@ -210,7 +210,7 @@ Scratchpad — no spec authority statement in [refs README](../refs/README.md).
 
 ## Encoding
 
-UTF-8 without BOM. Use real em dashes (`—`), middle dots (` · `), arrows (`→`) — not `â€"`, `ï¿½`, or `Â·`. Audit script flags common mojibake.
+UTF-8 without BOM. Use real em dashes (`—`), middle dots (` · `), arrows (`→`) — not `—"`, `ï¿½`, or ` · `. Audit script flags common mojibake.
 
 ---
 
@@ -219,10 +219,10 @@ UTF-8 without BOM. Use real em dashes (`—`), middle dots (` · `), arrows (`�
 | Phase | Work |
 |-------|------|
 | **A** | This doc + audit script (**done**) |
-| **B** | Run audit; triage report |
-| **C** | Normalize tier-1: `combat`, `game-phase`, `mapping`, `hub-and-services`, `story-events`, `centralized-ui-services` |
-| **D** | Wave `02-systems/` remainder |
-| **E** | Content + dev; remove duplicate body `**Status:**` |
+| **B** | Run audit; triage report (**done**) |
+| **C** | Normalize tier-1: `combat`, `game-phase`, `mapping`, `hub-and-services`, `story-events`, `centralized-ui-services` (**done**) |
+| **D** | Wave `02-systems/` remainder (**done**) |
+| **E** | Content + dev; remove duplicate body `**Status:**` (**done**) |
 
 Track format debt on GitHub when audit findings are non-trivial.
 
@@ -233,6 +233,8 @@ Track format debt on GitHub when audit findings are non-trivial.
 | Script | Purpose |
 |--------|---------|
 | [audit-doc-format.ps1](../../scripts/audit-doc-format.ps1) | Lint markdown; JSON report |
+| [normalize-doc-format-wave.ps1](../../scripts/normalize-doc-format-wave.ps1) | Batch scope / Status / Related / encoding pass |
+| [fix-tier1-encoding.ps1](../../scripts/fix-tier1-encoding.ps1) | Targeted U+FFFD repair (tier-1 pilots) |
 | [apply-obsidian-tags.ps1](../../scripts/apply-obsidian-tags.ps1) | Apply tag registry |
 | [obsidian-tag-registry.json](../../scripts/obsidian-tag-registry.json) | Per-file tags |
 

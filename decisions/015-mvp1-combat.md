@@ -12,7 +12,11 @@ tags:
 **Date:** 2026-05-20  
 **Amended:** 2026-05-23 — enemy formation aligned to **Etrian Odyssey IV+** (≤3 front + ≤3 back; **6** occupied max). Replaces prior **5** max / **≤2** back cap.
 
-## Decisions
+## Context
+
+Default combat layout, presentation scope, pause/flee rules, damage pipeline, status subset, and Synchro tuning for the first playable slice.
+
+## Decision
 
 1. **Enemy layout:** **Front + back rows** (like party) — up to **6** slots total (**≤3** per row) per encounter design; melee targets enemy **front** before back unless pierce.
 2. **Battle camera:** **Three-quarter** fixed angle on arena rig ([ADR 013](013-combat-scene-rendering.md)).

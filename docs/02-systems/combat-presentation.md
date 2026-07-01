@@ -8,6 +8,8 @@ tags:
 ---
 # Combat Presentation (Spells & Skills)
 
+**Scope:** [Optional](../00-release-scope.md#optional)
+
 How skills look and feel in battle — camera, animation, VFX, and **cinematic participation**. Combat runs on the **battle arena** (backdrop + enemy slots), not in dungeon FPV — see [combat scene](combat-scene.md) ([ADR 013](../../decisions/013-combat-scene-rendering.md)).
 
 ## Default: fixed camera

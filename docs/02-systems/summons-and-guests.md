@@ -8,6 +8,8 @@ tags:
 ---
 # Summons & Guests (Auxiliary slots)
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 Combat formation extends the core **3+3 guild party** with **one auxiliary slot per row** — front and back — for **summons** or **guest** allies.
 
 ## Formation (combat only)

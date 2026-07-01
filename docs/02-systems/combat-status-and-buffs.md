@@ -8,6 +8,8 @@ tags:
 ---
 # Combat Status, Buffs & Debuffs
 
+**Scope:** [Required](../00-release-scope.md#required-first-playable)
+
 Rules for **ailments**, **stat modifiers**, and **battle modifiers** during AGI combat. EO-first: limb **binds**, turn-skipping control, timed **Boost/Down** stats, end-of-round ticks. **Boost/Break** (EO2 Force) remains out of scope — see [Synchro Protocol](synchro-protocol.md).
 
 ## Who can be affected
