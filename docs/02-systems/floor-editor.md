@@ -101,16 +101,16 @@ Orthogonal to grid `H` / `E` interact exits ([`FloorExitLink[]`](#multi-exit-mar
 
 Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (CI / regression — not in Floor Editor window).
 
-## TileWorldCreator (planned)
+## TileWorldCreator
 
-**Epic:** [game #344](https://github.com/miramocha/griddungeon-game/issues/344). **No Phase 1 Floor Editor UI changes** — designers keep painting layout, elevation, FOE, and events as today. TWC builds FPV meshes at **runtime** from the saved `ExplorationFloor` asset.
+**Epic:** [game #344](https://github.com/miramocha/griddungeon-game/issues/344) (shipped). **No required Floor Editor UI changes** — designers keep painting layout, elevation, FOE, and events as today. TWC builds FPV meshes at **runtime** from the saved `ExplorationFloor` asset ([ADR 043](../../decisions/043-twc-fpv-presentation-layer.md)).
 
 | Phase | Floor Editor impact |
 |-------|---------------------|
-| Phase 0–1 | None required — **FPV Preview** still opens built-in `FloorArtPreviewMenus` path |
-| Phase 2 (optional) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy may clarify blocky/ground mode vs `MeshBackend = TileWorldCreator` strata |
+| Shipped (0–2) | None required — **FPV Preview** still opens built-in `FloorArtPreviewMenus` path |
+| Optional ([#370](https://github.com/miramocha/griddungeon-game/issues/370)) | **FPV Preview** may branch to TWC-built preview; **Elevation** tab copy for `MeshBackend = TileWorldCreator` strata |
 
-Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes while `MeshBackend = Default` ([#347](https://github.com/miramocha/griddungeon-game/issues/347) retires built-in mesh path after full TWC rollout). See [floor-art-fpv.md — TWC runtime path](floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344).
+Wall/walkable **Populate** buttons remain on **Floor Art Grid** in floor art scenes while `MeshBackend = Default`. Optional built-in mesh retirement: [#370](https://github.com/miramocha/griddungeon-game/issues/370). See [floor-art-fpv.md — TileWorldCreator runtime path](floor-art-fpv.md#tileworldcreator-runtime-path).
 
 ## Not the same as
 

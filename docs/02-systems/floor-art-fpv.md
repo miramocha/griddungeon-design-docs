@@ -1,7 +1,7 @@
 # Floor art — FPV corridor props
 
 **Status:** Draft  
-**Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor) · **TWC runtime (planned):** [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344) ([#345](https://github.com/miramocha/griddungeon-game/issues/345) spike → [#346](https://github.com/miramocha/griddungeon-game/issues/346) adapter → [#347](https://github.com/miramocha/griddungeon-game/issues/347) cleanup; docs [#55](https://github.com/miramocha/griddungeon-design-docs/issues/55))  
+**Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor) · **TWC runtime (shipped):** [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344) ([#345](https://github.com/miramocha/griddungeon-game/issues/345) spike → [#346](https://github.com/miramocha/griddungeon-game/issues/346) adapter → [#347](https://github.com/miramocha/griddungeon-game/issues/347) elevation; docs [#55](https://github.com/miramocha/griddungeon-design-docs/issues/55))  
 **Follows:** [Editor floor art grid rig #92](https://github.com/miramocha/griddungeon-game/issues/92)  
 **Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [Floor Editor](floor-editor.md) (logic tiles / FOE / export)
 
@@ -14,9 +14,9 @@ Artists author **3D corridor props** on the same **20×20** grid as exploration 
 
 Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core** only ([ADR 002](../../decisions/002-mapping-model.md)).
 
-## TileWorldCreator runtime path (planned — Epic [#344](https://github.com/miramocha/griddungeon-game/issues/344))
+## TileWorldCreator runtime path
 
-**Status:** Draft stub — implementation not started. **Docs:** [design-docs #55](https://github.com/miramocha/griddungeon-design-docs/issues/55).
+**Status:** Shipped ([Epic #344](https://github.com/miramocha/griddungeon-game/issues/344), [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md)). **Setup:** [TWC default notes](../04-dev/twc-default-notes.md).
 
 Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v4](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/api) at **runtime** when `FloorArtStratumDefaults.MeshBackend` is `TileWorldCreator`. Installations **without** the TWC asset use **`MeshBackend = Default`** (built-in prefab populate + blocky terrain/cube) — always supported, not deprecated. `ExplorationFloor` stays layout authority; adapter translates walkable / solid cells to TWC blueprint layers (`AddCellsToLayer` → `GenerateCompleteMap`).
 
@@ -24,20 +24,20 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 |-------|----------|
 | Scope | **FPV 3D only** — not UITK minimap ([map cell art](map-cell-art.md)) |
 | Workflow | Runtime from floor SO — not edit-time-only bake |
-| Grid | TWC **20×20**, **cell size 10** — match `ExplorationGridMetrics` |
-| Phase 1 interactables | Keep `FloorArtRuntimePopulate` chest/door paths |
-| Phase 1 elevation | Flat floors on TWC; built-in blocky terrain until [#347](https://github.com/miramocha/griddungeon-game/issues/347) |
+| Grid | TWC sub-grid (default **2×2** per logic cell, **5** u TWC cell) on **21×21** floors — match `ExplorationGridMetrics` (**10** u/logic cell) |
+| Interactables | Chest/door populate on `FloorArtGrid` lists (Phase 1 path; optional TWC Objects layer later) |
+| Elevation | `cellElevationSteps` → runtime `Level_sN` layers ([#347](https://github.com/miramocha/griddungeon-game/issues/347)); see [twc-default-notes § Elevation bridge](../04-dev/twc-default-notes.md#elevation-bridge-347) |
 | Built-in populate | `PopulateWallBlocks` / `PopulateWalkableTiles` / blocky terrain when `MeshBackend = Default` |
-| Floor Editor | **No Phase 1 UI change** — see [floor-editor.md](floor-editor.md#tileworldcreator-planned) |
+| Floor Editor | **No required UI change** — optional FPV Preview / elevation copy tracked on [#370](https://github.com/miramocha/griddungeon-game/issues/370) |
 | Map authority | **`ExplorationFloor` → TWC only** — do not use TWC CA/BSP/maze generators as gameplay layout source |
 | Mesh backends | **`Default`** (built-in, all installs) \| **`TileWorldCreator`** (optional plugin asmdef) |
 | Plugin asmdef | **`GridDungeon.FloorArt.TileWorldCreator`** — omit folder if no asset; Runtime never references vendor TWC asm |
 
-**New types (planned):** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcWalkableMaskBuilder`, `FloorArtTwcElevationTranslator`, `FloorArtTwcHost`).
+**Types:** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcWalkableMaskBuilder`, `FloorArtTwcElevationTranslator`, `FloorArtTwcHost`).
 
 **Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
 
-**#345 default notes:** [TWC default notes](../04-dev/twc-default-notes.md) ([#345](https://github.com/miramocha/griddungeon-game/issues/345)) — editor setup, locked parameters, tileset swaps, troubleshooting.
+**Out of epic #344:** Built-in mesh path retirement when all strata on TWC — [#370](https://github.com/miramocha/griddungeon-game/issues/370) (optional, standalone).
 
 ## Context
 
