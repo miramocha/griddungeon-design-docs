@@ -49,7 +49,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **Grid model:** `cell.X` → world **X**, `cell.Y` → world **Z**, north **+Z**; anchor = **cell corner** `(x, 0, z)` ([02 — Dungeon navigation](../02-dungeon-navigation.md)). When the floor asset has `cellElevationSteps`, party/camera **Y** follows step × `elevationStepUnits` via `DungeonExplorer` — not the flat `y = 0` default.
 
-**World scale at launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art scenes use **`FloorArtGrid.Cell Size = 10`**; legacy scenes authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
+**World scale at launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art prefabs and preview use **`FloorArtGrid.Cell Size = 10`**; legacy assets authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
 
 **Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template prefab workflow, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonView.RenderCell` remains a stub — runtime FPV is **prefab instantiate**, not blobber cell rendering.
 
