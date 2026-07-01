@@ -2,7 +2,7 @@
 
 Phase 0 default path: `ExplorationFloor` walkables → TWC `AddCellsToLayer` → `GenerateCompleteMap`.
 
-**Authority:** [floor art FPV — TileWorldCreator runtime path](../02-systems/floor-art-fpv.md#tileworldcreator-runtime-path-planned--epic-344) · **Issue:** [griddungeon-game #345](https://github.com/miramocha/griddungeon-game/issues/345)
+**Authority:** [floor art FPV — TileWorldCreator runtime path](../02-systems/floor-art-fpv.md#tileworldcreator-runtime-path) · [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md) · **Issues:** [#345](https://github.com/miramocha/griddungeon-game/issues/345) spike, [#346](https://github.com/miramocha/griddungeon-game/issues/346) adapter, [#347](https://github.com/miramocha/griddungeon-game/issues/347) elevation
 
 ## Setup (once after clone)
 
@@ -159,4 +159,4 @@ Walk party along B1F corridor — FPV mesh corners should match logic grid / min
 
 **Assembly:** `GridDungeon.FloorArt.TileWorldCreator` uses `autoReferenced: false` — TWC is optional; only explicit asmdef refs (tests, prefab host) pull it in.
 
-Follow-up: [#346](https://github.com/miramocha/griddungeon-game/issues/346) `IFloorArtMeshBackend`, [#347](https://github.com/miramocha/griddungeon-game/issues/347) elevation bridge.
+Follow-up (out of epic #344): [#371](https://github.com/miramocha/griddungeon-game/issues/371) Floor Editor FPV Preview for TWC; [#370](https://github.com/miramocha/griddungeon-game/issues/370) optional built-in mesh retirement after full rollout.
