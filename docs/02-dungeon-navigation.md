@@ -6,7 +6,7 @@ tags:
   - status/draft
   - domain/exploration
 ---
-# 02 — Dungeon Navigation
+# Dungeon Navigation
 
 ## Camera & presentation
 

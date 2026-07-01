@@ -32,14 +32,14 @@ EO traditionally uses player-drawn walls. **Drawing tools are out of scope** for
 | Bump-assist one-click stamp | Was a drawing aid; redundant with auto-wall on bump |
 | Free-text map notes | Annotation tool; cut with drawing scope |
 | Full floor reveal on entry | No fog tension |
-| **Minimap camera ? `RenderTexture` as primary HUD** | Superseded by floor painter + 2D map ([amendment 2026-05-21](#technical-notes-unity--authoring--runtime-map)) |
+| **Minimap camera → `RenderTexture` as primary HUD** | Superseded by floor painter + 2D map ([amendment 2026-05-21](#technical-notes-unity--authoring--runtime-map)) |
 
 ## Consequences
 
 - Save stores `revealedMapLayer` per floor (bitmasks + feature flags), not player strokes
 - No map tool tutorial; tutorial teaches **reading** map + FOE icons
-- EO "mapping as skill" shifts to **pathfinding / FOE routing** rather than pen accuracy
-- **Floor layout** is authored in a **level painter** ? `ExplorationFloor` assets; runtime HUD is **2D** from data + reveal state
+- EO "mapping as skill" becomes **pathfinding / FOE routing**; pen accuracy no longer applies
+- **Floor layout** is authored in a **level painter** → `ExplorationFloor` assets; runtime HUD is **2D** from data + reveal state
 - **FPV dungeon scenes** remain separate presentation; they do not feed the player map texture
 
 ## Technical notes (Unity) — authoring & runtime map
@@ -64,7 +64,7 @@ Painter replaces hand-editing huge tile arrays in the Inspector and replaces **M
 1. **`MapSystem`** holds revealed state (`Visited`, `WallMask`, features, `FoeIcons`) — unchanged authority.
 2. **`MapView`** (UI Toolkit) draws the chart from `IReadOnlyFloorMapState` + floor style from `ContentDatabase` / `ExplorationFloor`:
    - **Cells/edges:** floor tiles and wall segments revealed so far (fog hides unrevealed).
-   - **Party / FOE:** icons at grid `(x, y, level)` — UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) — at launch, map shows party—s **current `level`**).
+   - **Party / FOE:** icons at grid `(x, y, level)` — UI elements or stamped sprites on the 2D layer ([ADR 019](019-floor-verticality.md) — at launch, map shows the party's **current `level`**).
 3. **Refresh on dirty:** rebuild or patch the 2D view when reveal changes, party moves, or FOE updates — **no** minimap `RenderTexture` in the main path.
 4. **Pan/zoom** on the map `VisualElement` ([ADR 014](014-mvp1-exploration-map.md)).
 
@@ -72,7 +72,7 @@ Implementation options (either is fine): per-cell `VisualElement` grid, or one `
 
 ### Collision alignment
 
-Walkability and wall blocking use the **same `ExplorationFloor` data** the painter writes (`DungeonExplorer` ? `IsWalkable` / edge query) — not mesh colliders, not the 2D HUD ([dungeon navigation](../docs/02-dungeon-navigation.md)).
+Walkability and wall blocking read **`ExplorationFloor` data** from the painter (`DungeonExplorer` → `IsWalkable` / edge query). Mesh colliders and the 2D HUD do not drive collision ([dungeon navigation](../docs/02-dungeon-navigation.md)).
 
 ### Deferred — MapProxy + minimap camera (optional)
 

@@ -25,7 +25,7 @@ EO uses discrete grid steps with light animation. Movement must stay compatible 
 
 ## Amendments (2026-05-21)
 
-- Supersedes the prior rule “queue one buffered step max” during lerp. EO-style exploration uses **hold-to-repeat** after each step and turn animation instead of edge-buffered taps mid-lerp.
+- Supersedes the prior rule “queue one buffered step max” during lerp. EO-style exploration uses **hold-to-repeat** after each step and turn animation; edge-buffered taps mid-lerp are dropped.
 - Default lerp timings moved from ~0.2s / ~0.15s step/turn to **Normal** preset in [ADR 018](018-exploration-animation-speed.md) (0.32s step / 0.26s turn after 2026-05-26 FPV scale amend; was 0.28s at 1 u/cell). Player-selectable Slow / Fast / Very Fast presets added there.
 
 ## Alternatives considered

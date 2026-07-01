@@ -10,7 +10,6 @@ tags:
 
 **Scope:** [Required](../00-release-scope.md#required-first-playable)
 
-**Draft:** Draft
 **Implementation:** [#102](https://github.com/miramocha/griddungeon-game/issues/102) (wall blocks + runtime load, shipped) · **Populate v1.5:** [#172](https://github.com/miramocha/griddungeon-game/issues/172) (walkable hallway / corner / floor) · **TWC runtime (shipped):** [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344) ([#345](https://github.com/miramocha/griddungeon-game/issues/345) spike → [#346](https://github.com/miramocha/griddungeon-game/issues/346) adapter → [#347](https://github.com/miramocha/griddungeon-game/issues/347) elevation; docs [#55](https://github.com/miramocha/griddungeon-design-docs/issues/55))  
 **Follows:** [Editor floor art grid rig #92](https://github.com/miramocha/griddungeon-game/issues/92)  
 **Not:** [Map cell art](map-cell-art.md) (2D HUD `MapView`) or [Floor Editor](floor-editor.md) (logic tiles / FOE / export)
@@ -26,7 +25,7 @@ Logic, collision, map reveal, and encounters remain **`ExplorationFloor` + Core*
 
 ## TileWorldCreator runtime path
 
-**Shipped:** Shipped ([Epic #344](https://github.com/miramocha/griddungeon-game/issues/344), [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md)). **Setup:** [TWC default notes](../04-dev/twc-default-notes.md).
+**Shipped:** [Epic #344](https://github.com/miramocha/griddungeon-game/issues/344), [ADR 043](../../decisions/043-twc-fpv-presentation-layer.md). **Setup:** [TWC default notes](../04-dev/twc-default-notes.md).
 
 Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v4](https://giantgrey.gitbook.io/tileworldcreator-v4-documentation/api) at **runtime** when `FloorArtStratumDefaults.MeshBackend` is `TileWorldCreator`. Installations **without** the TWC asset use **`MeshBackend = Default`** (built-in prefab populate + blocky terrain/cube) — always supported, not deprecated. `ExplorationFloor` stays layout authority; adapter translates walkable / solid cells to TWC blueprint layers (`AddCellsToLayer` → `GenerateCompleteMap`).
 
@@ -59,7 +58,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **Grid model:** `cell.X` → world **X**, `cell.Y` → world **Z**, north **+Z**; anchor = **cell corner** `(x, 0, z)` ([02 — Dungeon navigation](../02-dungeon-navigation.md)). When the floor asset has `cellElevationSteps`, party/camera **Y** follows step × `elevationStepUnits` via `DungeonExplorer` — not the flat `y = 0` default.
 
-**World scale at launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art prefabs and preview use **`FloorArtGrid.Cell Size = 10`**; legacy assets authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
+**World scale (at-launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art prefabs and preview use **`FloorArtGrid.Cell Size = 10`**; legacy assets authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
 
 **Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template prefab workflow, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonView.RenderCell` remains a stub — runtime FPV is **prefab instantiate**, not blobber cell rendering.
 

@@ -87,6 +87,5 @@ Stratum **2+:** hub entry at warp gate after in-world unlock — [dungeons — w
 - [s1-guided-tutorials.md](s1-guided-tutorials.md) — Act 1 / hub / combat coach beats
 - [guided-tutorial.md](../../02-systems/guided-tutorial.md) — system (modes, schema, runtime)
 - [01 — Core loop](../../01-core-loop.md) — player-facing loop
-- [01 — Core loop](../../01-core-loop.md)
 - [game-phase](../../02-systems/game-phase.md) — new game bootstrap, `LeaveHub`
 - [foe-encounters — tutorial FOE](../../02-systems/foe-encounters.md#tutorial-foe-s1--foe_alley_stalker)

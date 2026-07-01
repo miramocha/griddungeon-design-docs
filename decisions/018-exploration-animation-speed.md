@@ -14,7 +14,7 @@ tags:
 
 ## Context
 
-Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-movement.md)). The original ~0.2s step default feels slightly fast for EO-style pacing. Players should be able to choose a comfortable animation speed without changing FOE patrol, encounters, or grid logic (still committed at step/turn start).
+Exploration uses discrete grid steps with DOTween lerps ([ADR 001](001-grid-movement.md)). The original ~0.2s step default runs fast for EO-style pacing. Players should be able to choose a comfortable animation speed without changing FOE patrol, encounters, or grid logic (still committed at step/turn start).
 
 ## Decision
 

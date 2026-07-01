@@ -18,7 +18,7 @@ Design-time tool only. Players never draw on the map ([ADR 002](../../decisions/
 
 ## Goal
 
-Paint launch dungeon floors in Unity and export **`ExplorationFloor`** assets.
+Paint default-build dungeon floors in Unity and export **`ExplorationFloor`** assets.
 
 **Layout authority (2026-06):** **Draft — not locked.** During iteration, serialized `Assets/Content/Floors/s1_B*n*F.asset` (Floor Editor **Save** / Load) is runtime truth. Design ASCII lives in [archive — at launch S1 floor layouts (draft)](../archive/mvp1-s1-floor-layouts-draft.md). `S1B*FLayoutBuilder` is dev reset only — not spec authority.
 

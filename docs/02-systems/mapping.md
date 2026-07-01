@@ -68,7 +68,7 @@ Exploration HUD uses the same **reactive, blocking** bar as combat ([tech notes 
 | **FOE** | FOE enters **line of sight**; icon **updates** on step-patrol move |
 | **Traps** (optional) | Party **triggers** trap on cell (mark for repeat visits) |
 
-at launch minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
+**At launch,** minimum: auto-floor, auto-wall on bump, auto-stairs/doors on interact, auto-FOE pin.
 
 ## Fog of war
 

@@ -17,7 +17,7 @@ tags:
 
 ## Context
 
-at launch needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
+The default build needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
 
 Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#content-ids-locked), [character progression § launch equipment](../docs/02-systems/character-progression.md#launch-equipment-locked)).
 
@@ -120,7 +120,7 @@ On load, map legacy `GatheredItemIds` → `PartyInventory` stacks (e.g. `patch_k
 - Separate material pouch asset — one `PartyInventory`, kind per slot (MVP2 materials tab).
 - `ItemCategory` on every `ItemDefinition` — slot kind is enough for tabs.
 - Full tabbed bag inside combat Item picker — combat uses filtered consumable list only.
-- Codex-driven identify as at launch blocker — shop identify sufficient.
+- Codex-driven identify as a default-build blocker — shop identify sufficient.
 
 ## Consequences
 

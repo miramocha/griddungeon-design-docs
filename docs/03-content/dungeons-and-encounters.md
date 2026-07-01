@@ -16,8 +16,8 @@ Content structured like **Etrian Odyssey strata** — themed zones with multiple
 ## Stratum structure
 
 ```
-Stratum 1: Fallen District (B1F—B5F full arc; **required slice: B1F—B3F** + boss on B3F) ? Stratum boss
-Stratum 2: Sand Ruins (B6F—B10F) ? —
+Stratum 1: Fallen District (B1F—B5F full arc; **required slice: B1F—B3F** + boss on B3F) → Stratum boss
+Stratum 2: Sand Ruins (B6F—B10F) → —
 ```
 
 Each floor data file:
@@ -31,7 +31,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 1. **Looping paths** — shortcuts behind keys/FOE gates reward map literacy.
 2. **FOE as puzzles** — block shortest route until party ready or map route around patrol.
-3. **Gather / fish nodes** — **optional** minigames ? materials for synthesis ([gathering & fishing](../02-systems/gathering-and-fishing.md)).
+3. **Gather / fish nodes** — **optional** minigames → materials for synthesis ([gathering & fishing](../02-systems/gathering-and-fishing.md)).
 4. **Safe-ish rooms** — lower encounter rate (not always zero).
 5. **Landmarks** — unique art/audio cue; auto-mapped when visited.
 
@@ -39,7 +39,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 | Floor | Theme | FOE teaching | Gimmick |
 |-------|-------|--------------|---------|
-| B1F | Outskirts gate | None on B1F; FOE from B2F | S1 intro: blocked path ? hub; shared map Acts 1 & 3 |
+| B1F | Outskirts gate | None on B1F; FOE from B2F | S1 intro: blocked path → hub; shared map Acts 1 & 3 |
 | B2F | Collapsed avenues | 2 FOEs, green tier; 1 step-patrol (`stepsPerMove: 4`) | Key door loop |
 | B3F | Flooded underpass | Yellow-tier patrol FOE, narrower paths | Damage floor tiles (later) |
 | B4F | Ruined plaza | Red-tier FOE guards chest | **Optional:** salvage pile + flooded cistern |
@@ -60,10 +60,10 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 ### Stratum entry & warp gates (locked)
 
-| Stratum | **Warp gate on floor** | **Hub ? labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
+| Stratum | **Warp gate on floor** | **Hub → labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
 |---------|------------------------|----------------------|----------------|---------------------------|
-| **`s1` (required slice)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** ? **B1F gate** (stratum beginning) | Act 2 party ready (`S1_PARTY_READY`) — not a warp-gate tile | ? **Hub** |
-| **`s2`+** | Yes — authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked ? warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | ? **Hub** |
+| **`s1` (required slice)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** → **B1F gate** (stratum beginning) | Act 2 party ready (`S1_PARTY_READY`) — not a warp-gate tile | → **Hub** |
+| **`s2`+** | Yes — authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked → warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | → **Hub** |
 
 **Rule:** every hub dive starts at the stratum **beginning** (gate or warp gate on entrance floor). No resume at deepest floor, no gate stairs to a prior stratum—s depth.
 
@@ -77,15 +77,15 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Authority:** [campaign/s1-intro.md](campaign/s1-intro.md) — three acts, save flags, entry rules, progression gates. This file owns **encounter IDs, stratum rules, and floor summary**; per-floor ASCII is [archived (draft)](../archive/mvp1-s1-floor-layouts-draft.md).
 
-Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from **B1F gate** ? B2F tutorial FOE ? B3F boss.
+Summary: Act 1 movement on `s1_B1F` (no combat) → hub party setup → Act 3 from **B1F gate** → B2F tutorial FOE → B3F boss.
 
 ### Required slice floor summary
 
 | Floor ID | Theme | Spawns | Stairs (gate / links) | FOEs | Random encounters |
 |----------|-------|--------|------------------------|------|-------------------|
-| `s1_B1F` | Outskirts gate | Spawn start `(4,2)` / gate `(10,11)` | Gate `^` ? **hub**; `v` `(10,17)` ? B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** — `grp_b1_chaff_*` |
-| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** — `foe_alley_stalker` ? `grp_alley_stalker_tutorial` | **0.10** — `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
-| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** — `foe_s1_warden` ? `grp_s1_warden` | **0.12** — `grp_b3_mix_hounds` / `rubble_pair` / `control` |
+| `s1_B1F` | Outskirts gate | Spawn start `(4,2)` / gate `(10,11)` | Gate `^` → **hub**; `v` `(10,17)` → B2F (blocked Act 1) | **0** | Act 1: **0**; Act 3: **0.05** — `grp_b1_chaff_*` |
+| `s1_B2F` | Collapsed avenues | `(10, 2)` from B1F `v` | `^` / `v` at `(10,2)` / `(10,15)` — **same stratum only** | **1** — `foe_alley_stalker` → `grp_alley_stalker_tutorial` | **0.10** — `grp_b2_chaff` / `shackle_rat` / `venom_slime` |
+| `s1_B3F` | Flooded underpass | `(10, 2)` from B2F | `^` at `(10, 2)`; boss north | **1** — `foe_s1_warden` → `grp_s1_warden` | **0.12** — `grp_b3_mix_hounds` / `rubble_pair` / `control` |
 
 **Win condition:** defeat `foe_s1_warden` on B3F. **Stratum 2** warp-gate hub entry is out of required-slice scope.
 
@@ -97,7 +97,7 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 | `.` | Walkable floor | Floor `—` when revealed |
 | `S` | Spawn start — starting floor only (`partyEntryPoint`) | Spawn only — not a map icon |
 | `M` | Gate landing fiction `(10, 10)`; hub spawn at `^` `(10, 11)` (`partyEntryGate`) | `M` not a map icon |
-| `^` | `stairsUp` — gate: ? **hub** (all strata) | Stairs up icon / `^` |
+| `^` | `stairsUp` — gate: → **hub** (all strata) | Stairs up icon / `^` |
 | `v` | `stairsDown` — next floor **in same stratum** | Stairs down icon / `v` |
 | `F` | FOE spawn | FOE marker when in LOS |
 | `!` | **Event** tile — story script on enter ([story events — S1](../02-systems/story-events.md#s1-tutorial-flow-foe_alley_stalker)) | Overlay when wired; S1 B2F tutorial briefing |
@@ -108,9 +108,9 @@ Summary: Act 1 movement on `s1_B1F` (no combat) ? hub party setup ? Act 3 from *
 
 **Edge exits (step-on):** not an ASCII grid symbol — authored in Floor Editor **Edge Exits** tab (`ExplorationFloor.edgeExits[]`). Walk onto any walkable **perimeter** cell on an enabled side to load another floor (no `Interact`). Distinct from `^` / `v` / `H` / `E` interact exits. See [floor-editor § Edge exits](../02-systems/floor-editor.md#edge-exits-step-on-floor-to-floor).
 
-**Coordinates:** `(x, y)` with **x** west?east `0—19`, **y** south?north `0—19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
+**Coordinates:** `(x, y)` with **x** west→east `0—19`, **y** south→north `0—19`. ASCII rows: **first line = y 19 (north)**, last line = y 0 (south). Facing **N** = toward increasing **y**.
 
-Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only — runtime paints **0—4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell ? alcove fill (`—` glyph today), still walkable — distinct from impassable `#`.
+Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate tile types; ASCII shows room shells only — runtime paints **0—4 edge segments** per cell from `WallMask` after reveal (bump + perimeter, [ADR 014](../../decisions/014-mvp1-exploration-map.md)). Three or more edges on one floor cell → alcove fill (`—` glyph today), still walkable — distinct from impassable `#`.
 
 ### Launch enemy & encounter IDs (locked names)
 
@@ -150,7 +150,7 @@ When layouts lock, promote coords from game `s1_B*n*F.asset` back here or replac
 | Type | Trigger | Design notes |
 |------|---------|--------------|
 | **Random** | Per-step roll | Shared table SO per floor (`randomEncounterTableId`); no FOE sprite |
-| **FOE** | Grid entity contact | Authored position; patrol path optional; flee ? 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
+| **FOE** | Grid entity contact | Authored position; patrol path optional; flee → 1 cell back ([foe-encounters](../02-systems/foe-encounters.md)) |
 | **Boss FOE** | Unique spawn | Stratum gate; higher rewards |
 | **Event** | Tile script | Story fight, no flee |
 

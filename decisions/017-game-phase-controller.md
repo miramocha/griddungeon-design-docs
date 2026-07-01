@@ -13,14 +13,14 @@ tags:
 
 ## Context
 
-Launch flow alternates between **hub**, **exploration**, and **combat** ([release scope](../docs/00-release-scope.md)). The tech checklist calls for `GameState` hub / explore / combat. We considered **Unity Visual Scripting (UVS) state graphs** for macro phases; combat also has internal sub-phases (AGI turns — Protocol optional on core turn when Synchro is 100% — → end of round).
+Launch flow alternates between **hub**, **exploration**, and **combat** ([release scope](../docs/00-release-scope.md)). The tech checklist calls for `GameState` hub / explore / combat. **Unity Visual Scripting (UVS) state graphs** were one option for macro phases; combat also has internal sub-phases (AGI turns, Protocol optional on a core turn when Synchro is 100%, then end of round).
 
 Requirements:
 
 - **Authoritative** phase transitions (who may enter combat, return to hub, etc.)
 - **Testable** combat and exploration rules in `GridDungeon.Core` without Visual Scripting
 - **Clear Enter/Exit** hooks for input maps, scene visibility, and event subscriptions
-- **Single responsibility** — phase orchestration separate from combat round logic
+- **Single responsibility:** phase orchestration stays separate from combat round logic
 
 ## Decision
 

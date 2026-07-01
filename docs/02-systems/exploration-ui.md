@@ -338,7 +338,7 @@ For a **clean replacement** (not a fork of coordinator surfaces), see [Appendix 
 
 **Rules unchanged:** `ExplorationPhaseController`, `MapSystem`, `InputRouter` handlers; presenters never call `TryStepForward` or reveal calculators. Map input still goes through `ExplorationMapCoordinator` (`ToggleExpandedFromInput`, hint publish).
 
-**Gate policy:** at launch — movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+**Gate policy (at launch):** movement lerp blocks steps; map tweens often parallel. Stricter EO lock (gate blocks next step after reveal stamp) is incremental — see [tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
 Type names and combat mirror table: [05 — Class design § UI layer](../05-class-design.md#ui-layer).
 

@@ -11,7 +11,7 @@ tags:
 
 **Scope:** [Required](../00-release-scope.md#required-first-playable)
 
-launch exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
+At launch, the exploration map is a **read-only 2D schematic** in UI Toolkit — one visual stack per grid cell, not FPV mesh art. Authority stays in `MapSystem` / `FloorMapState`; `MapView` is presentation only ([ADR 002](../../decisions/002-mapping-model.md), [mapping](mapping.md)).
 
 **Implementation today (#38):** `MapView` paints visited cells with **USS background fills** only (`MapGridCellPaint`). Per-edge **wall borders** and **feature markers** (party, FOE, gather, chest, stairs, story, doors) live on **marker overlay layers** anchored via `MapGridOverlayAnchor` — not as children of cell elements. Overlay art is authored as **`Assets/UI/Map/noun-*.svg`** raster imports assigned to `MapCellArtCatalog` slots. Party/FOE shells can scale above cell size (`MarkerCellScale`); feature markers (stairs, gather, story, doors) stay cell-sized.
 
@@ -94,7 +94,7 @@ Authoring legend: [dungeons & encounters — Map legend](../03-content/dungeons-
 
 Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or atlas SO).
 
-### at launch — ship with schematic map
+### At launch — ship with schematic map
 
 | Asset | Qty | Notes |
 |-------|-----|-------|
@@ -109,7 +109,7 @@ Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or at
 | `map_stairs_down` | 1 | Replaces `v` |
 | `map_foe` | 1 | Replaces `F` |
 
-### at launch — same issue / follow-up (game)
+### At launch — same issue / follow-up (game)
 
 | Asset | Qty | Notes |
 |-------|-----|-------|
@@ -130,7 +130,7 @@ Paths are conventions; final names live in the game repo `Assets/UI/Map/` (or at
 
 ## Visual tone (municipal underworks)
 
-Locked with [00 — Vision § Tone & setting](../00-vision.md#tone--setting). at launch map and HUD use a **warm charcoal + amber-gold** palette — readable schematic (transit / architectural plan), **not** sci-fi neon.
+Locked with [00 — Vision § Tone & setting](../00-vision.md#tone--setting). At launch, map and HUD use a **warm charcoal + amber-gold** palette — readable schematic (transit / architectural plan), **not** sci-fi neon.
 
 | Token | Hex | Use |
 |-------|-----|-----|

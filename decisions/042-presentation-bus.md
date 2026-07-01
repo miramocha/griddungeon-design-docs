@@ -16,7 +16,7 @@ tags:
 
 ## Context
 
-Phase HUDs and shared UITK services today **push layout** directly (`CommandRail.PanelHost`, `Q()`, UXML names). That couples gameplay orchestrators to UITK structure, blocks world-space shell swaps, and makes UVS integration awkward (Runtime `Action<T>` is not graph-friendly).
+Phase HUDs and shared UITK services **push layout** directly (`CommandRail.PanelHost`, `Q()`, UXML names), coupling gameplay orchestrators to UITK structure, blocking world-space shell swaps, and blocking UVS hooks (Runtime `Action<T>` is not graph-friendly).
 
 [ADR 017](017-game-phase-controller.md) keeps macro phase authority in C#. [ADR 037](037-layered-uitk-panels.md) Tier 2 allows world-space UITK rigs. [ADR 038](038-centralized-ui-presentation-lifecycle.md) standardizes overlay show/hide — distinct from **what** those overlays display.
 

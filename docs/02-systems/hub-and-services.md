@@ -58,7 +58,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 
 ## Hub environment presentation
 
-**Design direction:** the hub is a **readable 3D environment** (guild town at the labyrinth gate) behind the UI. The player still **picks services from menus** — no free-roam walking, no grid movement ([vision — non-goals](../00-vision.md)). **Menu focus** on the **root hub list** drives the camera so each service feels anchored in the world.
+**Design direction:** the hub is a **readable 3D environment** (guild town at the labyrinth gate) behind the UI. The player still **picks services from menus** — no free-roam walking, no grid movement ([vision — non-goals](../00-vision.md)). **Menu focus** on the **root hub list** drives the camera to that service's authored anchor.
 
 ### Locked decisions
 
@@ -77,7 +77,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
 | **Camera stack** | **Cinemachine 3** virtual cameras + session `CinemachineBrain` — **not** DOTween on a manual camera rig ([ADR 033](../../decisions/033-hub-environment-cinemachine.md)) |
 
-**Reference synthesis (EO + Mary Skelter):** [game references — hub & town](../00-game-references.md#etrian-odyssey--hub--town-loop).
+**References (EO + Mary Skelter):** [game references — hub & town](../00-game-references.md#etrian-odyssey--hub--town-loop).
 
 ### Debounced pan (rapid scroll)
 

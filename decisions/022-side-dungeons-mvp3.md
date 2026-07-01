@@ -14,7 +14,7 @@ tags:
 
 ## Context
 
-The EO-style loop uses **strata** as the main campaign vertical slice ([dungeons & encounters](../docs/03-content/dungeons-and-encounters.md)). Design needs **optional grid zones** outside stratum progression — full exploration and combat, entered from the **hub menu**, without warp gates or inter-stratum gate stairs.
+The EO-style loop uses **strata** as the main campaign vertical slice ([dungeons & encounters](../docs/03-content/dungeons-and-encounters.md)). **Optional grid zones** outside stratum progression need full exploration and combat, entered from the **hub menu**, without warp gates or inter-stratum gate stairs.
 
 ## Decision
 

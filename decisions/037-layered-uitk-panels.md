@@ -15,7 +15,7 @@ tags:
 
 ## Context
 
-at launch HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
+The default-build HUD is **screen-space UI Toolkit**: one shared `GamePanelSettings.asset`, multiple top-level `UIDocument` roots (`ExplorationMap`, `CombatHud`, `HubHud`, overlays), orchestrator-only `ExplorationHud`, and **`sortingOrder`** for stack depth.
 
 Within exploration and combat, phase chrome splits across documents at different maturity:
 
@@ -26,7 +26,7 @@ Within exploration and combat, phase chrome splits across documents at different
 
 Legacy `MapView` shim delegates to `ExplorationMapCoordinator` until scenes refresh. `InputHintPresenter`, `PartyMenuOverlay`, and `StoryHud` already prove the **multi-document** bootstrap pattern.
 
-Product direction: HUD should feel **more dimensional** — layered plates, slide/tilt depth, independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
+Product direction: add **layered plates**, slide/tilt depth, and independent draw order — **without** rewriting combat rules or moving fights onto the exploration grid ([ADR 013](013-combat-scene-rendering.md)).
 
 This is **not** full diegetic UI (map as in-world prop, command rail in dungeon cell). It is **presentation layering** on top of the existing Runtime event contract ([ui-event-contract](../docs/04-dev/ui-event-contract.md)).
 

@@ -141,7 +141,7 @@ EO-style **Boost / Down** modifiers — timed, visible on portrait strip.
 | `fire_res_up` / `fire_res_down` | ±25% fire damage taken |
 | `ice_res_up`, `volt_res_up`, … | Per element |
 
-launch combat uses **3 elements** (fire, ice, volt) in damage pipeline; resistance buffs can ship after core ailments.
+At launch, combat uses **3 elements** (fire, ice, volt) in the damage pipeline; resistance buffs can ship after core ailments.
 
 ---
 

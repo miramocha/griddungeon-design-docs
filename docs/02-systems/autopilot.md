@@ -11,8 +11,6 @@ tags:
 
 **Scope:** Optional — [release scope](../00-release-scope.md).
 
-> **Scope: Optional feature** — not required for initial release.
-
 **Autopilot** pathfinds and walks the party along **already discovered** floor tiles so players skip manual stepping on routes they mapped earlier. EO uses **drawn paths**; Grid Dungeon uses **auto-reveal only** ([ADR 002](../../decisions/002-mapping-model.md)) — autopilot replaces drawn paths with routing on **revealed walkable** cells.
 
 ## Design goals
@@ -143,7 +141,7 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 
 **Game repo:** merged [#248](https://github.com/miramocha/griddungeon-game/pull/248) ([`MapPathfinder`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Simulators/MapPathfinder.cs), [`ExplorationPathGraph`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Map/ExplorationPathGraph.cs), [`AutopilotPathWalker`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Core/Exploration/AutopilotPathWalker.cs), [`AutopilotController`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/Runtime/Exploration/AutopilotController.cs)).
 
-**Developer deep dive:** [04 — Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
+**Dev reference:** [04 — Dev: Autopilot pathfinding](../04-dev/autopilot-pathfinding.md).
 
 ### Type ownership
 

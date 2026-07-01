@@ -5,7 +5,7 @@ tags:
   - scope/required
   - status/draft
 ---
-# 00 — Vision
+# Vision
 
 ## Elevator pitch
 

@@ -15,7 +15,7 @@ tags:
 
 ## Context
 
-Grid Dungeon needs **scripted narrative beats** that:
+**Scripted narrative beats** must:
 
 - Pause normal input and show **character-forward dialogue** (visual-novel / ADV style): portraits, name plates, line-by-line text, optional choices.
 - Run in **multiple contexts** — hub, exploration, and **mid-combat** (tutorial FOE is the first requirement).

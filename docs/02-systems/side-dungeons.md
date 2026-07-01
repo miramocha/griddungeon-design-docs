@@ -11,7 +11,7 @@ tags:
 
 **Scope:** [Optional](../00-release-scope.md#optional)
 
-**Optional** — optional grid zones outside the main **stratum** ladder. Same exploration and combat subsystems as the labyrinth; different hub entry, save keys, and progression rules.
+Optional grid zones outside the main **stratum** ladder. Same exploration and combat subsystems as the labyrinth; different hub entry, save keys, and progression rules.
 
 **Locked:** [ADR 022](../../decisions/022-side-dungeons-mvp3.md)
 

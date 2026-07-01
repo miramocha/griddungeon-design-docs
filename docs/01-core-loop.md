@@ -7,7 +7,7 @@ tags:
   - domain/hub
   - domain/exploration
 ---
-# 01 — Core Loop
+# Core Loop
 
 ## Macro loop (EO-style)
 

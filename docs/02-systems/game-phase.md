@@ -409,7 +409,7 @@ Dev **F1/F2** shortcuts bypass this table; production new-game follows the asset
 
 ## Dev bootstrap HUD (UI Toolkit)
 
-at launch acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo — run after clone).
+**At launch,** acceptance for macro phases is exercised in **`Assets/Scenes/DevBootstrap.unity`** (local only; menu: **GridDungeon → Scenes → Create Dev Bootstrap** in the game repo — run after clone).
 
 | Piece | Location | Role |
 |-------|----------|------|
