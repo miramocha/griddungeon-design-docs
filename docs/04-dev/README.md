@@ -13,6 +13,7 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | Doc | Purpose |
 |-----|---------|
 | [Obsidian tags](obsidian-tags.md) | Vault tag taxonomy + registry for Properties / graph filters |
+| [Class naming patterns](class-naming-patterns.md) | C# suffix rules (`*View`, `*Coordinator`, partial seams); pairs with [05 — Class design](../05-class-design.md) |
 | [Doc format](doc-format.md) | Markdown profiles per folder; audit script for format debt |
 | [UI event contract](ui-event-contract.md) | Runtime `public event` + command APIs for custom UI; **edit when game repo APIs change** |
 | [Custom skill picker UI](custom-skill-picker-ui.md) | Replace combat skill modal (`ISkillUsePickerView`, host wiring, UITK hooks, tests) |
@@ -28,4 +29,4 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | [Autopilot pathfinding](autopilot-pathfinding.md) | Expanded-map A* (`MapPathfinder`, `ExplorationPathGraph`), walker planner, `AutopilotController` flow, tests, vs layout connectivity |
 | [TWC default notes](twc-default-notes.md) | TileWorldCreator [#345](https://github.com/miramocha/griddungeon-game/issues/345) setup, parameters, tileset swaps, troubleshooting |
 
-Gameplay rules and phase authority stay in [02 — Systems](../02-systems/) and [05 — class design](../05-class-design.md).
+Gameplay rules and phase authority stay in [02 — Systems](../02-systems/). **C# naming:** [class naming patterns](class-naming-patterns.md). **Shipped types / assemblies:** [05 — class design](../05-class-design.md).

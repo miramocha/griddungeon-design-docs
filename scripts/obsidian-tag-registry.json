@@ -181,6 +181,18 @@
       "tags": ["path/docs/02-systems", "type/system", "scope/later", "status/draft", "domain/phase"]
     },
     {
+      "path": "docs/03-content/README.md",
+      "tags": ["path/docs/03-content", "type/content", "scope/required", "status/active"]
+    },
+    {
+      "path": "docs/03-content/content-ids.md",
+      "tags": ["path/docs/03-content", "type/content", "scope/required", "status/accepted", "domain/campaign/s1"]
+    },
+    {
+      "path": "docs/03-content/content-schema.md",
+      "tags": ["path/docs/03-content", "type/content", "scope/required", "status/accepted", "domain/content-pipeline"]
+    },
+    {
       "path": "docs/03-content/campaign/README.md",
       "tags": ["path/docs/03-content", "type/content", "scope/required", "status/active", "domain/campaign/s1"]
     },

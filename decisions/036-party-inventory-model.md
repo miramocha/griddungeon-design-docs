@@ -17,9 +17,9 @@ tags:
 
 ## Context
 
-The default build needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
+The default build needs a single place for **party bag**, **worn gear**, shop, loot ([#31](https://github.com/miramocha/griddungeon-game/issues/31)), and chest grants. Today the game uses `PartyRuntime.GatheredItemIds` (flat string list), shop stubs, and `EquipmentLoadout` on `Combatant` without save or stat application.
 
-Equipment IDs and consumable IDs are locked ([05 — Class design](../docs/05-class-design.md#content-ids-locked), [character progression § launch equipment](../docs/02-systems/character-progression.md#launch-equipment-locked)).
+Equipment IDs and consumable IDs are locked ([content IDs](../docs/03-content/content-ids.md#content-ids-locked), [character progression § launch equipment](../docs/02-systems/character-progression.md#launch-equipment-locked)).
 
 ## Decision
 

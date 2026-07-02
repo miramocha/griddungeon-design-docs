@@ -89,6 +89,9 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 
 | Doc | Status | Summary |
 |-----|--------|---------|
+| [03 — Content index](docs/03-content/README.md) | Active | Content IDs, SO schema, rosters |
+| [03 — Content IDs](docs/03-content/content-ids.md) | Locked | Stable string IDs across code and assets |
+| [03 — Content schema](docs/03-content/content-schema.md) | Locked | ScriptableObject types + `Assets/Content/` folders |
 | [03 — Campaign index](docs/03-content/campaign/README.md) | Active | S1 campaign doc map |
 | [03 — Campaign / S1 intro](docs/03-content/campaign/s1-intro.md) | Draft | Three-act intro, flags, entry rules |
 | [03 — S1 guided tutorials](docs/03-content/campaign/s1-guided-tutorials.md) | Active | Coach beat table (`tutorialEntryId` rows) |
@@ -103,7 +106,8 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 | Doc | Status | Summary |
 |-----|--------|---------|
 | [04 — Tech notes](docs/04-tech-notes.md) | Draft | Module tree, map layer, FOE tick |
-| [05 — Class design](docs/05-class-design.md) | Locked | Assemblies, type catalog, folder layout, content IDs |
+| [04 — Dev: Class naming patterns](docs/04-dev/class-naming-patterns.md) | Active | C# suffix rules; pairs with [05 — Class design](docs/05-class-design.md) |
+| [05 — Class design](docs/05-class-design.md) | Locked | Assemblies, shipped type inventory |
 | [04 — Dev: UI event contract](docs/04-dev/ui-event-contract.md) | Active | Runtime events + command APIs for custom HUD |
 | [04 — Dev: Centralized UI services](docs/04-dev/centralized-ui-services.md) | Active | Cross-phase overlays, `ICentralizedUiSurface` |
 | [04 — Dev: Shared menu & picker UI](docs/04-dev/shared-menu-picker-ui.md) | Active | Rail menu, item list picker, skill picker |
@@ -114,7 +118,6 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 | [04 — Dev: Floor transition authoring](docs/04-dev/authoring-floor-transition-beats.md) | Active | Vignette prefab + Cinemachine workflow |
 | [04 — Dev: TWC default notes](docs/04-dev/twc-default-notes.md) | Active | TileWorldCreator adapter notes |
 | [04 — Dev: Autopilot pathfinding](docs/04-dev/autopilot-pathfinding.md) | Active | Integrator pathfind rules |
-| [04 — Dev: Class naming patterns](docs/04-dev/class-naming-patterns.md) | Active | C# suffix conventions |
 | [04 — Dev: Obsidian tags](docs/04-dev/obsidian-tags.md) | Active | Vault tag taxonomy + registry |
 | [04 — Dev: Doc format](docs/04-dev/doc-format.md) | Active | Markdown profiles; format audit script |
 | [Plan — Core assembly](docs/plans/core-assembly-improvement-plan.md) | Active | Core vs Campaign boundary improvements |

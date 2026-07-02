@@ -54,7 +54,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 ## Stratum 1 (B1F–B3F) — required slice
 
 **Tracking:** [design-docs #1](https://github.com/miramocha/griddungeon-design-docs/issues/1)  
-**Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](../05-class-design.md#content-ids-locked) (save/map/FOE state)  
+**Asset keys:** `s1` + [`s1_B1F`, `s1_B2F`, `s1_B3F`](content-ids.md#content-ids-locked) (save/map/FOE state)  
 **Grid:** **20—20**, flat `level = 0` ([ADR 019](../../decisions/019-floor-verticality.md) — no jump pads in required slice)  
 **Implementation:** `ExplorationFloor` assets under `Assets/Content/Floors/` ([ADR 002](../../decisions/002-mapping-model.md), [Floor Editor](../02-systems/floor-editor.md)). **Layouts are draft** — see [archive draft layouts](../archive/mvp1-s1-floor-layouts-draft.md); game assets + Floor Editor Apply are iteration authority until lock.
 
@@ -69,7 +69,7 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 **Within-stratum floors:** `stairsDown` / `stairsUp` on **B2F+** link only to the adjacent floor in the **same** stratum (paired cells).
 
-**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([05 — Class design](../05-class-design.md#content-definitions-runtime-scriptableobjects)).
+**First floor of each stratum** = stratum **gate**. Gate `stairsUp` returns to **hub** only ([content schema](content-schema.md#content-definitions-runtime-scriptableobjects)).
 
 **Return thread** ([dungeon navigation](../02-dungeon-navigation.md#interactables)) still instant-jumps to hub; it does not replace gate stairs.
 
@@ -114,7 +114,7 @@ Internal walls are **`SolidEdges`** on walkable `FloorTileData`, not separate ti
 
 ### Launch enemy & encounter IDs (locked names)
 
-**Stats, skills, group slot layouts, FOE mapping:** [enemy-roster.md](enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also listed in [05 — Class design](../05-class-design.md#content-ids-locked).
+**Stats, skills, group slot layouts, FOE mapping:** [enemy-roster.md](enemy-roster.md) ([design-docs #2](https://github.com/miramocha/griddungeon-design-docs/issues/2)). IDs also in [content IDs](content-ids.md#content-ids-locked).
 
 | Enemy ID | Role | Status teaching |
 |----------|------|----------------------|

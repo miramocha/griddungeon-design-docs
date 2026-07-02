@@ -9,7 +9,7 @@ tags:
 # launch class skills (content kit)
 
 **Shipped:** Locked at launch ContentDB ([design-docs #3](https://github.com/miramocha/griddungeon-design-docs/issues/3), [game #12](https://github.com/miramocha/griddungeon-game/issues/12))
-**Authority:** Skill IDs and targeting here; implementation types in [05 — class design](../05-class-design.md).
+**Authority:** Skill IDs and targeting here; implementation types in [05 — class design](../05-class-design.md); SO schema in [content schema](content-schema.md).
 
 ---
 
@@ -165,6 +165,6 @@ Not on guild class trees. Listed on `SummonDefinition.skillIds` for **player** c
 - [Party & classes](../02-systems/party-and-classes.md) — roster, deploy rules
 - [Summons & guests](../02-systems/summons-and-guests.md) — aux slots, `scout_drone` kit
 - [Combat](../02-systems/combat.md) — damage pipeline, targeting, row collapse
-- [05 — class design § content IDs](../05-class-design.md#content-ids-locked)
+- [content IDs](content-ids.md#content-ids-locked)
 - [release scope](../00-release-scope.md) — checklist row
 - [ADR 016](../../decisions/016-summon-control-mvp1.md) — summon player control

@@ -8,7 +8,9 @@ tags:
 ---
 # Class Design
 
-Type catalog and assembly map for the launch implementation. **Authoritative C#** lives in [griddungeon-game](https://github.com/miramocha/griddungeon-game) under `Assets/Scripts/` and `Assets/Content/`. Behavior, flows, and acceptance criteria live in [system docs](02-systems/) and [ADRs](../decisions/).
+C# **assembly map** and **shipped type inventory** for the default build. Suffix rules (`*View`, `*Coordinator`, partial seams): [class naming patterns](04-dev/class-naming-patterns.md).
+
+Code: [griddungeon-game](https://github.com/miramocha/griddungeon-game) ([Assets/Scripts/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md)). Locked IDs and SO schema: [03 — Content](03-content/README.md). Rules and acceptance: [system docs](02-systems/) and [ADRs](../decisions/).
 
 Derived from [tech notes](04-tech-notes.md), [release scope](00-release-scope.md), [ADR 014–016](../decisions/), and locked system docs.
 
@@ -23,7 +25,7 @@ Derived from [tech notes](04-tech-notes.md), [release scope](00-release-scope.md
 | **Test damage + AGI without Unity** | `GridDungeon.Core` simulators + `GridDungeon.Tests` (mostly Core; Runtime when wiring needs it) |
 | **Hub → explore → combat loop** | `GamePhaseController` + three `IPhaseController`s ([game phase](02-systems/game-phase.md)) |
 | **Spec-locked combat** | `CombatController` + `TurnQueue` + `EndOfRoundPipeline`; combat sub-phases not on `GamePhase` |
-| **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, …) at simulator boundaries |
+| **Content in data, not code** | ScriptableObjects in Runtime; **Core DTOs** (`SkillData`, `StatusData`, …) at simulator boundaries — [content schema](03-content/content-schema.md) |
 | **FOE + map + flee rules** | `ExplorationPhaseController` wires explorer events; `RetreatCellCalculator` + `FoeFleeRetreatPlacement` in Core |
 | **Phase vs presentation** | C# owns transitions; optional UVS later listens to `PhaseChanged` only ([ADR 017](../decisions/017-game-phase-controller.md)) |
 
@@ -109,41 +111,13 @@ Defined in `GridDungeon.Core/Enums/` (and related Core folders). Shared across a
 
 ---
 
-## Content definitions (Runtime ScriptableObjects)
-
-All read-only at runtime. Created in the Unity editor and referenced by `ContentDatabase`. Field-level authority: linked system and content docs; asset instances under `Assets/Content/`.
-
-| Type | Asset folder | Authority |
-|------|--------------|-----------|
-| `ClassDefinition`, `SkillNodeDefinition` | `Assets/Content/Classes/` | [party & classes](02-systems/party-and-classes.md), [class skills](03-content/class-skills.md) |
-| `SkillDefinition` | `Assets/Content/Skills/` | [class skills](03-content/class-skills.md), [ADR 035](../decisions/035-skill-use-picker.md), [combat presentation](02-systems/combat-presentation.md) |
-| `StatusDefinition` | `Assets/Content/Status/` | [combat status & buffs](02-systems/combat-status-and-buffs.md) |
-| `EquipmentDefinition` | `Assets/Content/Equipment/` | [character progression](02-systems/character-progression.md), [ADR 036](../decisions/036-party-inventory-model.md) |
-| `ItemDefinition` | `Assets/Content/Items/` | [items & inventory](02-systems/items-and-inventory.md) |
-| `EnemyDefinition` | `Assets/Content/Enemies/` | [enemy roster](03-content/enemy-roster.md) |
-| `LootTableDefinition` | `Assets/Content/LootTables/` | [items & inventory](02-systems/items-and-inventory.md) |
-| `RandomEncounterTableDefinition` | `Assets/Content/RandomEncounterTables/` | [dungeons & encounters](03-content/dungeons-and-encounters.md#random-encounter-table), [enemy-roster](03-content/enemy-roster.md#foe-vs-random-placement-per-floor); floor assigns `randomEncounterTableId` only |
-| `EncounterGroup` | `Assets/Content/EncounterGroups/` | [enemy roster](03-content/enemy-roster.md), [FOE encounters](02-systems/foe-encounters.md); optional `Events[]` combat→story rows ([combat § Encounter events](02-systems/combat.md#encounter-events-combat--story)) |
-| `StoryEventDefinition` | `Assets/Content/StoryEvents/` | [story events](02-systems/story-events.md), [ADR 028](../decisions/028-story-visual-novel-events.md) |
-| `NavigatorDefinition` | `Assets/Content/Navigators/` | [navigator](02-systems/navigator.md) |
-| `ProtocolSkillDefinition` | `Assets/Content/ProtocolSkills/` | [synchro protocol](02-systems/synchro-protocol.md) |
-| `SummonDefinition` | `Assets/Content/Summons/` | [summons & guests](02-systems/summons-and-guests.md), [ADR 016](../decisions/016-summon-control-mvp1.md) |
-| `ExplorationFloor` | `Assets/Content/Floors/` | [mapping](02-systems/mapping.md), [floor painter](02-systems/floor-editor.md), [ADR 040](../decisions/040-floor-exit-topology-graph.md); `randomEncounterTableId` → shared table SO |
-| `StratumDefinition` | `ContentDatabase` | [dungeons & encounters](03-content/dungeons-and-encounters.md), [campaign S1 intro](03-content/campaign/s1-intro.md) |
-| `CampaignStartConfig` | `ContentDatabase` | Cold start: `CampaignStartType` Hub vs Spawn, `LocationId` / `FloorId` / `HubExitId` — `GameBootstrapPhase` picks initial macro phase |
-| `NewGameDefaults` | `ContentDatabase` | `DefaultNavigatorId` seeded by `NewGameBootstrap` on first save |
-
-**Authoring rules:** [dungeons — warp gates](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked), [campaign S1 intro](03-content/campaign/s1-intro.md), [ADR 040 — exit links](../decisions/040-floor-exit-topology-graph.md). At launch: only `s1` uses `partyEntryPoint` (spawn start) + blockers; `s2+` adds `hasWarpGate`.
-
-**Chest / gather:** `IsWalkable=false` + `HasChest` + `ChestConfig[]` on floor asset (orthogonally adjacent interact while **facing** chest — [#105](https://github.com/miramocha/griddungeon-game/issues/105)); opened state in `CampaignSaveData.OpenedChestIds` (fixed item + quantity, not loot table); `HasGatherNode` + `lootTableId` on walkable gather cells.
-
----
-
 ## Core — models & simulators
 
 No `UnityEngine` dependency. Lives in `GridDungeon.Core`.
 
 ### Models
+
+<a id="map-data-model"></a>
 
 | Type | Role |
 |------|------|
@@ -157,7 +131,7 @@ No `UnityEngine` dependency. Lives in `GridDungeon.Core`.
 
 ### Content DTOs (no Unity)
 
-Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase` maps SO → DTO when loading content or starting battle. **Simulators and tests use only DTOs.**
+Runtime `ScriptableObject` types stay in `GridDungeon.Runtime`. `ContentDatabase` maps SO → DTO when loading content or starting battle. **Simulators and tests use only DTOs.** SO types and folders: [content schema](03-content/content-schema.md).
 
 | DTO | Source SO |
 |-----|-----------|
@@ -214,6 +188,8 @@ Pure C# phase orchestration. **Not** Unity Visual Scripting. Diagrams and Enter/
 **Transition callers (examples):** `HubController.LeaveHub` → Exploration; FOE contact / `EncounterTrigger` → Combat; `CombatController.OnBattleEnded` → Exploration; wipe → Hub + load save.
 
 ### Exploration & map
+
+<a id="exploration"></a>
 
 | Type | Role |
 |------|------|
@@ -328,104 +304,20 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 ## Key interfaces
 
+`I*` prefix patterns (`I*Host`, `I*View`, `I*Controller`, …): [class naming patterns § Interfaces](04-dev/class-naming-patterns.md#interfaces-common). Shipped contracts worth cross-phase lookup:
+
 | Interface | Role |
 |-----------|------|
-| `IPhaseController` | Macro phase Enter/Exit hooks |
 | `IReadOnlyFloorMapState` | Read-only map state for UI without leaking `MapSystem` internals |
 | `ICentralizedUiSurface` | Shared overlay lifecycle vocabulary — [centralized UI services](04-dev/centralized-ui-services.md) |
 
----
-
-## Folder structure (Unity Assets)
-
-```
-Assets/
-├── Scripts/
-│   ├── Core/                     GridDungeon.Core.asmdef
-│   │   ├── Models/               Combatant, BattleState, FoeInstance, FloorMapState, …
-│   │   ├── Content/              SkillData, StatusData, EnemyData, NavigatorData, …
-│   │   ├── Simulators/           DamageCalculator, ValidTargetCalculator, RetreatCellCalculator, …
-│   │   ├── SaveData/             SaveGame, FloorMapStateSave, …
-│   │   └── Enums/                GamePhase, CombatantKind, …
-│   ├── Campaign/                 GridDungeon.Campaign.asmdef
-│   │   └── …                     S1CampaignResolver, StoryEventEffectExecutor, …
-│   ├── Runtime/                  GridDungeon.Runtime.asmdef
-│   │   ├── Game/                 GameState, GamePhaseController, *PhaseController
-│   │   ├── Exploration/          DungeonExplorer, FoeSystem, EncounterTrigger, …
-│   │   ├── Map/                  MapSystem
-│   │   ├── Combat/               CombatController, CombatScenePresenter, …
-│   │   ├── Party/                PartyRuntime, CombatantFactory, NavigatorRuntime
-│   │   ├── Protocol/             ProtocolSystem
-│   │   ├── Hub/                  HubController, *Service
-│   │   ├── Codex/                CodexSystem
-│   │   ├── Content/              ContentDatabase
-│   │   └── Save/                 SaveSystem
-│   └── UI/                       GridDungeon.UI.asmdef
-│       ├── Dev/                  GamePhaseDevHudView
-│       ├── Game/                 GameBootstrap
-│       ├── Input/                InputRouter, *InputHandler
-│       └── Views/                Phase HUDs, map presenters, shared overlays
-├── UI/
-│   ├── Settings/                 GamePanelSettings.asset
-│   ├── Themes/
-│   └── Screens/                  UXML/USS per screen + Shared/
-├── Content/
-│   ├── Classes/, Skills/, Status/, Equipment/, Items/
-│   ├── Enemies/, EncounterGroups/, LootTables/, RandomEncounterTables/
-│   ├── StoryEvents/, Floors/
-│   ├── Navigators/, ProtocolSkills/, Summons/
-├── Tests/                        GridDungeon.Tests.asmdef (see game repo README)
-└── Plugins/Demigiant/DOTween/    required (see tech notes)
-```
-
----
-
-## Content IDs (locked)
-
-These string IDs must be stable across code and SO assets.
-
-**Full skill kit (targeting, effects, stubs):** [launch class skills](03-content/class-skills.md).
-
-| Type | ID | Notes |
-|------|----|-------|
-| Class | `vanguard`, `breaker`, `medic`, `summoner`, `marksman`, `tactician` | Day-one roster |
-| Navigator | `guild_handler` | Sortie Lead; day one; aura: `synchroGainBonus = 0.05` — [navigator](02-systems/navigator.md) |
-| Protocol skill | `protocol_strike`, `protocol_mend` | Damage all enemies / heal all living core — [synchro-protocol](02-systems/synchro-protocol.md) |
-| Summon | `scout_drone` | Summoner-only; 3 rounds; **player-controlled** kit |
-| Summon deploy skill | `deploy_scout_drone` | Summoner tree only; `SkillType.Deploy` → `scout_drone`, aux back ([ADR 016](../decisions/016-summon-control-mvp1.md)) |
-| Summon skill | `volt_burst` | On `scout_drone` summon kit only — not on Summoner class tree |
-| Stratum | `s1` | Stratum 1 |
-| Floors | `s1_B1F`, `s1_B2F`, `s1_B3F` | Save/map keys |
-| Items | `patch_kit`, `stim_draft`, `trauma_kit`, `return_thread`, `analysis_glass` | Starter consumables |
-| Equipment | `guild_shortsword`, `leather_coif`, `leather_jacket`, `leather_boots`, `scout_charm` | Launch shop slice — [progression — launch equipment](02-systems/character-progression.md#launch-equipment-locked) |
-| Status | `poison`, `sleep`, `panic`, `bind_head`, `bind_arm` | Launch subset |
-| Stat mods | `offense_up`, `offense_down`, `defense_up`, `defense_down`, `magic_up`, `magic_down`, `speed_up`, `speed_down`, `blind`, `regen` | |
-| Enemy | `stray_hound`, `rust_mite`, `gutter_crow`, `scrapling`, `shackle_rat`, `venom_slime`, `alley_thug`, `rubble_guard`, `s1_warden` | [enemy-roster](03-content/enemy-roster.md) |
-| Enemy skill | `enemy_attack`, `atk_peck_volt`, `atk_bind_arm`, `atk_poison_spit`, `atk_heavy_swing`, `atk_guard_slam`, `atk_warden_bind`, `atk_warden_venom` | Enemy pool only |
-| Encounter group | `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden`, `grp_b1_chaff_hound`, `grp_b1_chaff_mite`, `grp_b2_chaff`, `grp_b2_shackle_rat`, `grp_b2_venom_slime`, `grp_b3_mix_hounds`, `grp_b3_rubble_pair`, `grp_b3_control` | Slot layouts in roster doc |
-| Random encounter table | `enc_s1_none`, `enc_s1_b1_chaff`, `enc_s1_act2_mid`, `enc_s1_act3_deep`, `enc_s1_stub` | Shared table SOs; floors reference by id ([dungeons § random encounter table](03-content/dungeons-and-encounters.md#random-encounter-table)) |
-| FOE entity | `foe_alley_stalker`, `foe_s1_warden` | Map keys; not `EnemyDefinition` ids |
-
-### Class skills (3 per class — locked)
-
-| Class | `skill_id` | `skill_id` | `skill_id` |
-|-------|------------|------------|------------|
-| Vanguard | `vanguard_guard` | `vanguard_shield_bash` | `vanguard_protect` |
-| Breaker | `breaker_power_slash` | `breaker_cleave` | `breaker_pierce_drive` |
-| Medic | `medic_heal` | `medic_purify` | `medic_revive` |
-| Summoner | `summoner_volt_bolt` | `deploy_scout_drone` | `summoner_focus` |
-| Marksman | `marksman_aimed_shot` | `marksman_bind_shot` | `marksman_volley` |
-| Tactician | `tactician_rally` | `tactician_weaken` | `tactician_field_mend` |
-
-All class skills: **`presentation: Fixed`** ([combat presentation](02-systems/combat-presentation.md)).
-
-**Optional side dungeon IDs (draft, optional — not required slice):** `sd01`, floors `sd01_F1`, `sd01_F2` — [side dungeons](02-systems/side-dungeons.md).
+(`IPhaseController` — see game phase table in [Runtime — Game phase](#game-phase-adr-017) and [game phase](02-systems/game-phase.md).)
 
 ---
 
 ## Side dungeons (sketch)
 
-**Authority:** [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md). Does **not** change required-slice locked content IDs above.
+**Authority:** [side dungeons](02-systems/side-dungeons.md), [ADR 022](../decisions/022-side-dungeons-mvp3.md). Does **not** change required-slice locked content IDs ([content IDs](03-content/content-ids.md)).
 
 | Concern | Notes |
 |---------|-------|
@@ -441,13 +333,38 @@ All class skills: **`presentation: Fixed`** ([combat presentation](02-systems/co
 
 ---
 
+## Moved sections (link compatibility)
+
+<a id="content-definitions-runtime-scriptableobjects"></a>
+
+**Content definitions (ScriptableObjects)** → [content schema](03-content/content-schema.md#content-definitions-runtime-scriptableobjects).
+
+<a id="content-ids-locked"></a>
+
+**Content IDs (locked)** → [content IDs](03-content/content-ids.md#content-ids-locked).
+
+<a id="folder-structure-game-repo"></a>
+
+**Folder layout** → game repo [Assets/Scripts/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md); content assets → [content schema § asset layout](03-content/content-schema.md#asset-layout-assetscontent).
+
+<a id="skills"></a>
+
+**Skills** — SO types in [content schema](03-content/content-schema.md); IDs in [content IDs](03-content/content-ids.md) and [class skills](03-content/class-skills.md).
+
+<a id="enemies--encounters"></a>
+
+**Enemies & encounters** — [enemy roster](03-content/enemy-roster.md), [dungeons & encounters](03-content/dungeons-and-encounters.md).
+
+---
+
 ## Related docs
 
+- [03 — Content](03-content/README.md) — locked IDs, SO schema, rosters
 - [Stratum 1 enemy roster](03-content/enemy-roster.md) — locked S1 enemies, groups, skill stubs
-- [04 — Tech notes](04-tech-notes.md) — engine stack, high-level module map, save format
+- [04 — Tech notes](04-tech-notes.md) — engine stack, save format
 - [Release scope](00-release-scope.md) — systems checklist
-- [ADR 014 — launch exploration & map](../decisions/014-mvp1-exploration-map.md)
-- [ADR 015 — launch combat](../decisions/015-mvp1-combat.md)
+- [ADR 014 — default exploration & map](../decisions/014-mvp1-exploration-map.md)
+- [ADR 015 — default combat](../decisions/015-mvp1-combat.md)
 - [ADR 016 — Summon control](../decisions/016-summon-control-mvp1.md)
 - [ADR 017 — Game phase controller](../decisions/017-game-phase-controller.md)
 - [Game phase](02-systems/game-phase.md)
@@ -458,6 +375,6 @@ All class skills: **`presentation: Fixed`** ([combat presentation](02-systems/co
 - [Character progression](02-systems/character-progression.md)
 - [FOE encounters](02-systems/foe-encounters.md)
 - [Side dungeons](02-systems/side-dungeons.md)
-- [ADR 022 — Side dungeons MVP3](../decisions/022-side-dungeons-mvp3.md)
+- [ADR 022 — Side dungeons](../decisions/022-side-dungeons-mvp3.md)
 - [Navigator](02-systems/navigator.md)
 - [Synchro Protocol](02-systems/synchro-protocol.md)

@@ -11,7 +11,7 @@ tags:
 
 Party **bag** (shared, fixed slots) and **worn equipment** (per core member). **Credits** (hub wallet) stay on save — not a bag slot.
 
-**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [05 — Class design § content IDs](../05-class-design.md#content-ids-locked) · equipment stats table [character progression § launch equipment](character-progression.md#launch-equipment-locked)
+**Authority:** [ADR 036](../../decisions/036-party-inventory-model.md) · locked content IDs [content IDs](../03-content/content-ids.md#content-ids-locked) · equipment stats table [character progression § launch equipment](character-progression.md#launch-equipment-locked)
 
 **Implementation tracker:** [design-docs #22](https://github.com/miramocha/griddungeon-design-docs/issues/22) · [game epic #151](https://github.com/miramocha/griddungeon-game/issues/151) (#152–#157, loot [#31](https://github.com/miramocha/griddungeon-game/issues/31))
 
@@ -144,7 +144,7 @@ Stat and resist bonuses: full table in [character progression § launch equipmen
 
 ## Consumables
 
-Locked `itemId` strings — [05 § content IDs](../05-class-design.md#content-ids-locked):
+Locked `itemId` strings — [05 § content IDs](../03-content/content-ids.md#content-ids-locked):
 
 | `itemId` | Launch use context |
 |----------|------------------|

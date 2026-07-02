@@ -19,7 +19,7 @@ tags:
 
 ## Context
 
-In the default build, `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/05-class-design.md#content-definitions-runtime-scriptableobjects)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
+In the default build, `ExplorationFloor` stores **scalar** `stairsUp` / `stairsDown` plus a small `StairsUpLink[]` sketch for gate vs same-stratum up targets ([05 — Class design](../docs/03-content/content-schema.md#content-definitions-runtime-scriptableobjects)). Runtime stair routing is split between **serialized coords** and **`S1CampaignResolver`** switches (`TargetForStairsUp`, `TargetForStairsDown`, `CanDescendStairs`, `CanAscendToHub`).
 
 **Problems:**
 
@@ -180,6 +180,6 @@ See [side dungeons](../docs/02-systems/side-dungeons.md#authoring-mvp3).
 - [ADR 022 — Side dungeons MVP3](022-side-dungeons-mvp3.md)
 - [Floor Editor](../docs/02-systems/floor-editor.md)
 - [Side dungeons](../docs/02-systems/side-dungeons.md)
-- [05 — Class design — Floors & stratum](../docs/05-class-design.md#content-definitions-runtime-scriptableobjects)
+- [05 — Class design — Floors & stratum](../docs/03-content/content-schema.md#content-definitions-runtime-scriptableobjects)
 - [ADR 041 — Floor Connector (Graph Toolkit wiring)](041-floor-connector-toolkit-wiring.md)
 - [Unity Graph Toolkit — Introduction](https://docs.unity3d.com/Packages/com.unity.graphtoolkit@0.4/manual/introduction.html)

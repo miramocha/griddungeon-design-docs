@@ -166,7 +166,7 @@ Hub is **menu-driven** ([hub & services § Hub environment](hub-and-services.md#
 
 ## Launch content (locked)
 
-Matches [synchro-protocol § Launch content](synchro-protocol.md#launch-scope) and [class design — content IDs](../05-class-design.md#content-ids-locked).
+Matches [synchro-protocol § Launch content](synchro-protocol.md#launch-scope) and [class design — content IDs](../03-content/content-ids.md#content-ids-locked).
 
 | Navigator | `navigator_id` | Unlock | Aura at launch | Protocol kit |
 |-----------|----------------|--------|-------------|--------------|

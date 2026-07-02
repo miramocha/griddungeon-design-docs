@@ -275,6 +275,6 @@ GridDungeon.Core   →  (none)
 
 ### Links
 
-- Implementation tree: [05-class-design § folder tree](../05-class-design.md)
+- Implementation layout: game repo [Assets/Scripts/README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md); content assets: [content schema § asset layout](../03-content/content-schema.md#asset-layout-assetscontent)
 - Phase ownership: [game-phase.md](../02-systems/game-phase.md)
 - ADR 017 (phase controller): [017-game-phase-controller](../../decisions/017-game-phase-controller.md)

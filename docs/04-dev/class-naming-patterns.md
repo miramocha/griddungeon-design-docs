@@ -7,15 +7,25 @@ tags:
 ---
 # Class naming patterns (C# suffixes)
 
-Grid Dungeon uses **PascalCase type suffixes** to signal responsibility and assembly placement. This doc is the human-readable authority; agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc).
+PascalCase **suffix** = responsibility + assembly. Shipped type tables: [05 — Class design](../05-class-design.md). Suffix rules stay in this file.
 
-Related: [05-class-design](../05-class-design.md) (type catalog), [unity-csharp-naming](../../.cursor/rules/unity-csharp-naming.mdc) (identifiers, `m_` fields), [architecture-design-principles](../../.cursor/rules/architecture-design-principles.mdc) (who owns what).
+Agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (compressed checklist on `*.cs`).
+
+| Doc | Owns |
+|-----|------|
+| **This file** | `*View` / `*Presenter` / `*Calculator` rules, decision flow, partial-class seams, file caps |
+| [05 — Class design](../05-class-design.md) | Assemblies, enums, **shipped** type tables, side-dungeon API sketch |
+| [03 — Content](../03-content/README.md) | Locked IDs, ScriptableObject schema |
+
+Also: [unity-csharp-naming](../../.cursor/rules/unity-csharp-naming.mdc) (`m_` fields, identifiers), [architecture-design-principles](../../.cursor/rules/architecture-design-principles.mdc) (phase ownership).
 
 > **UXML/USS** use BEM kebab-case — not these C# suffixes. See [unity-ui-toolkit](../../.cursor/rules/unity-ui-toolkit.mdc).
 
 ---
 
 ## Assembly map
+
+Summary only — dependency diagram and `asmdef` paths: [05 — Class design § Assembly structure](../05-class-design.md#assembly-structure).
 
 ```
 GridDungeon.Core       → Calculators, Resolvers, Rules, DTOs
@@ -147,17 +157,6 @@ flowchart TD
 
 ---
 
-## Known legacy / tech debt
-
-| Symbol | Issue | Target suffix |
-|--------|-------|----------------|
-| `HubServices.cs` (multi-type file) | naming only | split or `HubServiceTypes.cs` |
-| `FormationGridFocusController` | internal; file `FormationGridFocus.cs` | keep internal |
-
-Do **not** treat these as patterns to copy for new code.
-
----
-
 ## Interfaces (common)
 
 | Pattern | When |
@@ -220,6 +219,7 @@ Authority for caps: [unity-csharp-file-size-limits](../../.cursor/rules/unity-cs
 
 ## See also
 
+- [05 — Class design](../05-class-design.md) — shipped type inventory, assemblies, enums
 - [centralized UI services](centralized-ui-services.md)
 - [shared menu & picker UI](shared-menu-picker-ui.md)
 - [ui-event-contract](ui-event-contract.md)

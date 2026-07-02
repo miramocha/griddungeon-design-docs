@@ -174,7 +174,7 @@ Protocols come from the **active Navigator’s fixed kit** only ([navigator.md](
 **Design (locked — this doc):**
 
 - [x] Synchro Charge + Protocol on core turn at 100%
-- [x] Default Navigator kit: `protocol_strike`, `protocol_mend` ([Navigator](navigator.md) · [class design § content IDs](../05-class-design.md#content-ids-locked))
+- [x] Default Navigator kit: `protocol_strike`, `protocol_mend` ([Navigator](navigator.md) · [class design § content IDs](../03-content/content-ids.md#content-ids-locked))
 - [x] Core actions gain Synchro Charge; Navigator off-formation
 - [x] S1 tutorial gating specified (flags, phases, [campaign S1](../03-content/campaign/s1-intro.md))
 

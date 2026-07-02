@@ -325,7 +325,7 @@ enum CombatantKind { Core, Summon, Guest, Enemy }
 
 ## Related docs
 
-- [05 — class design](05-class-design.md) — assembly map, type catalog, folder structure, content IDs
+- [05 — class design](05-class-design.md) — assembly map, C# type catalog
 - [Game phase](02-systems/game-phase.md) — design goals, diagrams, `GamePhaseController` + phase controllers ([ADR 017](../decisions/017-game-phase-controller.md))
 - [Mapping](02-systems/mapping.md)
 - [ADR 002](../decisions/002-mapping-model.md)

@@ -54,7 +54,7 @@ Combat uses `CharacterBaseStats` at spawn (no level scaling at launch). **ATK** 
 
 ## Enemy skill stubs
 
-Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([05 — Class design](../05-class-design.md#skills)); enemy AI picks from `skillIds` At launch: weighted random or cycle — implementation in game #12).
+Shared physical baseline plus per-enemy skills. Maps to `SkillDefinition` / `SkillData` ([content schema](content-schema.md#content-definitions-runtime-scriptableobjects)). At launch, enemy AI picks from `skillIds` (weighted random or cycle — game #12).
 
 | Skill ID | `descriptionEn` | Type | Element | Body | MP | Power (rank 1) | Target | On-hit status | Used by |
 |----------|-----------------|------|---------|------|----|----------------|--------|---------------|---------|
@@ -73,7 +73,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## Encounter groups
 
-`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤3 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([05 — enemies & encounters](../05-class-design.md#enemies--encounters)). Slot order = left-to-right in combat UI.
+`EncounterGroup` SO: `groupId`, `frontRow[]`, `backRow[]` (≤3 front / ≤3 back), optional `backgroundId`, `tutorialUnbeatable`, `noFlee` ([content schema](content-schema.md#content-definitions-runtime-scriptableobjects)). Slot order = left-to-right in combat UI.
 
 ### FOE & boss (authored spawns)
 
@@ -133,7 +133,7 @@ Status magnitudes follow [combat status & buffs](../02-systems/combat-status-and
 
 ## ContentDatabase checklist (game #12)
 
-Author under `Assets/Content/Enemies/` and `Assets/Content/EncounterGroups/` per [05 — folder structure](../05-class-design.md#folder-structure-game-repo).
+Author under `Assets/Content/Enemies/` and `Assets/Content/EncounterGroups/` per [content schema § asset layout](content-schema.md#asset-layout-assetscontent).
 
 | Asset kind | Count | IDs |
 |------------|-------|-----|
@@ -156,7 +156,7 @@ Wire floor **`randomEncounterTableId`** → shared table SO (rate + weighted `gr
 | Encounter groups incl. `grp_alley_stalker`, `grp_alley_stalker_tutorial`, `grp_s1_warden` | ✅ [FOE & boss](#foe--boss-authored-spawns) |
 | Stats/skills stubs at launch fights | ✅ [stats](#enemy-definitions-9-types) · [skills](#enemy-skill-stubs) |
 | FOE vs random per floor | ✅ [placement table](#foe-vs-random-placement-per-floor) · [dungeons](dungeons-and-encounters.md#mvp1-floor-summary) |
-| Locked IDs in [05 — content IDs](../05-class-design.md#content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
+| Locked IDs in [content IDs](content-ids.md#content-ids-locked) | ✅ (enemies, groups, skills, FOEs) |
 | Unity SOs / `ContentDatabase` | ⬜ **game #12** |
 
 ---
