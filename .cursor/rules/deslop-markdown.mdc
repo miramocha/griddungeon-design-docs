@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Deslop markdown
 
-Authority: [deslop skill](../skills/deslop/SKILL.md), [tells catalog](../skills/deslop/references/tells.md), [register guide](../skills/deslop/references/voices.md).
+Authority: [deslop skill](../skills/deslop/SKILL.md), [tells catalog](../skills/deslop/references/tells.md), [register guide](../skills/deslop/references/voices.md). Player-facing strings (labels, item/skill copy, hints): [deslop-player-facing-copy.mdc](deslop-player-facing-copy.mdc).
 
 ## When to run
 

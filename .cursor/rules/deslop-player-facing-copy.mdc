@@ -1,0 +1,50 @@
+---
+description: Run deslop on player-facing copy (labels, descriptions, hints) before handoff
+alwaysApply: true
+---
+
+# Deslop player-facing copy
+
+Authority: [deslop skill](../skills/deslop/SKILL.md). Complements [deslop-markdown.mdc](deslop-markdown.mdc) (`.md` prose).
+
+## When to run
+
+After you **draft or add player-facing text** — before handoff or commit:
+
+1. Read and follow **deslop** — Phase 0 (genre/register) → Phase 1 scan → Phase 2 rewrite → Phase 3 verify loop → Phase 4 register check.
+2. Apply to **changed strings** (or the full block if you rewrote most of it).
+3. Brief change log when the copy was agent-authored or the user asked for a deslop pass.
+
+## In scope
+
+| Kind | Examples |
+|------|----------|
+| **UI labels & hints** | Command rail labels, `TabbedPickerRailHints`, planning prompts, modal titles, HUD status lines, shop/service copy |
+| **Item / skill / enemy text** | `DisplayName`, `Description`, `textEn`, flavor lines on content under `Assets/Content/` |
+| **Help & tutorial (non-VN)** | Tooltips, codex entries, exploration warnings in HUD/modals |
+| **Design content specs** | Player-facing description fields in `docs/03-content/**` (not story-event dialogue) |
+
+## Skip
+
+| Case | Why |
+|------|-----|
+| `Debug.Log`, test stubs, editor menu paths (`GridDungeonEditorMenuHints`) | Not player-facing |
+| Story / VN dialogue (`docs/03-content/story-events/**`, `Assets/Content/StoryEvents/**`) | [code-review-no-story-edits.mdc](code-review-no-story-edits.mdc) — deslop only when user requests story/copy polish |
+| Locked input bind vocabulary | `[Z] Confirm`, `[Directional] Navigate` — segment order per `unity-global-input-hints.mdc`; trim typos only |
+| Mechanical label trims (`Skill` vs `Use Skill`) | Wording alignment, not a voice pass |
+| User asked to keep wording | Respect intent |
+| **Review-only** on story/content | Report slop; do not rewrite unless asked |
+
+## Register default
+
+**In-game UI & content** — short, direct, concrete; say what the control or item **does**. Labels stay minimal; descriptions one tight sentence when possible. No puffery or “not X but Y” framing.
+
+## Triggers
+
+User says **deslop**, **de-slop**, `/deslop`, **remove AI tells**, or **humanize** — run on named copy, file, or selection.
+
+## Do not
+
+- Change gameplay meaning, numbers, or content IDs.
+- Invent lore or mechanics to sound human — use `[ADD: …]` per skill.
+- Run deslop on story/dialogue during review-only passes unless the user scoped copy edits.

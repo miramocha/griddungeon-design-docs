@@ -8,7 +8,9 @@ description: >-
   email, blog, anything between. Use when the user says "deslop", "de-slop",
   "de-slop this", "remove the AI tells", "humanize this", "make this not sound
   like AI", or invokes /deslop. Also use before publishing any agent-drafted
-  prose. Adapted from https://github.com/JuliusBrussee/skills.
+  prose, including player-facing game copy (UI labels, item/skill descriptions,
+  help text, hints). See deslop-player-facing-copy.mdc and deslop-markdown.mdc.
+  Adapted from https://github.com/JuliusBrussee/skills.
 ---
 
 # Deslop
