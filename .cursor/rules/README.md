@@ -50,6 +50,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `unity-meta-files.mdc` | **Game** — `.meta` GUID policy (link from game repo via `scripts/link-cursor-rules.ps1`) |
 | `github-backlog-project.mdc` | **Shared** — read `.cursor/backlog-project.json` before backlog/ticket queries (project #3) |
 | `deslop-markdown.mdc` | **Shared** — deslop pass on `.md` prose before handoff (`**/*.md` glob) |
+| `deslop-player-facing-copy.mdc` | **Shared** — deslop pass on UI labels, item/skill descriptions, hints, help text before handoff (`alwaysApply`) |
 
 ## Agent skills (design-docs repo)
 

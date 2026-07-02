@@ -92,7 +92,7 @@ After **Attack** or a **single-target** skill during command planning ([#60](htt
 |---------|-------|
 | Attack | Weapon hit; target enemy slot |
 | Guard | Damage reduction until next turn |
-| Switch | **Turn-cost** formation swap — pick **two core slots** (0–5) on combat `PartyFormationFloater`; queued in planning; resolves on acting core’s AGI turn; +0.15 Synchro. Corpses / empty slots allowed; aux excluded. [ADR 045](../../decisions/045-combat-formation-switch.md) |
+| Formation | **Turn-cost** formation swap — pick **two core slots** (0–5) on combat `PartyFormationFloater`; queued in planning; resolves on acting core’s AGI turn; +0.15 Synchro on successful swap. Corpses / empty slots allowed; aux excluded. [ADR 045](../../decisions/045-combat-formation-switch.md) |
 | Skill | Class skill; opens **use picker** (default tab **All**, type tabs per [ADR 035](../../decisions/035-skill-use-picker.md)); may **place summon** in aux slot |
 | Item | Usable consumables |
 | Flee | Queued in command planning like other commands; **resolves on that core’s AGI turn** (not instant). Success roll via `FleeCalculator` (see [§ Flee success](#flee-success-mvp1)); may fail (wasted turn). Retreat cell rule: [FOE flee](foe-encounters.md#flee-from-foe-fights-locked) |

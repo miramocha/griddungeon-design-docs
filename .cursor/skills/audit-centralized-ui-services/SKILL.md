@@ -53,7 +53,7 @@ Run greps in **griddungeon-game** unless user scopes docs-only.
 | `Assets/Scripts/UI/Views/*Presenter*.cs` | Phase HUD layout-only USS |
 | Static facades (`ItemListInventory`, `SkillUsePickerOverlay`, …) | `ScreenFadePresenter` (exception) |
 | Phase HUD orchestration (`HubHudView`, `CombatHudView`, …) | Editor dev tools unless shipping |
-| `DevBootstrapSceneCreator` / `DevSceneComposition.Wire*` | uGUI |
+| `DevBootstrapSceneCreator` / `DevSceneWire*.Wire*` | uGUI |
 
 ## Workflow
 
@@ -129,7 +129,7 @@ Score each row: **Pass** / **Fail** / **N/A** / **Partial**.
 | 6 | `sortingOrder` documented constant on presenter | Match table in centralized-ui-services.md § sortingOrder |
 | 7 | Modal chrome via USS (`tabbed-picker--modal-centered`, `--rail-offset`) | Not inline `style.left` from foreign `worldBound` |
 | 8 | `pickingMode` on service overlay when interactive | `SyncPickingMode` pattern |
-| 9 | `DevSceneComposition.Wire…` + bootstrap menu | No serialized picker UXML on phase HUD |
+| 9 | `DevSceneWireGameState.Wire…` / phase `DevSceneWire*.Wire…` + bootstrap menu | No serialized picker UXML on phase HUD |
 | 10 | Phase view orchestrates via facade only | `SkillUsePickerOverlay.Input`, not `CombatHudView` host fields |
 | 11 | No bind footers on modal chrome | `InputHints` / `TabbedPickerRailHints` only |
 | 12 | Edit Mode tests for lifecycle | `*PresenterTests`, picker view settle tests |
