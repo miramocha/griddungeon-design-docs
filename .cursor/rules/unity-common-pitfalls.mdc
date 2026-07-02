@@ -53,7 +53,7 @@ When touching legacy code, address smells in the area you are already changing �
 1. List **unqualified type names** in the file; add **`using`** at the top for each namespace (or fully qualify only when two namespaces collide — `unity-csharp-naming.mdc`).
 2. **Mirror imports** from the nearest sibling in the same folder (e.g. `*Builder` ↔ `*Projector`, fixture ↔ test).
 3. **Cross-assembly:** confirm `.asmdef` references (`unity-core-campaign-assembly.mdc`) **and** namespace imports — Core vs Campaign vs Runtime vs Tests each have distinct roots.
-4. Run `Tools/request-compile-status.ps1` when the Editor may be open, or `Tools/read-unity-editor-log.ps1` as fallback — do not assume green IDE squiggles alone. See `unity-compile-status-agent.mdc`.
+4. Run `tools/request-compile-status.ps1` when the Editor may be open, or `tools/read-unity-editor-log.ps1` as fallback — do not assume green IDE squiggles alone. See `unity-compile-status-agent.mdc`.
 
 **Example ([#315](https://github.com/miramocha/griddungeon-game/issues/315)):** `SynchroBarPresentationProjector` used `CampaignSaveData` without `using GridDungeon.Core.SaveData;`.
 

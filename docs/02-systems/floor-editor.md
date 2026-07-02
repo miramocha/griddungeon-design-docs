@@ -33,7 +33,7 @@ Logic indices are **cell counts** (0…19). **FPV world scale** (10 Unity units 
 | Game `y` | **0 = south** — `y = GridSize - 1 - row` |
 | Index | `x + y * width` (`ExplorationFloorLayout.ToIndex`) |
 
-Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate) and `Tools/layout_grid_check.py` (draft reference until layout lock).
+Same as [archive — s1_B1F ASCII](../archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate) and `tools/layout_grid_check.py` (draft reference until layout lock).
 
 ## ASCII symbols
 
@@ -110,7 +110,7 @@ Orthogonal to grid `H` / `E` interact exits ([`FloorExitLink[]`](#multi-exit-mar
 
 **Create Dev Bootstrap** registers launch floors in `ContentDatabase` and **does not overwrite** existing `ExplorationFloor` assets ([#107](https://github.com/miramocha/griddungeon-game/issues/107)). Edit or reset layouts in **GridDungeon → Content → Floor Editor** — destructive repaints overwrite the committed floor asset.
 
-Layout path validation: `Tools/layout_grid_check.py` / [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (CI / regression — not in Floor Editor window).
+Layout path validation: `tools/layout_grid_check.py` / [stratum-floor-layout-check](https://github.com/miramocha/griddungeon-game/tree/main/.cursor/skills/stratum-floor-layout-check) (CI / regression — not in Floor Editor window).
 
 ## TileWorldCreator
 

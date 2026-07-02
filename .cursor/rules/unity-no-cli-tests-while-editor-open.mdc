@@ -10,7 +10,7 @@ The user typically has **this Unity project open** in the Editor. **Do not** run
 ## Do not run
 
 - `Unity.exe -batchmode … -runTests`
-- `Tools/ci-compile.ps1` (same `projectPath` lock as tests)
+- `tools/ci-compile.ps1` (same `projectPath` lock as tests)
 - Any shell/CI invocation that opens the same `projectPath` for Edit Mode or Play Mode tests
 
 Batch mode fails with *"another Unity instance is running with this project open"* and fights the user's session.
@@ -20,11 +20,11 @@ Batch mode fails with *"another Unity instance is running with this project open
 1. **Ask the user** to run tests in **Window → General → Test Runner → Edit Mode** — expand `Tests → <Domain> → <Fixture>` (or filter by category). Domain folders: [Assets/Tests/README.md](../../Assets/Tests/README.md); fixture names come from the ticket/diff or Test Runner tree.
 2. Provide a **manual Play Mode checklist** when the ticket needs it (see `ticket-test-documentation.mdc`).
 3. You may still **author or fix** test code under `Assets/Tests/`; verification is via the user's Test Runner, not agent-launched Unity.
-4. **Editor open, compile check:** `Tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `Tools/read-unity-editor-log.ps1` (read-only `Editor.log` tail — no second Unity instance). See `unity-compile-status-agent.mdc`.
+4. **Editor open, compile check:** `tools/request-compile-status.ps1` (structured JSON via `com.miraluna.editor-agent-compile`). Fallback: `tools/read-unity-editor-log.ps1` (read-only `Editor.log` tail — no second Unity instance). See `unity-compile-status-agent.mdc`.
 
 ## Exceptions
 
-- User explicitly asks to run CLI/batch tests **or** `Tools/ci-compile.ps1` **and** confirms the Editor is **closed** on this project.
+- User explicitly asks to run CLI/batch tests **or** `tools/ci-compile.ps1` **and** confirms the Editor is **closed** on this project.
 - Non-Unity test commands that do not open this project (e.g. future `dotnet test` on a standalone test project) — only if the repo actually has them.
 
 ## Reporting results

@@ -184,7 +184,7 @@ Rows print **north-up** (`y = 7` top row, `y = 0` bottom). Only walkable steps s
 | High areas | Gradual 1–2 ridges | Isolated 3–4 crests (NW corner **4**) |
 | Adjacent delta | Often ≤ 1 | More ±2 jumps — more cliff-seal candidates |
 
-Reproduce: `python Tools/elevation_noise_example.py` in **griddungeon-design-docs** (mirrors Core math for doc fixtures).
+Reproduce: `python tools/elevation_noise_example.py` in **griddungeon-design-docs** (mirrors Core math for doc fixtures).
 
 ### Redistribution
 

@@ -213,7 +213,7 @@ Category filter: `Map` or `Exploration` per `TestCategories.cs`.
 | **Algorithm** | A* (Manhattan, heap) | Delegates to **`MapPathfinder`** (same A* on unit-cost layout tiles) |
 | **Walkability** | Visited + `S1ExplorationWalkability` + reveal walls/doors | `ExplorationFloorLayout.IsWalkable` (+ optional `extraWalkable` cells) |
 | **Walls / doors** | Revealed `WallMask`, closed doors in save | Layout tiles only (no fog) |
-| **Tests** | `MapPathfinderTests`, `ExplorationPathGraphTests` | `S1B1FLayoutTests`, `S1B2FLayoutTests`, `S1B3FLayoutTests`; `Tools/layout_grid_check.py` (Python BFS for script-only parity) |
+| **Tests** | `MapPathfinderTests`, `ExplorationPathGraphTests` | `S1B1FLayoutTests`, `S1B2FLayoutTests`, `S1B3FLayoutTests`; `tools/layout_grid_check.py` (Python BFS for script-only parity) |
 
 Use **FloorLayoutConnectivity** when validating floor painter output; use **ExplorationPathGraph** for anything that depends on what the party has already mapped.
 

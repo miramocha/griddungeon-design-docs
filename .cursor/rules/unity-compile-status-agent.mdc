@@ -7,7 +7,7 @@ alwaysApply: true
 
 Grid Dungeon uses [`com.miraluna.editor-agent-compile`](../../com.miraluna.editor-agent-compile) for structured compile checks while the Editor stays open.
 
-Authority: [Tools/README.md](../../Tools/README.md), package [README.md](../../com.miraluna.editor-agent-compile/README.md).
+Authority: [tools/README.md](../../tools/README.md), package [README.md](../../com.miraluna.editor-agent-compile/README.md).
 
 ## When to run (agents)
 
@@ -15,7 +15,7 @@ After any handoff-touching **`.cs`** change when the Unity Editor **may be open*
 
 ```powershell
 cd <griddungeon-game>
-.\Tools\request-compile-status.ps1
+.\tools\request-compile-status.ps1
 ```
 
 - Exit **0** required before claiming compile-clean or closing a C# ticket.
@@ -23,15 +23,15 @@ cd <griddungeon-game>
 - Exit **2** — timeout; confirm Editor is open on this project and package resolved.
 - Exit **3** — Editor did not claim request; open project in Unity.
 
-Do **not** run `Tools/ci-compile.ps1` while the Editor has this project open (project lock). See `unity-no-cli-tests-while-editor-open.mdc`.
+Do **not** run `tools/ci-compile.ps1` while the Editor has this project open (project lock). See `unity-no-cli-tests-while-editor-open.mdc`.
 
 ## Fallbacks
 
 | Situation | Command |
 |-----------|---------|
-| Read last JSON without triggering compile | `.\Tools\read-compile-status.ps1` |
-| Package/JSON unavailable | `.\Tools\read-unity-editor-log.ps1` |
-| Editor closed | `.\Tools\ci-compile.ps1` |
+| Read last JSON without triggering compile | `.\tools\read-compile-status.ps1` |
+| Package/JSON unavailable | `.\tools\read-unity-editor-log.ps1` |
+| Editor closed | `.\tools\ci-compile.ps1` |
 
 ## Output
 
@@ -41,4 +41,4 @@ Unity menu equivalent: **Tools → Miraluna → Request Compile Status**.
 
 ## Other projects
 
-Install the same UPM package via `manifest.json`, copy/wrap `Tools/*.ps1`, add an equivalent cursor rule in that repo.
+Install the same UPM package via `manifest.json`, copy/wrap `tools/*.ps1`, add an equivalent cursor rule in that repo.

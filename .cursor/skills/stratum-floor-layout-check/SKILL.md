@@ -45,6 +45,6 @@ Edit Mode uses `FloorLayoutConnectivity` → `MapPathfinder` on `ExplorationFloo
 
 ## Related
 
-- [Tools/README.md](../../Tools/README.md)
+- [tools/README.md](../../tools/README.md)
 - [floor-editor.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/02-systems/floor-editor.md)
 - Design ASCII: [archive — s1_B1F (draft)](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/archive/mvp1-s1-floor-layouts-draft.md#s1_b1f--outskirts-gate-intro--gate)
