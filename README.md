@@ -178,6 +178,7 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 | [041 — Floor Connector wiring](decisions/041-floor-connector-toolkit-wiring.md) | Proposed | `FloorNode` / `ExitEdge` / `HubNode` ([#253](https://github.com/miramocha/griddungeon-game/issues/253)) |
 | [042 — Presentation bus](decisions/042-presentation-bus.md) | Accepted | Phase shell DTO bus + rail chrome |
 | [043 — TWC FPV presentation](decisions/043-twc-fpv-presentation-layer.md) | Accepted | TileWorldCreator runtime mesh backend |
+| [045 — Combat Formation Switch](decisions/045-combat-formation-switch.md) | Accepted | Turn-cost pick-two slot swap (EO II); [game #378](https://github.com/miramocha/griddungeon-game/issues/378) |
 
 ## Resolved
 
