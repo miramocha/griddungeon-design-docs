@@ -6,7 +6,7 @@ alwaysApply: false
 
 # C# class suffix patterns (Grid Dungeon)
 
-Authority: [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md), [05-class-design](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/05-class-design.md), [unity-csharp-naming](unity-csharp-naming.mdc), [unity-core-campaign-assembly](unity-core-campaign-assembly.mdc).
+Authority: [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md) (suffix rules), [05-class-design](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/05-class-design.md) (shipped type inventory only), [unity-csharp-naming](unity-csharp-naming.mdc), [unity-core-campaign-assembly](unity-core-campaign-assembly.mdc).
 
 **C# types:** PascalCase suffix = role. **UXML/USS:** BEM kebab-case — not these suffixes.
 

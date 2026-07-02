@@ -11,7 +11,7 @@ Authority: [griddungeon-design-docs — content-original-naming](https://github.
 When adding or renaming **content IDs** (`enemyId`, `skillId`, `equipId`, summon ids, display names in SOs):
 
 - **Do not** copy recognizable item/skill/enemy names from Etrian Odyssey or other reference games (`medica`, `amrita`, `nectar`, `union_*`, etc.).
-- **Do** match locked IDs in design-docs [05-class-design § content IDs](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/05-class-design.md#content-ids-locked) and roster docs ([enemy-roster](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/enemy-roster.md), [class-skills](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/class-skills.md)).
+- **Do** match locked IDs in design-docs [content IDs](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/content-ids.md#content-ids-locked) and roster docs ([enemy-roster](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/enemy-roster.md), [class-skills](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/03-content/class-skills.md)).
 - **Tone:** municipal underworks / contract crew ([vision tone](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/00-vision.md#tone--setting)).
 
 Renaming a locked ID requires a design-docs update in the same PR.
