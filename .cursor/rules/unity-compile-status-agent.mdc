@@ -3,9 +3,9 @@ description: Agent compile and Edit Mode test verification via com.miraluna.edit
 alwaysApply: true
 ---
 
-# Unity Editor Agent (compile + Edit Mode tests)
+# Unity Editor Agent (compile + Edit Mode tests + editor actions)
 
-Grid Dungeon uses [`com.miraluna.editor-agent`](../../com.miraluna.editor-agent) for structured **compile** and **Edit Mode test** checks while the Editor stays open.
+Grid Dungeon uses [`com.miraluna.editor-agent`](../../com.miraluna.editor-agent) for structured **compile**, **Edit Mode test**, and **editor action** checks while the Editor stays open.
 
 Authority: [tools/README.md](../../griddungeon-game/tools/README.md), package [README.md](../../com.miraluna.editor-agent/README.md).
 
@@ -18,12 +18,21 @@ cd <griddungeon-game>
 .\tools\request-compile-status.ps1
 ```
 
-After **test** changes (or before closing a test ticket), when Editor may be open:
+After **test** changes (or before closing a test ticket), when Editor may be open — follow **editor-agent-test** skill:
 
 ```powershell
 .\tools\request-test-status.ps1 -Category <Domain>
 # or
 .\tools\request-agent.ps1 -Action Test -Category Combat
+```
+
+After **scene/content regen** or when user asks to **run/list agent tools** — follow **editor-agent-action** skill:
+
+```powershell
+.\tools\list-agent-tools.ps1
+.\tools\request-action-status.ps1 -ToolName create-dev-bootstrap
+# or
+.\tools\request-agent.ps1 -Action Invoke -ToolName ensure-content-database
 ```
 
 - Compile exit **0** required before claiming compile-clean.
@@ -40,6 +49,7 @@ Do **not** run `tools/ci-compile.ps1` or `Unity.exe -batchmode -runTests` while 
 |-----------|---------|
 | Read last compile JSON only | `.\tools\read-compile-status.ps1` |
 | Read last test JSON only | `.\tools\read-test-status.ps1` |
+| Read last action JSON only | `.\tools\read-action-status.ps1` |
 | Package/JSON unavailable | `.\tools\read-unity-editor-log.ps1` |
 | Editor closed — compile | `.\tools\ci-compile.ps1` |
 | Editor closed — tests | `Unity.exe -runTests -testPlatform editmode` |
@@ -50,6 +60,7 @@ Do **not** run `tools/ci-compile.ps1` or `Unity.exe -batchmode -runTests` while 
 |------|---------|
 | `Logs/last-compile.json` | `file`, `line`, `column`, `message` |
 | `Logs/last-test.json` | `summary`, `failures[]` |
+| `Logs/last-action.json` | `ok`, `toolName`, `message`, `createdAssetPaths`, `error` |
 
 Unity menu: **Tools → Miraluna → Request Compile Status** / **Request Test Run**.
 

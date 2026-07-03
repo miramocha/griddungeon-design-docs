@@ -13,7 +13,7 @@ Runs **Edit Mode** tests inside the **open** Unity Editor via [`com.miraluna.edi
 
 Authority: [tools/README.md](../../../tools/README.md), [unity-no-cli-tests-while-editor-open.mdc](../../rules/unity-no-cli-tests-while-editor-open.mdc), [unity-compile-status-agent.mdc](../../rules/unity-compile-status-agent.mdc).
 
-Complements **test-plan-grid-dungeon** (test plan prose) — this skill owns **execution**.
+Complements **test-plan-grid-dungeon** (test plan prose) — this skill owns **execution**. For editor menu actions (scene regen, content ensure), use **editor-agent-action**.
 
 ## When to use
 
