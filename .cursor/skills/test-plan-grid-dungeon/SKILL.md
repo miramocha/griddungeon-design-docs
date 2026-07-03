@@ -19,7 +19,7 @@ Complements [.cursor/rules/ticket-test-documentation.mdc](../../rules/ticket-tes
 ## Rules
 
 1. **Do not invent results** — unchecked until the user or CI reports green.
-2. **No Unity CLI batch tests** while the Editor may be open — ask the user to run Test Runner ([unity-no-cli-tests-while-editor-open.mdc](../../rules/unity-no-cli-tests-while-editor-open.mdc)).
+2. **Edit Mode with Editor open:** run tests via **editor-agent-test** skill (`request-test-status.ps1`). **No** `Unity.exe -batchmode -runTests` while Editor may be open ([unity-no-cli-tests-while-editor-open.mdc](../../rules/unity-no-cli-tests-while-editor-open.mdc)).
 3. **Post to GitHub issue comment** by default; mirror under `## Test plan` on the PR.
 4. Mark steps **N/A** with reason + follow-up issue (e.g. instant enemy AI → #35), not as failures.
 5. Use **tables** for manual steps: `| Step | Action | Expected |` with stable step numbers across edits.
