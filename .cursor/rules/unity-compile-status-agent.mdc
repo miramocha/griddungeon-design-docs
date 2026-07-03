@@ -1,44 +1,58 @@
 ---
-description: Agent compile verification via com.miraluna.editor-agent-compile while Unity Editor stays open
+description: Agent compile and Edit Mode test verification via com.miraluna.editor-agent while Unity Editor stays open
 alwaysApply: true
 ---
 
-# Unity compile status (agent gate)
+# Unity Editor Agent (compile + Edit Mode tests)
 
-Grid Dungeon uses [`com.miraluna.editor-agent-compile`](../../com.miraluna.editor-agent-compile) for structured compile checks while the Editor stays open.
+Grid Dungeon uses [`com.miraluna.editor-agent`](../../com.miraluna.editor-agent) for structured **compile** and **Edit Mode test** checks while the Editor stays open.
 
-Authority: [tools/README.md](../../tools/README.md), package [README.md](../../com.miraluna.editor-agent-compile/README.md).
+Authority: [tools/README.md](../../griddungeon-game/tools/README.md), package [README.md](../../com.miraluna.editor-agent/README.md).
 
 ## When to run (agents)
 
-After any handoff-touching **`.cs`** change when the Unity Editor **may be open** on `griddungeon-game`:
+After handoff-touching **`.cs`** changes when the Unity Editor **may be open** on `griddungeon-game`:
 
 ```powershell
 cd <griddungeon-game>
 .\tools\request-compile-status.ps1
 ```
 
-- Exit **0** required before claiming compile-clean or closing a C# ticket.
-- Exit **1** — fix reported `CS####` lines; re-run until green.
-- Exit **2** — timeout; confirm Editor is open on this project and package resolved.
+After **test** changes (or before closing a test ticket), when Editor may be open:
+
+```powershell
+.\tools\request-test-status.ps1 -Category <Domain>
+# or
+.\tools\request-agent.ps1 -Action Test -Category Combat
+```
+
+- Compile exit **0** required before claiming compile-clean.
+- Test exit **0** before claiming Edit Mode tests green (when you ran them).
+- Exit **1** — fix errors/failures; re-run until green.
+- Exit **2** — timeout; confirm Editor is open and package resolved.
 - Exit **3** — Editor did not claim request; open project in Unity.
 
-Do **not** run `tools/ci-compile.ps1` while the Editor has this project open (project lock). See `unity-no-cli-tests-while-editor-open.mdc`.
+Do **not** run `tools/ci-compile.ps1` or `Unity.exe -batchmode -runTests` while the Editor has this project open. See `unity-no-cli-tests-while-editor-open.mdc`.
 
 ## Fallbacks
 
 | Situation | Command |
 |-----------|---------|
-| Read last JSON without triggering compile | `.\tools\read-compile-status.ps1` |
+| Read last compile JSON only | `.\tools\read-compile-status.ps1` |
+| Read last test JSON only | `.\tools\read-test-status.ps1` |
 | Package/JSON unavailable | `.\tools\read-unity-editor-log.ps1` |
-| Editor closed | `.\tools\ci-compile.ps1` |
+| Editor closed — compile | `.\tools\ci-compile.ps1` |
+| Editor closed — tests | `Unity.exe -runTests -testPlatform editmode` |
 
 ## Output
 
-Structured errors live in `Logs/last-compile.json` (gitignored): `file`, `line`, `column`, `message`.
+| File | Content |
+|------|---------|
+| `Logs/last-compile.json` | `file`, `line`, `column`, `message` |
+| `Logs/last-test.json` | `summary`, `failures[]` |
 
-Unity menu equivalent: **Tools → Miraluna → Request Compile Status**.
+Unity menu: **Tools → Miraluna → Request Compile Status** / **Request Test Run**.
 
 ## Other projects
 
-Install the same UPM package via `manifest.json`, copy/wrap `tools/*.ps1`, add an equivalent cursor rule in that repo.
+Install the same UPM package via `manifest.json`, copy/wrap `tools/*.ps1`, add equivalent cursor rules.

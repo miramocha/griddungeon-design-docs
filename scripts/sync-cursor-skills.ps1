@@ -22,6 +22,7 @@ $canonical = @{
     "stratum-floor-asset-sync" = "game"
     "stratum-floor-layout-check" = "game"
     "pull-next-backlog-ticket" = "game"
+    "editor-agent-test"        = "game"
     "blender-bone-remap"       = "game"
     "vroid-shapekey-remap"     = "game"
     "deslop"                   = "design-docs"
