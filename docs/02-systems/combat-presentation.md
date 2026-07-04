@@ -16,7 +16,7 @@ How skills look and feel in battle — camera, animation, VFX, and **cinematic p
 
 **Most spells and skills** use the standard **fixed battle camera**:
 
-- **Three-quarter** fixed angle for the encounter at launch — [ADR 015](../../decisions/015-mvp1-combat.md)).
+- **Straight front** fixed angle on the enemy formation (Etrian Odyssey style) — [ADR 015](../../decisions/015-mvp1-combat.md)).
 - Camera **does not** cut, orbit, or change angle per cast.
 - Optional **slight zoom** toward the primary enemy target on hit — subtle punch-in via **DOTween**, then ease back to default framing before the next action.
 - No dramatic camera moves; zoom is short and repeatable (tuned per skill or global default).

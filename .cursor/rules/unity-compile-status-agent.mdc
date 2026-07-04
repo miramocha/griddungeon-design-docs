@@ -18,7 +18,7 @@ cd <griddungeon-game>
 .\tools\request-compile-status.ps1
 ```
 
-After **test** changes (or before closing a test ticket), when Editor may be open — follow **editor-agent-test** skill:
+After **test** changes (or before closing a test ticket), when Editor may be open — follow **editor-agent-test** skill (**`-Category <Domain>` only** for handoff; do not use `-Fixture` / `-Test`):
 
 ```powershell
 .\tools\request-test-status.ps1 -Category <Domain>

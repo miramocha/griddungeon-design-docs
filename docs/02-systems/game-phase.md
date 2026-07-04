@@ -204,7 +204,7 @@ Hub is reached from exploration only through **events**, **items**, **exits/gate
 
 While `Current == Exploration`, `ExplorationPhaseController` owns event subscriptions. A single step can end in map reveal, FOE contact combat, or a random encounter.
 
-**FOE patrol advance** after each step is spec'd but **not implemented** in `FoeSystem` yet (contact-only `OnPartyStep` today).
+**FOE patrol advance** — implemented ([ADR 003](../decisions/003-foe-step-patrol.md)). `ExplorationPhaseController.HandlePartyStep` calls `FoeSystem.OnPartyStepDisplacement()` after each party displacement step. `FoePatrolCalculator` advances living FOEs when `partyStepCount % stepsPerMove == 0` and `PatrolPath` has more than one waypoint. Contact is checked **before** patrol (party stepped onto FOE) and **after** (FOE patrolled onto party).
 
 ```mermaid
 sequenceDiagram
@@ -224,9 +224,9 @@ sequenceDiagram
     DE->>Map: OnBumpWall
   end
   DE->>EP: OnPartyStep
-  EP->>Foe: OnPartyStep(cell)
-  alt FOE same cell
-    Foe->>EP: OnFoeContact
+  EP->>Foe: TryGetContactAt (before patrol)
+  EP->>Foe: OnPartyStepDisplacement
+  alt FOE on party cell (before or after patrol)
     EP->>GS: RequestCombat(foe context)
   else if no contact
     EP->>Enc: TryRollRandomEncounter
@@ -312,8 +312,7 @@ Target behaviour at launch. **Game repo status** (aligned with `griddungeon-game
 - `DungeonView.SetVisible(true)`
 - `MapSystem.LoadFloor`
 - `FoeSystem.LoadFloor`
-- Subscribe: `DungeonExplorer.OnPartyStep`, `OnPartyEnteredCell`, `OnBumpWall`
-- Subscribe: `FoeSystem.OnFoeContact` → `RequestCombat`
+- Subscribe: `DungeonExplorer.OnPartyStep` → `HandlePartyStep` (FOE patrol, contact combat, random encounter); `OnPartyEnteredCell`, `OnBumpWall`
 - `InputRouter` → `UI`, `Exploration`, `Map` (via `PhaseChanged`)
 
 ### Exploration `OnExit`
