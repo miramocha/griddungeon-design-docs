@@ -18,7 +18,7 @@ How skills look and feel in battle — camera, animation, VFX, and **cinematic p
 
 - **Straight front** fixed angle on the enemy formation (Etrian Odyssey style) — [ADR 015](../../decisions/015-mvp1-combat.md)).
 - Camera **does not** cut, orbit, or change angle per cast.
-- Optional **slight zoom** toward the primary enemy target on hit — subtle punch-in via **DOTween**, then ease back to default framing before the next action.
+- Optional **slight zoom** toward the primary enemy target on **action commit** (before resolve) and during **enemy target pick** — `BattleCameraRig.NudgeZoomToTarget` via `BattleCameraFocusPolicy` ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)); then ease back when targeting ends or turn advances.
 - No dramatic camera moves; zoom is short and repeatable (tuned per skill or global default).
 - Feedback = character portrait flash, slot VFX, screen shake (light), combat log, numeric popups.
 - Fast to resolve; keeps AGI pacing readable.
@@ -131,7 +131,7 @@ Each skill references a **presentation profile**. **Timing** for cinematics is a
 ## Combat flow integration
 
 1. Player confirms skill + targets.
-2. **`Fixed`** → VFX + optional zoom → apply on hit frame → restore camera.
+2. **`Fixed`** → optional pre-resolve camera nudge → VFX → apply on hit frame → restore camera.
 3. **`Cinematic`** → `CinematicSkillPlayer` plays clip → on end → apply rules → resume queue.
 4. **`CinematicQTE`** → play clip → `QTEController` listens for prompts → score tier → apply base skill + `qte_bonus` → resume queue.
 
@@ -152,14 +152,14 @@ Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowe
 
 ### VFX anchor targets (`EnemySlot` rig)
 
-`Fixed` and cinematic clips spawn hit VFX at **arena slot transforms**, not world grid cells. Indices match [combat scene § Enemy slots](combat-scene.md#enemy-slots) and [combat § Enemy roster UI](combat.md#enemy-roster-ui-formation-rows):
+`Fixed` and cinematic clips spawn hit VFX at **arena slot transforms**, not world grid cells. Indices match [combat scene § Enemy slots](combat-scene.md#enemy-slots) and [combat § Enemy arena plates](combat.md#enemy-arena-plates-formation-rows):
 
 | Slot index | Tactical row | Transform name (convention) |
 |------------|--------------|-----------------------------|
 | `0`–`2` | Front | `EnemySlot_0` … `EnemySlot_2` |
 | `3`–`5` | Back | `EnemySlot_3` … `EnemySlot_5` |
 
-- **Primary target zoom** (`BattleCameraRig.NudgeZoomToTarget`) uses the **occupied** anchor for `Combatant.SlotIndex`.
+- **Primary target zoom** (`BattleCameraRig.NudgeZoomToTarget`) uses the **occupied** anchor for `Combatant.SlotIndex`. Policy: `BattleCameraFocusPolicy.ShouldFocusForAction` — attack and single-enemy skills yes; guard/switch/flee/heal/item/ally skills no ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)).
 - **Empty anchors** stay disabled/hidden — no VFX parent on vacant rig points.
 - **Row collapse (Phase C):** when survivors shift index, presenters **re-parent** sprites and refresh UI on the new slot — VFX always follows current `SlotIndex`, not a fixed screen position.
 
@@ -167,7 +167,8 @@ Fixed presentation must not obscure turn order or row HP. Full-screen VFX allowe
 
 ## Tech sketch (Unity 6)
 
-- `BattleCameraRig` — default pose; `NudgeZoomToTarget` for `Fixed`
+- `BattleCameraRig` — default pose; `NudgeZoomToTarget` on action commit + target pick; `RestoreDefaultFramingAnimated` on turn start / targeting end
+- `BattleCameraFocusPolicy` — which actions and slots earn a nudge (Core)
 - `SkillDefinition.presentation` → `Fixed | Cinematic | CinematicQTE`; `cinematicAssetId` when not `Fixed`
 - `CinematicSkillPlayer` — `PlayableDirector.Play()` / `stopped`; `INotificationReceiver` for QTE markers ([ADR 027](../../decisions/027-combat-cinematic-timeline-events.md))
 - `QTEController` — `OpenPrompt` / `ClosePrompt` / `CancelActivePrompts`; outputs `QTEResult` tier
@@ -191,6 +192,7 @@ See [release scope](../00-release-scope.md). Optional in MVP2 alongside gather/f
 ## Related docs
 
 - [ADR 027 — Combat cinematic Timeline events](../../decisions/027-combat-cinematic-timeline-events.md)
+- [ADR 046 — Combat arena plates + camera focus](../../decisions/046-combat-arena-plates-camera.md)
 - [Combat](combat.md)
 - [Input bindings — cinematic QTE](input-bindings.md#cinematic-qte)
 - [Synchro Protocol](synchro-protocol.md) — candidate for `CinematicQTE` finishers

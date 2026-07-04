@@ -83,11 +83,13 @@ Combat UI and rules use **front/back rows** (like the party). The arena is **not
 
 | Mode | When | Notes |
 |------|------|-------|
-| **Sprite stack** | launch default | 2D/2.5D billboard or layered sprite (EO HD style) |
-| **3D model** | later optional | Model on slot; idle + hit reacts |
+| **3D model** | **default (required slice)** | `EnemyDefinition.battlePrefab` spawned on slot anchor via `CombatScenePresenter` ([#385](https://github.com/miramocha/griddungeon-game/issues/385)) |
+| **Sprite stack** | optional fallback | 2D/2.5D billboard when no prefab assigned |
 | **Hybrid** | Bosses | 3D body + 2D VFX overlay |
 
-Slot transform drives facing, hit flash, VFX spawn, and **cinematic** focus ([combat presentation](combat-presentation.md)).
+**Enemy HP chrome (UI):** transient **screen-space** plates tracked to slot anchors — not a permanent top-center HUD strip. See [ADR 046](../../decisions/046-combat-arena-plates-camera.md) · `CombatArenaPlatePresenter` @ sort **15**.
+
+Slot transform drives facing, hit flash, VFX spawn, **plate projection**, and **cinematic** focus ([combat presentation](combat-presentation.md)).
 
 ### Party presentation
 
@@ -176,12 +178,13 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 
 ## Tech (Unity 6)
 
-- **`CombatScenePresenter`** — owns backdrop instance, slot rig, enemy spawn (presentation only; [ADR 017](../../decisions/017-game-phase-controller.md))
+- **`CombatScenePresenter`** — owns backdrop instance, slot rig, enemy spawn (`SpawnEnemyVisuals` / `ClearAndDestroyEnemyVisuals`; presentation only; [ADR 017](../../decisions/017-game-phase-controller.md))
 - Invoked from **`CombatPhaseController.OnEnter`**; torn down on `OnExit`
-- `CombatEntryContext` → `ResolveBackground()`, `SpawnEncounter(EncounterGroup)`
+- `CombatEntryContext` → `ResolveBackground()`, spawn from `EncounterGroup` + `ContentDatabase`
 - `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
+- **`CombatArenaPlatePresenter`** — screen-space enemy HP plates above slot anchors ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)); not embedded in `CombatHud`
 - Additive scene `CombatArena` or enabled root under `GameRoot`
-- At launch: one biome backdrop + sprite enemies on 6 slots
+- Default slice: one biome backdrop + **3D battle prefabs** on up to 6 slots + transient plates on target pick / HP beats
 
 ---
 
@@ -189,8 +192,8 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 
 | Milestone | Deliverable |
 |-----------|-------------|
-| **Launch** | Arena transition, 1 backdrop, sprite slots, random + FOE entry |
-| **Optional** | Extra biome plates; optional 3D enemy on boss slot |
+| **Launch** | Arena transition, 1 backdrop, **3D battle prefabs** on slots, transient arena plates, random + FOE entry |
+| **Optional** | Extra biome plates; sprite fallback enemies without prefab |
 | **Later** | Blurred FPV snapshot plate; in-world experiment flag |
 
 ---
@@ -198,6 +201,7 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 ## Related docs
 
 - [ADR 013 — Combat scene rendering](../../decisions/013-combat-scene-rendering.md)
+- [ADR 046 — Combat arena plates + camera focus](../../decisions/046-combat-arena-plates-camera.md)
 - [Combat presentation](combat-presentation.md)
 - [Combat](combat.md)
 - [02 — Dungeon navigation](../02-dungeon-navigation.md)

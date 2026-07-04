@@ -23,7 +23,7 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | [Presentation shell gotchas](presentation-shell-gotchas.md) | Bus/shell traps — stale DTO chrome, wire lifecycle, scene shell vs prefab, phase order, projector tests |
 | [UITK BEM transition guide](uitk-bem-transition-guide.md) | `BemMotionCompletion` + `VisualPresentationSync` API, recipes for `*Transition` helpers and presenter sync, steady-class registry, tests |
 | [Centralized UI gotchas](centralized-ui-gotchas.md) | Implementation traps — pop-in exit races, `IsSettling`, context-switch hide, marker fade vs step motion, map panel fade vs screen fade, detached-host tests |
-| [Custom party UI](custom-party-ui.md) | Replace exploration strip / combat party roster / map marker (`CombatRosterView`, events, UITK hooks) |
+| [Custom party UI](custom-party-ui.md) | Replace exploration strip / combat party roster / map marker (`CombatArenaPlateView`, `IEnemyFormationRoster`, events, UITK hooks) |
 | [Authoring floor transition beats](authoring-floor-transition-beats.md) | `stairs_default` vignette prefab, catalog, Cinemachine, Unity menu workflow |
 | [Layered UITK panels](layered-uitk-panels.md) | Split HUD into panel `UIDocument` components — [ADR 037](../../decisions/037-layered-uitk-panels.md) (draft) |
 | [Autopilot pathfinding](autopilot-pathfinding.md) | Expanded-map A* (`MapPathfinder`, `ExplorationPathGraph`), walker planner, `AutopilotController` flow, tests, vs layout connectivity |

@@ -264,7 +264,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Zone | UITK element | Layout |
 |------|--------------|--------|
 | **Left rail** | `command-panel` | Vertical button column (Attack → Guard → Skill → Item → Flee → **Back**) |
-| **Top center** | `combat-log-preview-row` then `enemy-roster` | Log preview (round + latest line) above enemy formation — [§ Combat log](#combat-log-preview--modal) |
+| **Top center** | `combat-log-preview-row` only | Log preview (round + latest line) — [§ Combat log](#combat-log-preview--modal). Enemy HP plates are **transient** on `CombatArenaPlate` above arena slots ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)), not embedded here. |
 | **Bottom center** | `synchro-bar` in center column; shared `PartyFormationFloaterPresenter` (combat-center inset) | Synchro meter + **Protocol** when 100% (`C` / LMB on bar); party grid floats at bottom ([custom party UI](../04-dev/custom-party-ui.md)) |
 | **Right rail** | `turn-order-strip` | **Vertical** flat AGI queue — [§ Turn order strip](#turn-order-strip-agi-queue-ui) |
 | **Center** | `combat-hud__arena-spacer` | Transparent flex-grow; no opaque full-width HUD panel |
@@ -279,7 +279,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 
 | Surface | Behavior |
 |---------|----------|
-| **Preview row** | Top of center column (above enemy roster); **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. **No** separate Log button. |
+| **Preview row** | Top of center column; **round label** + **one latest line** (USS ellipsis). Empty placeholder before first action. **No** separate Log button. Enemy plates are not in this column — see [§ Enemy arena plates](#enemy-arena-plates-formation-rows). |
 | **Open** | Click preview row or **`V`** (`ToggleLog`, Combat action map) → `combat-log-modal` (`hud-overlay` panel). Opening log **cancels** any open skill/item picker. |
 | **Modal body** | Title + scrollable full fight history (`combat-log` ScrollView) only — **no** Close button, **no** footer hint |
 | **Close** | **`V`** toggle; **`X`** / Back (`CombatPlayerCommandGate.TryBack` — log dismissed **before** pickers); LMB on modal backdrop, not scroll area (interim UX — may revisit). Read-only — does not pause combat. |
@@ -313,15 +313,17 @@ Combat must show a **vertical strip** on the **right rail** (top → bottom = so
 
 **Acceptance:** player can answer “who acts next?” without reading the combat log — matches [vision](../00-vision.md) and [release scope](../00-release-scope.md) AGI queue UI.
 
-### Enemy roster UI (formation rows)
+### Enemy arena plates (formation rows)
 
-Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — not a single flat wrap list. The AGI turn-order strip stays a **flat** queue (no row grouping).
+Enemy HP chrome is **not** a permanent strip on `CombatHud`. **`CombatArenaPlatePresenter`** (sort **15**) shows transient plates above battle-arena slot anchors during **enemy targeting** and **HP beats**; hidden idle ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)).
+
+Combat still uses **two tactical rows** — **Front** and **Back** — for slot indices and arena rig alignment. The AGI turn-order strip stays a **flat** queue (no row grouping).
 
 | UI area | Layout | Data |
 |---------|--------|------|
-| **Front row** | Up to **3** portrait cards, left → right | `BattleState.EnemySlots[0..2]` — occupied slots only (empty indices hidden) |
+| **Front row** | Up to **3** portrait cards, left → right | `BattleState.EnemySlots[0..2]` — occupied slots only |
 | **Back row** | Up to **3** portrait cards, left → right | `BattleState.EnemySlots[3..5]` — occupied slots only |
-| **Row label** | Small heading per row (`Front` / `Back`) | Mirrors party row affordance; optional subtle row tint on cards |
+| **Row label** | Small heading per row (`Front` / `Back`) | Mirrors party row affordance |
 
 **Slot index map** (shared by UI, arena rig, and VFX):
 
@@ -330,16 +332,17 @@ Combat HUD shows enemies in **two labeled rows** — **Front** and **Back** — 
 | Front | `0`, `1`, `2` | `EnemySlot_0` … `EnemySlot_2` |
 | Back | `3`, `4`, `5` | `EnemySlot_3` … `EnemySlot_5` |
 
-Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row. Example: front at `0` and `2`, back at `4` → front row shows two cards **centered** in the row (flex `justify-content: center` on `combat-roster__slots`).
+Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[]` — UI and arena show only **non-null** combatants at their index, not collapsed into a single row.
 
-**Roster vitals At launch:** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatRosterView.BuildSlot` skips MP for `CombatantKind.Enemy`).
+**Roster vitals At launch:** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatArenaPlateView` — no MP on enemies).
 
-**Launch implementation:** `CombatHud` enemy panel → `enemy-roster-front` / `enemy-roster-back` containers; `CombatRosterView.BindEnemyFormation`. Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows) — one portrait card per occupied core slot (6 + aux). S1 Protocol coach / planning prompt: deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). Replace or reskin plates: [custom party UI](../04-dev/custom-party-ui.md#combat-party-roster).
+**Launch implementation:** `CombatArenaPlateView.BindEnemyFormation` via `CombatArenaPlate.EnemyRoster` (`IEnemyFormationRoster`). Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows). During enemy targeting the party floater **collapses**; arena plates reveal for valid enemies. S1 Protocol coach / planning prompt: deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). Replace or reskin: [custom party UI](../04-dev/custom-party-ui.md#enemy-arena-plates-combatarenaplate).
 
 ## Related docs
 
 - [release scope](../00-release-scope.md)
 - [Combat scene & enemy rendering](combat-scene.md)
+- [ADR 046 — Combat arena plates + camera focus](../../decisions/046-combat-arena-plates-camera.md)
 - [Combat status & buffs](combat-status-and-buffs.md)
 - [Navigator](navigator.md)
 - [Synchro Protocol (team bar)](synchro-protocol.md)

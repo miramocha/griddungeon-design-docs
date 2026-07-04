@@ -24,7 +24,7 @@ Forward-facing reference for **replacing or extending Grid Dungeon HUD** without
 |-------|-------------------|-----------|
 | **Runtime `public event` list + commands** | **Here** | Edit when C# API changes |
 | Replace combat skill modal | [custom skill picker UI](custom-skill-picker-ui.md) | `ISkillUsePickerView` + host; events/commands here |
-| Replace exploration strip / combat party roster | [custom party UI](custom-party-ui.md) | Event names + `CombatRosterView` API |
+| Replace exploration strip / combat party roster | [custom party UI](custom-party-ui.md) | Event names + `IEnemyFormationRoster` / `CombatArenaPlate` API |
 | Cross-phase overlays (hints, party floater, fade, sort stack) | [centralized UI services](centralized-ui-services.md) | Link only |
 | Exploration HUD wiring, UXML mounts, scene graph | [exploration UI](../02-systems/exploration-ui.md) | Link only |
 | MapView **per-event UI effect** (which presenter repaints what) | [exploration UI § MapView](../02-systems/exploration-ui.md#mapview-push-updates) | Cross-link |
@@ -182,7 +182,7 @@ Map panel: also subscribe `gs.Map.RevealChanged`, `gs.Foes.OnFoePatrolMoved` —
 
 **Read during fight:** `State` (`BattleState`), `CurrentPhase`, `IsCommandPlanning`, `IsWaitingForPlayer`, `IsSelectingTarget`, `ValidTargets`, `CommandTarget`, `PlanningPrompt`, `CanUseProtocol`, `RequiresProtocolOnlyCommands`, `IsPresentationLocked`.
 
-Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy). Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`); enemies: `CombatRosterView.BindEnemyFormation` — [custom party UI — combat roster](custom-party-ui.md#combat-party-roster).
+Use **`State.CoreSlots` / `State.EnemySlots`** for plates, not `PartyRuntime` (battle copy). Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`); enemies: `CombatArenaPlate.EnemyRoster` (`IEnemyFormationRoster`) — [custom party UI — enemy arena plates](custom-party-ui.md#enemy-arena-plates-combatarenaplate).
 
 **Commands (wire buttons / focus nav):**
 
@@ -260,7 +260,7 @@ Shipped reference: `HubHudView`, `HubHudReactivePresenter`.
 | Bootstrap | `Assets/Scripts/UI/Game/GameBootstrap.cs` |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs` |
 | Exploration shell | `Assets/Scripts/UI/Views/ExplorationHudView.cs` |
-| Party strip / combat roster | `PartyFormationFloaterPresenter.cs` · `PartyFormationGridView.cs` · `CombatRosterView.cs` (enemies) · [custom party UI](custom-party-ui.md) |
+| Party strip / combat roster | `PartyFormationFloaterPresenter.cs` · `PartyFormationGridView.cs` · `CombatArenaPlateView.cs` (enemies) · [custom party UI](custom-party-ui.md) |
 | Party / pause menu | `PartyMenuOverlayView.cs` · [exploration UI § Party / pause menu](../02-systems/exploration-ui.md#party--pause-menu-partymenuoverlayview) |
 | Map | `Assets/Scripts/UI/Views/MapView.cs` |
 | Map party glyph | `MapPartyMarkerPresenter` (runtime presenter) · [custom party UI § Map](custom-party-ui.md#map-party-marker-optional) |

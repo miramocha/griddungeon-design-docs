@@ -223,22 +223,22 @@ Shipped on **`ExplorationHud`** (`ExplorationHudView` — **no** `UIDocument`) +
 **Shipped** — epic [#179](https://github.com/miramocha/griddungeon-game/issues/179) via [PR #182](https://github.com/miramocha/griddungeon-game/pull/182) ([#180](https://github.com/miramocha/griddungeon-game/issues/180) frame — [#181](https://github.com/miramocha/griddungeon-game/issues/181) log modal). Spec: [combat — Combat HUD frame layout](02-systems/combat.md#combat-hud-frame-layout). Full-screen `combat-hud` (`position: absolute; inset: 0`, `flex-direction: row`):
 
 ```
-command-rail | center column (log-preview → enemy → arena-spacer → synchro) + PartyFormationFloater overlay | turn-order-strip
+command-rail | center column (log-preview → arena-spacer → synchro) + PartyFormationFloater + CombatArenaPlate overlays | turn-order-strip
 ```
 
 - **Left rail** — `combat-hud__command-rail` → `command-panel` (vertical column, centered in rail). Button order: Attack → — → Flee → **Back** (DOM matches focus navigator).
-- **Top center** — `enemy-roster` + `enemy-roster-front` / `enemy-roster-back` (Front/Back rows; occupied slots **centered** in row; **HP only** — no MP on enemies).
+- **Top center** — `combat-log-preview-row` only (round + one line). **Enemy HP plates** — transient `CombatArenaPlatePresenter` @ sort **15** above arena slot anchors ([ADR 046](../decisions/046-combat-arena-plates-camera.md)); not embedded in `CombatHud`.
 - **Bottom center** — `synchro-bar` in center column (**Protocol** when Synchro 100% — `C` / LMB); party plates on shared **`PartyFormationFloater`** (combat-center inset; HP + MP on cores).
 - **Log** — `combat-log-preview-row` (round + one line; no Log button); modal via **`V`** or preview click; title + scroll only; close via **`V`**, **`X`** / Back (`TryBack` — log before pickers), or backdrop click (not scroll).
-- **Centralized UI services** — cross-phase `UIDocument` overlays (`InputHintPresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** — bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
+- **Centralized UI services** — cross-phase `UIDocument` overlays (`InputHintPresenter`, `CombatArenaPlatePresenter`, `CommandRailPresenter` + `CommandPanelModalSupport`, `PartyFormationFloater`, `ScreenFadePresenter`), `sortingOrder` stack, bootstrap: [centralized UI services](04-dev/centralized-ui-services.md). **Input hints** — bind copy only on global strip (`sortingOrder` 300); `InputHints.Publish` / `Clear`; constants in `TabbedPickerRailHints` ([shared menu & picker UI](04-dev/shared-menu-picker-ui.md#global-input-hints); agent rule `unity-global-input-hints.mdc`).
 - **Right rail** — `turn-order-strip` vertical flat AGI queue (top → bottom = soonest → latest).
 
-`CombatRosterView.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
+`CombatArenaPlate.EnemyRoster.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
 
 - **Skill use picker** — modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
 - **Shared UITK menus** — `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` — composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
 - AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
-- Stale queued target: USS `combat-roster__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
+- Stale queued target: USS `combat-arena-plate__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
 - **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal. Mid-fight story: `EncounterEventScheduler` on `CombatController`.
 - **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control — `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
 - **Shared panel scale:** `GamePanelSettings.asset` — Scale With Screen Size, reference **1920—1080**, **Match Height** (exploration + combat `UIDocument` panels).
@@ -246,13 +246,14 @@ command-rail | center column (log-preview → enemy → arena-spacer → synchro
 ## Combat scene
 
 - `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..5` ([ADR 013](../decisions/013-combat-scene-rendering.md))
+- `CombatScenePresenter.SpawnEnemyVisuals` / `ClearAndDestroyEnemyVisuals` — `EnemyDefinition.battlePrefab` on slot rig ([ADR 046](../decisions/046-combat-arena-plates-camera.md))
 - `CombatScenePresenter.GetEnemySlotAnchor(int slotIndex)` — `slotIndex` `0..5` matches UI + `Combatant.SlotIndex`
 - Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
 - Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) — separate assets per id
 
 ## Combat presentation
 
-- `BattleCameraRig` — fixed angle on arena rig ([combat presentation](02-systems/combat-presentation.md))
+- `BattleCameraRig` — fixed angle on arena rig; `NudgeZoomToTarget` on action commit + enemy target pick; `BattleCameraFocusPolicy` ([ADR 046](../decisions/046-combat-arena-plates-camera.md) · [combat presentation](02-systems/combat-presentation.md))
 - `SkillDefinition.presentation`: `Fixed` | `Cinematic` | `CinematicQTE`
 - `Fixed` — VFX at slots; optional subtle zoom to primary target, then reset
 - `Cinematic` / `CinematicQTE` — `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))

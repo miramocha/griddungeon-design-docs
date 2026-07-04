@@ -10,7 +10,7 @@ tags:
 
 How to replace or extend **party-facing HUD plates** — exploration strip, combat party roster, and (optionally) the map party glyph — without moving roster rules, combat planning, or phase authority into UI.
 
-Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no single swap port** (`ISkillUsePickerView`). Launch ships imperative presenters built on a shared **`PartyFormationGridView`** (8 fixed cells, `PartyFormationSlotBinder` plates). **`CombatRosterView`** is **enemy-only**. You fork or replace those views while keeping the same **data sources** and **events** documented in [UI event contract](ui-event-contract.md).
+Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no single swap port** (`ISkillUsePickerView`). Launch ships imperative presenters built on a shared **`PartyFormationGridView`** (8 fixed cells, `PartyFormationSlotBinder` plates). **Enemy HP plates** use centralized **`CombatArenaPlateView`** (`IEnemyFormationRoster`). You fork or replace those views while keeping the same **data sources** and **events** documented in [UI event contract](ui-event-contract.md).
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — reference types under `Assets/Scripts/UI/Views/`.
 
@@ -90,7 +90,7 @@ flowchart TB
     PFV[PartyFormationToolkitView]
     MPM[MapPartyMarkerPresenter]
     PFG["PartyFormationGridView<br/>single instance"]
-    CRV["CombatRosterView<br/>enemy only"]
+    CAP["CombatArenaPlateView<br/>IEnemyFormationRoster"]
   end
 
   PR -->|pull CoreSlots| PF
@@ -100,8 +100,8 @@ flowchart TB
   PF --> PFP
   PFP --> PFG
   CHV --> PF
+  CHV --> CAP
   PFV --> PF
-  CHV --> CRV
   CHV -->|commands| CC
 ```
 
@@ -109,7 +109,7 @@ flowchart TB
 |-------|------|----------------|
 | **Core / Runtime** | `Combatant` stats, formation indices (`PartyFormationLayout`), `ValidTargetCalculator`, queue/back, battle copy | UITK layout, focus chrome |
 | **`PartyFormationGridView`** | 8 fixed party cells, plate bind, highlight modifiers | When to transition phase or submit actions |
-| **`CombatRosterView`** | Enemy slot build (dynamic, no empty placeholders) | Party formation |
+| **`CombatArenaPlateView`** | Enemy slot plates (dynamic, no empty placeholders); `IEnemyFormationRoster` | Party formation |
 | **Phase views** | Subscribe to events; call `BindParty` / `Set*Highlight` | Duplicate damage math or AGI order |
 
 **Do not** add `GridDungeon.UI` references to `GridDungeon.Runtime`. Custom party UI lives in UI (or your asmdef referencing Runtime); wire from `ExplorationHudView` / `CombatHudView` bootstrap or your own `UIDocument`.
@@ -140,10 +140,11 @@ UXML/USS: `PartyFormationFloater.uxml`, `PartyFormationFloater.uss` — one scen
 | `BindParty(Combatant?[] core, Combatant?[] aux, PartyFormationBindOptions)` | All party surfaces — empty slots stay visible |
 | `RefreshCombatantStats(Combatant c)` | In-place HP/MP/dead class after bind |
 
-Enemy roster remains `CombatRosterView` (`BindEnemyFormation` only).
+Enemy plates use **`CombatArenaPlate`** centralized service — not embedded in `CombatHud.uxml`.
 
-Path: `Assets/Scripts/UI/Views/CombatRosterView.cs`  
-Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — enemy only)
+Path: `Assets/Scripts/UI/Views/CombatArenaPlateView.cs`  
+Facade: `CombatArenaPlate.cs`  
+Styles: `Assets/UI/Screens/Shared/CombatArenaPlate.uss` (`.combat-arena-plate__*` — enemy only; no MP)
 
 ### Interaction & combat chrome
 
@@ -161,7 +162,7 @@ Styles: `Assets/UI/Screens/Combat/CombatHud.uss` (`.combat-roster__*` — enemy 
 
 Party plates use BEM `party-formation-slot` (+ `__header`, `__stat`, `__footer`, …) from `PartyFormationSlot.uss`. Empty cells keep the shell with `--empty` (never `display:none`). Index map: `PartyFormationLayout` (Core).
 
-Enemy slots remain `combat-roster__slot*` in `CombatHud.uss` — built by `CombatRosterView.BuildSlot` (no MP on enemies).
+Enemy slots use BEM `combat-arena-plate__slot*` in `CombatArenaPlate.uss` — built by `CombatArenaPlateView` (no MP on enemies).
 
 **Planning highlight rule:** During a **core command turn**, gold **acting** highlight belongs on the **party roster** slot for that core, **not** on the AGI turn-order strip ([combat § Turn order strip](../02-systems/combat.md#turn-order-strip-agi-queue-ui)). Strip highlight is for auto/AI/enemy turns.
 
@@ -266,25 +267,51 @@ Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRail
 
 ---
 
+## Enemy arena plates (`CombatArenaPlate`)
+
+### Service wiring
+
+Enemy HP chrome is a **centralized** `UIDocument` @ sort **15** — not a host inside `CombatHud.uxml`. Bootstrap: `DevSceneComposition.WireCombatArenaPlate`.
+
+| API | Role |
+|-----|------|
+| `CombatArenaPlate.EnemyRoster` | `IEnemyFormationRoster` for `CombatTargetSelectionCoordinator` |
+| `BindEnemyFormation(Combatant?[])` | Occupied slots only; front/back row layout |
+| `SyncTargetableEnemyPlates(validIds)` | Reveal all valid enemies during target pick |
+| `RevealSlotForHpBeat(slotIndex)` | Transient plate on reactive HP beat |
+| `HideImmediate()` | Ally targeting + idle — must not block party floater pointer |
+
+### Shipped wiring
+
+- `CombatHudView` resolves `CombatArenaPlate.EnemyRoster` → `m_enemyRoster`.
+- `CombatHudReactivePresenter` calls `RevealSlotForHpBeat` on enemy HP beats.
+- `CombatTargetSelectionCoordinator` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and **`IEnemyFormationRoster`** for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
+
+### Replace strategies
+
+| Approach | Notes |
+|----------|-------|
+| **Reskin plates** | Change `CombatArenaPlate.uss` or fork slot builder in `CombatArenaPlateView` |
+| **Custom enemy panel** | Fork `CombatArenaPlatePresenter` / view; keep `IEnemyFormationRoster` surface for coordinator |
+| **Full combat HUD fork** | Must preserve reveal policy (targeting + HP beat only) and ally-target `HideImmediate` |
+
+---
+
 ## Combat party roster
 
 ### UXML hooks
 
-`Assets/UI/Screens/Combat/CombatHud.uxml`:
-
-| `name` | Role |
-|--------|------|
-| `enemy-roster-front` / `enemy-roster-back` | Enemy row containers (`CombatRosterView`) |
+`Assets/UI/Screens/Combat/CombatHud.uxml` — **no** `enemy-roster` hosts. Center column: log preview → arena spacer → synchro only.
 
 Party roster uses the **shared** `PartyFormationFloater.Grid` (combat-center USS inset), not a host inside combat UXML.
 
-Replace party only by forking `PartyFormationFloaterPresenter` or injecting a custom `PartyFormationGridView` via the facade. Enemy roster stays `m_enemyRoster` in `CombatHudView`.
+Replace party only by forking `PartyFormationFloaterPresenter` or injecting a custom `PartyFormationGridView` via the facade. Enemy plates stay on `CombatArenaPlate` facade.
 
 ### Shipped wiring (`CombatHudView`)
 
-- Resolves `PartyFormationFloater.Grid` → `m_partyRoster` + `m_enemyRoster`; `SetCombatSlotClickHandler(OnRosterSlotClicked)` for planning/targeting.
+- Resolves `PartyFormationFloater.Grid` → `m_partyRoster`; `CombatArenaPlate.EnemyRoster` → `m_enemyRoster`; `SetCombatSlotClickHandler(OnRosterSlotClicked)` for planning/targeting.
 - Subscribes to `CombatController`: `OnQueueRebuilt`, `OnTurnStart`, `OnCommandTargetChanged`, `OnPartyCommandsChanged`, `OnTargetingChanged`, `OnActionResolved`, `BattleEnded`, etc.
-- `CombatTargetSelectionCoordinator` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and `CombatRosterView` for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace party DOM, implement the same highlight/focus surface or fork `CombatTargetSelectionCoordinator`.
+- `CombatTargetSelectionCoordinator` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and **`IEnemyFormationRoster`** for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)) — if you replace party DOM, implement the same highlight/focus surface or fork `CombatTargetSelectionCoordinator`.
 
 ### Combat events (party roster)
 
@@ -311,7 +338,7 @@ Full table: [UI event contract — Combat](ui-event-contract.md#combat-phase).
 | Approach | Notes |
 |----------|-------|
 | **Reskin slots** | Change `PartyFormationSlot.uss` or fork `PartyFormationSlotBinder` |
-| **Custom party panel only** | Replace `m_partyRoster` (`PartyFormationGridView`); keep `m_enemyRoster` + `CombatTargetSelectionCoordinator` unchanged |
+| **Custom party panel only** | Replace `m_partyRoster` (`PartyFormationGridView`); keep `CombatArenaPlate.EnemyRoster` + `CombatTargetSelectionCoordinator` unchanged |
 | **Full combat HUD fork** | Duplicate `CombatHudView` event subscriptions; must preserve acting-on-roster vs strip rule and stale-target styling at launch parity |
 
 Motion (HP lerp, hit flash, synchro bar): `CombatHudReactivePresenter` — optional to reuse or replace; does not change combat rules.
@@ -367,7 +394,8 @@ Manual: **F3** dev combat — acting highlight on **party roster** for core turn
 | `PartyFormationGridViewTests` | Empty cells, bind, combat highlights |
 | `PartyFormationFloaterPresenterTests` | Context priority, reveal, exploration bind |
 | `PartyFormationFloaterViewTests` | Collapse / picking mode |
-| `CombatRosterViewTests` | Enemy bind only |
+| `CombatArenaPlateViewTests` | Enemy bind, reveal, anchor sync |
+| `CombatArenaOverlayAnchorTests` | World → panel projection |
 | `PartyFormationCoordinatorTests` | Core swap / move semantics |
 | `ExplorationPartyStripFormatterTests` | Status summary strings |
 | `CombatTargetSelectionCoordinatorTests` | Roster focus + `CombatController` targeting |

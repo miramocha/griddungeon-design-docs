@@ -198,7 +198,7 @@ documentRoot.pickingMode = PickingMode.Ignore;
 combatHud.pickingMode = PickingMode.Ignore;
 arenaSpacer.pickingMode = PickingMode.Ignore;
 logPreviewRow.pickingMode = PickingMode.Position;
-// Enemy slots: CombatRosterView.ApplySlotPickingMode when targetable
+// Enemy slots: CombatArenaPlateView.ApplySlotPickingMode when targetable
 ```
 
 **Shipped in:** `CombatHudView.ConfigurePassThroughPicking`, `PartyFormationFloaterPresenter.ConfigurePassThroughPicking`.

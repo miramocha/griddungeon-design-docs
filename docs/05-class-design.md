@@ -274,9 +274,9 @@ Lives in `GridDungeon.UI`. UI Toolkit documents + C# presenters. **Reactive HUD 
 |---------|----------------|
 | Exploration HUD | `ExplorationHudView`, `ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView` |
 | Map markers | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapGridMarkerAnimator` |
-| Combat HUD | `CombatHudView`, `CombatHudReactivePresenter`, `CombatRosterView`, `CombatHudLogView` |
+| Combat HUD | `CombatHudView`, `CombatHudReactivePresenter`, `CombatArenaPlateView`, `CombatHudLogView` |
 | Party menu | `PartyMenuOverlayView`, `PartyFormationFloaterPresenter`, `PartyFormationGridView` |
-| Shared services | `ItemListInventoryPresenter`, `InputHintPresenter`, `CommandRailPresenter` — [centralized UI services](04-dev/centralized-ui-services.md) |
+| Shared services | `ItemListInventoryPresenter`, `InputHintPresenter`, `CommandRailPresenter`, `CombatArenaPlatePresenter` — [centralized UI services](04-dev/centralized-ui-services.md) |
 | Global input hints | `InputHints`, `TabbedPickerRailHints` |
 
 **Exploration UI authority:** [exploration UI](02-systems/exploration-ui.md). **Combat UI authority:** [combat](02-systems/combat.md). **Custom pickers:** [custom party UI](04-dev/custom-party-ui.md), [custom skill picker UI](04-dev/custom-skill-picker-ui.md).

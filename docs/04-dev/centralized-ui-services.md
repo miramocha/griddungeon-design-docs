@@ -37,6 +37,7 @@ flowchart TB
     MM[MinimapPanel sort 0]
     EXP[ExpandedMap sort 100]
     PF[PartyFormationFloater sort 10 / 260]
+    CAP[CombatArenaPlate sort 15]
     WH[WalletHudPresenter sort 27]
     PM[PartyMenuOverlay sort 250]
     IH[InputHintPresenter sort 300]
@@ -46,6 +47,7 @@ flowchart TB
   MM --> PF
   EXP --> PF
   CH --> PF
+  CH --> CAP
   HH --> WH
   PM --> WH
   PM --> IH
@@ -123,6 +125,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 |----------------|----------|--------|
 | **0** | Exploration minimap (side panel) | `MinimapPanelView` |
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
+| **15** | Combat arena enemy plates (transient HP above slot anchors) | `CombatArenaPlatePresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
 | **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `SetPartyMenuRailVisible` |
@@ -278,7 +281,7 @@ m_combatHud.RestoreInputHint();
 
 ### Party formation floater — `PartyFormationFloaterPresenter` + `PartyFormationFloater`
 
-**Job:** One **party formation grid** shared by exploration strip, combat roster (center column), and formation-edit dock in party menu. Enemy roster stays on `CombatRosterView` inside `CombatHud` ([custom party UI](custom-party-ui.md)).
+**Job:** One **party formation grid** shared by exploration strip, combat roster (center column), and formation-edit dock in party menu. **Enemy HP plates** live on **`CombatArenaPlatePresenter`** (sort **15**) — transient above arena slot anchors, not embedded in `CombatHud` ([ADR 046](../../decisions/046-combat-arena-plates-camera.md) · [custom party UI](custom-party-ui.md#enemy-arena-plates-combatarenaplate)).
 
 | Type | Path | Notes |
 |------|------|-------|
@@ -318,6 +321,45 @@ PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: fal
 ```
 
 Integrator detail (replace grid, events, combat chrome): [custom party UI](custom-party-ui.md).
+
+---
+
+### Combat arena plate — `CombatArenaPlatePresenter` + `CombatArenaPlate`
+
+**Job:** Transient **enemy HP plates** tracked to battle-arena slot transforms — reveal during enemy targeting and HP beats; hidden idle. Replaces the embedded top-center `enemy-roster` on `CombatHud` ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)).
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/CombatArenaPlatePresenter.cs` | `sortingOrder` **15**; full-bleed overlay; pass-through picking when hidden |
+| Facade | `Assets/Scripts/UI/Views/CombatArenaPlate.cs` | `EnemyRoster`, `SyncTargetableEnemyPlates`, `RevealSlotForHpBeat`, `HideImmediate` |
+| View | `Assets/Scripts/UI/Views/CombatArenaPlateView.cs` | Implements `IEnemyFormationRoster` |
+| Anchor | `Assets/Scripts/UI/CombatArenaOverlayAnchor.cs` | `WorldToScreenPoint` → panel coords each frame while revealed |
+| UXML / USS | `Assets/UI/Screens/Shared/CombatArenaPlate.uxml`, `CombatArenaPlate.uss` | Per-slot plates; PopIn via `CentralizedUiPresentation` ([ADR 039](../../decisions/039-uitk-dotween-show-hide.md)) |
+| Bootstrap | `DevSceneComposition.WireCombatArenaPlate` | Child of `GameState`; ref on `GameState` + `CombatScenePresenter` |
+
+**Reveal policy**
+
+| Trigger | API | Plates |
+|---------|-----|--------|
+| Enemy target pick | `SyncTargetableEnemyPlates(validIds)` | All valid living enemies |
+| HP beat (damage/heal/death) | `RevealSlotForHpBeat(slotIndex, holdSec)` | Affected slot (~0.28s default) |
+| Ally target pick | `HideImmediate()` | None — full-bleed layer must not block party floater LMB |
+| Idle / planning / turn end | `HideImmediate()` or natural dismiss | None |
+
+**Targeting coordination:** `CombatHudView.TargetPicker` calls `PartyFormationFloater.SetRevealed(!selectingEnemies)` so the party floater collapses during enemy targeting. `CombatTargetSelectionCoordinator` binds `CombatArenaPlate.EnemyRoster` for enemy highlights and pointer confirm.
+
+```csharp
+// Reactive beat after enemy HP change
+CombatArenaPlate.RevealSlotForHpBeat(slotIndex);
+
+// Enter enemy targeting
+CombatArenaPlate.SyncTargetableEnemyPlates(validEnemyIds);
+
+// Switch to ally targeting — snap-hide arena plates
+CombatArenaPlate.HideImmediate();
+```
+
+Integrator detail: [custom party UI § Enemy arena plates](custom-party-ui.md#enemy-arena-plates-combatarenaplate).
 
 ---
 
