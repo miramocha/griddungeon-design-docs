@@ -1,18 +1,12 @@
 # Editor Agent test — examples
 
-## By ticket type
+## By ticket type (handoff — use `-Category` only)
 
 ### Combat simulator change
 
 ```powershell
 .\tools\request-compile-status.ps1
 .\tools\request-test-status.ps1 -Category Combat
-```
-
-Diff touches `DamageCalculatorTests.cs` only:
-
-```powershell
-.\tools\request-test-status.ps1 -TestName GridDungeon.Tests.Combat.DamageCalculatorTests
 ```
 
 ### UI picker / UITK view
@@ -34,6 +28,10 @@ Diff touches `DamageCalculatorTests.cs` only:
 .\tools\request-test-status.ps1 -Category GameFlow
 ```
 
+### Editor / agent package tests
+
+Package tests live under `Miraluna.Editor.Agent.Tests`. Prefer **Test Runner → Edit Mode** on that assembly, or `-Category Content` if wired — do **not** use `-Fixture AgentActionDtoTests` for agent handoff.
+
 ## Failure triage
 
 Exit **1** — script prints failures; also open `Logs/last-test.json`:
@@ -51,7 +49,7 @@ Exit **1** — script prints failures; also open `Logs/last-test.json`:
 }
 ```
 
-- Fix test or production code; re-run same command.
+- Fix test or production code; re-run the same `-Category`.
 - If failure is unrelated flake, note in PR — do not claim full domain green without re-run.
 
 Exit **3** — Unity not claiming:
@@ -59,7 +57,7 @@ Exit **3** — Unity not claiming:
 1. Confirm Editor focused on `griddungeon-game`
 2. Check **Package Manager** shows `com.miraluna.editor-agent`
 3. Menu smoke: **Tools → Miraluna → Request Test Run**
-4. Retry CLI
+4. Retry CLI with `-Category`
 
 Exit **2** — timeout on large domain:
 
@@ -67,7 +65,19 @@ Exit **2** — timeout on large domain:
 .\tools\request-test-status.ps1 -Category UI -TimeoutSeconds 900
 ```
 
-Or narrow to fixture via `-TestName`.
+Stay on `-Category` — do not narrow to `-Fixture` / `-Test` for handoff (brittle / can hang).
+
+## Local debug only (not agent handoff)
+
+User explicitly iterating on one class or method:
+
+```powershell
+.\tools\list-edit-mode-tests.ps1
+.\tools\request-test-status.ps1 -Fixture DamageCalculatorTests
+.\tools\request-test-status.ps1 -Test DamageCalculatorTests.ApplyDamage_SubtractsHp
+```
+
+Agents skip these unless the user asks.
 
 ## Editor closed (exception path)
 

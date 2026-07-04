@@ -17,7 +17,7 @@ Batch mode fails with *"another Unity instance is running with this project open
 
 ## Do instead
 
-1. **Edit Mode (preferred for agents):** `tools/request-test-status.ps1` with optional `-Category <domain>` — runs tests inside the **open** Editor via [`com.miraluna.editor-agent`](../../com.miraluna.editor-agent). Unified entry: `tools/request-agent.ps1 -Action Test -Category Combat`.
+1. **Edit Mode (preferred for agents):** follow **editor-agent-test** skill — `tools/request-test-status.ps1 -Category <Domain>` only for handoff ([`.cursor/skills/editor-agent-test/SKILL.md`](../skills/editor-agent-test/SKILL.md)). Do **not** use `-Fixture` / `-Test` for agent verification (brittle). Unified entry: `tools/request-agent.ps1 -Action Test -Category Combat`.
 2. **Manual:** **Window → General → Test Runner → Edit Mode** — expand `Tests → <Domain> → <Fixture>`. Domain folders: [Assets/Tests/README.md](../../Assets/Tests/README.md) in griddungeon-game.
 3. **Play Mode:** Test Runner UI or batch `-runTests -testPlatform playmode` with **Editor closed** only (not covered by Editor Agent).
 4. You may still **author or fix** test code under `Assets/Tests/`; agent verification for Edit Mode uses `request-test-status.ps1` when the Editor is open.

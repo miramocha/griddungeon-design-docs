@@ -23,8 +23,8 @@ Do not mark an exploration/combat issue done without at least one **automated** 
 ## Test plan (verified YYYY-MM-DD)
 
 ### Automated
-- [ ] Unity Test Runner → Edit Mode → `Tests` → `<Domain>` → `<TestClass>` — all green (name fixtures from the PR/diff; domain map in [Assets/Tests/README.md](../../Assets/Tests/README.md))
-- [ ] (optional) Category filter e.g. `Combat` — see `TestCategories.cs`
+- [ ] Editor open: `.\tools\request-test-status.ps1 -Category <Domain>` — exit 0 (see **editor-agent-test** skill; domain from PR/diff)
+- [ ] (optional) Test Runner → Edit Mode → `Tests` → `<Domain>` → `<TestClass>` — all green when verifying manually
 - [ ] (optional) Play Mode / CI — note job or N/A
 
 ### Manual (Play Mode)
@@ -66,7 +66,7 @@ In test plans, list **`<Domain>` + fixture classes touched by the ticket`** (fro
 ## Agent / PR workflow
 
 1. **Before handoff:** format changed `.cs`, `.uxml`, and `.uss` per `format-before-handoff-and-commit.mdc` (CSharpier, Prettier, **`using` check** — missing + duplicate — on changed `.cs` in **griddungeon-game**).
-2. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules (expand `Tests → <Domain>` in Test Runner, or ask the user to).
+2. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules — **`-Category <Domain>` via editor-agent-test** (not `-Fixture` / `-Test` for handoff).
 3. When C# or Unity assets changed, delegate **fresh-reviewer** (`.cursor/agents/fresh-reviewer.md`) after commits on the branch and before close-out — diff + issue AC only; fix Blockers in follow-up commits (see **test-plan-grid-dungeon** skill).
 4. After implementation, **post the filled template** to the issue via `gh issue comment` (or PR body).
 5. If the user verified in-editor, incorporate their notes; do not invent results you did not run.
