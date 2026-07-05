@@ -19,6 +19,22 @@ Curated titles for **future design and tone checks**. **Launch authority** stays
 |------|---------------------|
 | ***Etrian Odyssey*** (series) | Auto-map (no player drawing), FOEs, strata/floors, guild party, AGI combat, hub between dives, EO Union-style team burst → [Synchro Protocol](02-systems/synchro-protocol.md) |
 
+### Etrian Odyssey — character status & equipment UI
+
+**Scratchpad screenshot:** [*Etrian Odyssey IV* — Protector status screen](refs/party-character-ui.md#1--etrian-odyssey-iv--character-status-protector) ([party / character UI refs](refs/party-character-ui.md)).
+
+| EO beat | What EO does | Grid Dungeon |
+|---------|--------------|--------------|
+| **Single-character inspect** | Full-screen status: class, level, XP bar, stats, worn gear, portrait | Party menu **Equipment** / **Formation** → centralized **`CharacterDetail`** (stats + five text worn rows) + **formation floater** for member pick |
+| **Worn gear rows** | Icon + name per slot (weapon + three armor lines) | Text rows: `weapon` / `head` / `body` / `legs` / `accessory` — [items & inventory § Equipment pane](02-systems/items-and-inventory.md#equipment-pane) |
+| **Stat presentation** | HP/TP gauges, attribute bars, derived ATK/DEF/MAT/MDF grid | Compact two-line stats (HP/MP + STR/TEC/AGI/VIT/LUC); derived combat grid **not** on inspect at launch |
+| **Subclass pills** | Main + sub class on status | No subclass at launch |
+| **Force gauge** | Per-character Force % on status (EO IV+) | **Synchro Charge** on combat HUD only — not character inspect |
+
+**Borrow from EO (evaluate):** equipment **readability** (icon + short name), stat **tiering** (resources → bases → derived), strong class header + optional portrait.
+
+**Do not copy blindly:** EO three-armor row layout (we use head/body/legs), Force on status pane, L/R character switch without our floater contract.
+
 ### Etrian Odyssey IV+ — enemy formation (locked at launch)
 
 From **Etrian Odyssey IV** onward, enemy lines use the same **front + back row** grid as the player party layout (not a single enemy row). Grid Dungeon adopts this cap at launch ([ADR 015](../decisions/015-mvp1-combat.md)).
@@ -41,7 +57,7 @@ From **Etrian Odyssey IV** onward, enemy lines use the same **front + back row**
 | **Service loop** | Guild, shop, hospital, inn/save, then **re-enter** stratum | launch menu tree: Explorers Guild, Navigator Office, shop, hospital, inn ([hub table](02-systems/hub-and-services.md#hub-locations-launch-slice)) |
 | **No marathon in the maze** | Heal, equip, save at hub; push depth deliberately | Inn primary save; no labyrinth save at launch; Return thread / gate stairs up |
 | **Item bag** | Fixed slots; categorized browse in EO Nexus–style titles | Fixed **party bag** (default 30 slots), **category tabs** (All / Consumables / Equipment) — [items & inventory](02-systems/items-and-inventory.md) · [ADR 036](../decisions/036-party-inventory-model.md) |
-| **Stratum entry** | Pick stratum / floor from hub or gate rules | **Enter Stratum** from hub; S1 gate spawn; S2+ warp gates ([dungeons § entry](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
+| **Stratum entry** | Pick stratum / floor from hub or gate rules | Hub **Depart**; S1 gate spawn; S2+ warp gates ([dungeons § entry](03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)) |
 | **Hub navigation (EO titles vary)** | Older: **menu / icon** hubs; newer (e.g. Nexus): **walkable** 3D districts | **Menu-first** (EO classic) — **no** avatar walk; later **camera pan** on root-menu focus ([hub environment](02-systems/hub-and-services.md#hub-environment-presentation)) |
 | **Presentation** | Often **static** illustration or simple 3D with direct facility pick | Full-screen 3D backdrop + UI overlay; pans **later** |
 
@@ -59,7 +75,7 @@ MSK informs **feel** and **presentation bar**, not launch mechanics. Compare pro
 |----------|---------------|--------------|
 | **Base between tower floors** | **Hub / jail base** after nightmare dives — facilities, story, breathing room | Same macro loop as EO hub ([hub macro loop](02-systems/hub-and-services.md#macro-loop-eo-aligned)) |
 | **Dungeon vs base contrast** | FPV **nightmare** labyrinth vs safer **base** with readable spaces | Exploration FPV grid + **non-walkable** guild town (menu + backdrop) |
-| **Place readability** | Distinct **zones** in base (shop, clinic, etc.) even when navigation is not full open-world | Later: root-menu focus **pans** camera to shop / hospital / guild anchors — **one** shared gate for all **Enter Stratum** rows |
+| **Place readability** | Distinct **zones** in base (shop, clinic, etc.) even when navigation is not full open-world | Later: root-menu focus **pans** camera to shop / hospital / guild anchors — **one** shared gate for all **Depart** rows |
 | **Combat / UI read** | Strong hit feedback, ailments, flashy skills | Reactive blocking HUD ([tech notes § UI reactivity](04-tech-notes.md#ui-reactivity)); sparse cinematics ([combat presentation](02-systems/combat-presentation.md)) |
 | **Burst fantasy** | Transform / blood / rage spikes | **Synchro Charge** + Navigator only — MSK burst is **feel reference**, not a second meter ([ADR 006](../decisions/006-union-team-bar.md)) |
 

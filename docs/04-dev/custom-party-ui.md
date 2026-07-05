@@ -229,7 +229,7 @@ Reference: `PartyFormationFloaterPresenter.cs`, `PartyFormationExplorationSync.c
 
 ## Formation menu (party pause)
 
-Hub / exploration pause → **Formation** section shows centered **`CharacterDetailView`** (`PartyFormationInspect` — read-only worn gear) **and** the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**).
+Hub / exploration pause → **Formation** section shows right-docked **`CharacterDetailView`** (`PartyFormationInspect` — read-only worn gear) **and** the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**).
 
 | Step | Behaviour |
 |------|-----------|
@@ -248,11 +248,13 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 
 ## Equipment menu (party pause)
 
+**Visual reference (scratchpad):** [EO IV character status](../refs/party-character-ui.md) — `CharacterDetail` single-column stats + equip rows (3D character preview is a separate surface, not in this modal).
+
 **Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
 
 | Step | Behaviour |
 |------|-----------|
-| **Z** on Equipment (pane reveal) | Center `CharacterDetail` + floater dock (sort **260**). |
+| **Z** on Equipment (pane reveal) | Right-docked `CharacterDetail` + floater dock (sort **260**). |
 | **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. |
 | **W/S** (slots engaged) | Move worn-slot focus. |
