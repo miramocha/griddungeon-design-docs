@@ -252,6 +252,7 @@ Every row below needs a **visible** reaction (DOTween or USS transition). Pair w
 | Valid targeting | Enemy/portrait **outline pulse** on valid slots ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) | No — selection is interactive; pulse loops until pick |
 | Stale queued target | Dashed roster frame + tooltip *Target down — will retarget* ([#65](https://github.com/miramocha/griddungeon-game/issues/65)) | No — informational during planning / playback |
 | Summon auto-turn | Aux portrait highlight → VFX → log ([summons & guests](summons-and-guests.md)) | Yes — next queue entry |
+| Action committed | Top-center action name via `ActionCallout` (transparent overlay) | Yes — bundled with wind-up / resolve beat |
 | FOE join (optional) | New enemy chevron **slides in** on strip next round ([chain FOE](chain-foe-battle.md)) | Yes — next round start |
 | Combat log line | Newest entry **fade/slide in** on **preview** line; full history in log modal ([#181](https://github.com/miramocha/griddungeon-game/issues/181)) | Bundled with the beat above (same lock) |
 
