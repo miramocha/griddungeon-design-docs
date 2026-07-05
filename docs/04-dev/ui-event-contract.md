@@ -176,7 +176,8 @@ Map panel: also subscribe `gs.Map.RevealChanged`, `gs.Foes.OnFoePatrolMoved` —
 | `OnPartyCommandsChanged` | `Action` | Queue assign/remove/back | Queued action labels |
 | `OnTargetingChanged` | `Action` | Enter/exit target pick | Valid target highlights |
 | `OnPlanningPromptChanged` | `Action` | Planning HUD copy changed | Command panel prompt |
-| `OnActionResolved` | `Action<CombatActionResult>` | One action resolved | HP/status/death; log line; synchro delta |
+| `OnActionCommitted` | `Action<Combatant, CombatAction>` | Command begins resolving (before wind-up / resolve) | `ActionCallout.ShowForCombatAction`; attacker plate highlight |
+| `OnActionResolved` | `Action<CombatActionResult>` | One action resolved | HP/status/death; log line; synchro delta; `ActionCallout.Hide` |
 | `OnProtocolResolved` | `Action<ProtocolResolveResult>` | Protocol finished | Log; synchro reset; hit flashes |
 | `BattleEnded` | `Action<BattleResult>` | Fight over | Clear HUD; gate reset |
 

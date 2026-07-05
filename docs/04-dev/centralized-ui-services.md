@@ -38,6 +38,7 @@ flowchart TB
     EXP[ExpandedMap sort 100]
     PF[PartyFormationFloater sort 10 / 260]
     CAP[CombatArenaPlate sort 15]
+    AC[ActionCallout sort 50]
     WH[WalletHudPresenter sort 27]
     PM[PartyMenuOverlay sort 250]
     IH[InputHintPresenter sort 300]
@@ -48,6 +49,7 @@ flowchart TB
   EXP --> PF
   CH --> PF
   CH --> CAP
+  CH --> AC
   HH --> WH
   PM --> WH
   PM --> IH
@@ -131,10 +133,11 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `SetPartyMenuRailVisible` |
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
-| **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
+| **50** | Action callout (top action banner, transparent) | `ActionCalloutPresenter` |
 | **100** | Exploration expanded map overlay | `ExpandedMapOverlayView` |
 | **150** | Story event VN modal | `StoryEventPresenter` |
 | **175** | Notice overlay (loot, skill unlock, …) | `NoticeOverlayPresenter` |
+| **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **252** | Confirm modal (yes/no — exit, quit to title, …) | `ConfirmModalPresenter` |
@@ -506,6 +509,28 @@ m_gameState.NoticeOverlay?.TryShowLoot(loot, id => m_gameState.Content.GetItem(i
 
 // UI layer / hub (when wired)
 Notice.TryShowSkillUnlock(gameState, "Protocol Strike");
+```
+
+---
+
+### Action callout — `ActionCalloutPresenter` + `ActionCallout`
+
+**Job:** Phase-agnostic **top-edge action banner** — large action name, transparent full-screen host (no scrim). Pop-in on show; auto-hide optional via `holdSeconds`. First consumer: combat AGI playback on `OnActionCommitted`.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/ActionCalloutPresenter.cs` | `sortingOrder` **50**; `IActionCalloutService`; `pickingMode.Ignore` on root |
+| Facade | `Assets/Scripts/UI/Views/ActionCallout.cs` | `Show`, `ShowForCombatAction`, `Hide`, `HideImmediate` |
+| Runtime API | `Assets/Scripts/Runtime/UI/IActionCalloutService.cs` | Registered on `GameState.ActionCallout` |
+| UXML / USS | `Assets/UI/Screens/Shared/ActionCallout.uxml`, `ActionCallout.uss` | BEM `action-callout-*`; **no** `hud-overlay` dim |
+| Bootstrap | `DevSceneComposition.WireActionCallout` | Child `ActionCallout` GO under `GameState` |
+
+**Publishers (launch):** `CombatHudReactivePresenter` on `OnActionCommitted` / `OnActionResolved` / `OnProtocolResolved`.
+
+```csharp
+ActionCallout.Show("Move north", holdSeconds: 1.2f);
+ActionCallout.ShowForCombatAction(action, contentDatabase, holdSeconds);
+ActionCallout.Hide();
 ```
 
 ---
