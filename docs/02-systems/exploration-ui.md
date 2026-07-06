@@ -225,7 +225,9 @@ Closing the menu after equipment changes refreshes the exploration **party strip
 
 **Formation:** core slot swap via shared `PartyFormationFloaterView` — bottom 2×4 grid floater (exploration strip + formation menu; slides off-screen when irrelevant). Bind copy on global `InputHints`. **Deferred:** **Skills** (ADR 034), **Tutorial codex** ([ADR 029](../../decisions/029-guided-tutorial.md)).
 
-Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [input bindings](input-bindings.md).
+Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [input bindings](input-bindings.md) · [ADR 047](../../decisions/047-party-menu-3d-stage.md) (3D hex stage behind menu).
+
+**3D stage:** While the menu is open, `PartyMenuStagePresenter` shows stashed `PlayerCharacter_Default` instances on a hex ring with Cinemachine overview / orbit ([custom party UI § 3D stage](../04-dev/custom-party-ui.md#party-menu-3d-stage)). **Hub:** town backdrop hides when hub environment is active. **Exploration:** `DungeonView` hides (floor art stays loaded); minimap and party strip follow `ExplorationMapCoordinator` / `ExplorationHudView` party-menu chrome rules; FPV restores on close. Combat never activates the stage.
 
 When the menu is open, `InputRouter` unbinds exploration movement. Quit confirm copy stays on the pane body (not the global hint strip).
 

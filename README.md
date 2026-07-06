@@ -181,6 +181,7 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 | [043 — TWC FPV presentation](decisions/043-twc-fpv-presentation-layer.md) | Accepted | TileWorldCreator runtime mesh backend |
 | [045 — Combat Formation Switch](decisions/045-combat-formation-switch.md) | Accepted | Turn-cost pick-two slot swap (EO II); [game #378](https://github.com/miramocha/griddungeon-game/issues/378) |
 | [046 — Combat arena plates + camera](decisions/046-combat-arena-plates-camera.md) | Accepted | Transient enemy HP plates @ sort 15; `battlePrefab` spawn; camera nudge on commit; [game #384](https://github.com/miramocha/griddungeon-game/issues/384) |
+| [047 — Party menu 3D stage](decisions/047-party-menu-3d-stage.md) | Accepted | Hex backdrop + CM orbit; stash lifecycle; VRM LookAt on focus; [game #400](https://github.com/miramocha/griddungeon-game/issues/400) |
 
 ## Resolved
 
