@@ -14,8 +14,8 @@ tags:
 ```
 [New game] Stratum 1 movement tutorial on B1F (no combat) → gate stairs → hub
     → Hub: recruit 6 core, Navigator, equip (Stratum 1 Act 2)
-    → Enter Stratum 1 at B1F gate → explore B1F–B3F
-[Loop] Hub → enter stratum at beginning (S1 gate; S2+ warp gate when unlocked) → explore → fight → loot
+    → **Depart** at B1F gate → explore B1F–B3F
+[Loop] Hub → **Depart** at stratum beginning (S1 gate; S2+ warp gate when unlocked) → explore → fight → loot
     → Retreat via first-floor gate stairs up (hub) / return item
     → Hub: heal, save → repeat (skill points anytime outside combat / story / cutscene — hub or labyrinth)
 [optional] Hub → Side expedition → non-strata map (sd01, …) → explore → fight → exit stairs → hub

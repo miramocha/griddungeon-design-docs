@@ -406,7 +406,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ## Input hint hard cut — hub → stratum (`InputHintPresenter` + `FloorTransitionPresenter`)
 
-**Symptom:** Global bind strip **snaps off** when leaving hub for stairs / Enter Stratum — no slide retract; strip may linger through first half of hub leave fade then vanish instantly.
+**Symptom:** Global bind strip **snaps off** when leaving hub for stairs / **Depart** — no slide retract; strip may linger through first half of hub leave fade then vanish instantly.
 
 **Cause:**
 
@@ -418,13 +418,13 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 **Fix (shipped):**
 
-1. **`HubHudView.OnEnterStratumClicked`** — `InputHints.Clear` when leave transition **starts** (slide retract with fade).
+1. **`HubHudView.OnDepartClicked`** — `InputHints.Clear` when leave transition **starts** (slide retract with fade).
 2. **`FloorTransitionPresenter`** — `InputHint.Hide()` not `HideImmediate()` (animated dismiss; no-op if already clearing).
 3. **`ExplorationMapCoordinator.OnFloorTransitionPresentationReleased`** — republish exploration copy (`MinimapPanelView.Show()` slide in).
 
 **Rule:** Floor-transition and other Runtime beat code must not `HideImmediate()` player-visible centralized chrome. Coordinate with phase owners per [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
-**Tests:** `InputHintPresenterTests` (settle, rapid swap during hide); manual F1 → Enter Stratum.
+**Tests:** `InputHintPresenterTests` (settle, rapid swap during hide); manual F1 → **Depart**.
 
 ---
 

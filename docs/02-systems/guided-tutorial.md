@@ -127,7 +127,7 @@ Trigger (campaign flag, cell script, combat tutorial phase)
 | `combat.command.flee` | Flee |
 | `combat.synchro_meter` | Synchro bar |
 | `hub.guild` | Guild menu row |
-| `hub.enter_stratum` | Enter Stratum row |
+| `hub.enter_stratum` | **Depart** hub row (tutorial coach) |
 
 ### Completion kinds
 

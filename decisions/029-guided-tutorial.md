@@ -93,7 +93,7 @@ While a **blocking** combat hint is active:
 
 **Story events vs codex:** Navigator **story** scenes ([ADR 028](028-story-visual-novel-events.md)) may optionally add a codex entry later — **not required for S1 unlock/outro in the default build**. Default-build codex content = **guided tutorial entries** from [s1-guided-tutorials](../docs/03-content/campaign/s1-guided-tutorials.md).
 
-**Hub Act 2:** guild / Enter Stratum coach hints **cut at launch** unless playtest fails ([stakeholder](#stakeholder-decisions-2026-05-23)).
+**Hub Act 2:** guild / **Depart** coach hints **cut at launch** unless playtest fails ([stakeholder](#stakeholder-decisions-2026-05-23)).
 
 ### 6. Page schema (draft)
 
@@ -162,7 +162,7 @@ Add new ids via ADR appendix or system doc amendment — no ad-hoc transforms in
 | **Later — S1 Act 1** | Paginated tutorial entries per [s1-guided-tutorials § Act 1](../docs/03-content/campaign/s1-guided-tutorials.md#act-1--movement-b1f); unlock codex rows on complete ([#88](https://github.com/miramocha/griddungeon-game/issues/88)) |
 | **Later — S1 B2F** | `s1_combat_guided_protocol` coach after `s1_synchro_protocol_unlock` (in addition to HUD gate) |
 | **Later — Codex UI** | Read-only replay — **Pause menu** row (`Esc`; exploration, combat, hub) |
-| **Later — Hub** | Guild / Enter Stratum coach only if playtest requires (was cut at launch) |
+| **Later — Hub** | Guild / **Depart** coach only if playtest requires (was cut at launch) |
 | **Deferred** | Map-key entry; full codex categories; story scenes in codex |
 | **Later** | S2+ entries, tile triggers, boss mechanic pages |
 

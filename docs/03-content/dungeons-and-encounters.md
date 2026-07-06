@@ -62,8 +62,8 @@ foe_spawns[], trap_table, gather_nodes[], stairs, quests
 
 | Stratum | **Warp gate on floor** | **Hub → labyrinth** | **Hub unlock** | **First-floor `stairsUp`** |
 |---------|------------------------|----------------------|----------------|---------------------------|
-| **`s1` (required slice)** | **None** | Act 1: cold start on B1F intro; Act 3+: **Enter Stratum 1** → **B1F gate** (stratum beginning) | Act 2 party ready (`S1_PARTY_READY`) — not a warp-gate tile | → **Hub** |
-| **`s2`+** | Yes — authored gate cell on **entrance floor** | **Enter Stratum** *N* only if gate unlocked → warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | → **Hub** |
+| **`s1` (required slice)** | **None** | Act 1: cold start on B1F intro; Act 3+: hub **Depart** → **B1F gate** (stratum beginning) | Act 2 party ready (`S1_PARTY_READY`) — not a warp-gate tile | → **Hub** |
+| **`s2`+** | Yes — authored gate cell on **entrance floor** | Hub **Depart** (*N*) only if gate unlocked → warp to gate (beginning) | Discover / story-unlock warp gate in prior stratum | → **Hub** |
 
 **Rule:** every hub dive starts at the stratum **beginning** (gate or warp gate on entrance floor). No resume at deepest floor, no gate stairs to a prior stratum—s depth.
 

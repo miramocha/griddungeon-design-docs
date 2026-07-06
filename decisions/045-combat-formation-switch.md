@@ -17,7 +17,7 @@ tags:
 
 Etrian Odyssey II lets the party **Switch** — spend a core’s turn to swap two formation slots mid-fight. Grid Dungeon’s hub **Formation** pane already uses pick-two slot UX on `PartyFormationFloater`; combat needs the same pattern as a **turn-cost command** queued in planning and resolved on the acting core’s AGI turn (like **Guard**).
 
-EO IV **row promote** ([#377](https://github.com/miramocha/griddungeon-game/issues/377) / ADR 044) may land in parallel; this ADR locks **Formation** command behavior and documents promote interaction.
+EO IV **row promote** ([#377](https://github.com/miramocha/griddungeon-game/issues/377) / ADR 044, **optional**) may land after Formation Switch; this ADR documents promote interaction when #377 ships.
 
 ## Decision
 
@@ -104,10 +104,10 @@ Document in tests: promote-then-switch and switch-then-promote on adjacent beats
 
 - [combat.md](../docs/02-systems/combat.md) — `Formation` in core command table
 - Implementation: [griddungeon-game #378](https://github.com/miramocha/griddungeon-game/issues/378)
-- Epic: [griddungeon-game #380](https://github.com/miramocha/griddungeon-game/issues/380)
+- Epic: [griddungeon-game #380](https://github.com/miramocha/griddungeon-game/issues/380) (closed — shipped [#378](https://github.com/miramocha/griddungeon-game/issues/378))
 
 ## Related
 
 - [Combat](../docs/02-systems/combat.md)
 - [Items & inventory — party formation](../docs/02-systems/items-and-inventory.md)
-- [ADR 044 — EO IV row targeting / promote](044-eo4-row-targeting-party-promote.md) (when authored)
+- [ADR 044 — EO IV row targeting / promote](044-eo4-row-targeting-party-promote.md)

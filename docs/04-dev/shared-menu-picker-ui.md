@@ -320,6 +320,9 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `PartyEquipmentSlots` | [X] Back · [Up/Down] Navigate |
 | `PartyFormationSwap` | [Z] Confirm · [X] Cancel · [Directional] Navigate — default when Formation pane is open (auto-engage on reveal) |
 | `PartyFormationEngage` | [Z] Confirm · [X] Back · [Directional] Navigate — after **X** backs out of swap mode while pane stays open |
+| `FieldItemUse` | [Z] Use · [X] Back · [Directional] Navigate — field item member pick (Inventory pane) |
+| `FieldItemInspectNoTarget` | [X] Back — heal item pick when no core can benefit (full HP party) |
+| `FieldSkillTarget` | [Z] Confirm · [X] Back · [Directional] Navigate — Use Skill member target pick |
 | `ForItemPickerEngage(backVerb)` | [Z] Confirm · [X] {backVerb} |
 | `ForItemPickerRows(multiTab, backVerb)` | [Z] Confirm · [X] {backVerb} · [Q/E] Tab · [Up/Down] Navigate — or [Z] Confirm · [X] {backVerb} · [Up/Down] Navigate when single tab |
 
@@ -616,6 +619,7 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 | Hub shop buy/sell | — | `PickerTabStripView` | `ItemListPickerView` via `ItemListInventory` | `HubShopStockCatalogBuilder` | `ItemListInventory` facade + `HubHudView` |
 | Party menu section | `PartyMenuShellToolkitView` | — | — | — | `PartyMenuInputHandler` |
 | Party inventory | — | ✓ | `ItemListPickerView` via `ItemListInventory` → `PartyInventoryBagView` | `InventoryBagDisplayBuilder` → mapper | `ItemListInventory.BagKeyboardView` |
+| Party field item member pick | — | — | — | `CharacterDetail` + floater `FieldItemUseDock` | `PartyMenuFieldItemUseFlow` / `FieldItemCharacterPicker` |
 | Party equipment display | — | — | — | `CharacterDetailView` via `CharacterDetail` facade | `IPartyEquipmentKeyboardView` |
 | Party equipment members (floater) | — | — | — | `PartyFormationFloater` grid focus | `PartyEquipmentFloaterToolkitView` |
 | Combat Item | — | ✓ (single tab) | `ItemListPickerView` via `ItemListInventory` → adapter | `CombatItemListPresentationBuilder` | `ItemListInventory.CombatItemInput` |

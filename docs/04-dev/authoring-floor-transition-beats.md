@@ -22,7 +22,7 @@ Shipped default beat: **`stairs_default`** — black void, a threshold door prop
 | Beat id | Typical trigger | Prefab |
 |---------|-----------------|--------|
 | `stairs_default` | B1F↔B2F↔B3F stairs (`TryChangeFloor`) | `stairs_default.prefab` |
-| `hub_enter_stratum` | Hub → Enter Stratum 1 (`BeginHubEnterTransition`) | Same prefab (catalog row) |
+| `hub_enter_stratum` | Hub → **Depart** (`BeginHubEnterTransition`) | Same prefab (catalog row) |
 | `hub_return_from_exploration` | B1F gate `^` → hub | Same prefab (optional row) |
 
 Unique beats per floor pair can be added later; override with catalog `leaveFloorKey` / `enterFloorKey` when needed.
@@ -234,7 +234,7 @@ If fades do not appear, re-run **Create Dev Bootstrap** so `PanelSettings` and `
 |------|--------|----------|
 | 1 | F2 B1F, walk to `v`, Interact | Fade → door vignette → fade → B2F FPV; no movement during beat |
 | 2 | B2F↔B3F and reverse | Same default beat; spawn on paired stair cell |
-| 3 | Hub → Enter Stratum | `hub_enter_stratum` row or same prefab |
+| 3 | Hub → **Depart** | `hub_enter_stratum` row or same prefab |
 | 4 | B1F gate `^` → hub | Transition or fade; phase → Hub |
 | 5 | Spam Interact on stairs mid-beat | Second request ignored; no duplicate floor art |
 | 6 | Clear **Beat Prefab** on catalog row | Fade-only still changes floor |

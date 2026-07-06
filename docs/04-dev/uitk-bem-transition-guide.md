@@ -56,7 +56,7 @@ Multi-step flows (hub → stratum, stairs vignette, service panel close):
 - **Mid-beat cross-system code** (`FloorTransitionPresenter`, gates, phase `OnEnter`) — do **not** call `HideImmediate()` on chrome the player still sees; use `Hide()` or skip if the owner already cleared.
 - **End of beat** — `PresentationReleased` (or equivalent); underlying phase republishes with `Show()`.
 
-**Shipped example:** hub Enter Stratum — `HubHudView` clears input hint when leave transition starts; `FloorTransitionPresenter` uses `InputHint.Hide()` (not `HideImmediate`); `ExplorationMapCoordinator.RefreshGlobalInputHint` on `PresentationReleased`.
+**Shipped example:** hub **Depart** — `HubHudView` clears input hint when leave transition starts; `FloorTransitionPresenter` uses `InputHint.Hide()` (not `HideImmediate`); `ExplorationMapCoordinator.RefreshGlobalInputHint` on `PresentationReleased`.
 
 ### Review smells (reject in PR)
 

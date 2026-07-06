@@ -239,14 +239,17 @@ PC: combat **menu focus** — arrows or **`W`/`A`/`S`/`D`**, **`Z`** confirm, **
 
 Every row below needs a **visible** reaction (DOTween or USS transition). Pair with combat log text; log alone is insufficient at launch.
 
-**Blocking:** `CombatPresentationGate` — AGI playback waits until `CombatHudReactivePresenter` finishes mandatory beats ([#35](https://github.com/miramocha/griddungeon-game/pull/35)); EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
+**Blocking:** `CombatPresentationGate` — AGI playback waits until `CombatHudReactivePresenter` finishes mandatory beats ([#35](https://github.com/miramocha/griddungeon-game/pull/35), pacing [#395](https://github.com/miramocha/griddungeon-game/pull/395)); EO-style pacing ([tech notes — UI reactivity](../04-tech-notes.md#ui-reactivity)).
 
 | Event | UI reaction at launch | Blocks until done |
 |-------|-------------------|-------------------|
 | Turn advances | AI/auto: turn strip handoff to `Current`. **Player command:** acting highlight on **party roster** slot, not strip | Yes — next AGI turn / command |
-| Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; optional floating number near slot | Yes — next action on that beat |
+| Attack wind-up | `OnActionCommitted` → `ActionCallout` + attacker/target plate before damage numbers (`AttackWindUpSeconds`, default **1.5s**) | Yes — resolve follows wind-up |
+| Damage / heal | Target portrait **flash** + HP/MP bar **lerp**; arena plate pop on enemies; optional floating number near slot | Yes — next action on that beat |
+| Multi-target hit | `TargetResults` — **sequential** arena plate + HP beat per occupied enemy (e.g. `breaker_cleave`) | Yes — chained; gate holds through full chain ([#397](https://github.com/miramocha/griddungeon-game/pull/397)) |
 | Status applied / cleansed | Icon **pop-in** or brief tint on portrait + queue icon | Yes |
-| Death / KO | Portrait **grey + scale down** or slide out; strip slot removed on rebuild with short fade | Yes |
+| Death / KO | Portrait **grey + scale down** or slide out; extended **death beat** (**1s**) before row collapse | Yes |
+| Enemy row collapse | Back row promotes on arena rig with **staggered** slot jumps (**0.5s** move, **0.2s** stagger) after death beat | Yes — `EnemyRowCollapse` after presentation delay |
 | Synchro Charge change | Meter fill **lerps**; at 100% brief **glow** before Protocol use | Yes — Protocol command on core turn |
 | Protocol use | Navigator + participating cores **highlight** ([synchro-protocol](synchro-protocol.md)) | Yes — same core turn continues after resolve |
 | Valid targeting | Enemy/portrait **outline pulse** on valid slots ([#60](https://github.com/miramocha/griddungeon-game/issues/60)) | No — selection is interactive; pulse loops until pick |
@@ -337,12 +340,14 @@ Sparse authoring (e.g. two front, one back) keeps **index gaps** in `EnemySlots[
 
 **Roster vitals At launch:** party cores and aux show **HP + MP**; **enemy** plates show **HP only** (`CombatArenaPlateView` — no MP on enemies).
 
-**Launch implementation:** `CombatArenaPlateView.BindEnemyFormation` via `CombatArenaPlate.EnemyRoster` (`IEnemyFormationRoster`). Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows). During enemy targeting the party floater **collapses**; arena plates reveal for valid enemies. S1 Protocol coach / planning prompt: deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). Replace or reskin: [custom party UI](../04-dev/custom-party-ui.md#enemy-arena-plates-combatarenaplate).
+**Launch implementation:** `CombatArenaPlateView.BindEnemyFormation` via `CombatArenaPlate.EnemyRoster` (`IEnemyFormationRoster`). Party roster uses shared **`PartyFormationFloater`** (`PartyFormationGridView`, 2×4 front/back rows). During enemy targeting the party floater **collapses**; arena plates reveal for valid enemies. **Area skills** populate `CombatActionResult.TargetResults`; `CombatActionPresentationTiming` chains plate reveal + HP lerp **one target at a time** ([#397](https://github.com/miramocha/griddungeon-game/pull/397)). S1 Protocol coach / planning prompt: deferred ([#88](https://github.com/miramocha/griddungeon-game/issues/88)). Replace or reskin: [custom party UI](../04-dev/custom-party-ui.md#enemy-arena-plates-combatarenaplate).
 
 ## Related docs
 
 - [release scope](../00-release-scope.md)
 - [Combat scene & enemy rendering](combat-scene.md)
+- [ADR 044 — EO IV row targeting / party promote](../../decisions/044-eo4-row-targeting-party-promote.md) (**optional** — [#377](https://github.com/miramocha/griddungeon-game/issues/377))
+- [ADR 045 — Combat Formation Switch](../../decisions/045-combat-formation-switch.md) (shipped [#378](https://github.com/miramocha/griddungeon-game/issues/378))
 - [ADR 046 — Combat arena plates + camera focus](../../decisions/046-combat-arena-plates-camera.md)
 - [Combat status & buffs](combat-status-and-buffs.md)
 - [Navigator](navigator.md)

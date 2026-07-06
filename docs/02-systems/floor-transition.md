@@ -31,7 +31,7 @@ References: Resident Evil door transitions; *Labyrinth of Galleria* closet step-
 |---------|--------|----------------|
 | Stairs up / down (exploration floors) | `ExplorationPhaseController.TryChangeFloor` | `stairs_default` |
 | Exploration → **Hub** (gate `stairsUp`) | `ExplorationPhaseController.TryReturnToHub` | `hub_return_from_exploration` or fade fallback |
-| Hub → Enter Stratum | `HubController.TryLeaveHub` → `ExplorationPhaseController.BeginHubEnterTransition` on exploration enter from Hub | `hub_enter_stratum` or fade fallback |
+| Hub → **Depart** (hub menu) | `HubController.TryLeaveHub` → `ExplorationPhaseController.BeginHubEnterTransition` on exploration enter from Hub | `hub_enter_stratum` or fade fallback |
 | Campaign floor jump (same API) | `TryChangeFloor` | catalog resolve |
 
 Hub enter/leave use catalog destination key **`hub`** (no floor art load). Other scripted hub returns (story, wipe) may stay instant until wired to the same presenter.
@@ -172,7 +172,7 @@ Exploration must never soft-lock if art is missing.
 ### Manual
 
 - **Scene:** `DevBootstrap.unity` — **F2** exploration
-- **Steps:** Stairs B1F→B2F→B3F and back; hub enter stratum; spam stairs during beat
+- **Steps:** Stairs B1F→B2F→B3F and back; hub **Depart**; spam stairs during beat
 - **Expected:** Vignette plays; spawn correct; no input during beat; FPV shows new floor art after
 
 ---

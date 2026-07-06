@@ -70,7 +70,7 @@ HubTown (scene or additive root)
 ├── CM_Shop
 ├── CM_Hospital
 ├── CM_Inn
-└── CM_Gate_Plaza                 ← all Enter Stratum rows
+└── CM_Gate_Plaza                 ← all **Depart** rows (`CM_Depart`)
 ```
 
 - Map `HubRootMenuSlot` → vcam in presenter data (serialized pairs or catalog asset).

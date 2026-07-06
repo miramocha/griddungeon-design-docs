@@ -58,6 +58,16 @@ Optional work does not block the required slice. Grouped by theme; each feature 
 
 **Also optional in this wave:** [cinematic + QTE skills](02-systems/combat-presentation.md), full ailment list, gamepad, pathfind **avoid FOE cells**.
 
+### EO IV row combat (optional)
+
+**Goal:** Party auto-promote on front wipe, probabilistic enemy row targeting, melee reach — [ADR 044](../decisions/044-eo4-row-targeting-party-promote.md).
+
+| Feature | Doc / issue |
+|---------|-------------|
+| Party `PartyRowCollapse`, `EnemyPartyTargetPicker`, melee reach | [ADR 044](../decisions/044-eo4-row-targeting-party-promote.md), [game #377](https://github.com/miramocha/griddungeon-game/issues/377) |
+
+**Required slice today:** enemy `EnemyRowCollapse` + ADR 015 front-first targeting. Formation Switch ships separately ([ADR 045](../decisions/045-combat-formation-switch.md)).
+
 ### FOE combat patrol + mid-battle join
 
 | Feature | Doc |

@@ -71,7 +71,7 @@ Prepare roster and Navigator before a dive when convenient; **skill points** nee
 | **Inside a service** | Camera **holds** the last root-menu anchor for that service; no tighter framing or secondary anchors on sub-menus |
 | **Hub entry default shot** | **TBD** — leaning toward a **wide establishing** town view until the player moves root-menu focus; not locked yet |
 | **Locked / unavailable root rows** | **No pan** — focus on a greyed-out service does not move the camera (avoids teasing buildings the player cannot use yet) |
-| **Enter Stratum** (multiple strata unlocked) | **One shared gate** anchor — all **Enter Stratum** *N* entries use the same labyrinth  plaza camera pose |
+| **Depart** (multiple strata unlocked) | **One shared gate** anchor — all **Depart** rows into Stratum *N* use the same labyrinth plaza camera pose |
 | **Rapid root-menu scroll** | **Debounced settle** — pan only after root focus stays on one row ~**150–300 ms** (tune in playtest); no interruptible chase mid-scroll |
 | **Ambient scene life** (NPCs, smoke, flags) | **Light ambient** motion in the backdrop — **later than launch** (author with later hub presentation or polish pass) |
 | **Hub audio bed** | **Probably no** looping town ambience / music stem tied to the 3D backdrop — service UI SFX from [Service UI motion](#service-ui-motion) still apply |
@@ -117,7 +117,7 @@ Each hub menu entry maps to an **authored camera pose** (and optional look-at) a
 | **Hospital** | Hospital / clinic building |
 | **Inn / Camp desk** | Inn or camp desk exterior |
 | **Quest counter** | Notice board / guild quest hall wing |
-| **Enter Stratum** *N* (any *N*) | **One shared** labyrinth gate plaza — same anchor for every stratum entry row |
+| **Depart** (stratum entry; any *N*) | **One shared** labyrinth gate plaza — same anchor for every stratum entry row |
 | **Side expedition** (optional) | Caravan yard / expedition board ([side dungeons](side-dungeons.md)) |
 | **Synthesis** (optional) | Workshop / forge annex |
 
@@ -134,7 +134,7 @@ Service screens may still use the **Service UI motion** table above for panel tw
 | Piece | Role |
 |-------|------|
 | `HubEnvironmentPresenter` | Hub phase: enable session `CinemachineBrain`, disable `ExplorationCameraRig`; after debounce, `PanToAnchor(HubRootMenuSlot)` via **vcam priority** |
-| Hub town scene | `CinemachineCamera` per service + optional `CM_Establishing_Wide`; shared gate vcam for **Enter Stratum** |
+| Hub town scene | `CinemachineCamera` per service + optional `CM_Establishing_Wide`; shared gate vcam for **Depart** (`CM_Depart`) |
 | `HubHudView` / root focus | Emits slot focus changes (`MenuFocusNavigator` + `HubRootMenuSlot`); no pan while service panel open |
 | `HubPhaseController` | Enables backdrop + presenter on enter; tears down on exit |
 | `ExplorationCameraSession` | Brain on/off coordinated with floor-transition lock so vignette and hub do not fight |
@@ -170,15 +170,15 @@ Hub → Guild (party/skills) + Navigator Office (active lead) + shop/equip
 
 Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03-content/campaign/s1-intro.md)**.
 
-**Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable **Enter Stratum 1** when `S1_PARTY_READY`. Hub only — no labyrinth grid, no combat.
+**Act 2 (this doc):** first hub visit after Act 1 — unlock services, **Explorers Guild** fills **6 core** slots, **Navigator Office** assigns `guild_handler`, inn save; enable hub **Depart** (into Stratum 1) when `S1_PARTY_READY`. Hub only — no labyrinth grid, no combat.
 
-**Act 3 from hub:** **Enter Stratum 1** → always **B1F gate** `(10, 11)` (`stairsUp`); Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
+**Act 3 from hub:** **Depart** → always **B1F gate** `(10, 11)` (`stairsUp`); Synchro **0%** until mid–first FOE on B2F ([synchro § S1 gating](synchro-protocol.md#s1-tutorial-gating-first-foe)).
 
 ## Stratum structure
 
 - Labyrinth divided into **strata** (biome-themed zones), each with multiple **floors**.
 - Example: Stratum 1 "Fallen District" — floors B1F–B5F At launch: B1F–B3F + boss on B3F).
-- **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Enter Stratum 1** → B1F gate; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
+- **Stratum entry (locked):** party always starts at the **beginning** of a stratum (entrance floor). **S1:** no warp gate — hub **Depart** → B1F gate; **S2+:** hub entry only after that stratum’s **warp gate** is unlocked in-world, then warp to the gate cell on the entrance floor ([dungeons](../03-content/dungeons-and-encounters.md#stratum-entry--warp-gates-locked)).
 - **First-floor gate `stairsUp`:** → **hub** only (all strata).
 
 ## Quests (optional at launch)
@@ -199,7 +199,7 @@ Full three-act flow, save flags, and entry rules: **[campaign/s1-intro.md](../03
 
 | Destination | Hub action | Entry API (draft) |
 |-------------|------------|-------------------|
-| **Stratum** labyrinth | **Enter Stratum** *N* | `LeaveHub(stratumId, floorId)` |
+| **Stratum** labyrinth | **Depart** (*N*) | `LeaveHub(stratumId, floorId)` |
 | **Side dungeon** (optional) | **Side expedition** → pick location | `EnterSideDungeon(locationId, floorId)` |
 
 Strata: warp-gate unlock + beginning-only hub entry (S2+); S1 gate entry. Side dungeons use **menu entry only** and **hub-only** exit — see [side dungeons](side-dungeons.md).

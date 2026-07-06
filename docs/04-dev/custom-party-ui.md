@@ -269,6 +269,28 @@ Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRail
 
 ---
 
+## Field item use (party pause)
+
+Hub / exploration pause → **Inventory** pane → **Z** on a field-usable consumable row.
+
+| Step | Behaviour |
+|------|-----------|
+| **Z** on heal / MP item | Bag modal suppresses (`ItemListInventory.SuppressPresentation`); floater `FieldItemUseDock`; right-docked **`CharacterDetail`** inspect; wallet HUD retracts. |
+| **WASD** | Floater member focus; detail mirrors focused core. |
+| **Z** on valid core | Apply via `FieldItemUseService`; refresh bag; repeat if stack remains. |
+| Full-HP party (heal) | Still enters pick — invalid slots, **Z** no-op, `ItemMemberTargetRules` notice; **X** back to bag. |
+| **X** | `BackOutFieldItemMemberPick` — bag + wallet restore; party menu open. |
+
+`return_thread` skips member pick (instant hub retreat when rules allow).
+
+Owner: `PartyMenuFieldItemUseFlow` on `PartyMenuOverlayView`; floater context `PartyFormationContext.FieldItemUseDock`. Shares inspect chrome with **Use Skill** (`PartyMenuMemberInspectDetailBinder`).
+
+Hints: `TabbedPickerRailHints.FieldItemUse` / `FieldItemInspectNoTarget` — [shared menu § `TabbedPickerRailHints`](shared-menu-picker-ui.md#tabbedpickerrailhints-copy).
+
+Shipped: [griddungeon-game #399](https://github.com/miramocha/griddungeon-game/pull/399).
+
+---
+
 ## Enemy arena plates (`CombatArenaPlate`)
 
 ### Service wiring
@@ -287,6 +309,7 @@ Enemy HP chrome is a **centralized** `UIDocument` @ sort **15** — not a host i
 
 - `CombatHudView` resolves `CombatArenaPlate.EnemyRoster` → `m_enemyRoster`.
 - `CombatHudReactivePresenter` calls `RevealSlotForHpBeat` on enemy HP beats.
+- **Multi-target** (`TargetKind.AllEnemies` / `AllAllies`): `CombatActionResult.TargetResults` drives **sequential** plate pop-in + HP lerp — next target starts after previous beat finishes ([#397](https://github.com/miramocha/griddungeon-game/pull/397)).
 - `CombatTargetSelectionCoordinator` takes **`IRosterStatSlots`** for party (`PartyFormationGridView`) and **`IEnemyFormationRoster`** for enemies ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 
 ### Replace strategies

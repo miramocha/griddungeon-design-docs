@@ -328,7 +328,7 @@ Scene menu: **GridDungeon → Scenes → Create Dev Bootstrap** (`DevBootstrap.u
 
 | API | Caller | Phase |
 |-----|--------|-------|
-| `LeaveHub(stratumId, floorId)` | Hub **Enter Stratum** | → Exploration (stratum rules) |
+| `LeaveHub(stratumId, floorId)` | Hub **Depart** | → Exploration (stratum rules) |
 | `EnterSideDungeon(locationId, floorId)` | Hub **Side expedition** | → Exploration (side rules; exit → hub only) |
 
 ---

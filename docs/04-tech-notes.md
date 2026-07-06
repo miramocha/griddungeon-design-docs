@@ -153,7 +153,7 @@ Sprite checklist, composite wall rules (edge segments — no 16 autotiles), door
 - **`ExplorationStateSave`:** add `ExplorationMapKind` (`Stratum` | `SideDungeon`) + `locationId` + `floorId` on active dive.
 - **Hub entry:** `HubController.EnterSideDungeon(locationId, floorId)` — parallel to `LeaveHub`; loads floor SO from `ContentDatabase` by side key.
 - **Content path (draft):** `Assets/Content/SideDungeons/sd01_F1.asset`
-- **Stratum-only save:** `HubSaveData.UnlockedWarpGateStrata` (hub **Enter Stratum** after in-world gate unlock); does not track side locations — use `UnlockedSideDungeonIds` or quest flags.
+- **Stratum-only save:** `HubSaveData.UnlockedWarpGateStrata` (hub **Depart** after in-world gate unlock); does not track side locations — use `UnlockedSideDungeonIds` or quest flags.
 
 ## Autopilot
 
@@ -239,7 +239,7 @@ command-rail | center column (log-preview → arena-spacer → synchro) + PartyF
 - **Shared UITK menus** — `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` — composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
 - AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-arena-plate__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
-- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal. Mid-fight story: `EncounterEventScheduler` on `CombatController`.
+- **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35), [#395](https://github.com/miramocha/griddungeon-game/pull/395)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — wind-up, sequential multi-target HP beats ([#397](https://github.com/miramocha/griddungeon-game/pull/397)), death beat + staggered `EnemyRowCollapse`; DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal. Mid-fight story: `EncounterEventScheduler` on `CombatController`.
 - **Roster vitals bars:** UITK `ProgressBar` via `RosterStatMeter` on party/enemy roster slots; synchro meter uses the same control — `CombatHudReactivePresenter` still lerps displayed values on damage/heal beats.
 - **Shared panel scale:** `GamePanelSettings.asset` — Scale With Screen Size, reference **1920—1080**, **Match Height** (exploration + combat `UIDocument` panels).
 

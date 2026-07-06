@@ -128,6 +128,7 @@ Tag filters: [obsidian-tags](docs/04-dev/obsidian-tags.md). More integrator docs
 |-----|--------|---------|
 | [Refs — README](docs/refs/README.md) | Active | Scratchpad policy (not spec authority) |
 | [Refs — Map UI](docs/refs/map-ui.md) | Scratchpad | Other games’ map UI screenshots |
+| [Refs — Party / character UI](docs/refs/party-character-ui.md) | Scratchpad | Character status & equipment inspect screenshots |
 | [Archive — release scope snapshot](docs/archive/mvp1-spec.md) | Archived | Historical; use [release scope](docs/00-release-scope.md) |
 | [Archive — S1 floor layouts (draft)](docs/archive/mvp1-s1-floor-layouts-draft.md) | Archived | ASCII layouts until floor lock |
 

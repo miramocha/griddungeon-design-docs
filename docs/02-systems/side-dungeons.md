@@ -20,7 +20,7 @@ Optional grid zones outside the main **stratum** ladder. Same exploration and co
 | Stratum labyrinth | Side dungeon |
 |-------------------|--------------|
 | Main campaign vertical slice (`s1`, `s2`, —) | Optional combat / loot / story beats |
-| Hub **Enter Stratum** + warp gates (S2+) | Hub **Side expedition** menu only |
+| Hub **Depart** + warp gates (S2+) | Hub **Side expedition** menu only |
 | `UnlockedWarpGateStrata` (strata only) | Unlock via quest / flag / milestone — not warp gates |
 | Gate `stairsUp` ? hub only (strata) | Exit ? **hub only** |
 
@@ -28,7 +28,7 @@ Side dungeons are **instanced grids reached from the hub menu**, not a free-roam
 
 ## Hub menu (optional)
 
-New top-level hub option alongside inn, guild, and **Enter Stratum**:
+New top-level hub option alongside inn, guild, and **Depart**:
 
 | UI label (draft) | Action |
 |------------------|--------|

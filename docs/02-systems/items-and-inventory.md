@@ -265,9 +265,31 @@ Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](h
 | Context | UI |
 |---------|-----|
 | **Combat `Item` command** | **Consumable row list** only — combat-usable items from bag; **no category tab strip** ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md) sub-menu) |
-| **Field** | Use from party menu **Consumables** tab, or filtered field-usable rows (`return_thread`, heals) |
+| **Field** | Party menu **Inventory** → confirm consumable row → **member pick** (heals) or instant apply (`return_thread`) |
 
 Combat picker uses the shared tabbed shell with **Immediate** row focus + `Z`/`X` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md), [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md)); catalog filters by `ItemEffectType` + `useContexts`, not `InventoryBagCatalog` tabs.
+
+### Field item member pick (shipped)
+
+**Scope:** hub + exploration party menu **Inventory** pane. `FieldItemUseService` resolves `ItemEffectType` + phase (`HealHp`, `HealMp`, `RetreatToHub`).
+
+| Step | Behaviour |
+|------|-----------|
+| **Z** on field-usable bag row | `return_thread` applies immediately (no member pick). Heals enter member pick. |
+| Member pick open | `ItemListInventory.SuppressPresentation` hides bag modal; **`WalletHud`** credits strip **retracts**; floater docks (`FieldItemUseDock`, sort **260**); right-docked **`CharacterDetail`** inspect mirrors floater focus (same binder as Use Skill). |
+| **WASD** | Navigate floater cores; invalid targets (e.g. full HP on heal item) show on detail — **Z** no-op, notice via `ItemMemberTargetRules`. |
+| **Z** on valid core | `FieldItemUseService.TryApplyToMember`; bag refreshes; repeat same item if stack remains. |
+| **X** | Back to bag row (bag + wallet restore); party menu stays open. |
+
+**Hints:** `TabbedPickerRailHints.FieldItemUse` when selectable targets exist; `FieldItemInspectNoTarget` when all cores invalid (hospital revive pattern — inspect without confirm).
+
+| Layer | Type |
+|-------|------|
+| Core | `ItemMemberTargetRules` |
+| Runtime | `FieldItemUseService`, `PartyMenuFieldItemUseFlow` |
+| UI | `FieldItemCharacterPicker`, `PartyFormationFloater.ApplyFieldItemUseFloaterDock`, `CharacterDetail` via `PartyMenuMemberInspectDetailBinder` |
+
+Shipped: [griddungeon-game #399](https://github.com/miramocha/griddungeon-game/pull/399). Detail: [custom party UI § Field item use](../04-dev/custom-party-ui.md#field-item-use-party-pause).
 
 ---
 
