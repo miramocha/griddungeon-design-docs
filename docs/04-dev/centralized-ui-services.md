@@ -886,11 +886,12 @@ public interface ICentralizedUiSurface
 
 | Call | When |
 |------|------|
-| `Hide()` | Player dismiss; same context authority |
-| `HideImmediate()` | Phase leave, `SetContext` swap, another overlay at same sort takes focus |
-| `SetContext(Hidden)` | System → `HideImmediate()` |
-| `SetContext(open)` | `HideImmediate()` if leaving another open context, then `Show()` |
+| `Hide()` | Player dismiss, tab/section switch, competing overlay handoff the player sees |
+| `HideImmediate()` | `OnDisable`, phase exit, bootstrap init, story preemption, documented input-stack snap |
+| `SetContext(open)` | Animated dismiss of leaving context when picker is on-screen; `Show()` may reopen during settle ([#411](https://github.com/miramocha/griddungeon-game/issues/411)) |
 | Data refresh while settling | `Show` path — not refresh-only while `IsSettling` |
+
+Policy detail: [gotchas § Hide vs HideImmediate](centralized-ui-gotchas.md#hide-vs-hideimmediate-policy-411).
 
 ### Animation stack (DOTween)
 
