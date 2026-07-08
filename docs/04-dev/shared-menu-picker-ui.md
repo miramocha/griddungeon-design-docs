@@ -12,7 +12,7 @@ How **rail menus**, **item list pickers**, and **skill use pickers** share UITK 
 
 **Related:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md) (`MenuFocusNavigator`, `menu-item--focused`), [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md), [ADR 036 — Party inventory model](../../decisions/036-party-inventory-model.md), [custom skill picker UI](custom-skill-picker-ui.md), [UI event contract](ui-event-contract.md).
 
-**Shipped ([#185](https://github.com/miramocha/griddungeon-game/issues/185)):** `WindowedListPaneView` (8-row windowing + `IListFocusNavigator`), unified `ItemListPickerView` / `RailMenuPresenter` across hub shop, party bag, and combat item picker; tabbed overlays use a **transparent** full-screen host (no modal dim).
+**Shipped ([#185](https://github.com/miramocha/griddungeon-game/issues/185)):** `WindowedListPaneView` (8-row windowing + `IListFocusNavigator`), unified `ItemListPickerView` / `RailMenuFocus` across hub shop, party bag, and combat item picker; tabbed overlays use a **transparent** full-screen host (no modal dim).
 
 **Implementation root:** `Assets/Scripts/UI/Views/` · `Assets/UI/Navigation/` · `Assets/UI/Screens/Shared/` · feature UXML under `Assets/UI/Screens/{Combat,Hub}/`.
 
@@ -24,7 +24,7 @@ Grid Dungeon does **not** use one mega-widget for every menu. at launch has thre
 
 | Family | Primary types | Orientation | Typical use |
 |--------|---------------|-------------|-------------|
-| **Rail menu** | `RailMenuPresenter` → `RailMenuView` or `MenuFocusNavigator` | Vertical **or** horizontal | Command bar, hub services, party section rail, **category tab chips** |
+| **Rail menu** | `RailMenuFocus` → `RailMenuView` or `MenuFocusNavigator` | Vertical **or** horizontal | Command bar, hub services, party section rail, **category tab chips** |
 | **Item list picker** | `ItemListPickerView` (+ thin adapters) | Horizontal tabs + windowed rows | Hub shop buy/sell, party bag, combat **Item** command |
 | **Skill use picker** | `SkillUsePickerPresenter` + `CombatSkillListPickerAdapter` | Horizontal tabs + windowed rows | Combat **Skill** command (ADR 035) |
 
@@ -39,7 +39,7 @@ flowchart TB
   end
 
   subgraph rail [Rail menu family]
-    RMP[RailMenuPresenter]
+    RMP[RailMenuFocus]
     RMV[RailMenuView chip DOM]
     RMP --> RMV
     RMP --> MFN
@@ -136,7 +136,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  subgraph presenter [RailMenuPresenter facade]
+  subgraph presenter [RailMenuFocus facade]
     API[BindFocusConfirmed / SetTabLabels / SetFocusItems / SetSelectedIndex]
   end
 
@@ -161,8 +161,8 @@ flowchart TB
 
 | Type | Factory | DOM | Selection vs focus |
 |------|---------|-----|-------------------|
-| **Horizontal chips** | `RailMenuPresenter.CreateHorizontal(host)` | `RailMenuView` builds `rail-menu__item` + `rail-menu__item-label` | **`--selected`** on active tab (Q/E or click) |
-| **Vertical focus rail** | `RailMenuPresenter.CreateVerticalFocus()` | Existing UXML `Button`s; `ConfigureButton` adds `rail-menu__item` | **`menu-item--focused`** via `SetFocusItems`; optional **`--selected`** via `BindSelectionTargets` (party section) |
+| **Horizontal chips** | `RailMenuFocus.CreateHorizontal(host)` | `RailMenuView` builds `rail-menu__item` + `rail-menu__item-label` | **`--selected`** on active tab (Q/E or click) |
+| **Vertical focus rail** | `RailMenuFocus.CreateVerticalFocus()` | Existing UXML `Button`s; `ConfigureButton` adds `rail-menu__item` | **`menu-item--focused`** via `SetFocusItems`; optional **`--selected`** via `BindSelectionTargets` (party section) |
 
 **Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need the combined selectors (e.g. `.rail-menu__item.unity-button.menu-item--focused`, `.rail-menu__item.unity-button.rail-menu__item--selected`).
 
@@ -186,7 +186,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 
 - **No `overflow: hidden`** on the rail — left tuck is clipped by the screen edge.
 - **Combat pickers:** `.combat-hud > .tabbed-picker { left: 240px }` so the modal does not cover the rail bookmark.
-- **Labels:** `RailMenuPresenter.ConfigureButton` migrates `Button.text` → child `rail-menu__item-label` so long names wrap with the chip (no fixed-width label hack).
+- **Labels:** `RailMenuFocus.ConfigureButton` migrates `Button.text` → child `rail-menu__item-label` so long names wrap with the chip (no fixed-width label hack).
 
 ### Consumers (vertical)
 
@@ -206,7 +206,7 @@ Phase HUDs **publish menu DTOs** on `UiPresentationBridge` — they do **not** c
 | Tab strips (all pickers) | `PickerTabStripView` | Thin wrapper over `CreateHorizontal` |
 | Party equipment member select | `PartyEquipmentFloaterToolkitView` | Floater 2×4 grid focus → `PartyEquipmentCoordinator.SetActiveMemberListIndex` (no inline tabs) |
 
-**Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). **`CommandRailScreenShell`** (catalog prefab or UITK fallback) materializes buttons from `CommandRailPresentationState` via `CommandRailMenuShellSupport` + `RailMenuPresenter.CreateVerticalFocus()`. **Non-button copy** (phase header title, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade + `CommandRailInfoPresentationProjector`; **Credits balance** on `WalletHudPresenter` (`WalletHud.uxml`, `sortingOrder` 27) — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
+**Global command rail:** `CommandRail.uxml` (`command-rail-panel` — **buttons only**). **`CommandRailScreenShell`** (catalog prefab or UITK fallback) materializes buttons from `CommandRailPresentationState` via `CommandRailMenuShellSupport` + `RailMenuFocus.CreateVerticalFocus()`. **Non-button copy** (phase header title, service headings/lines, combat prompts) lives in the global `CommandRailInfoPresenter` (`CommandRailInfo.uxml`, `sortingOrder` 26) via `CommandRailInfo` facade + `CommandRailInfoPresentationProjector`; **Credits balance** on `WalletHudPresenter` (`WalletHud.uxml`, `sortingOrder` 27) — see [centralized UI services](centralized-ui-services.md). Canonical empty template for new rails: `RailMenuVertical.uxml`.
 
 **Extend:** New vertical rail → add projector publish + shell `Apply` (or extend `CommandRailPresentationProjector` menu items), bind `MenuFocusNavigator` in your input handler. New horizontal strip → empty host with class `tabbed-picker__tabs` (or `rail-menu rail-menu--horizontal`) and `PickerTabStripView`.
 
@@ -439,7 +439,7 @@ flowchart TB
 
 | Concern | Owner |
 |---------|--------|
-| Tab labels / selection | `PickerTabStripView` → `RailMenuPresenter` horizontal |
+| Tab labels / selection | `PickerTabStripView` → `RailMenuFocus` horizontal |
 | Row window + focus | `WindowedListPaneView` |
 | Row DOM | `ItemListRowBuilder` + `ItemListRow.uss` |
 | Detail panel | `item-list-picker-detail` label text from `ItemListRowModel.Detail` |
@@ -648,7 +648,7 @@ Inside party menu dialogs, `PartyMenu.uss` disables focus **scale** (`scale: 1 1
 
 ### New **command rail** or section strip
 
-- Vertical actions: `RailMenuPresenter.CreateVerticalFocus()` + `ConfigureButton` on each `Button`.
+- Vertical actions: `RailMenuFocus.CreateVerticalFocus()` + `ConfigureButton` on each `Button`.
 - Horizontal sections/tabs: `PickerTabStripView` or `CreateHorizontal` directly.
 
 ### Do not
@@ -707,7 +707,7 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
 | `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
 | `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
-| `Assets/Scripts/UI/Views/RailMenuPresenter.cs` | Rail facade |
+| `Assets/Scripts/UI/Views/RailMenuFocus.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |
 | `Assets/Scripts/UI/Views/WindowedListPaneView.cs` | Windowed list + `IListFocusNavigator` (#185) |
 | `Assets/Scripts/UI/Views/WindowedListPaneClasses.cs` | BEM constants for windowed list |

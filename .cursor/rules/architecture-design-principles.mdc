@@ -1,4 +1,4 @@
-Ôªø---
+---
 description: Maps clean-code principles to Grid Dungeon architecture (design-docs)
 alwaysApply: true
 ---
@@ -11,40 +11,40 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design](..
 
 ## Single responsibility (SRP)
 
-| Concern | One owner ‚Äî do not merge |
+| Concern | One owner ó do not merge |
 |---------|---------------------------|
 | Macro phase (Hub / Exploration / Combat) | `GamePhaseController` + one `IPhaseController` per phase |
-| Combat round (Protocol on core turn ‚Üí AGI ‚Üí end-of-round) | `CombatController` only |
+| Combat round (Protocol on core turn ? AGI ? end-of-round) | `CombatController` only |
 | Grid step / facing | `DungeonExplorer` |
 | Map reveal state | `MapSystem` + `MapRevealCalculator` (Core) |
 | FOE patrol / contact | `FoeSystem` |
 | FOE flee retreat cell (walkable?) | `RetreatCellCalculator` (Core); `FoeSystem.CanRetreatFromFoe` delegates |
 | FOE flee post-combat placement (FOE contact only) | `FoeFleeRetreatPlacement` (Core); `ExplorationPhaseController` applies on flee end |
-| Damage / hit / status math | Core simulators (`DamageCalculator`, `StatusSystem`, ‚Ä¶) |
-| S1 stratum spawn / story gates / VN effect execution | `GridDungeon.Campaign` (`S1CampaignResolver`, `StoryEventEffectExecutor`, ‚Ä¶) ‚Äî not Core |
+| Damage / hit / status math | Core simulators (`DamageCalculator`, `StatusSystem`, Ö) |
+| S1 stratum spawn / story gates / VN effect execution | `GridDungeon.Campaign` (`S1CampaignResolver`, `StoryEventEffectExecutor`, Ö) ó not Core |
 | Scene composition / lifetime refs | `GameState` (composition root, not phase logic) |
 | Battle arena visuals | `CombatScenePresenter` (not `CombatController`) |
 | Input action maps per mode | `InputRouter` |
 
-Reject designs that put combat formulas, map reveal, or phase transitions in one ‚Äúmanager‚Äù type.
+Reject designs that put combat formulas, map reveal, or phase transitions in one ìmanagerî type.
 
 ## DRY
 
-- **One formula** for damage, AGI order, retreat cell, map reveal ‚Äî document once in Core; Runtime calls simulators.
-- **One content ID table** ‚Äî [content IDs](../../docs/03-content/content-ids.md#content-ids-locked); do not duplicate IDs across docs without linking.
-- **One phase flow doc** ‚Äî [game-phase.md](../../docs/02-systems/game-phase.md) for diagrams; ADR 017 for the decision; class design for type sketches.
+- **One formula** for damage, AGI order, retreat cell, map reveal ó document once in Core; Runtime calls simulators.
+- **One content ID table** ó [content IDs](../../docs/03-content/content-ids.md#content-ids-locked); do not duplicate IDs across docs without linking.
+- **One phase flow doc** ó [game-phase.md](../../docs/02-systems/game-phase.md) for diagrams; ADR 017 for the decision; class design for type sketches.
 - Tolerate a single duplicated diagram if it aids readability; do not fork transition rules in three places.
 
 ## KISS / YAGNI
 
-- Current macro flow: **pure C#** `GamePhaseController` ‚Äî no UVS state graph as authority ([ADR 017](../../decisions/017-game-phase-controller.md)).
-- No generic ‚Äústate machine framework‚Äù for three phases.
+- Current macro flow: **pure C#** `GamePhaseController` ó no UVS state graph as authority ([ADR 017](../../decisions/017-game-phase-controller.md)).
+- No generic ìstate machine frameworkî for three phases.
 - Defer optional systems (UVS presentation layer, guest combat, minigames) until spec checklist says otherwise.
-- `GridDungeon.Core` stays free of `UnityEngine` and ScriptableObject types ‚Äî use DTOs at simulator boundaries.
+- `GridDungeon.Core` stays free of `UnityEngine` and ScriptableObject types ó use DTOs at simulator boundaries.
 
 ## Fix causes, not symptoms
 
-Architecture docs should name **who initiates transitions** and **who owns state**, not only UI symptoms (e.g. ‚Äúhide dungeon view‚Äù ‚Üí `CombatPhaseController.OnEnter` + `DungeonView.SetVisible`).
+Architecture docs should name **who initiates transitions** and **who owns state**, not only UI symptoms (e.g. ìhide dungeon viewî ? `CombatPhaseController.OnEnter` + `DungeonSceneHost.SetVisible`).
 
 ## Be consistent
 

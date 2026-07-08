@@ -99,7 +99,7 @@ GameState (composition root)
 +-- DungeonExplorer      — grid step, facing, interact; `m_poseRoot` (e.g. **PartyPose**) for world lerp — see [party pose vs grid](02-dungeon-navigation.md#party-pose-vs-grid-coordinates)
 +-- ExplorationGridMetrics (Core) — `WorldUnitsPerCell` (10), corner→world math shared with floor art
 +-- FloorArtPresenter    load FPV prefabs by `floorKey` via `FloorArtCatalog` ([#102](https://github.com/miramocha/griddungeon-game/issues/102)); MeshBackend registry Default or TWC plugin ([#344](https://github.com/miramocha/griddungeon-game/issues/344))
-+-- DungeonView          FPV mount / visibility (hidden during combat); per-cell blobber deferred
++-- DungeonSceneHost          FPV mount / visibility (hidden during combat); per-cell blobber deferred
 +-- CombatScenePresenter — battle backdrop + enemy slot rig ([combat scene](02-systems/combat-scene.md))
 +-- MapSystem            — auto-reveal layer, fog, read-only UI
 +-- FoeSystem            — spawn, visibility, step patrol, contact
@@ -236,7 +236,7 @@ command-rail | center column (log-preview → arena-spacer → synchro) + PartyF
 `CombatArenaPlate.EnemyRoster.BindEnemyFormation` — `EnemySlots[0..2]` → front, `[3..5]` → back. Party: `PartyFormationFloater.Grid` (`PartyFormationGridView`). Replace/reskin: [custom party UI](04-dev/custom-party-ui.md).
 
 - **Skill use picker** — modal cloned from `SkillUsePicker.uxml`; `CombatSkillPickerHost` + `ISkillUsePickerView` ([#138](https://github.com/miramocha/griddungeon-game/issues/138)). Integrator: [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
-- **Shared UITK menus** — `RailMenuPresenter`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` — composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
+- **Shared UITK menus** — `RailMenuFocus`, `ItemListPickerView`, `SkillUsePickerToolkitView`, `WindowedListPaneView`, `PickerTabStripView` — composition diagram and consumers: [shared menu & picker UI](04-dev/shared-menu-picker-ui.md).
 - AGI strip — flat list only (no enemy row grouping); USS ellipsis for names ([#66](https://github.com/miramocha/griddungeon-game/pull/66)).
 - Stale queued target: USS `combat-arena-plate__slot--stale-target` on enemy/party roster during planning ([#65](https://github.com/miramocha/griddungeon-game/issues/65)).
 - **Reactive HUD ([#35](https://github.com/miramocha/griddungeon-game/pull/35), [#395](https://github.com/miramocha/griddungeon-game/pull/395)):** `CombatHudReactivePresenter` + `CombatPresentationGate` — wind-up, sequential multi-target HP beats ([#397](https://github.com/miramocha/griddungeon-game/pull/397)), death beat + staggered `EnemyRowCollapse`; DOTween beats block AGI until complete; `CombatHudLogView` owns log format + preview/modal. Mid-fight story: `EncounterEventScheduler` on `CombatController`.
@@ -248,7 +248,7 @@ command-rail | center column (log-preview → arena-spacer → synchro) + PartyF
 - `CombatEntryContext` → `BattleBackground` + `EncounterGroup` → spawn on `EnemySlot_0..5` ([ADR 013](../decisions/013-combat-scene-rendering.md))
 - `CombatScenePresenter.SpawnEnemyVisuals` / `ClearAndDestroyEnemyVisuals` — `EnemyDefinition.battlePrefab` on slot rig ([ADR 046](../decisions/046-combat-arena-plates-camera.md))
 - `CombatScenePresenter.GetEnemySlotAnchor(int slotIndex)` — `slotIndex` `0..5` matches UI + `Combatant.SlotIndex`
-- Exploration `DungeonView` paused/hidden; grid anchor unchanged until fight ends
+- Exploration `DungeonSceneHost` paused/hidden; grid anchor unchanged until fight ends
 - Enemy **grid sprite** (exploration) vs **battle prefab/sprite** (arena) — separate assets per id
 
 ## Combat presentation

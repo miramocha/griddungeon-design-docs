@@ -195,7 +195,7 @@ Pure C# phase orchestration. **Not** Unity Visual Scripting. Diagrams and Enter/
 |------|------|
 | `DungeonExplorer` | Grid step, facing, interact; `OnPartyStep`, `OnPartyEnteredCell`, `OnBumpWall` |
 | `ExplorationAnimationDurations` | Step/turn/bump durations per preset ([ADR 018](../decisions/018-exploration-animation-speed.md)) |
-| `DungeonView` | FPV mount visibility |
+| `DungeonSceneHost` | FPV mount visibility |
 | `MapSystem` | `FloorMapState` load/snapshot; reveal on explorer events |
 | `FoeSystem` | Spawn, patrol, snapshot, hub reset; `CanRetreatFromFoe` |
 | `EncounterTrigger` | Random encounter roll on party step |

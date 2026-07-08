@@ -78,8 +78,8 @@ flowchart TB
         PMO[PartyMenuOverlayView sort 250]
     end
 
-    subgraph World["GameObject: DungeonView"]
-        DV[DungeonView — visibility only]
+    subgraph World["GameObject: DungeonSceneHost"]
+        DV[DungeonSceneHost — visibility only]
     end
 
     IR[InputRouter]
@@ -227,7 +227,7 @@ Closing the menu after equipment changes refreshes the exploration **party strip
 
 Spec: [items & inventory](items-and-inventory.md) · [ADR 036](../../decisions/036-party-inventory-model.md) · [shared menu & picker UI](../04-dev/shared-menu-picker-ui.md) · [input bindings](input-bindings.md) · [ADR 047](../../decisions/047-party-menu-3d-stage.md) (3D hex stage behind menu).
 
-**3D stage:** While the menu is open, `PartyMenuStagePresenter` shows stashed `PlayerCharacter_Default` instances on a hex ring with Cinemachine overview / orbit ([custom party UI § 3D stage](../04-dev/custom-party-ui.md#party-menu-3d-stage)). **Hub:** town backdrop hides when hub environment is active. **Exploration:** `DungeonView` hides (floor art stays loaded); minimap and party strip follow `ExplorationMapCoordinator` / `ExplorationHudView` party-menu chrome rules; FPV restores on close. Combat never activates the stage.
+**3D stage:** While the menu is open, `PartyMenuStagePresenter` shows stashed `PlayerCharacter_Default` instances on a hex ring with Cinemachine overview / orbit ([custom party UI § 3D stage](../04-dev/custom-party-ui.md#party-menu-3d-stage)). **Hub:** town backdrop hides when hub environment is active. **Exploration:** `DungeonSceneHost` hides (floor art stays loaded); minimap and party strip follow `ExplorationMapCoordinator` / `ExplorationHudView` party-menu chrome rules; FPV restores on close. Combat never activates the stage.
 
 When the menu is open, `InputRouter` unbinds exploration movement. Quit confirm copy stays on the pane body (not the global hint strip).
 
@@ -273,7 +273,7 @@ When the menu is open, exploration movement actions are **disabled** (`SetPartyM
 
 | Layer | Type | Phase behavior |
 |-------|------|----------------|
-| `DungeonView` / `FloorArtPresenter` | World / FPV (`SetVisible`; authored art load [#102](https://github.com/miramocha/griddungeon-game/issues/102)) | `ExplorationPhaseController` shows; `CombatPhaseController` hides |
+| `DungeonSceneHost` / `FloorArtPresenter` | World / FPV (`SetVisible`; authored art load [#102](https://github.com/miramocha/griddungeon-game/issues/102)) | `ExplorationPhaseController` shows; `CombatPhaseController` hides |
 | `ExplorationHud` + `ExplorationMap` | UI Toolkit | Minimap gated on `GamePhase.Exploration`; expanded overlay sort **100**; party/pause menu on overlay `UIDocument` |
 | `DungeonExplorer` + `MapSystem` | Simulation | `ExplorationPhaseController` wires on enter, unwires on exit |
 
@@ -288,13 +288,13 @@ stateDiagram-v2
 
     state Exploration {
         [*] --> EPC
-        EPC: ExplorationPhaseController\nDungeonView visible\nexplorer ↔ map/foes
+        EPC: ExplorationPhaseController\nDungeonSceneHost visible\nexplorer ↔ map/foes
         UI: Minimap visible\nexpanded optional\npause available
     }
 
     state Combat {
         [*] --> CPC
-        CPC: CombatPhaseController\nDungeonView hidden\nCombatScenePresenter
+        CPC: CombatPhaseController\nDungeonSceneHost hidden\nCombatScenePresenter
         UI: Map chrome hidden\npause closed
     }
 ```

@@ -76,6 +76,7 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*System` | Long-lived runtime subsystem | `MapSystem`, `FoeSystem`, `SaveSystem`, `ProtocolSystem` |
 | `*Factory` | Build runtime models from save/content | `CombatantFactory` |
 | `*Presenter` | Scene/world presentation (non-UITK overlay) | `CombatScenePresenter`, `FloorArtPresenter` |
+| `*Host` | Runtime scene composition root (visibility, child presenters) | `DungeonSceneHost` |
 | `*Definition` | ScriptableObject asset | `SkillDefinition`, `StoryEventDefinition` |
 
 ### UI Toolkit (`GridDungeon.UI`)
@@ -88,7 +89,7 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*InputHandler` | Input System routing | `CombatInputHandler`, `ExplorationInputHandler` |
 | `*Picker` | Keyboard/grid selection | `PartyFormationGridTargetPicker`, `FieldItemCharacterPicker` |
 | `*ToolkitView` | Keyboard surface for tabbed picker shell | `SkillUsePickerToolkitView`, `PartyFormationToolkitView` |
-| `*Navigator` / `*Focus` | Focus graph / grid index state | `MenuFocusNavigator`, `PartyFormationGridFocus` |
+| `*Navigator` / `*Focus` | Focus graph / grid index state | `MenuFocusNavigator`, `PartyFormationGridFocus`, `RailMenuFocus` |
 | `*Builder` | Build panel rows in code | `CommandRailPanelBuilder`, `ItemListRowBuilder` |
 | `*Layout` | Picker profile / hook names (data) | `ItemListPickerLayout` |
 | `*Adapter` | Bridge APIs | `CombatItemListPickerAdapter` |
@@ -123,7 +124,15 @@ Phase HUDs often use:
 - `*HudView` — `MonoBehaviour` + phase UXML
 - `*HudReactivePresenter` — subscribes to `CombatController` / `MapSystem` / hub services for motion
 
-#### Map markers
+#### Embedded rail focus
+
+`RailMenuFocus` — vertical command-rail or horizontal tab focus over existing `VisualElement` trees. Owns `MenuFocusNavigator` (+ optional `RailMenuView` chip menu). **No** `UIDocument`, **no** overlay lifecycle — not `*Presenter`. Static factories (`CreateHorizontal`, `CreateVerticalFocus`, `ConfigureButton`) stay on the focus type.
+
+| Type | Role |
+|------|------|
+| `RailMenuFocus` | Focus index, selection sync, chip/tab wiring |
+| `RailMenuView` | Horizontal chip DOM bind |
+
 
 `MapChestMarkerRules` (when to show) + `MapChestMarkersPresenter` (bind map → glyphs). One pair per marker family — repetition is intentional until a generic layer is justified ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
 
