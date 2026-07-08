@@ -94,7 +94,7 @@ Exact sort values are implementation tuning; order matters more than absolute nu
 
 | Phase | Deliverable |
 |-------|-------------|
-| **POC** | Exploration map split — **shipped** [#244](https://github.com/miramocha/griddungeon-game/pull/244): `ExplorationMap` GO, `MinimapPanelView` + `ExpandedMapOverlayView`, drop `BindToHud` |
+| **POC** | Exploration map split — **shipped** [#244](https://github.com/miramocha/griddungeon-game/pull/244): `ExplorationMap` GO, `MinimapPanelPresenter` + `ExpandedMapOverlayPresenter`, drop `BindToHud` |
 | **Wave A** | Exploration full split (map + strip + pause) + bootstrap/tests |
 | **Wave B** | Combat split (rail / center / AGI / pickers) |
 | **Wave C (optional)** | Tier 2 world-space for 1–2 panels (Navigator corner, command rail tilt) |

@@ -125,7 +125,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 
 | `sortingOrder` | Document | Owner |
 |----------------|----------|--------|
-| **0** | Exploration minimap (side panel) | `MinimapPanelView` |
+| **0** | Exploration minimap (side panel) | `MinimapPanelPresenter` |
 | **10** | Party formation floater (exploration / combat) | `PartyFormationFloaterPresenter` |
 | **15** | Combat arena enemy plates (transient HP above slot anchors) | `CombatArenaPlatePresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
@@ -134,7 +134,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **50** | Action callout (top action banner, transparent) | `ActionCalloutPresenter` |
-| **100** | Exploration expanded map overlay | `ExpandedMapOverlayView` |
+| **100** | Exploration expanded map overlay | `ExpandedMapOverlayPresenter` |
 | **150** | Story event VN modal | `StoryEventPresenter` |
 | **175** | Notice overlay (loot, skill unlock, …) | `NoticeOverlayPresenter` |
 | **200** | Skill use picker (combat) + item-list modals (hub shop, combat item) | `SkillUsePickerPresenter`, `ItemListInventoryPresenter` (`HubShop`, `CombatItem`) |
@@ -265,7 +265,7 @@ WalletHud.NotifyBalanceChanged(m_gameState); // lerp; transient pulse when no Sh
 | Story modal | `StoryEventPresenter` → `TabbedPickerRailHints.ModalDismiss` |
 | Notice overlay | `NoticeOverlayPresenter` → `TabbedPickerRailHints.ModalDismiss` |
 | Confirm modal | `ConfirmModalPresenter` → `TabbedPickerRailHints.ConfirmModal` |
-| Victory rewards | `BattleRewardScreenView` on show; clear on dismiss |
+| Victory rewards | `BattleRewardScreenPresenter` on show; clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; map/hub republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter.RestoreGlobalInputHintForPhase` |
 
@@ -571,14 +571,14 @@ m_gameState.ConfirmModal?.TryShow(request);
 
 ### Exploration map — `ExplorationMapCoordinator`
 
-**Job:** Exploration minimap (side panel) + expanded map overlay — shared `MapGridPaintController`, global input-hint publish. Two `UIDocument` presenters; coordinator owns event wiring and M-toggle choreography.
+**Job:** Exploration minimap (side panel) + expanded map overlay — shared `MapGridPaintCoordinator`, global input-hint publish. Two `UIDocument` presenters; coordinator owns event wiring and M-toggle choreography.
 
 | Type | Path | Notes |
 |------|------|-------|
 | Coordinator | `Assets/Scripts/UI/Views/ExplorationMapCoordinator.cs` | Subscriptions, `ToggleExpandedFromInput`, hint publish, chrome visibility |
-| Minimap | `Assets/Scripts/UI/Views/MinimapPanelView.cs` | `ICentralizedUiSurface`; `sortingOrder` **0**; `SlideTransition` (`map-minimap--retracted` on slide shell) |
-| Expanded | `Assets/Scripts/UI/Views/ExpandedMapOverlayView.cs` | `UniformScaleTransition` (`map-expanded--hidden`, `map-expanded-scale--expanded`); `sortingOrder` **100** |
-| Paint | `Assets/Scripts/UI/MapGridPaintController.cs` | Shared grid paint + marker sync across surfaces |
+| Minimap | `Assets/Scripts/UI/Views/MinimapPanelPresenter.cs` | `ICentralizedUiSurface`; `sortingOrder` **0**; `SlideTransition` (`map-minimap--retracted` on slide shell) |
+| Expanded | `Assets/Scripts/UI/Views/ExpandedMapOverlayPresenter.cs` | `UniformScaleTransition` (`map-expanded--hidden`, `map-expanded-scale--expanded`); `sortingOrder` **100** |
+| Paint | `Assets/Scripts/UI/MapGridPaintCoordinator.cs` | Shared grid paint + marker sync across surfaces |
 | USS | `MapView.uss` (shared grid), `MinimapPanel.uss`, `ExpandedMapPanel.uss` | Trees built in C# via `MapGridHostBuilder` |
 | Orchestrator | `Assets/Scripts/UI/Views/ExplorationHudView.cs` | Party strip hides when expanded open |
 | Bootstrap | `DevSceneComposition.WireExplorationMap` | `ExplorationMap` GO → `MinimapPanel` + `ExpandedMapOverlay` children |
@@ -654,8 +654,8 @@ GameState
 ├── ItemListInventory (ItemListInventoryPresenter)
 ├── CharacterDetail (CharacterDetailPresenter)
 ├── ExplorationMap (ExplorationMapCoordinator)
-│   ├── MinimapPanel (MinimapPanelView)
-│   └── ExpandedMapOverlay (ExpandedMapOverlayView)
+│   ├── MinimapPanel (MinimapPanelPresenter)
+│   └── ExpandedMapOverlay (ExpandedMapOverlayPresenter)
 ├── ExplorationHud (ExplorationHudView — orchestrator only)
 ├── CombatHud
 ├── HubHud
@@ -930,7 +930,7 @@ Policy detail: [gotchas § Hide vs HideImmediate](centralized-ui-gotchas.md#hide
 | `PopInPresentationDriver` | Pop-in scale (`PopInTransition`, 420ms) | `ItemListPickerView`, `CharacterDetailPresenter`, `SkillUsePicker`, `StoryEventPresenter`, `NoticeOverlayPresenter` |
 | `CollapsePresentationDriver` | Dip / slide (`CollapseTransition`, 260ms; `--collapsed` authority) | `PartyFormationFloater` ([#214](https://github.com/miramocha/griddungeon-game/issues/214)) |
 | `SlidePresentationDriver` | Retract translate (`SlideTransition`) | `WalletHud`, `InputHint` ([#215](https://github.com/miramocha/griddungeon-game/issues/215), [#216](https://github.com/miramocha/griddungeon-game/issues/216)) |
-| `ScaleInPresentationDriver` | Uniform scale (`UniformScaleTransition`) | `ExpandedMapOverlayView` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) |
+| `ScaleInPresentationDriver` | Uniform scale (`UniformScaleTransition`) | `ExpandedMapOverlayPresenter` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) |
 | `FadePresentationDriver` | Opacity fade (`FadeTransition`, 280ms; `map-view--faded` authority) | Legacy map fade paths; marker fade helpers |
 | `RailEnterPresentationDriver` (internal) | Opacity + translate enter (`CommandRailEnterTransition`; `--entering` on body) | `CommandRail` ([#217](https://github.com/miramocha/griddungeon-game/issues/217)) |
 | `InstantPresentationDriver` | BEM `--hidden` only | Detached / test hosts without `panel` (see [gotchas § Edit Mode tests](centralized-ui-gotchas.md#edit-mode-tests-without-a-panel)) |
@@ -952,8 +952,8 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | `InputHint` | Presenter + facade ✅ | Slide | [#216](https://github.com/miramocha/griddungeon-game/issues/216) |
 | `CommandRail` | Presenter + facade ✅ | Rail enter | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
 | `CommandRailInfo` | Presenter ✅ (immediate root dismiss; copy block swaps animated) | `RailInfoCopyTransition` (slide+fade / fade) | [#217](https://github.com/miramocha/griddungeon-game/issues/217) |
-| `MinimapPanelView` | Presenter ✅ | Slide retract (`map-minimap--retracted`) | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
-| `ExpandedMapOverlayView` | Presenter ✅ | `ScaleInPresentationDriver` + `UniformScaleTransition` | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
+| `MinimapPanelPresenter` | Presenter ✅ | Slide retract (`map-minimap--retracted`) | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
+| `ExpandedMapOverlayPresenter` | Presenter ✅ | `ScaleInPresentationDriver` + `UniformScaleTransition` | [#244](https://github.com/miramocha/griddungeon-game/pull/244) |
 | `ExplorationMapCoordinator` | Orchestration (events, M-toggle, hints, autopilot) | Coordinates minimap slide + expanded scale; pause-menu chrome | [#244](https://github.com/miramocha/griddungeon-game/pull/244), [#248](https://github.com/miramocha/griddungeon-game/pull/248) |
 | `PartyMenuOverlayView` | Orchestration only — calls service facades | — | [#208](https://github.com/miramocha/griddungeon-game/issues/208) |
 | `ScreenFade` | Exception (imperative fade) | Opacity | — |

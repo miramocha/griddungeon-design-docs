@@ -37,7 +37,7 @@ At launch, the exploration map is a **read-only 2D schematic** in UI Toolkit —
 
 ### Draw priority
 
-**Cell paint** (`MapGridCellPaint` / `MapGridPaintController`): fog → solid mass → walkable floor/alcove fill only.
+**Cell paint** (`MapGridCellPaint` / `MapGridPaintCoordinator`): fog → solid mass → walkable floor/alcove fill only.
 
 **Overlays** (sibling layers above the cell grid; see [exploration UI — Map marker overlays](exploration-ui.md#map-marker-overlays)): wall borders → doors → gather → chest → stairs → story → FOE → party. Anchored to cell `worldBound` when layout is resolved.
 

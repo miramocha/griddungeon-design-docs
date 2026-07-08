@@ -272,7 +272,7 @@ Lives in `GridDungeon.UI`. UI Toolkit documents + C# presenters. **Reactive HUD 
 
 | Concern | Types / assets |
 |---------|----------------|
-| Exploration HUD | `ExplorationHudView`, `ExplorationMapCoordinator`, `MinimapPanelView`, `ExpandedMapOverlayView` |
+| Exploration HUD | `ExplorationHudView`, `ExplorationMapCoordinator`, `MinimapPanelPresenter`, `ExpandedMapOverlayPresenter` |
 | Map markers | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapGridMarkerAnimator` |
 | Combat HUD | `CombatHudView`, `CombatHudReactivePresenter`, `CombatArenaPlateView`, `CombatHudLogView` |
 | Party menu | `PartyMenuOverlayView`, `PartyFormationFloaterPresenter`, `PartyFormationGridView` |

@@ -33,7 +33,7 @@ See [centralized UI services](centralized-ui-services.md) for the full cross-pha
 
 | Panel | Current owner | Notes |
 |-------|---------------|-------|
-| Map | `ExplorationMapCoordinator` + `MinimapPanelView` / `ExpandedMapOverlayView` — own `UIDocument` each ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) | **Shipped** — no `BindToHud` mount |
+| Map | `ExplorationMapCoordinator` + `MinimapPanelPresenter` / `ExpandedMapOverlayPresenter` — own `UIDocument` each ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) | **Shipped** — no `BindToHud` mount |
 | Party strip | `PartyFormationFloaterPresenter` (already own doc, sort **10**) | Optional: merge into exploration orchestrator only |
 | Pause / party menu | `PartyMenuOverlayView` (already own doc, sort **250**) | Optional: split formation pane only |
 
@@ -47,7 +47,7 @@ See [centralized UI services](centralized-ui-services.md) for the full cross-pha
 | Center column | `combat-hud__center` | Rosters + synchro + log preview |
 | Turn order | `turn-order-strip` | Right rail |
 | Pickers | cloned into combat root | Consider own doc at sort 40+ |
-| Battle reward | `BattleRewardScreenView` on same GO | Already separate component — candidate for own doc |
+| Battle reward | `BattleRewardScreenPresenter` on same GO | Already separate component — candidate for own doc |
 
 ## Suggested scene graph (Tier 1)
 
@@ -56,8 +56,8 @@ flowchart TB
     subgraph Explore["Exploration (orchestrator + panels)"]
         EHV[ExplorationHudView]
         EMC[ExplorationMapCoordinator]
-        MM[MinimapPanelView]
-        EXP[ExpandedMapOverlayView]
+        MM[MinimapPanelPresenter]
+        EXP[ExpandedMapOverlayPresenter]
         PS[PartyFormationFloater]
         PO[PartyMenuOverlayView]
     end
@@ -103,7 +103,7 @@ UITK focus is **per panel**. Handlers must know active panel:
 | Area | Paths |
 |------|-------|
 | Bootstrap | `DevBootstrapSceneCreator.cs`, `DevSceneComposition.cs` |
-| Exploration | `ExplorationHudView.cs`, `ExplorationMapCoordinator.cs`, `MinimapPanelView.cs`, `ExpandedMapOverlayView.cs`, `PartyMenuOverlayView.cs` |
+| Exploration | `ExplorationHudView.cs`, `ExplorationMapCoordinator.cs`, `MinimapPanelPresenter.cs`, `ExpandedMapOverlayPresenter.cs`, `PartyMenuOverlayView.cs` |
 | Combat | `CombatHudView.cs`, `CombatHud.uxml` (split) |
 | Input | `InputRouter.cs`, `*InputHandler.cs` |
 | Tests | `Assets/Tests/UI/` — panel sort, focus owner, map fullscreen sort |

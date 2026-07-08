@@ -133,7 +133,7 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 | Path graph + A*/BFS | Split across Core + Runtime — see **Implementation (shipped)** below |
 | Step commit + lerp | `DungeonExplorer` |
 | Map click ? goal | `ExplorationMapCoordinator` ? `AutopilotController` |
-| Overlay | `MapGridPaintController` (BEM path/cursor/destination classes) |
+| Overlay | `MapGridPaintCoordinator` (BEM path/cursor/destination classes) |
 
 ---
 
@@ -152,7 +152,7 @@ PC defaults: [ADR 021](../../decisions/021-autopilot-mvp2.md). Rebind when setti
 | **`AutopilotPathWalker`** | `GridDungeon.Core` | Given a path + `pathIndex`, returns the next **turn** or **step** action (`AutopilotWalkerAction`) for `DungeonExplorer` — shortest arc (left vs right). |
 | **`AutopilotController`** | `GridDungeon.Runtime` | State machine (`Idle` ? `Selecting` ? `Walking` / `Suspended`), destination validation, pathfind orchestration, overlay events, combat suspend/resume, walker dispatch on animation complete. |
 
-UI wiring (not pathfinding): `ExplorationMapCoordinator` owns `AutopilotController`; `ExpandedMapDestinationSelection` handles expanded-map pointer + arrow cursor; `MapGridPaintController.SetAutopilotOverlay` paints path/cursor/destination.
+UI wiring (not pathfinding): `ExplorationMapCoordinator` owns `AutopilotController`; `ExpandedMapDestinationSelection` handles expanded-map pointer + arrow cursor; `MapGridPaintCoordinator.SetAutopilotOverlay` paints path/cursor/destination.
 
 ### A* algorithm (`MapPathfinder`)
 

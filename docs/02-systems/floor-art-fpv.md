@@ -44,7 +44,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **Types:** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcWalkableMaskBuilder`, `FloorArtTwcElevationTranslator`, `FloorArtTwcHost`).
 
-**Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
+**Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintCoordinator`.
 
 **Out of epic #344:** Built-in mesh path retirement when all strata on TWC — [#370](https://github.com/miramocha/griddungeon-game/issues/370) (optional, standalone).
 

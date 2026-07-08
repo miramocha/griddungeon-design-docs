@@ -46,7 +46,7 @@ Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint st
 | Exploration minimap | `MapView.RefreshGlobalInputHint` |
 | Exploration pause / party menu | `PartyMenuOverlayView.RefreshMenuHint` (`ExplorationPauseMenuShell` on exploration shell) |
 | Story modal | `StoryEventPresenter` (`TabbedPickerRailHints.ModalDismiss`) |
-| Victory rewards | `BattleRewardScreenView` on show / clear on dismiss |
+| Victory rewards | `BattleRewardScreenPresenter` on show / clear on dismiss |
 | Floor transition | `FloorTransitionPresenter` clears on start; `MapView` / `HubHudView` republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter` restores phase hint via `RestoreGlobalInputHintForPhase` |
 
