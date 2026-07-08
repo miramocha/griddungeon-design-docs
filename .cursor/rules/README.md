@@ -31,6 +31,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 |------|---------|
 | `unity-clean-code-principles.mdc` | SRP, DRY, KISS, YAGNI (always apply) |
 | `unity-csharp-naming.mdc` | Names for C# sketches in class design docs |
+| `unity-csharp-class-suffix-patterns.mdc` | Type role suffixes (`*View`, `*Presenter`, …); pairs with [class naming patterns](../docs/04-dev/class-naming-patterns.md) |
 | `unity-csharp-language.mdc` | C# 9 subset — no `init`, `record`, etc. |
 | `unity-csharp-unityengine-object.mdc` | Qualify `UnityEngine.Object` — avoid CS0104 vs `System.Object` |
 | `unity-csharp-formatting.mdc` | Layout / class organization |
@@ -44,6 +45,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 | `format-before-handoff-and-commit.mdc` | **Shared** — CSharpier + Prettier on changed `.cs` / `.uxml` / `.uss` before handoff and commit |
 | `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
+| `code-review-config.mdc` | **Shared** — `.cursor/review-config.json` schema for review class-naming doc URLs |
 | `pre-commit-csharpier-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.cs` |
 | `pre-commit-prettier-uitk-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.uxml` / `.uss` |
 | `git-commit-agent-workflow.mdc` | **Shared** — agent git commit order (format → commit → post-commit review → push) |
@@ -69,7 +71,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 
 | Agent | Notes |
 |-------|--------|
-| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1` |
+| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1`; class naming via [review-config.json](../review-config.json) |
 
 ## Architecture mapping
 

@@ -66,8 +66,7 @@ public enum InputActions { None = 0, Jump = 1, Attack = 2 }
 ## Classes and interfaces
 
 - **Classes**: PascalCase **nouns** or noun phrases (`PlayerController`, `InventorySlot`) — types describe things; methods describe actions.
-- **Role suffixes** (`*View`, `*Presenter`, `*Calculator`, …): see [unity-csharp-class-suffix-patterns](unity-csharp-class-suffix-patterns.mdc) and [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md).
-- **Role suffixes** (`*View`, `*Presenter`, `*Calculator`, …): see [unity-csharp-class-suffix-patterns](unity-csharp-class-suffix-patterns.mdc) and [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md).
+- **Role suffixes** (`*View`, `*Presenter`, `*Calculator`, …): see [unity-csharp-class-suffix-patterns](unity-csharp-class-suffix-patterns.mdc) and `classNaming.patternsDoc` in [review-config.json](../review-config.json) ([code-review-config](code-review-config.mdc)).
 - **Interfaces**: `I` + PascalCase **adjective** describing capability (`IDamageable`, `IInteractable`).
 - **MonoBehaviour files**: one `MonoBehaviour` per `.cs` file; the **filename must match** the behaviour class. Other helper types in the same file are fine. **Member section order**: `unity-csharp-formatting` (Fields → Properties → Events → lifecycle → public → private).
 

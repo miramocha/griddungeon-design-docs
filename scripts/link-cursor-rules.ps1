@@ -32,6 +32,7 @@ $ruleNames = @(
     "format-before-handoff-and-commit.mdc",
     "git-commit-agent-workflow.mdc",
     "code-review-no-story-edits.mdc",
+    "code-review-config.mdc",
     "github-backlog-project.mdc",
     "confirm-art-asset-deletion.mdc"
 )

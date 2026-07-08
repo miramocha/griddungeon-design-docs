@@ -1,0 +1,7 @@
+{
+  "classNaming": {
+    "patternsDoc": "docs/CLASS-NAMING.md",
+    "shippedTypesDoc": "docs/CLASS-DESIGN.md",
+    "suffixRule": "csharp-class-suffix-patterns.mdc"
+  }
+}

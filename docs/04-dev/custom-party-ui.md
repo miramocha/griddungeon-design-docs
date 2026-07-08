@@ -246,9 +246,31 @@ Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormation
 
 ---
 
+## Party menu 3D stage
+
+**Authority:** [ADR 047](../../decisions/047-party-menu-3d-stage.md)
+
+Full-screen **3D hex formation** behind existing party UITK whenever Tab party menu is open (hub + exploration). Mirrors hub **3D backdrop + overlay** ([hub environment](../02-systems/hub-and-services.md#hub-environment-presentation)).
+
+| Layer | Choice |
+|-------|--------|
+| **UITK** | Unchanged — `PartyMenuOverlayView` **250**, `CharacterDetail` **251**, floater **260** |
+| **Models** | `PlayerCharacter_Default` per occupied slot; stashed under floor when menu closed |
+| **Layout** | Hex ring on stage; UITK floater stays 2×4 `PartyFormationLayout` grid |
+| **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus |
+| **LookAt** | VRM 1.0 gaze on **focused** member only while floater docked (tracks orbit vcam) |
+| **Idle** | `PartyMenuStagePoseCatalog` + `AnimatorOverrideController` per slot; additive breathing layer on shared idle controller |
+| **Combat** | No party 3D models — arena layout is separate ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)) |
+
+**Hub:** hide guild-town geo while party menu open (when hub backdrop active). **Exploration:** hide dungeon view + minimap chrome; keep floor art loaded; restore FPV on close. **Implementation:** `PartyMenuStagePresenter`, `PartyCharacterVisualRegistry` — [game #400](https://github.com/miramocha/griddungeon-game/issues/400) (closed).
+
+**Art paths:** `Assets/Art/Characters/PartyMenu/Idles/`, `Assets/Scenes/PartyMenu/party_menu_stage_greybox.prefab`, `Assets/Content/PartyMenu/PartyMenuStagePoseCatalog.asset`.
+
+---
+
 ## Equipment menu (party pause)
 
-**Visual reference (scratchpad):** [EO IV character status](../refs/party-character-ui.md) — `CharacterDetail` single-column stats + equip rows (3D character preview is a separate surface, not in this modal).
+**Visual reference (scratchpad):** [EO IV character status](../refs/party-character-ui.md) — `CharacterDetail` single-column stats + equip rows. **3D character lineup** is the party menu hex stage ([ADR 047](../../decisions/047-party-menu-3d-stage.md)), not inside this modal.
 
 **Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
 

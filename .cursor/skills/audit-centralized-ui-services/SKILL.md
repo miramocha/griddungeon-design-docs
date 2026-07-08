@@ -27,6 +27,7 @@ description: >-
 |-----|------|
 | Rule | `.cursor/rules/centralized-ui-services.mdc` |
 | Shell rule | `.cursor/rules/presentation-shell.mdc` |
+| Class naming | `.cursor/review-config.json` → `classNaming` + `code-review-config.mdc` (`*Presenter` vs facade, `*View` vs `*Coordinator`) |
 | Design | `griddungeon-design-docs/docs/04-dev/centralized-ui-services.md` |
 | Gotchas | `griddungeon-design-docs/docs/04-dev/centralized-ui-gotchas.md` |
 | Shell gotchas | `griddungeon-design-docs/docs/04-dev/presentation-shell-gotchas.md` |

@@ -98,7 +98,8 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 - `CharacterDetailPresenter` implements `ICentralizedUiSurface`; facade exposes `RequestedVisible`, `IsShown`, `IsSettling`.
 - `Show()` while `IsSettling` bumps `UiTransitionSession` generation (kills in-flight tweens) and re-enters via `PresentCurrentContext` — not `Refresh()` alone.
-- Context enum swap (`SetPartyMenuContext`) calls `TeardownPresentationForContextSwap` → `HideImmediate()` on the internal presentation — not animated `Hide()` across authorities.
+- Party-menu section swaps call facade `Hide()` on competing sort-251 overlays before opening the next pane ([#411](https://github.com/miramocha/griddungeon-game/issues/411)).
+- `SetPartyMenuContext` still uses `TeardownPresentationForContextSwap` on the internal presentation for same-overlay context swaps (formation ↔ equipment).
 - `PartyMenuOverlayView` orchestrates context + `Show`/`Hide`; it does **not** own a second PopIn stack ([#208](https://github.com/miramocha/griddungeon-game/issues/208)).
 
 **Tests:** `CharacterDetailPresenterTests` (settle + `HideImmediate`), `PartyMenuSort251LifecycleTests` (bag + detail at sort 251).
@@ -107,15 +108,32 @@ Hub shop modal rail disable (`CommandPanelModalSupport`) and input hints key off
 
 ---
 
-## Context switches must not use animated hide
+## Hide vs HideImmediate policy ([#411](https://github.com/miramocha/griddungeon-game/issues/411))
 
-**Symptom:** Left combat with item picker mid-close; hub shop opens invisible, or bag + shop contexts fight.
+| Call | When |
+|------|------|
+| `Hide()` | Player dismiss, tab/section switch, competing overlay handoff the player sees |
+| `HideImmediate()` | `OnDisable`, phase exit, bootstrap init, story preemption, documented input-stack snap |
 
-**Cause:** `ItemListInventoryPresenter` owns **one** `ItemListPickerView` across `HubShop` / `CombatItem` / `PartyBag` / `Hidden`. Animated `Hide()` callbacks can fire **after** the next context already called `Show`.
+**Player-visible paths (animated):** party-menu Q/E section swap (`HideCompetingSort251Overlays`), hub hospital detail exit (`ResetHospitalPickState`), inventory context switch (`ForceHideForContextSwitch`), party-menu close (`FinishPartyMenuClose` unless `snapPresentation: true`), field-skill picker cancel.
 
-**Fix pattern (shipped):** `ForceHideForContextSwitch` / `HideHubShopInternal(immediate: true)` / `ItemListPickerView.HideImmediate()` — skip exit animation, clear `IsSettling`, do not rely on deferred callbacks when **authority** changes (phase leave, context enum swap).
+**Intentional snap (documented Tier 2):** combat target-mode picker dismiss, party floater dock teardown, story preemption on notice overlay, phase-exit paths on command rail / minimap / skill picker.
 
-**Rule:** Animated `Hide()` is for **player dismiss** within the same context. **System dismiss** (phase exit, service close, switch HubShop → PartyBag) uses **`HideImmediate()`**.
+`UiTransitionSession` generation cancels stale exit callbacks when `Show()` runs during dismiss — prefer `Hide()` + reopen over `HideImmediate()` on happy paths. Reserve `HideImmediate()` for lifecycle/teardown.
+
+**Tests:** `PartyMenuSort251LifecycleTests`, `CharacterDetailPresenterTests`, `ItemListInventoryPresenterTests` (mid-dismiss reopen).
+
+---
+
+## Context switches and animated dismiss
+
+**Symptom (legacy):** Left combat with item picker mid-close; hub shop opens invisible, or bag + shop contexts fight.
+
+**Cause:** `ItemListInventoryPresenter` owns **one** `ItemListPickerView` across contexts. Stale exit `onComplete` fired after the next context called `Show` when hosts used `Refresh` during settle or skipped `UiTransitionSession` generation.
+
+**Fix (shipped [#411](https://github.com/miramocha/griddungeon-game/issues/411)):** `ForceHideForContextSwitch` calls animated `Hide()` / `Close()` on the leaving context. `Show()` while `IsSettling` bumps generation and re-presents. Phase exit and `OnDisable` still use `HideImmediate()`.
+
+**Rule:** Animated `Hide()` for player-visible dismiss and in-phase overlay handoff. `HideImmediate()` for lifecycle teardown and documented input-stack snaps — not mid-beat Runtime hard cuts ([no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide)).
 
 ---
 
