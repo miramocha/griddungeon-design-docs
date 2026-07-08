@@ -9,7 +9,7 @@ tags:
 
 PascalCase **suffix** = responsibility + assembly. Shipped type tables: [05 — Class design](../05-class-design.md). Suffix rules stay in this file.
 
-Agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (compressed checklist on `*.cs`).
+Agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (compressed checklist on `*.cs`). Review agents resolve the full doc via [`.cursor/review-config.json`](../../.cursor/review-config.json) → `classNaming.patternsDoc` ([code-review-config](../../.cursor/rules/code-review-config.mdc)).
 
 | Doc | Owns |
 |-----|------|
@@ -93,7 +93,12 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*Layout` | Picker profile / hook names (data) | `ItemListPickerLayout` |
 | `*Adapter` | Bridge APIs | `CombatItemListPickerAdapter` |
 | `*Support` | Shared static UI helpers | `CommandPanelModalSupport` |
-| `*Transition` | DOTween show/hide on `VisualElement` | `SlideTransition`, `PopInTransition` |
+| `*Transition` | DOTween show/hide on `VisualElement` | `SlideTransition`, `PopInTransition`, `RailInfoCopyTransition` |
+| `*Routine` | Static **coroutine beat** helpers (fade-to → work → fade-from) | `ScreenFadeBeatRoutine` |
+| *(no suffix)* static facade | Thin API on `CentralizedUiFacade<TPresenter>` or presenter register | `InputHints`, `CommandRailInfo`, `ScreenFades`, `PartyMenuEnvironmentFade` |
+| `*Defaults` | Path / tuning constants (static class) | `PartyMenuStageDefaults`, `WorldBackdropFadeDefaults` |
+| *(no suffix)* token helper | Shared static value resolver (color, copy table) | `WorldBackdropColor`, `TabbedPickerRailHints` |
+| `internal` helper | Implementation behind `*Presenter` / `*View` — no public suffix | `UiFadeOverlay` (UITK fade shell used by fade presenters) |
 
 #### View + Presenter pairs
 
@@ -101,6 +106,17 @@ Common pattern for centralized services:
 
 - `WalletHudView` — clones UXML, sets balance label
 - `WalletHudPresenter` — `UIDocument`, slide in/out, `CentralizedUiPresenterBase`
+
+**Static facades** (optional, `GridDungeon.UI` or co-located with Runtime presenter):
+
+- `InputHints` → `InputHintPresenter`
+- `CommandRailInfo` → `CommandRailInfoPresenter`
+- `ScreenFades` → `ScreenFadePresenter` (floor transitions; sort **10000**)
+- `PartyMenuEnvironmentFade` → `PartyMenuEnvironmentFadePresenter` (3D backdrop mask; sort **15**)
+
+Facade = register/unregister in presenter `OnEnable`/`OnDisable`, thin static methods; no `UIDocument` on the facade type. See [centralized UI services](centralized-ui-services.md).
+
+**`*Routine` vs `*Transition`:** `*Transition` tweens a `VisualElement` in place. `*Routine` yields `IEnumerator` beats that **orchestrate** multiple steps (e.g. fade to black → swap under black → fade from). Do not put coroutine beat graphs on `*Presenter` when a static `*Routine` is shared across phases.
 
 Phase HUDs often use:
 
@@ -128,6 +144,10 @@ Phase HUDs often use:
 | `*Inspector` | `FloorEditorFoeInspector` |
 | `*Store` | `FloorEditorFoeSpawnStore` |
 | `*AssetResolver` | `FloorEditorStoryEventAssetResolver` |
+| `*Creator` | Menu entry that authors a **scene or full prefab** | `DevBootstrapSceneCreator`, `PartyMenuStagePrefabCreator`, `FloorTransitionBeatPrefabCreator` |
+| `*Factory` | Reusable **prefab fragment** or asset builder shared by creators | `WorldBackdropSphereFactory` (shared `Backdrop` / `BackdropSphere` + party backdrop material) |
+
+Prefer `*Creator` for one-shot menu tools that save a prefab/scene asset. Extract a `*Factory` when two or more creators share the same hierarchy chunk (party stage + floor-transition beats both use `WorldBackdropSphereFactory`).
 
 ### Tests
 

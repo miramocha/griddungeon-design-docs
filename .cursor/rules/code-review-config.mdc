@@ -1,0 +1,42 @@
+---
+description: Review agents read .cursor/review-config.json for class naming doc URLs and optional suffix rule.
+alwaysApply: false
+---
+
+# Code review config
+
+Portable review settings live at **`.cursor/review-config.json`** at the workspace root (copy from [review-config.example.json](../review-config.example.json) for new projects).
+
+## When to read
+
+Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-out review when the diff **adds or renames C# types**:
+
+1. Read `.cursor/review-config.json` in any open workspace folder for the repo under review.
+2. If `classNaming` is missing or `patternsDoc` is empty, **skip** the class-naming suffix gate.
+3. Otherwise use the paths below — do **not** hardcode project-specific doc URLs in review prompts.
+
+## Schema
+
+| Field | Required | Meaning |
+|-------|----------|---------|
+| `classNaming.patternsDoc` | Yes (for gate) | Full class/suffix naming guide — HTTPS URL or repo-relative path |
+| `classNaming.shippedTypesDoc` | No | Shipped type inventory — lookup only, not for inventing new suffixes |
+| `classNaming.suffixRule` | No | Filename under `.cursor/rules/` — compressed checklist (e.g. `unity-csharp-class-suffix-patterns.mdc`) |
+
+## Review workflow
+
+When `classNaming` is configured and types were added/renamed:
+
+1. Open **`classNaming.patternsDoc`** for authority on suffix choice and decision flow.
+2. If `suffixRule` is set and the file exists under `.cursor/rules/`, enforce it in review findings.
+3. If `shippedTypesDoc` is set, use it only to check whether a type name already exists — not to override `patternsDoc`.
+4. Pass **`code-review-config.mdc`**, **`classNaming.suffixRule`** (when set), and **`patternsDoc`** path/URL in **fresh-reviewer** subagent prompts.
+
+## Other projects
+
+1. Copy `review-config.example.json` → `review-config.json`.
+2. Point `patternsDoc` at your naming doc (local path or URL).
+3. Optionally add a project-specific `suffixRule` under `.cursor/rules/`.
+4. Omit `classNaming` entirely to disable the suffix gate.
+
+Grid Dungeon ships a filled `review-config.json` in **griddungeon-game** and **griddungeon-design-docs** (relative paths in design-docs).

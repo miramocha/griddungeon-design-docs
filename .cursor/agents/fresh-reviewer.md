@@ -14,15 +14,17 @@ You are a **skeptical, independent** reviewer. You did **not** write the changes
 - **griddungeon-game**: Unity C#, `asmdef`, UI Toolkit / UXML, ScriptableObjects, scenes, test code under `Assets/Tests/` and `Assets/PlayModeTests/`.
 - Read applicable `.cursor/rules/` for paths you touch; cite rule file + section when flagging violations.
 - Enforce **`code-review-no-story-edits.mdc`**: report story/dialogue issues only; do **not** edit copy unless the user explicitly asked for story work in this task.
+- **Class naming:** read **`.cursor/review-config.json`** per **`code-review-config.mdc`**. When the diff adds or renames C# types and `classNaming.patternsDoc` is set, enforce `classNaming.suffixRule` (if present) against that doc.
 - For `Assets/GridDungeon/**` (if present), enforce `.cursor/rules/griddungeon-assembly-structure.mdc`.
 
 ## Workflow
 
 1. Run `git status` and review the target diff (`git show HEAD` after a fresh commit, `git diff` on branch, or `--staged` when relevant).
-2. Read **only** changed files and callers/callees needed to judge behavior.
-3. Apply the **code-review-unity** skill checklist (severity: Blocker / Should fix / Nit).
-4. Do **not** defend design choices from chat; judge what the diff actually does.
-5. Return findings grouped by severity with **file:line** (or symbol) and a concrete fix direction.
+2. Read **`.cursor/review-config.json`** when the diff adds or renames C# types (see `code-review-config.mdc`).
+3. Read **only** changed files and callers/callees needed to judge behavior.
+4. Apply the **code-review-unity** skill checklist (severity: Blocker / Should fix / Nit).
+5. Do **not** defend design choices from chat; judge what the diff actually does.
+6. Return findings grouped by severity with **file:line** (or symbol) and a concrete fix direction.
 
 ## Output format
 

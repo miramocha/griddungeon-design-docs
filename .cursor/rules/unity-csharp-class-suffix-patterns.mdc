@@ -89,17 +89,27 @@ Thin domain wrappers (`HubHospitalCharacterPicker`, `FieldItemCharacterPicker`) 
 
 Multiple `*Service` types may share one file (e.g. `HubServices.cs`) — prefer one type per file for new code.
 
+### Editor authoring
+
+| Suffix | Role |
+|--------|------|
+| `*Creator` | Menu tool that authors a **scene or full prefab** (`PartyMenuStagePrefabCreator`) |
+| `*Factory` | Reusable **prefab fragment** shared by creators (`WorldBackdropSphereFactory`) |
+
 ### Other UI / runtime
 
 | Suffix | Role |
 |--------|------|
 | `*InputHandler` | Input System → view/coordinator (`CombatInputHandler`) |
 | `*Transition` | DOTween show/hide helper on `VisualElement` (`SlideTransition`) |
+| `*Routine` | Static coroutine beat orchestration (`ScreenFadeBeatRoutine`) — not a `MonoBehaviour` |
+| *(no suffix)* facade | Static API to a centralized `*Presenter` (`InputHints`, `ScreenFades`) |
+| `*Defaults` | Static path/tuning constants (`WorldBackdropFadeDefaults`) |
 | `*Support` | Static shared UI chrome helpers (`CommandPanelModalSupport`) |
 | `*Builder` | Assemble rows/panels/copy from data (UI or presentation) |
 | `*Adapter` | Bridge two picker/list APIs |
 | `*Definition` | ScriptableObject content asset (`SkillDefinition`) |
-| `*Factory` | Construct domain/runtime models (`CombatantFactory`) |
+| `*Factory` | Construct domain/runtime models (`CombatantFactory`); Editor: shared prefab fragment (`WorldBackdropSphereFactory`) |
 
 ## New type checklist
 
@@ -112,6 +122,8 @@ Multiple `*Service` types may share one file (e.g. `HubServices.cs`) — prefer 
 7. **File ≤300 lines target** — split before new suffix soup on one type ([unity-csharp-file-size-limits](unity-csharp-file-size-limits.mdc))
 
 ## PR review — reject
+
+Enforced by **fresh-reviewer** / **code-review-unity** when diff adds or renames types. Authority: [class naming patterns](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/class-naming-patterns.md).
 
 - New `*View` with no `VisualElement` / UXML bind responsibility
 - Second centralized overlay strip (use `InputHints` / existing presenter)

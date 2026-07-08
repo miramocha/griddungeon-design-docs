@@ -276,8 +276,9 @@ Lives in `GridDungeon.UI`. UI Toolkit documents + C# presenters. **Reactive HUD 
 | Map markers | `MapPartyMarkerPresenter`, `MapFoeMarkersPresenter`, `MapGatherMarkersPresenter`, `MapGridMarkerAnimator` |
 | Combat HUD | `CombatHudView`, `CombatHudReactivePresenter`, `CombatArenaPlateView`, `CombatHudLogView` |
 | Party menu | `PartyMenuOverlayView`, `PartyFormationFloaterPresenter`, `PartyFormationGridView` |
-| Shared services | `ItemListInventoryPresenter`, `InputHintPresenter`, `CommandRailPresenter`, `CombatArenaPlatePresenter` — [centralized UI services](04-dev/centralized-ui-services.md) |
+| Shared services | `ItemListInventoryPresenter`, `InputHintPresenter`, `CommandRailPresenter`, `CommandRailInfoPresenter`, `ScreenFadePresenter`, `PartyMenuEnvironmentFadePresenter`, `CombatArenaPlatePresenter` — [centralized UI services](04-dev/centralized-ui-services.md) |
 | Global input hints | `InputHints`, `TabbedPickerRailHints` |
+| Fade facades | `ScreenFades`, `PartyMenuEnvironmentFade` |
 
 **Exploration UI authority:** [exploration UI](02-systems/exploration-ui.md). **Combat UI authority:** [combat](02-systems/combat.md). **Custom pickers:** [custom party UI](04-dev/custom-party-ui.md), [custom skill picker UI](04-dev/custom-skill-picker-ui.md).
 

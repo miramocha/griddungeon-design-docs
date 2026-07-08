@@ -598,17 +598,31 @@ Legacy `MapView` shim delegates to coordinator until scenes refresh. **Do not** 
 
 ---
 
-### Screen fade — `ScreenFadePresenter` (no static facade)
+### Screen fade — `ScreenFadePresenter` + `ScreenFades`
 
 **Job:** Full-screen opaque/translucent overlay for floor transitions and other beats.
 
 | Type | Path | Notes |
 |------|------|-------|
 | Presenter | `Assets/Scripts/Runtime/UI/ScreenFadePresenter.cs` | `sortingOrder` **10000** |
-| Access | `GameState.ScreenFade` | `FadeOut` / `FadeIn` / `SetOpaque` / `SetTransparent` |
+| Facade | `ScreenFades` (same file) | `FadeOut` / `FadeIn` / `SetOpaque` / `SetTransparent`; registers on presenter `OnEnable` |
+| Beat helper | `ScreenFadeBeatRoutine` (same file) | Coroutine fade-to → work → fade-from (e.g. land reveal under black) |
+| Access | `GameState.ScreenFade` **or** `ScreenFades.*` | Prefer facade when caller has no `GameState`; both resolve the same presenter |
 | Bootstrap | Wired on `GameState` with `FloorTransitionPresenter` | See `DevSceneComposition.WireFloorTransition` |
 
-Callers hold a `GameState` reference; there is no `ScreenFades.Publish` facade — fade is **imperative** and short-lived.
+Shared fade shell: `UiFadeOverlay` (internal). Default color/duration: `WorldBackdropColor`, `WorldBackdropFadeDefaults`.
+
+---
+
+### Party menu environment fade — `PartyMenuEnvironmentFadePresenter` + `PartyMenuEnvironmentFade`
+
+**Job:** UITK mask over the party menu **3D backdrop** (greybox sphere) — same material/color family as floor-transition stairs beats.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/PartyMenuEnvironmentFadePresenter.cs` | `sortingOrder` **15** |
+| Facade | `PartyMenuEnvironmentFade` (same file) | Fade in/out on party menu open/close |
+| Backdrop color | `WorldBackdropColor` | Reads party backdrop material `_BaseColor`; `PartyMenuBackdropColor` is a thin alias |
 
 ---
 
