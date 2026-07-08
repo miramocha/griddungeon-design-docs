@@ -131,10 +131,10 @@ Phase HUDs often use:
 | Type | Role |
 |------|------|
 | `RailMenuFocus` | Focus index, selection sync, chip/tab wiring |
-| `RailMenuView` | Horizontal chip DOM bind |
+| `RailMenuView` | Chip list DOM bind on host (`VisualElement`); horizontal tabs or vertical chips — not a `UIDocument` / UXML-file view |
 
-
-`MapChestMarkerRules` (when to show) + `MapChestMarkersPresenter` (bind map → glyphs). One pair per marker family — repetition is intentional until a generic layer is justified ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
+#### Map markers
+ (when to show) + `MapChestMarkersPresenter` (bind map → glyphs). One pair per marker family — repetition is intentional until a generic layer is justified ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
 
 ### Campaign
 
