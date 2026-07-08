@@ -1,5 +1,5 @@
 ---
-description: Prefer Core/tests for logic; limit internal *ForTests seams in prod C#.
+description: Prefer Core/tests for logic; limit internal *ForTests seams; no UNITY_EDITOR in Runtime without user approval.
 globs:
   - "**/Assets/Scripts/**/*.cs"
   - "**/Assets/Tests/**/*.cs"
@@ -20,6 +20,39 @@ Authority: [Assets/Tests/README.md](../../Assets/Tests/README.md) (Edit Mode dom
 4. **`internal *ForTests` on prod type** — last resort for UITK build wiring, deferred `schedule.Execute`, or state tests cannot reach without `InternalsVisibleTo`. One narrow method; name ends in `ForTests`.
 5. **Manual / Play Mode** — visual feel, scene wiring, or one-off layout when Edit Mode cannot own it ([`ticket-test-documentation.mdc`](ticket-test-documentation.mdc)).
 
+## `#if UNITY_EDITOR` in production Runtime — stop and ask first
+
+**Before** adding `#if UNITY_EDITOR`, `using UnityEditor`, or `EditorApplication.*` under `Assets/Scripts/` **outside** `Assets/Scripts/Editor/`:
+
+1. **Stop and ask the user** — propose an alternative and wait for confirmation.
+2. **Default:** do not add editor-only branches to fix Edit Mode tests.
+
+| OK without asking | Ask first (usually reject) |
+|-------------------|----------------------------|
+| `Assets/Scripts/Editor/**` | `#if UNITY_EDITOR` in Runtime / UI / Core / Campaign |
+| `Application.isPlaying` for real play vs edit (destroy, material assign, tweens) | `EditorApplication.isPlaying` in Runtime to branch test vs play |
+| `#if UNITY_EDITOR \|\| DEVELOPMENT_BUILD` **logging only** | Editor-only code path that changes gameplay, UI, or assets “for tests” |
+
+**Prefer instead of editor `if` in Runtime:**
+
+- **Core** simulators + `Assets/Tests/<Domain>/` for logic under test
+- **Explicit clone from `sharedMaterials`** + assign (`sharedMaterials` edit, `materials` setter play) — never `.materials` **getter** in edit mode
+- **`internal *ForTests`** on the prod type (narrow, documented) — not `#if UNITY_EDITOR` wrappers
+- **Test doubles** in test asm / `GridDungeon.Tests` helpers — not Runtime public types
+
+```csharp
+// ❌ BAD — editor branch in Runtime for Edit Mode tests
+#if UNITY_EDITOR
+if (!EditorApplication.isPlaying) { … }
+#endif
+
+// ✅ GOOD — play vs edit runtime rule (legitimate prod)
+if (Application.isPlaying)
+    renderer.materials = instances;
+else
+    renderer.sharedMaterials = instances;
+```
+
 ## Do not
 
 | Avoid | Use instead |
@@ -28,6 +61,8 @@ Authority: [Assets/Tests/README.md](../../Assets/Tests/README.md) (Edit Mode dom
 | Business logic in `*ForTests` helpers | Core simulator or presenter path under test |
 | Duplicate seam per presenter (`FlushScheduledFooForTests` × N) | Shared transition helper or test fixture base in `Assets/Tests/` |
 | `#if UNITY_INCLUDE_TESTS` / test-only branches in prod | `internal` helpers (ship in player builds but not callable outside test asmdefs) |
+| `#if UNITY_EDITOR` in Runtime/UI to satisfy tests | Ask user; Core, `Application.isPlaying`, or test asm (see above) |
+| Prod hot path reads `*ForTests` properties | Neutral prod API (`CurrentAlpha`) or injection at fixture setup |
 | `EnsureBuiltForTests` when normal `Show`/`OnEnable` builds tree | Call production entry point in test setup |
 | New seam to skip animation when ADR 039 helper exists | `SimulateDue*ForTests` on the transition target |
 
@@ -54,5 +89,7 @@ internal void OpenCombatItemForTests(PartyBag bag) { … } // prefer public Open
 
 - [ ] Rule under test could move to **Core** — move it before adding `*ForTests`
 - [ ] New `*ForTests` is **`internal`**, suffixed `ForTests`, smallest API
+- [ ] No new `#if UNITY_EDITOR` / `UnityEditor` in Runtime without **user approval**
+- [ ] Prod path does not read `*ForTests` properties — neutral API or injection
 - [ ] UITK motion uses **ADR 039** helpers before new presenter flush/advance methods
 - [ ] Test plan names **Edit Mode** path (`Tests → <Domain> → <Fixture>`)

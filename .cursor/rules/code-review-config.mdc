@@ -1,5 +1,5 @@
 ---
-description: classNaming paths in review-config.json — read before creating types and in review.
+description: review-config.json — classNaming + productionTestSeams rules; read before creating types and at review start.
 alwaysApply: false
 ---
 
@@ -19,11 +19,13 @@ When **creating or renaming** a C# type under `Assets/Scripts/` or `Assets/Tests
 
 ### Review (after the diff)
 
-Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-out review when the diff **adds or renames C# types**:
+Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-out review:
 
 1. Read `.cursor/review-config.json` in any open workspace folder for the repo under review.
-2. If `classNaming` is missing or `patternsDoc` is empty, **skip** the class-naming suffix gate.
-3. Otherwise use the paths below — do **not** hardcode project-specific doc URLs in review prompts.
+2. **Class naming** — when the diff **adds or renames C# types** and `classNaming.patternsDoc` is set, enforce per below.
+3. **Production test seams** — when the diff touches `Assets/Scripts/**/*.cs` (Runtime, UI, Core, Campaign — not `Editor/` only), read **`productionTestSeams.rule`** (default: `unity-test-seams.mdc`) and flag new `#if UNITY_EDITOR` / `UnityEditor` in Runtime, prod paths reading `*ForTests`, and test-only branches.
+
+Otherwise use the paths below — do **not** hardcode project-specific doc URLs in review prompts.
 
 ## Schema
 
@@ -32,6 +34,7 @@ Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-o
 | `classNaming.patternsDoc` | Yes (for gate) | Full class/suffix naming guide — HTTPS URL or repo-relative path |
 | `classNaming.shippedTypesDoc` | No | Shipped type inventory — lookup only, not for inventing new suffixes |
 | `classNaming.suffixRule` | No | Filename under `.cursor/rules/` — compressed checklist (e.g. `unity-csharp-class-suffix-patterns.mdc`) |
+| `productionTestSeams.rule` | No | Filename under `.cursor/rules/` — prod test-seam / editor-branch gate (e.g. `unity-test-seams.mdc`) |
 
 ## Review workflow
 
@@ -41,6 +44,12 @@ When `classNaming` is configured and types were added/renamed:
 2. If `suffixRule` is set and the file exists under `.cursor/rules/`, enforce it in review findings.
 3. If `shippedTypesDoc` is set, use it only to check whether a type name already exists — not to override `patternsDoc`.
 4. Pass **`code-review-config.mdc`**, **`classNaming.suffixRule`** (when set), and **`patternsDoc`** path/URL in **fresh-reviewer** subagent prompts.
+
+When `productionTestSeams.rule` is set and the diff touches prod C# under `Assets/Scripts/`:
+
+1. Read that rule file before reviewing (section **`#if UNITY_EDITOR` in production Runtime — stop and ask first**).
+2. **Flag as Should fix or Blocker:** new `#if UNITY_EDITOR` / `using UnityEditor` / `EditorApplication` in Runtime/UI/Core/Campaign; prod hot paths reading `*ForTests`; public test-only types in Runtime asm.
+3. Pass **`productionTestSeams.rule`** in **fresh-reviewer** prompts whenever `Assets/Scripts/**/*.cs` is in the diff (alongside `code-review-no-story-edits.mdc`).
 
 ## Other projects
 

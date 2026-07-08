@@ -3,5 +3,8 @@
     "patternsDoc": "docs/04-dev/class-naming-patterns.md",
     "shippedTypesDoc": "docs/05-class-design.md",
     "suffixRule": "unity-csharp-class-suffix-patterns.mdc"
+  },
+  "productionTestSeams": {
+    "rule": "unity-test-seams.mdc"
   }
 }

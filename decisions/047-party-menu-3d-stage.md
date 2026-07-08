@@ -81,6 +81,18 @@ Six authored poses cover core slots; aux grids **3** and **7** borrow a front/ba
 
 Only **one** character tracks camera at a time (matches floater single-focus UX).
 
+### Material silhouette — focused member reveal
+
+| State | 3D character colors |
+|-------|---------------------|
+| Menu open (any section) | **All silhouette** (black base + shade via `CharacterMaterialSilhouette`) |
+| Floater undocked | **All silhouette** |
+| Floater docked, no member focus | **All silhouette** |
+| Floater docked + member focus | **Focused = revealed**; others silhouette |
+| Menu close / stash | Restore cached colors |
+
+Shares the **same debounced focus signal** as LookAt (`PartyMenuStagePresenter` → `PartyCharacterVisualRegistry.SetMemberRevealGridIndex`). Animator `Silhouette` layer on `PartyMenuIdleBase.controller` (`MemberRevealed` bool) syncs with C# material lerp (path B until `_CharacterSilhouetteReveal` ships on toon shaders).
+
 ### Cinemachine — overview vs orbit
 
 Session uses **one** `CinemachineBrain` ([ADR 033](033-hub-environment-cinemachine.md)). Extend `ExplorationCameraSession` with `partyMenuBrainLock` (same pattern as hub/combat locks).
@@ -104,7 +116,7 @@ Session uses **one** `CinemachineBrain` ([ADR 033](033-hub-environment-cinemachi
 | Menu open/close, section chrome | `PartyMenuOverlayView` |
 | Floater dock + member focus | `PartyFormationFloaterPresenter` → `PartyMenuStage` facade |
 | 3D session, brain lock, vcam | `PartyMenuStagePresenter` |
-| Visual pool, pose, LookAt | `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose`, `VrmCharacterLookAt` |
+| Visual pool, pose, LookAt, silhouette | `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose`, `VrmCharacterLookAt`, `CharacterMaterialSilhouette` |
 | Stage anchors, orbit rig, vcams | `PartyMenuStageAnchorSet`, `PartyMenuStageOrbitRig` on `party_menu_stage_greybox` prefab |
 | Debounced focus → camera | `PartyMenuMemberFocusDebouncer` (Core) |
 

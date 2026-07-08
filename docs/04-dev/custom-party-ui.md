@@ -259,6 +259,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | **Layout** | Hex ring on stage; UITK floater stays 2×4 `PartyFormationLayout` grid |
 | **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus |
 | **LookAt** | VRM 1.0 gaze on **focused** member only while floater docked (tracks orbit vcam) |
+| **Silhouette** | All members black silhouette on menu open; **focused** member reveals full color when floater docked + grid focus (`CharacterMaterialSilhouette` + `Silhouette` animator layer) |
 | **Idle** | `PartyMenuStagePoseCatalog` + `AnimatorOverrideController` per slot; additive breathing layer on shared idle controller |
 | **Combat** | No party 3D models — arena layout is separate ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)) |
 

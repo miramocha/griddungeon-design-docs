@@ -73,7 +73,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 
 | Agent | Notes |
 |-------|--------|
-| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1`; class naming via [review-config.json](../review-config.json) |
+| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1`; [review-config.json](../review-config.json) — class naming + `productionTestSeams` (`unity-test-seams.mdc`) |
 
 ## Architecture mapping
 
