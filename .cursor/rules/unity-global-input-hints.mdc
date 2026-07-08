@@ -43,14 +43,14 @@ Separate segments with ` · ` (middle dot + spaces). **Do not** hardcode hint st
 | Hub | `HubHudView.RefreshInputHint` / `RestoreInputHint` |
 | Combat | `CombatHudView.RefreshInputHint` / `RestoreInputHint` |
 | Party menu | `PartyMenuOverlayView.RefreshMenuHint` |
-| Exploration minimap | `MapView.RefreshGlobalInputHint` |
+| Exploration minimap | `ExplorationMapCoordinator.RefreshGlobalInputHint` |
 | Exploration pause / party menu | `PartyMenuOverlayView.RefreshMenuHint` (`ExplorationPauseMenuShell` on exploration shell) |
 | Story modal | `StoryEventPresenter` (`TabbedPickerRailHints.ModalDismiss`) |
-| Victory rewards | `BattleRewardScreenView` on show / clear on dismiss |
-| Floor transition | `FloorTransitionPresenter` clears on start; `MapView` / `HubHudView` republish on `PresentationReleased` |
+| Victory rewards | `BattleRewardScreenPresenter` on show / clear on dismiss |
+| Floor transition | `FloorTransitionPresenter` clears on start; `ExplorationMapCoordinator` / `HubHudView` republish on `PresentationReleased` |
 | Story end / pause close | `InputRouter` restores phase hint via `RestoreGlobalInputHintForPhase` |
 
-Clear on overlay close, phase exit, or when a higher-priority overlay owns binds. Restore the underlying screen hint after dismiss (hub `RestoreInputHint`, exploration `MapView.RefreshGlobalInputHint`, combat `CombatHudView.RestoreInputHint`, etc.).
+Clear on overlay close, phase exit, or when a higher-priority overlay owns binds. Restore the underlying screen hint after dismiss (hub `RestoreInputHint`, exploration `ExplorationMapCoordinator.RefreshGlobalInputHint`, combat `CombatHudView.RestoreInputHint`, etc.).
 
 ## Modal panel hints (`hud-overlay__hint`)
 

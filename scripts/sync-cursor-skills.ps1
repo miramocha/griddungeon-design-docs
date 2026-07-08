@@ -27,6 +27,7 @@ $canonical = @{
     "blender-bone-remap"       = "game"
     "vroid-shapekey-remap"     = "game"
     "deslop"                   = "design-docs"
+    "class-naming-grid-dungeon" = "design-docs"
 }
 
 function Get-RepoSkillsRoot([string]$repo) {

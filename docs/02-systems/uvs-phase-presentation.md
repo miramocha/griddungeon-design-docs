@@ -135,7 +135,7 @@ Invalid `RequestTransition` returns `false` and leaves `Current` unchanged.
 |------|-----|
 | `GamePhaseController.TryTransitionTo` | No scene reference; use `GameState.RequestTransition` |
 | `IPhaseController.OnEnter` / `OnExit` | Invoked only by phase controller |
-| Direct `DungeonView.SetVisible`, scene loads | Owned by phase controllers |
+| Direct `DungeonSceneHost.SetVisible`, scene loads | Owned by phase controllers |
 
 ---
 
@@ -397,7 +397,7 @@ hubController.PresentationGate.Release();
 | `OnTurnStart`, `OnActionResolved` | Hit FX, camera punch |
 | `CombatScenePresenter.Show` / `Hide` | Already called from `CombatPhaseController` — animate around, don’t replace |
 
-Arena visibility: `CombatPhaseController.OnEnter` hides `DungeonView` and shows the presenter; your graph should assume that layout when reacting to `PhaseChanged` → `Combat`.
+Arena visibility: `CombatPhaseController.OnEnter` hides `DungeonSceneHost` and shows the presenter; your graph should assume that layout when reacting to `PhaseChanged` → `Combat`.
 
 ---
 

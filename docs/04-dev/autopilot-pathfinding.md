@@ -22,7 +22,7 @@ flowchart TB
   subgraph ui [UI — GridDungeon.UI]
     EMC[ExplorationMapCoordinator]
     EMDS[ExpandedMapDestinationSelection]
-    MGP[MapGridPaintController]
+    MGP[MapGridPaintCoordinator]
   end
 
   subgraph runtime [Runtime]

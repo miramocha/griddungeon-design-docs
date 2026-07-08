@@ -79,7 +79,7 @@ New UI should **compose** existing shared blocks under `Assets/UI/Screens/Shared
 | Shared component | UXML / presenter | Reuse rule |
 |------------------|------------------|------------|
 | **Party menu overlay** | `PartyMenu.uxml`, `PartyMenuOverlayView` | Hub **Tab** and exploration **Esc** — same shell; phase hosts only open/close and publish hints |
-| **Command rail** | `CommandRail.uxml`, `CommandRailPresenter` | One shell; hub / combat / party section rails populate `PanelHost` in code (`CommandRailPanelBuilder`, `RailMenuPresenter`) |
+| **Command rail** | `CommandRail.uxml`, `CommandRailPresenter` | One shell; hub / combat / party section rails populate `PanelHost` in code (`CommandRailPanelBuilder`, `RailMenuFocus`) |
 | **Command rail info** | `CommandRailInfo.uxml`, `CommandRailInfoPresenter` | Non-button copy (titles, service lines) — not duplicated per phase UXML |
 | **Global input hints** | `InputHint.uxml`, `InputHintPresenter` | One strip, `sortingOrder` 300 — phase views publish via `InputHints`; see `unity-global-input-hints.mdc` |
 | **Tabbed item picker** | `ItemListPicker.uxml`, `ItemListPickerView` | Shared row/tab view; **hosts** use [ItemListInventory](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-services.md#item-list-inventory--itemlistinventorypresenter--itemlistinventory) service (standalone `UIDocument`) — not `CloneTree` on phase HUDs |

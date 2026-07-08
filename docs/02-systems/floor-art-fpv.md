@@ -44,7 +44,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **Types:** `FloorArtMeshBackendKind` (`Default` \| `TileWorldCreator`); `IFloorArtMeshBackend` + registry in `GridDungeon.Runtime`; `FloorArtDefaultMeshBackend` (built-in); TWC impl in optional asmdef `GridDungeon.FloorArt.TileWorldCreator` (`FloorArtTwcMeshBackend`, `FloorArtTwcWalkableMaskBuilder`, `FloorArtTwcElevationTranslator`, `FloorArtTwcHost`).
 
-**Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintController`.
+**Not replaced:** `FloorArtPresenter` lifecycle, `FloorArtCatalog`, `CellElevationGenerator` (Floor Editor), UITK `MapGridPaintCoordinator`.
 
 **Out of epic #344:** Built-in mesh path retirement when all strata on TWC — [#370](https://github.com/miramocha/griddungeon-game/issues/370) (optional, standalone).
 
@@ -60,7 +60,7 @@ Replace **3D FPV wall/walkable/ground mesh** generation with [TileWorldCreator v
 
 **World scale (at-launch FPV):** Logic grid stays **20×20** cells; each cell is **`10` Unity world units** on XZ (`ExplorationGridMetrics.WorldUnitsPerCell` in game `GridDungeon.Core`). Corner `(0,0)` → world `(0, 0, 0)`; cell `(3, 4)` → `(30, 0, 40)`. FPV eye height default **3** units (`0.3 × cell size`). Floor art prefabs and preview use **`FloorArtGrid.Cell Size = 10`**; legacy assets authored at **1** unit/cell get prop positions expanded at runtime via `FloorArtLayoutSpacing.Apply` (populate + hand-placed generated props only).
 
-**Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template prefab workflow, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonView.RenderCell` remains a stub — runtime FPV is **prefab instantiate**, not blobber cell rendering.
+**Prior art:** [#92](https://github.com/miramocha/griddungeon-game/issues/92) shipped `FloorArtGrid`, template prefab workflow, walkability/pin gizmos, **Snap Selected To Grid**. `DungeonSceneHost.RenderCell` remains a stub — runtime FPV is **prefab instantiate**, not blobber cell rendering.
 
 ## Locked decisions (Populate v1)
 
@@ -132,7 +132,7 @@ Neighbor bitmask: `N=1`, `E=2`, `S=4`, `W=8` (walkable neighbor only).
 | Topic | Decision |
 |-------|----------|
 | Source | **Authored floor art prefab** (stratum template or custom `FloorArtRoot` per floor key) |
-| Not in v1 | `DungeonView` spawning wall prefabs per cell from `ExplorationFloor` at runtime |
+| Not in v1 | `DungeonSceneHost` spawning wall prefabs per cell from `ExplorationFloor` at runtime |
 | Load trigger | `FloorTransitionPresenter` → `FloorArtPresenter.LoadFloorArt` when floor commits |
 | Unload | Previous floor art instance destroyed on floor change or leaving exploration |
 | Catalog | `FloorArtCatalog`: `floorKey` → **DefaultTemplate** (stratum prefab + runtime build) or **CustomPrefab** (`FloorArtRoot` prefab) |
@@ -181,21 +181,21 @@ Most floors skip this — use **Default template** + TWC/runtime populate with n
 sequenceDiagram
     participant EPC as ExplorationPhaseController
     participant Cat as FloorArtCatalog
-    participant DV as DungeonView
+    participant DV as DungeonSceneHost
     participant Prefab as Floor art prefab
 
     EPC->>EPC: Load ExplorationFloor (logic)
     EPC->>Cat: Resolve(floorKey)
     alt art registered
         Cat->>DV: LoadFloorArt(prefab)
-        DV->>Prefab: Instantiate under DungeonView
+        DV->>Prefab: Instantiate under DungeonSceneHost
     else missing
         EPC->>DV: Clear / warn
     end
 ```
 
-- **Prefab instance** under `DungeonView` transform — stratum template or catalog **CustomPrefab** row.
-- **Combat:** `CombatPhaseController` hides `DungeonView` (existing); floor art root hides with it.
+- **Prefab instance** under `DungeonSceneHost` transform — stratum template or catalog **CustomPrefab** row.
+- **Combat:** `CombatPhaseController` hides `DungeonSceneHost` (existing); floor art root hides with it.
 - **Alignment:** Art root at world origin `(0,0,0)`; same as Editor preview and prefab authoring.
 
 ## Floor transitions
@@ -228,7 +228,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 |------|------------------|
 | Modular N/E/S/W wall pieces from `WallMask` | FPV v2 or shared with map art rules |
 | Auto-place gather, doors, stairs meshes | Follow-up populate modes (gather skipped in [#172](https://github.com/miramocha/griddungeon-game/issues/172)) |
-| `DungeonView.RenderCell` blobber / per-cell swaps | Optional later |
+| `DungeonSceneHost.RenderCell` blobber / per-cell swaps | Optional later |
 | Replacing `ExplorationFloor` collision from meshes | Never — logic SO only |
 
 ## Implementation checklist (game repo)
@@ -252,7 +252,7 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 ### Phase B — Runtime load
 
 - [x] `FloorArtCatalog` SO under `Assets/Content/FloorArt/`
-- [x] `FloorArtPresenter`: load/unload by `floorKey` under `DungeonView`
+- [x] `FloorArtPresenter`: load/unload by `floorKey` under `DungeonSceneHost`
 - [x] `ExplorationPhaseController`: load after floor SO ready; cancel in-flight prefab mount on floor change
 - [x] S1 floors use shared stratum template prefab — no per-floor Build Settings entries
 - [ ] DevBootstrap F2 manual: visible walls match blocked overlay
@@ -289,5 +289,5 @@ Shipped **floor transition vignette** (black void + 3D threshold prop + Cinemach
 ## Related docs
 - [Floor transition vignette](floor-transition.md) · [ADR 032](../../decisions/032-floor-transition-vignette-mvp1.md)
 - [04-tech-notes — Map authoring](../04-tech-notes.md#map-authoring--hud-adr-002)
-- [Exploration UI — DungeonView](exploration-ui.md#phase-system-vs-ui-visibility)
+- [Exploration UI — DungeonSceneHost](exploration-ui.md#phase-system-vs-ui-visibility)
 - Game: `Assets/Scenes/Floors/README.md`, [#92](https://github.com/miramocha/griddungeon-game/issues/92), [#102](https://github.com/miramocha/griddungeon-game/issues/102), [#172](https://github.com/miramocha/griddungeon-game/issues/172) (populate walkable tiles), [#344](https://github.com/miramocha/griddungeon-game/issues/344) (TWC runtime epic)

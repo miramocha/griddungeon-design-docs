@@ -309,7 +309,7 @@ Target behaviour at launch. **Game repo status** (aligned with `griddungeon-game
 ### Exploration `OnEnter`
 
 - Load floor from `ContentDatabase` + save snapshot
-- `DungeonView.SetVisible(true)`
+- `DungeonSceneHost.SetVisible(true)`
 - `MapSystem.LoadFloor`
 - `FoeSystem.LoadFloor`
 - Subscribe: `DungeonExplorer.OnPartyStep` → `HandlePartyStep` (FOE patrol, contact combat, random encounter); `OnPartyEnteredCell`, `OnBumpWall`
@@ -323,7 +323,7 @@ Target behaviour at launch. **Game repo status** (aligned with `griddungeon-game
 
 ### Combat `OnEnter`
 
-- `DungeonView.SetVisible(false)` (or dimmed)
+- `DungeonSceneHost.SetVisible(false)` (or dimmed)
 - `CombatPhaseController` uses `CombatController.PendingEntry`, calls `StartBattle`
 - `CombatScenePresenter` show backdrop + enemy slots
 - `AuraSystem.ApplyPassives` for active Navigator

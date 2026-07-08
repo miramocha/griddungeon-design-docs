@@ -10,6 +10,17 @@ Authority: [class naming patterns](https://github.com/miramocha/griddungeon-desi
 
 **C# types:** PascalCase suffix = role. **UXML/USS:** BEM kebab-case — not these suffixes.
 
+## When creating a new type (required)
+
+Before you add or **rename** a type under `Assets/Scripts/` or `Assets/Tests/`:
+
+1. **Read** [class naming patterns](../docs/04-dev/class-naming-patterns.md) (or `classNaming.patternsDoc` in [review-config.json](../review-config.json)) — use § Decision flow and the suffix section for your layer.
+2. **Run** **class-naming-grid-dungeon** skill when unsure between `*View`, `*Presenter`, `*Coordinator`, Core simulators, etc.
+3. **Check** this file’s assembly → suffix table and locked distinctions below.
+4. **Grep** [05 — Class design](../docs/05-class-design.md) or the game codebase for name collisions only.
+
+Do not pick a suffix from a nearby type without matching its responsibility.
+
 ## Assembly → suffix
 
 | Assembly | Use suffix | Avoid |

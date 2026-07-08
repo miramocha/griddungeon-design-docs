@@ -31,7 +31,7 @@ Hub already locks **full-screen 3D backdrop + UITK overlay** for guild town ([hu
 | **Phases** | **Hub** and **Exploration** only — gated by existing `PartyMenuGate` (not combat) |
 | **UITK** | Unchanged ownership — `PartyMenuOverlayView`, floater, `CharacterDetail` |
 | **Hub town** | Hide hub environment geo while party menu open when hub backdrop is active (`HubEnvironmentPresenter.SetTownVisible(false)`) |
-| **Exploration dungeon** | Hide `DungeonView` while menu open; `FloorArtPresenter.SuppressUnloadOnDisable` keeps floor art loaded; restore view + FPV (`ExplorationCameraRig.ReattachPartyFpv`) on close |
+| **Exploration dungeon** | Hide `DungeonSceneHost` while menu open; `FloorArtPresenter.SuppressUnloadOnDisable` keeps floor art loaded; restore view + FPV (`ExplorationCameraRig.ReattachPartyFpv`) on close |
 
 ### Visual instances — stash lifecycle
 

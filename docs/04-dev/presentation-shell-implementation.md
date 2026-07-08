@@ -228,7 +228,7 @@ Shells **spawn at Play Mode** from catalog. Scene-placed `CommandRail` + `Comman
 
 Shells render **display state** only. **Focus and confirm** stay on the phase HUD:
 
-- `HubHudView` binds `Button` refs after menu exists (`BindButtonsFromHost`) and uses `RailMenuPresenter` focus
+- `HubHudView` binds `Button` refs after menu exists (`BindButtonsFromHost`) and uses `RailMenuFocus` focus
 - Clicks can route via `CommandRailScreenShell.ItemInvoked` + item `Id` if you adopt bus-first wiring
 
 Do not duplicate `InputHints` or global bind footers on the shell.

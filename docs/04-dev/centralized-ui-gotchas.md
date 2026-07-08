@@ -281,7 +281,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 | **Opacity fade on side panel** | Right-docked panel opacity fade does not read well; minimap uses **slide retract** (`SlideTransition`, `map-minimap--retracted`) — not `map-view--faded`. |
 | **Expanded open during suppress** | Coordinator must `CloseExpandedImmediate()` when chrome should hide — expanded overlay at sort **100** can cover fade beats. |
 
-**Fix (shipped — `ExplorationMapCoordinator`, `MinimapPanelView`, `FloorTransitionPresenter`):**
+**Fix (shipped — `ExplorationMapCoordinator`, `MinimapPanelPresenter`, `FloorTransitionPresenter`):**
 
 1. **`ExplorationMapCoordinator.SyncMapChromeVisibility`** — `VisualPresentationSync` gates on `map-minimap--retracted` + `IsSettling`; hub / non-exploration: `HideImmediate()`. Also retract when **party/pause menu** is open (matches party floater collapse).
 2. **M-toggle** — expanded `UniformScaleTransition` / `ScaleInPresentationDriver`; minimap `SlideTransition.Hide()` while expanded open (MSK-style).
@@ -438,7 +438,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 1. **`HubHudView.OnDepartClicked`** — `InputHints.Clear` when leave transition **starts** (slide retract with fade).
 2. **`FloorTransitionPresenter`** — `InputHint.Hide()` not `HideImmediate()` (animated dismiss; no-op if already clearing).
-3. **`ExplorationMapCoordinator.OnFloorTransitionPresentationReleased`** — republish exploration copy (`MinimapPanelView.Show()` slide in).
+3. **`ExplorationMapCoordinator.OnFloorTransitionPresentationReleased`** — republish exploration copy (`MinimapPanelPresenter.Show()` slide in).
 
 **Rule:** Floor-transition and other Runtime beat code must not `HideImmediate()` player-visible centralized chrome. Coordinate with phase owners per [no hard cuts](uitk-bem-transition-guide.md#no-hard-cuts-player-visible-showhide).
 
@@ -469,7 +469,7 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 2. **`SyncPresentation`** — mirror floater: hide → `ShouldCallHide` → `m_presentation.Hide()` (no callback, no `else` teardown); show → `IsSteadyVisible` early-out, then `ShouldCallShow` → `Show()`.
 3. **`CancelPendingDismiss`** — call on `SetReason(..., true)` and `StartTransient` only; **not** on `SetReason(..., false)` while dismiss is settling.
 4. **`CreateSlide(..., fallbackRetractOffsetSign: -1)`** for wallet — non-zero retract distance when `%` layout sample fails.
-5. **Override `IsShown`** from `!IsPanelRetracted` (like `MinimapPanelView` + retracted class).
+5. **Override `IsShown`** from `!IsPanelRetracted` (like `MinimapPanelPresenter` + retracted class).
 6. **`CentralizedUiPresentation.TryDismissVisuallyExtended`** — slide dismiss when target is extended but lifecycle missed `Show()`.
 7. **Cold start / phase teardown** — `m_presentation.HideImmediate()` only; reserve `HideImmediate` for `OnDisable` and system dismiss, not player context close within the same phase.
 8. **Balance lerp** (`SyncBalance` / transient pulse) stays separate from chrome slide — do not conflate number snap on shop open with visibility hard cut.

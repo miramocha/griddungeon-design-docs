@@ -203,8 +203,8 @@ Use `IsSteadyVisible` to skip redundant present when context is unchanged (see `
 |-----------|--------------|---------|
 | `InputHintPresenter` | `input-hint__text--retracted` | `ShouldCallShow` / `ShouldCallHide` on label |
 | `WalletHudPresenter` | `wallet-hud__panel--retracted` | Same slide driver |
-| `MinimapPanelView` | `map-minimap--retracted` | `SyncMapChromeVisibility` → `SlideTransition` via `CentralizedUiPresentation` |
-| `ExpandedMapOverlayView` | `map-expanded--hidden` | `UniformScaleTransition` via `ScaleInPresentationDriver` |
+| `MinimapPanelPresenter` | `map-minimap--retracted` | `SyncMapChromeVisibility` → `SlideTransition` via `CentralizedUiPresentation` |
+| `ExpandedMapOverlayPresenter` | `map-expanded--hidden` | `UniformScaleTransition` via `ScaleInPresentationDriver` |
 | `PartyFormationFloaterPresenter` | `party-formation-floater--collapsed` | `IsSteadyVisible` + `ShouldCallShow` with context-reveal guard |
 
 **Input hint sketch:**
@@ -229,7 +229,7 @@ m_presentation.Show();
 **Minimap chrome sketch:**
 
 ```csharp
-bool steadyHidden = RetractTarget.ClassListContains(MinimapPanelView.RetractedClass);
+bool steadyHidden = RetractTarget.ClassListContains(MinimapPanelPresenter.RetractedClass);
 bool isSettling = m_minimap.IsSettling;
 
 if (wantVisible && VisualPresentationSync.ShouldCallShow(true, steadyHidden, isSettling))
@@ -248,8 +248,8 @@ When the **animation target is the surface root**, public `IsShown` can mirror B
 
 | Type | `IsShown` |
 |------|-----------|
-| `MinimapPanelView` | `!RetractTarget.ClassListContains("map-minimap--retracted")` |
-| `ExpandedMapOverlayView` | `!m_surface.Root.ClassListContains("map-expanded--hidden")` |
+| `MinimapPanelPresenter` | `!RetractTarget.ClassListContains("map-minimap--retracted")` |
+| `ExpandedMapOverlayPresenter` | `!m_surface.Root.ClassListContains("map-expanded--hidden")` |
 | `CommandRailInfoPresenter` | `!m_view.Root.ClassListContains(CommandRailInfoView.HiddenClass)` |
 
 `IsSettling` still comes from `CentralizedUiPresentation` when a driver is attached. Immediate-dismiss surfaces (`CommandRailInfoPresenter`: `IsSettling => false`) use BEM-only hide.
@@ -260,8 +260,8 @@ When the **animation target is the surface root**, public `IsShown` can mirror B
 
 | Transition | Steady class | USS | Present complete (`active`) | Dismiss complete (`active`) | Consumer |
 |------------|--------------|-----|----------------------------|----------------------------|----------|
-| `SlideTransition` | `map-minimap--retracted` | `MinimapPanel.uss` | `false` | `true` | `MinimapPanelView` |
-| `UniformScaleTransition` | `map-expanded--hidden` (+ `map-expanded-scale--expanded` on present complete) | `ExpandedMapPanel.uss` | scale steady | hidden steady | `ExpandedMapOverlayView` |
+| `SlideTransition` | `map-minimap--retracted` | `MinimapPanel.uss` | `false` | `true` | `MinimapPanelPresenter` |
+| `UniformScaleTransition` | `map-expanded--hidden` (+ `map-expanded-scale--expanded` on present complete) | `ExpandedMapPanel.uss` | scale steady | hidden steady | `ExpandedMapOverlayPresenter` |
 | `FadeTransition` | `map-view--faded` | `MapView.uss` | `false` | `true` | Legacy / marker helpers |
 | `SlideTransition` | `input-hint__text--retracted` | `InputHint.uss` | `false` | `true` | `InputHintPresenter` |
 | `SlideTransition` | `wallet-hud__panel--retracted` | `WalletHud.uss` | `false` | `true` | `WalletHudPresenter` |

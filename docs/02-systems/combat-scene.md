@@ -112,7 +112,7 @@ Slot transform drives facing, hit flash, VFX spawn, **plate projection**, and **
 Sequence:
 
 1. Freeze exploration input; store `fightAnchor` (cell, facing).
-2. Hide or dim `DungeonView` (disable FPV camera, optional blur on last frame capture — cosmetic).
+2. Hide or dim `DungeonSceneHost` (disable FPV camera, optional blur on last frame capture — cosmetic).
 3. Enable `CombatLayer`: load backdrop, spawn enemies on slots from `EncounterGroup`.
 4. Fade in battle UI + `BattleCameraRig` default pose.
 5. Start AGI round (Protocol on core turn when Synchro is 100%).
@@ -181,7 +181,7 @@ Grid `grid_sprite` (exploration) and `battle_prefab` / `battle_sprite` (combat) 
 - **`CombatScenePresenter`** — owns backdrop instance, slot rig, enemy spawn (`SpawnEnemyVisuals` / `ClearAndDestroyEnemyVisuals`; presentation only; [ADR 017](../../decisions/017-game-phase-controller.md))
 - Invoked from **`CombatPhaseController.OnEnter`**; torn down on `OnExit`
 - `CombatEntryContext` → `ResolveBackground()`, spawn from `EncounterGroup` + `ContentDatabase`
-- `DungeonView.SetVisible(false)` / `BattleCameraRig.enabled = true`
+- `DungeonSceneHost.SetVisible(false)` / `BattleCameraRig.enabled = true`
 - **`CombatArenaPlatePresenter`** — screen-space enemy HP plates above slot anchors ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)); not embedded in `CombatHud`
 - Additive scene `CombatArena` or enabled root under `GameRoot`
 - Default slice: one biome backdrop + **3D battle prefabs** on up to 6 slots + transient plates on target pick / HP beats

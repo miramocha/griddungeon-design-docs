@@ -27,7 +27,7 @@ Deliver in this order unless the user asks for tree only:
 - Use ASCII branches from script (`+--`, `` `-- ``, `|` indent) or Unicode box-drawing in chat markdown
 - Each line: **UXML `name`** (primary) + short role in brackets
 - Include **control `text="..."`** for `Button` / `Label` when static in UXML
-- Mark **code-built** hosts: `← Populate()` / `RailMenuPresenter.CreateButton`
+- Mark **code-built** hosts: `← Populate()` / `RailMenuFocus.CreateButton`
 - Mark **hidden by default**: `--hidden`, `display: none` hosts
 
 ### 2. Phase / state table (when HUD is phase-driven)
@@ -100,7 +100,7 @@ Presenter → document map (extend as needed):
 | `CommandRailPresenter` | `CommandRail.uxml` |
 | `HubHudView` | `HubHud.uxml` + clones pickers into `hub-hud` |
 | `PartyMenuOverlayView` | `PartyMenu.uxml`; section rail = `CommandRail.PartySectionRailRoot` |
-| `MapView` | mounted under `ExplorationHud` |
+| `ExplorationMapCoordinator` | `ExplorationMap` GO — `MinimapPanelPresenter` + `ExpandedMapOverlayPresenter` |
 | `CombatHudView` | `CombatHud.uxml` + cloned pickers |
 
 ### 4. USS visibility

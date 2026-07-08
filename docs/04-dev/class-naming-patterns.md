@@ -9,7 +9,7 @@ tags:
 
 PascalCase **suffix** = responsibility + assembly. Shipped type tables: [05 — Class design](../05-class-design.md). Suffix rules stay in this file.
 
-Agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (compressed checklist on `*.cs`). Review agents resolve the full doc via [`.cursor/review-config.json`](../../.cursor/review-config.json) → `classNaming.patternsDoc` ([code-review-config](../../.cursor/rules/code-review-config.mdc)).
+Agents: read this file **before creating or renaming** a type ([`unity-csharp-class-creation`](../../.cursor/rules/unity-csharp-class-creation.mdc), [**class-naming-grid-dungeon**](../../.cursor/skills/class-naming-grid-dungeon/SKILL.md)). Compressed checklist: [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (`*.cs` glob). Paths resolve via [`.cursor/review-config.json`](../../.cursor/review-config.json) → `classNaming.patternsDoc` ([code-review-config](../../.cursor/rules/code-review-config.mdc)).
 
 | Doc | Owns |
 |-----|------|
@@ -76,6 +76,7 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*System` | Long-lived runtime subsystem | `MapSystem`, `FoeSystem`, `SaveSystem`, `ProtocolSystem` |
 | `*Factory` | Build runtime models from save/content | `CombatantFactory` |
 | `*Presenter` | Scene/world presentation (non-UITK overlay) | `CombatScenePresenter`, `FloorArtPresenter` |
+| `*Host` | Runtime scene composition root (visibility, child presenters) | `DungeonSceneHost` |
 | `*Definition` | ScriptableObject asset | `SkillDefinition`, `StoryEventDefinition` |
 
 ### UI Toolkit (`GridDungeon.UI`)
@@ -88,7 +89,7 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*InputHandler` | Input System routing | `CombatInputHandler`, `ExplorationInputHandler` |
 | `*Picker` | Keyboard/grid selection | `PartyFormationGridTargetPicker`, `FieldItemCharacterPicker` |
 | `*ToolkitView` | Keyboard surface for tabbed picker shell | `SkillUsePickerToolkitView`, `PartyFormationToolkitView` |
-| `*Navigator` / `*Focus` | Focus graph / grid index state | `MenuFocusNavigator`, `PartyFormationGridFocus` |
+| `*Navigator` / `*Focus` | Focus graph / grid index state | `MenuFocusNavigator`, `PartyFormationGridFocus`, `RailMenuFocus` |
 | `*Builder` | Build panel rows in code | `CommandRailPanelBuilder`, `ItemListRowBuilder` |
 | `*Layout` | Picker profile / hook names (data) | `ItemListPickerLayout` |
 | `*Adapter` | Bridge APIs | `CombatItemListPickerAdapter` |
@@ -122,6 +123,15 @@ Phase HUDs often use:
 
 - `*HudView` — `MonoBehaviour` + phase UXML
 - `*HudReactivePresenter` — subscribes to `CombatController` / `MapSystem` / hub services for motion
+
+#### Embedded rail focus
+
+`RailMenuFocus` — vertical command-rail or horizontal tab focus over existing `VisualElement` trees. Owns `MenuFocusNavigator` (+ optional `RailMenuView` chip menu). **No** `UIDocument`, **no** overlay lifecycle — not `*Presenter`. Static factories (`CreateHorizontal`, `CreateVerticalFocus`, `ConfigureButton`) stay on the focus type.
+
+| Type | Role |
+|------|------|
+| `RailMenuFocus` | Focus index, selection sync, chip/tab wiring |
+| `RailMenuView` | Chip list DOM bind on host (`VisualElement`); horizontal tabs or vertical chips — not a `UIDocument` / UXML-file view |
 
 #### Map markers
 

@@ -13,7 +13,7 @@ How to replace or extend the **combat skill selection modal** without changing c
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — shipped UITK reference: `SkillUsePickerToolkitView` + `Assets/UI/Screens/Combat/SkillUsePicker.uxml`.
 
-**Shared components:** Skill picker reuses the same **tab strip** (`PickerTabStripView` → `RailMenuPresenter`) and **windowed list** (`WindowedListPaneView`) as hub shop / party bag item lists, but **not** `ItemListPickerView` (skill-specific row DOM). See [shared menu & picker UI](shared-menu-picker-ui.md).
+**Shared components:** Skill picker reuses the same **tab strip** (`PickerTabStripView` → `RailMenuFocus`) and **windowed list** (`WindowedListPaneView`) as hub shop / party bag item lists, but **not** `ItemListPickerView` (skill-specific row DOM). See [shared menu & picker UI](shared-menu-picker-ui.md).
 
 ---
 
