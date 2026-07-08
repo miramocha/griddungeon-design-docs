@@ -79,6 +79,14 @@ GridDungeon.Tests      → *Tests per domain folder
 | `*Host` | Runtime scene composition root (visibility, child presenters) | `DungeonSceneHost` |
 | `*Definition` | ScriptableObject asset | `SkillDefinition`, `StoryEventDefinition` |
 
+#### Party menu stage vs reusable character prefab
+
+| Family | Lives on | Examples |
+|--------|----------|----------|
+| `Character*` | Reusable character prefab `MonoBehaviour` (`GridDungeon.Runtime.Characters`) | `VrmCharacterLookAt`, `CharacterMaterialSilhouette` |
+| `PartyCharacterVisual*` | `GameState` session pool / static helpers | `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose` |
+| `PartyMenu*` | Stage rig / per-instance stage hooks | `PartyMenuHeadLookTarget`, `PartyMenuStageOrbitRig` |
+
 ### UI Toolkit (`GridDungeon.UI`)
 
 | Suffix | Responsibility | Examples |

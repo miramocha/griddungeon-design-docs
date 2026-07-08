@@ -29,4 +29,4 @@ During **code review** (PR review, post-commit review, `fresh-reviewer`, `@code-
 
 ## Subagents
 
-When delegating **fresh-reviewer** or similar: include this rule in applicable `.cursor/rules/` and state **no story/dialogue edits** in the subagent prompt. When the diff adds or renames C# types, also pass **`code-review-config.mdc`** and paths from **`.cursor/review-config.json`** (`classNaming.suffixRule` when set).
+When delegating **fresh-reviewer** or similar: include this rule in applicable `.cursor/rules/` and state **no story/dialogue edits** in the subagent prompt. Read **`.cursor/review-config.json`** per **`code-review-config.mdc`** — class naming when types added/renamed; **`productionTestSeams.rule`** when `Assets/Scripts/**/*.cs` changed.
