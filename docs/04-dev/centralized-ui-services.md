@@ -594,7 +594,7 @@ m_mapCoordinator.ToggleExpandedFromInput();
 m_mapCoordinator.RefreshGlobalInputHint();
 ```
 
-Legacy `MapView` shim delegates to coordinator until scenes refresh. **Do not** embed map chrome on a phase HUD `UIDocument` — map lives on `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)).
+Map chrome lives on `ExplorationMap` ([#244](https://github.com/miramocha/griddungeon-game/pull/244)) — **do not** embed on a phase HUD `UIDocument`.
 
 ---
 

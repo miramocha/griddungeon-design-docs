@@ -100,7 +100,7 @@ Presenter → document map (extend as needed):
 | `CommandRailPresenter` | `CommandRail.uxml` |
 | `HubHudView` | `HubHud.uxml` + clones pickers into `hub-hud` |
 | `PartyMenuOverlayView` | `PartyMenu.uxml`; section rail = `CommandRail.PartySectionRailRoot` |
-| `MapView` | mounted under `ExplorationHud` |
+| `ExplorationMapCoordinator` | `ExplorationMap` GO — `MinimapPanelPresenter` + `ExpandedMapOverlayPresenter` |
 | `CombatHudView` | `CombatHud.uxml` + cloned pickers |
 
 ### 4. USS visibility

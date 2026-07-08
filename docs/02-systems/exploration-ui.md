@@ -29,7 +29,6 @@ How the **exploration HUD** is composed, bound, and wired to runtime systems in 
 | Party / pause menu | `Assets/Scripts/UI/Views/PartyMenuOverlayView.cs` (shared `PartyMenu.uxml`; Quit on hub + exploration) |
 | Global input hints | `InputHintPresenter` / `InputHints` facade (sort **300**) |
 | Grid paint helpers | `Assets/Scripts/UI/MapGridPainter.cs`, `MapGridStyleClasses.cs` |
-| Legacy shim | `MapView.cs` — obsolete delegate to coordinator; remove after scene migration |
 | Map overlay art catalog | `Assets/Scripts/UI/MapCellArtCatalog.cs`, `Assets/UI/Map/MapCellArtCatalog.asset`, `MapCellArtCatalogEditor` (Editor wire menu) |
 | Input | `Assets/Scripts/UI/Input/InputRouter.cs`, `ExplorationInputHandler.cs`, `MapInputHandler.cs` |
 | Scene wiring (Editor) | `DevBootstrapSceneCreator.cs`, `DevSceneComposition.WireExplorationHud` / `WireExplorationMap` |
