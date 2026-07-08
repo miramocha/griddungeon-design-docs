@@ -1,0 +1,15 @@
+---
+description: Before creating or renaming C# types, consult class naming patterns doc.
+alwaysApply: true
+---
+
+# New C# types — name before you code
+
+Before adding or **renaming** a public type under `Assets/Scripts/` or `Assets/Tests/`:
+
+1. Read **`.cursor/review-config.json`** → **`classNaming.patternsDoc`** (decision flow + locked suffix rules).
+2. Follow **class-naming-grid-dungeon** skill when choosing suffix, assembly, or folder.
+3. Skim **`classNaming.suffixRule`** ([unity-csharp-class-suffix-patterns](unity-csharp-class-suffix-patterns.mdc)) for the assembly → suffix table.
+4. Use **`classNaming.shippedTypesDoc`** only to avoid duplicate type names — not to invent suffixes.
+
+Review enforcement: [code-review-config](code-review-config.mdc) + **fresh-reviewer** when the diff adds or renames types.

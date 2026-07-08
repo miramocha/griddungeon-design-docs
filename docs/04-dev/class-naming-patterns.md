@@ -9,7 +9,7 @@ tags:
 
 PascalCase **suffix** = responsibility + assembly. Shipped type tables: [05 — Class design](../05-class-design.md). Suffix rules stay in this file.
 
-Agents also load [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (compressed checklist on `*.cs`). Review agents resolve the full doc via [`.cursor/review-config.json`](../../.cursor/review-config.json) → `classNaming.patternsDoc` ([code-review-config](../../.cursor/rules/code-review-config.mdc)).
+Agents: read this file **before creating or renaming** a type ([`unity-csharp-class-creation`](../../.cursor/rules/unity-csharp-class-creation.mdc), [**class-naming-grid-dungeon**](../../.cursor/skills/class-naming-grid-dungeon/SKILL.md)). Compressed checklist: [`.cursor/rules/unity-csharp-class-suffix-patterns.mdc`](../../.cursor/rules/unity-csharp-class-suffix-patterns.mdc) (`*.cs` glob). Paths resolve via [`.cursor/review-config.json`](../../.cursor/review-config.json) → `classNaming.patternsDoc` ([code-review-config](../../.cursor/rules/code-review-config.mdc)).
 
 | Doc | Owns |
 |-----|------|

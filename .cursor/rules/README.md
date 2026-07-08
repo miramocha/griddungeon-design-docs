@@ -31,6 +31,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 |------|---------|
 | `unity-clean-code-principles.mdc` | SRP, DRY, KISS, YAGNI (always apply) |
 | `unity-csharp-naming.mdc` | Names for C# sketches in class design docs |
+| `unity-csharp-class-creation.mdc` | **Always apply** — read `classNaming.patternsDoc` before new/renamed C# types |
 | `unity-csharp-class-suffix-patterns.mdc` | Type role suffixes (`*View`, `*Presenter`, …); pairs with [class naming patterns](../docs/04-dev/class-naming-patterns.md) |
 | `unity-csharp-language.mdc` | C# 9 subset — no `init`, `record`, etc. |
 | `unity-csharp-unityengine-object.mdc` | Qualify `UnityEngine.Object` — avoid CS0104 vs `System.Object` |
@@ -64,6 +65,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | [vroid-shapekey-remap](../skills/vroid-shapekey-remap/SKILL.md) | VRoid `Fcl_*` shape key → `vroid*` naming (Blender MCP) |
 | [audit-centralized-ui-services](../skills/audit-centralized-ui-services/SKILL.md) | Centralized UI + presentation shell gotcha audits |
 | [deslop](../skills/deslop/SKILL.md) | De-slop agent prose — AI-writing tell scan + rewrite loop |
+| [class-naming-grid-dungeon](../skills/class-naming-grid-dungeon/SKILL.md) | Pick suffix + assembly before creating or renaming C# types |
 
 **Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `blender-bone-remap`, `vroid-shapekey-remap`, `audit-centralized-ui-services`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script).
 

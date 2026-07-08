@@ -1,5 +1,5 @@
 ---
-description: Review agents read .cursor/review-config.json for class naming doc URLs and optional suffix rule.
+description: classNaming paths in review-config.json — read before creating types and in review.
 alwaysApply: false
 ---
 
@@ -8,6 +8,16 @@ alwaysApply: false
 Portable review settings live at **`.cursor/review-config.json`** at the workspace root (copy from [review-config.example.json](../review-config.example.json) for new projects).
 
 ## When to read
+
+### Implementation (before you code)
+
+When **creating or renaming** a C# type under `Assets/Scripts/` or `Assets/Tests/`:
+
+1. Read **`classNaming.patternsDoc`** first ([unity-csharp-class-creation](unity-csharp-class-creation.mdc), **class-naming-grid-dungeon** skill).
+2. Use **`classNaming.suffixRule`** as a compressed checklist when set.
+3. Use **`classNaming.shippedTypesDoc`** for duplicate-name lookup only.
+
+### Review (after the diff)
 
 Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-out review when the diff **adds or renames C# types**:
 
