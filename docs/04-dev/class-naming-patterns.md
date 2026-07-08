@@ -134,7 +134,8 @@ Phase HUDs often use:
 | `RailMenuView` | Chip list DOM bind on host (`VisualElement`); horizontal tabs or vertical chips — not a `UIDocument` / UXML-file view |
 
 #### Map markers
- (when to show) + `MapChestMarkersPresenter` (bind map → glyphs). One pair per marker family — repetition is intentional until a generic layer is justified ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
+
+`MapChestMarkerRules` (when to show) + `MapChestMarkersPresenter` (bind map → glyphs). One pair per marker family — repetition is intentional until a generic layer is justified ([#341](https://github.com/miramocha/griddungeon-game/issues/341)).
 
 ### Campaign
 

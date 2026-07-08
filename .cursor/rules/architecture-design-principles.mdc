@@ -26,7 +26,7 @@ Complements [game phase](../../docs/02-systems/game-phase.md), [class design](..
 | Battle arena visuals | `CombatScenePresenter` (not `CombatController`) |
 | Input action maps per mode | `InputRouter` |
 
-Reject designs that put combat formulas, map reveal, or phase transitions in one “manager” type.
+Reject designs that put combat formulas, map reveal, or phase transitions in one "manager" type.
 
 ## DRY
 
@@ -38,13 +38,13 @@ Reject designs that put combat formulas, map reveal, or phase transitions in one
 ## KISS / YAGNI
 
 - Current macro flow: **pure C#** `GamePhaseController` — no UVS state graph as authority ([ADR 017](../../decisions/017-game-phase-controller.md)).
-- No generic “state machine framework” for three phases.
+- No generic "state machine framework" for three phases.
 - Defer optional systems (UVS presentation layer, guest combat, minigames) until spec checklist says otherwise.
 - `GridDungeon.Core` stays free of `UnityEngine` and ScriptableObject types — use DTOs at simulator boundaries.
 
 ## Fix causes, not symptoms
 
-Architecture docs should name **who initiates transitions** and **who owns state**, not only UI symptoms (e.g. “hide dungeon view” ? `CombatPhaseController.OnEnter` + `DungeonSceneHost.SetVisible`).
+Architecture docs should name **who initiates transitions** and **who owns state**, not only UI symptoms (e.g. "hide dungeon view" ? `CombatPhaseController.OnEnter` + `DungeonSceneHost.SetVisible`).
 
 ## Be consistent
 
