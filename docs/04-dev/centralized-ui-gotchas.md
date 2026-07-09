@@ -27,6 +27,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Reviewing a migration off embedded pickers | Cross-check **Standalone document** + **Modal rail chrome leak** |
 | Hover / click dead on a lower `UIDocument` (keyboard still works) | Read **Pointer dead — `sortingOrder` + `PickingMode`** — verify stack table + pass-through on full-screen chrome |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
+| Party menu 3D silhouette / VRM material reveal | Read [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
 
 ---
 
@@ -482,6 +483,52 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 
 ---
 
+## Party menu 3D — silhouette reveal stuck black (`CharacterMaterialSilhouette`)
+
+**Symptom:** Focused party member stays **black silhouette** after floater dock + grid focus; orbit camera and `SetMemberRevealGridIndex` fire, but no color reveal. Console may spam **`Game object with animator is inactive`** and **`Animator is not playing an AnimatorController`** during `OnMenuOpened` → `SyncRoster`.
+
+**Authority:** [ADR 047](../../decisions/047-party-menu-3d-stage.md) · [custom party UI § Party menu 3D stage](custom-party-ui.md#party-menu-3d-stage).
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Pose on inactive instance** | `ApplyPoseForGridIndex` ran while the VRM root was still `SetActive(false)` in stash spawn — `Animator.Play` / `GetLayerIndex` for `Silhouette` / `Breathing` layers fail silently or log errors; controller state never binds. |
+| **Cached `Material` refs ≠ live renderer** | `CharacterMaterialSilhouette` stored `Material` instances in snapshots and lerped `_Color` on those objects; VRM / play-mode `renderer.materials` later pointed at **different** instances — tween reached `revealAmount: 1` on orphaned materials. |
+| **Re-cache after silhouette pass** | Re-running `EnsureCache()` after `SetRevealed(false)` re-read **blackened** shared/instance materials as “original” colors — reveal lerps black → black forever. |
+| **MToon10 property shape** | `VRM10/…/MToon10` often has `_Color` = white multiplier `(1,1,1)`; skin tint lives in **`_BaseColorFactor`** / **`_Base_Color_Opacity`**. Capturing or writing only `_Color` after a blacken pass loses the real reveal target. |
+
+**Fix (shipped — `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose`, `CharacterMaterialSilhouette`):**
+
+1. **`PresentSlotOnStage`** — `PartyCharacterVisualStagePlacement.Present` (activate) **before** `ApplyPoseForGridIndex`; `PartyCharacterVisualPose.Apply` no-ops when `!animator.gameObject.activeInHierarchy`.
+2. **Live material writes** — snapshots store **renderer + material index + pristine color values**; `ApplyRevealAmount` batches `renderer.materials` per renderer and writes the same property IDs that were cached (e.g. `_BaseColorFactor` when `_Color` is neutral white).
+3. **Pristine lock** — first successful `EnsureCache` captures colors from **shared** materials (before silhouette blacken); values stay locked — do **not** rebuild cache after `SetRevealed(false)`; attach meshes before the first cache pass.
+4. **MToon10** — when `_Color` is neutral white, cache and apply via **`_BaseColorFactor`** / **`_ShadeColorFactor`**.
+5. **`RefreshSilhouetteAfterActivation`** — re-apply current `RevealAmount` to live materials only; no cache rebuild on stage present.
+
+**Tests:** `CharacterMaterialSilhouetteTests` (late renderer attach + restore), `PartyCharacterVisualRegistryTests` (silhouette focus grid index).
+
+**Rule for party-menu VRM work:**
+
+```csharp
+// ❌ BAD — pose / silhouette while stash instance is inactive
+instance.SetActive(false);
+ApplyPoseForGridIndex(instance, gridIndex);
+silhouette.SetRevealed(false);
+
+// ❌ BAD — rebuild material cache after blackening
+silhouette.EnsureCache(); // re-captures black as "original" once pristine lock is set
+
+// ✅ GOOD — activate, cache pristine once, apply to live materials
+Present(slot); // SetActive(true)
+ApplyPoseForGridIndex(slot.Root, gridIndex);
+silhouette.SetRevealAmount(revealAmount, immediate: true);
+```
+
+**Cross-ref:** [ADR 047 § Material silhouette](../../decisions/047-party-menu-3d-stage.md#material-silhouette--focused-member-reveal), [custom party UI § Party menu 3D stage](custom-party-ui.md#party-menu-3d-stage).
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
@@ -497,3 +544,4 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 | Floor transition + map panel fade timing | [authoring-floor-transition-beats.md § Screen fade](authoring-floor-transition-beats.md#screen-fade-uitk) |
 | **Gotchas (this page)** | **Here** |
 | Pointer / `sortingOrder` / `PickingMode` pass-through | [§ Pointer dead](#pointer-dead--sortingorder-stack--pickingmode-pass-through) |
+| Party menu 3D silhouette reveal (VRM / MToon10) | [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |

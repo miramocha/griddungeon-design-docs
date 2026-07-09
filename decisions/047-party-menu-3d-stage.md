@@ -91,7 +91,7 @@ Only **one** character tracks camera at a time (matches floater single-focus UX)
 | Floater docked + member focus | **Focused = revealed**; others silhouette |
 | Menu close / stash | Restore cached colors |
 
-Shares the **same debounced focus signal** as LookAt (`PartyMenuStagePresenter` → `PartyCharacterVisualRegistry.SetMemberRevealGridIndex`). Animator `Silhouette` layer on `PartyMenuIdleBase.controller` (`MemberRevealed` bool) syncs with C# material lerp (path B until `_CharacterSilhouetteReveal` ships on toon shaders).
+Shares the **same debounced focus signal** as LookAt (`PartyMenuStagePresenter` → `PartyCharacterVisualRegistry.SetMemberRevealGridIndex`). Animator `Silhouette` layer on `PartyMenuIdleBase.controller` (`MemberRevealed` bool) syncs with C# material lerp (path B until `_CharacterSilhouetteReveal` ships on toon shaders). Implementation traps (inactive animator, MToon10 material instances, pristine cache): [centralized UI gotchas § silhouette reveal](../docs/04-dev/centralized-ui-gotchas.md#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette).
 
 ### Cinemachine — overview vs orbit
 
