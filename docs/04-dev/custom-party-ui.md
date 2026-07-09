@@ -278,7 +278,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Equipment (pane reveal) | Right-docked `CharacterDetail` + floater dock (sort **260**). |
-| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail; focused member plays equip idle preview (v1: OH sword loop). |
+| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. Floater **retracts**; 3D member plays equip idle (v1: OH sword loop); orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
 | **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, chest, leg, left hand). |
 | **Z** (slot engaged) | **No picker** — equip deferred. |
