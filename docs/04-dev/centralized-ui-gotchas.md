@@ -495,16 +495,16 @@ Direct `PopInTransition` / `UiTransitionSession` tests still use **`SimulateDueE
 |------|-----------------|
 | **Pose on inactive instance** | `ApplyPoseForGridIndex` ran while the VRM root was still `SetActive(false)` in stash spawn — `Animator.Play` / `GetLayerIndex` for `Silhouette` / `Breathing` layers fail silently or log errors; controller state never binds. |
 | **Cached `Material` refs ≠ live renderer** | `CharacterMaterialSilhouette` stored `Material` instances in snapshots and lerped `_Color` on those objects; VRM / play-mode `renderer.materials` later pointed at **different** instances — tween reached `revealAmount: 1` on orphaned materials. |
-| **Re-cache after silhouette pass** | `InvalidateCache()` + `EnsureCache()` after `SetRevealed(false)` re-read **blackened** shared/instance materials as “original” colors — reveal lerps black → black forever. |
-| **MToon10 property shape** | `VRM10/…/MToon10` often has `_Color` = white multiplier `(1,1,1)`; skin tint lives in **`_BaseColorFactor`** / **`_Base_Color_Opacity`**. Capturing only `_Color` after a blacken pass loses the real reveal target. |
+| **Re-cache after silhouette pass** | Re-running `EnsureCache()` after `SetRevealed(false)` re-read **blackened** shared/instance materials as “original” colors — reveal lerps black → black forever. |
+| **MToon10 property shape** | `VRM10/…/MToon10` often has `_Color` = white multiplier `(1,1,1)`; skin tint lives in **`_BaseColorFactor`** / **`_Base_Color_Opacity`**. Capturing or writing only `_Color` after a blacken pass loses the real reveal target. |
 
 **Fix (shipped — `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose`, `CharacterMaterialSilhouette`):**
 
 1. **`PresentSlotOnStage`** — `PartyCharacterVisualStagePlacement.Present` (activate) **before** `ApplyPoseForGridIndex`; `PartyCharacterVisualPose.Apply` no-ops when `!animator.gameObject.activeInHierarchy`.
-2. **Live material writes** — snapshots store **renderer + material index + pristine color values**; `ApplyRevealAmount` resolves `renderer.materials[index]` each apply (do not keep long-lived `Material` refs for writes).
-3. **Pristine lock** — first successful `EnsureCache` captures colors from **shared** materials (before silhouette blacken); `InvalidateCache` clears only `m_cacheBuilt`, **not** stored values; do **not** rebuild cache after `SetRevealed(false)`.
-4. **MToon10** — when `_Color` is neutral white, prefer **`_BaseColorFactor`** / **`_ShadeColorFactor`** for cached lerp targets.
-5. **`RefreshSilhouetteAfterActivation`** — re-apply current `RevealAmount` to live materials only; **no** `InvalidateCache` on stage present.
+2. **Live material writes** — snapshots store **renderer + material index + pristine color values**; `ApplyRevealAmount` batches `renderer.materials` per renderer and writes the same property IDs that were cached (e.g. `_BaseColorFactor` when `_Color` is neutral white).
+3. **Pristine lock** — first successful `EnsureCache` captures colors from **shared** materials (before silhouette blacken); values stay locked — do **not** rebuild cache after `SetRevealed(false)`; attach meshes before the first cache pass.
+4. **MToon10** — when `_Color` is neutral white, cache and apply via **`_BaseColorFactor`** / **`_ShadeColorFactor`**.
+5. **`RefreshSilhouetteAfterActivation`** — re-apply current `RevealAmount` to live materials only; no cache rebuild on stage present.
 
 **Tests:** `CharacterMaterialSilhouetteTests` (late renderer attach + restore), `PartyCharacterVisualRegistryTests` (silhouette focus grid index).
 
@@ -516,9 +516,8 @@ instance.SetActive(false);
 ApplyPoseForGridIndex(instance, gridIndex);
 silhouette.SetRevealed(false);
 
-// ❌ BAD — invalidate material cache after blackening
-silhouette.InvalidateCache();
-silhouette.EnsureCache(); // re-captures black as "original"
+// ❌ BAD — rebuild material cache after blackening
+silhouette.EnsureCache(); // re-captures black as "original" once pristine lock is set
 
 // ✅ GOOD — activate, cache pristine once, apply to live materials
 Present(slot); // SetActive(true)
