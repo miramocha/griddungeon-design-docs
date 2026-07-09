@@ -257,7 +257,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | **UITK** | Unchanged — `PartyMenuOverlayView` **250**, `CharacterDetail` **251**, floater **260** |
 | **Models** | `PlayerCharacter_Default` per occupied slot; stashed under floor when menu closed |
 | **Layout** | Hex ring on stage; UITK floater stays 2×4 `PartyFormationLayout` grid |
-| **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus |
+| **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus; **equip inspect** keeps orbit with bone Look At when worn slots engaged ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)) |
 | **LookAt** | VRM 1.0 gaze on **focused** member only while floater docked (tracks orbit vcam) |
 | **Silhouette** | All members black silhouette on menu open; **focused** member reveals full color when floater docked + grid focus (`CharacterMaterialSilhouette` + `Silhouette` animator layer). **Traps:** inactive pose apply, stale material instances, re-cache after blacken — [centralized UI gotchas § silhouette reveal](centralized-ui-gotchas.md#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
 | **Idle** | `PartyMenuStagePoseCatalog` + `AnimatorOverrideController` per slot; additive breathing layer on shared idle controller |
@@ -265,7 +265,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 
 **Hub:** hide guild-town geo while party menu open (when hub backdrop active). **Exploration:** hide dungeon view + minimap chrome; keep floor art loaded; restore FPV on close. **Implementation:** `PartyMenuStagePresenter`, `PartyCharacterVisualRegistry` — [game #400](https://github.com/miramocha/griddungeon-game/issues/400) (closed).
 
-**Art paths:** `Assets/Art/Characters/PartyMenu/Idles/`, `Assets/Scenes/PartyMenu/party_menu_stage_greybox.prefab`, `Assets/Content/PartyMenu/PartyMenuStagePoseCatalog.asset`.
+**Art paths:** `Assets/Art/Characters/PartyMenu/Idles/`, `Assets/Art/Characters/PartyMenu/Equipment/`, `Assets/Scenes/PartyMenu/party_menu_stage_greybox.prefab`, `Assets/Content/PartyMenu/PartyMenuStagePoseCatalog.asset`, `Assets/Content/PartyMenu/PartyMenuEquipPoseCatalog.asset`.
 
 ---
 
@@ -278,11 +278,11 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Equipment (pane reveal) | Right-docked `CharacterDetail` + floater dock (sort **260**). |
-| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
-| **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. |
-| **W/S** (slots engaged) | Move worn-slot focus. |
+| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail; focused member plays equip idle preview (v1: OH sword loop). |
+| **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. Floater **retracts**; 3D member plays equip idle (v1: OH sword loop); orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
+| **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, chest, leg, left hand). |
 | **Z** (slot engaged) | **No picker** — equip deferred. |
-| **X** | Disengage slots, then hide pane. |
+| **X** | Disengage slots → floater re-docks, restore grid idle + head orbit; then hide pane. |
 
 Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
 
