@@ -130,7 +130,6 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **15** | Combat arena enemy plates (transient HP above slot anchors) | `CombatArenaPlatePresenter` |
 | **20** | `CombatHud`, `HubHud` | `CombatHudView`, `HubHudView` |
 | **25** | Global command rail (bookmark buttons) | `CommandRailPresenter` |
-| **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `CommandRailPresenter` via `SetPartyMenuRailVisible` |
 | **26** | Global command-rail copy (header title, service blurbs, combat prompt) | `CommandRailInfoPresenter` |
 | **27** | Global wallet strip (Credits balance) | `WalletHudPresenter` |
 | **50** | Action callout (top action banner, transparent) | `ActionCalloutPresenter` |
@@ -141,6 +140,8 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **252** | Confirm modal (yes/no — exit, quit to title, …) | `ConfirmModalPresenter` |
+| **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `PartySectionRailPresenter` |
+| **256** | Party equipment picker floater (bone-projected bag rows; above section rail) | `PartyEquipmentPickerFloaterPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
 | **300** | Global input hint strip | `InputHintPresenter` |
 | **10000** | Full-screen fade | `ScreenFadePresenter` |
@@ -366,6 +367,30 @@ Integrator detail: [custom party UI § Enemy arena plates](custom-party-ui.md#en
 
 ---
 
+### Party equipment picker floater — `PartyEquipmentPickerFloaterPresenter` + `PartyEquipmentPickerFloater`
+
+**Job:** World-anchored **equip-from-bag** list beside the focused member’s worn-slot bone during party menu equipment inspect ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). Not `ItemListInventory` / party bag modal.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/PartyEquipmentPickerFloaterPresenter.cs` | `sortingOrder` **256**; `LateUpdate` bone projection |
+| Facade | `Assets/Scripts/UI/Views/PartyEquipmentPickerFloater.cs` | `Show`, `Hide`, row nav + confirm |
+| View | `Assets/Scripts/UI/Views/PartyEquipmentPickerFloaterView.cs` | `WindowedListPaneView` (5 rows) + `ItemListRowBuilder` |
+| Anchor | `Assets/Scripts/UI/UiWorldOverlayAnchor.cs` | Shared world → panel projection (combat plates use `CombatArenaOverlayAnchor` wrapper) |
+| UXML / USS | `Assets/UI/Screens/Shared/PartyEquipmentPickerFloater.uxml`, `.uss` | Compact list chrome — no tabs, no detail pane |
+| Bootstrap | `DevSceneWireGameState.WirePartyEquipmentPickerFloater` | Sibling under `GameState` |
+
+```csharp
+PartyEquipmentPickerFloater.Show(session); // gridIndex + worn slot + catalog rows
+PartyEquipmentPickerFloater.MoveRowNext();
+PartyEquipmentPickerFloater.ConfirmFocusedRow(); // coordinator apply
+PartyEquipmentPickerFloater.Hide();
+```
+
+Publisher: `PartyEquipmentToolkitView` on worn-slot confirm; hides on member/slot change via `PartyEquipmentCoordinator`.
+
+---
+
 ### Skill use picker — `SkillUsePickerPresenter` + `SkillUsePickerOverlay`
 
 **Job:** Combat **Skill** command tabbed overlay — one scene-wide document instead of `CloneTree` on `CombatHud`.
@@ -454,7 +479,7 @@ CharacterDetail.Bind(subject);
 CharacterDetail.Hide();
 ```
 
-**Deferred:** equipment bag picker window on slot confirm; combat analyze host (third caller → optional `GameState` ref).
+**Deferred:** combat analyze host (third caller → optional `GameState` ref). Equipment slot confirm uses **`PartyEquipmentPickerFloater`** (sort **256**) — not `ItemListInventory`.
 
 **Lifecycle:** [game#209](https://github.com/miramocha/griddungeon-game/issues/209) shipped — presenter implements `ICentralizedUiSurface` ([§ Presentation lifecycle](#presentation-lifecycle)).
 
@@ -653,6 +678,7 @@ GameState
 ├── SkillUsePicker (SkillUsePickerPresenter)
 ├── ItemListInventory (ItemListInventoryPresenter)
 ├── CharacterDetail (CharacterDetailPresenter)
+├── PartyEquipmentPickerFloater (PartyEquipmentPickerFloaterPresenter)
 ├── ExplorationMap (ExplorationMapCoordinator)
 │   ├── MinimapPanel (MinimapPanelPresenter)
 │   └── ExpandedMapOverlay (ExpandedMapOverlayPresenter)

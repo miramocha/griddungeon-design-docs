@@ -248,13 +248,13 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 
 **Visual reference (scratchpad):** [EO IV character status — equipment + stats layout](../refs/party-character-ui.md) — shipped on centralized **`CharacterDetailView`**: HP/MP meters, attribute bars, derived ATK/DEF/MAT/MDF grid, icon worn rows (single-column; 3D preview is a separate surface).
 
-**Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Right-docked **`CharacterDetailView`** (`PartyEquipDisplay`): structured stats + five worn rows with icons. **Q/E** / **W/S** move floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot is currently a **no-op** (inline bag picker removed; separate picker window + `PartyEquipmentApply` path is follow-up). Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
+**Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Right-docked **`CharacterDetailView`** (`PartyEquipDisplay`): structured stats + five worn rows with icons. **WASD** moves floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot opens **`PartyEquipmentPickerFloater`** (sort **255**) — bone-projected filtered list, not the party bag modal. Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
 
 | Layer | Type |
 |-------|------|
 | Core | `PartyEquipmentCatalog`, `PartyEquipmentStatPreview`, bag-row filter for slot + class |
 | Runtime | `PartyEquipmentCoordinator`, `PartyEquipmentOperations`, `PartyEquipmentApply` |
-| UI | **`CharacterDetail`** facade / `CharacterDetailView` (sort **251**); floater member bridge `PartyEquipmentFloaterToolkitView` — [custom party UI](../04-dev/custom-party-ui.md) |
+| UI | **`CharacterDetail`** facade / `CharacterDetailView` (sort **251**); floater member bridge `PartyEquipmentFloaterToolkitView`; equip picker `PartyEquipmentPickerFloater` (sort **255**) — [custom party UI](../04-dev/custom-party-ui.md) |
 
 Stats on combatants: `EquipmentStatAggregator` when building from save ([#155](https://github.com/miramocha/griddungeon-game/issues/155)).
 

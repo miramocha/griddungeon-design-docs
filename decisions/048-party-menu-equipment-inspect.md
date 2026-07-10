@@ -48,8 +48,8 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 | Piece | Choice |
 |-------|--------|
 | **Look At** | Bone child transforms via `PartyMenuBoneLookTarget` per worn slot |
-| **Bones** | Weapon → `RightLowerArm`; Head → `Head`; Body → `UpperChest` (fallback `Chest`); Legs → `RightLowerLeg`; Accessory → `LeftHand` |
-| **Framing** | `PartyMenuEquipInspectLayout` Z deltas on orbit camera local offset; `PartyMenuStageOrbitRig.FocusEquipSlot` tweens yaw + height + Z |
+| **Bones** | Weapon → `RightLowerArm`; Head → `Head`; Body → `Spine` (fallback `Chest`); Legs → `LeftLowerLeg`; Accessory → `LeftHand` |
+| **Framing** | `PartyMenuEquipInspectLayout` per-slot Z deltas + yaw flank offsets on orbit pivot; `PartyMenuStageOrbitRig.FocusEquipSlot` tweens yaw + height + Z |
 | **VRM LookAt** | Off on inspected member while equip pose plays |
 | **Session** | `PartyMenuStagePresenter` `m_equipInspectActive` keeps orbit when floater undocked |
 
@@ -75,14 +75,22 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 
 - Equipment inspect decouples floater dock from stage orbit (ADR 047 table updated in custom-party-ui).
 - HeavySword clip is cataloged but unused until WeaponType content lands.
-- Playtest may tune `PartyMenuEquipInspectLayout` Z deltas per slot.
+- Playtest may tune `PartyMenuEquipInspectLayout` Z deltas and yaw flank offsets per slot.
+
+### Equip inspect camera tuning (v1)
+
+| Slot | Z delta (closer) | Yaw flank |
+|------|------------------|-----------|
+| Head | `0.85` | left (`+55°`) |
+| Body | `0.55` | right (`-55°`) |
+| Legs | `0.5` | left (`+55°`) |
+| Weapon / Accessory | unchanged | front (`0°`) |
 
 ## Out of scope (v1)
 
 - Per-slot unique poses (non-weapon)
 - WeaponType-driven clip selection
 - Dedicated `CM_EquipInspect` vcam
-- Equip picker window (still deferred)
 
 ## Related
 

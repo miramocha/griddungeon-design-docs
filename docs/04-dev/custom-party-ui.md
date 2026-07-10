@@ -273,22 +273,26 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 
 **Visual reference (scratchpad):** [EO IV character status](../refs/party-character-ui.md) — `CharacterDetail` single-column stats + equip rows. **3D character lineup** is the party menu hex stage ([ADR 047](../../decisions/047-party-menu-3d-stage.md)), not inside this modal.
 
-**Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a slot is a **no-op** until a follow-up picker window ships (inline bag list removed).
+**Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a focused slot opens a **bone-anchored picker floater** (not the party bag modal).
 
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Equipment (pane reveal) | Right-docked `CharacterDetail` + floater dock (sort **260**). |
 | **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. Floater **retracts**; 3D member plays equip idle (v1: OH sword loop); orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
-| **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, chest, leg, left hand). |
-| **Z** (slot engaged) | **No picker** — equip deferred. |
-| **X** | Disengage slots → floater re-docks, restore grid idle + head orbit; then hide pane. |
+| **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, spine, left lower leg, left hand). |
+| **Z** (slot engaged) | Opens world-anchored **equipment picker floater** (sort **255**) beside focused slot bone — filtered bag rows + Remove when worn slot filled. |
+| **W/S** (picker open) | Move picker row focus (`WindowedListPaneView`, no `ScrollView`). |
+| **Z** (picker open) | Confirm row → `PartyEquipmentApply` equip/unequip. |
+| **X** (picker open) | Close picker; stay in worn-slot engage. |
+| **X** (slots engaged, picker closed) | Disengage slots → floater re-docks, restore grid idle + head orbit. |
+| **X** (pane) | Hide pane when slots not engaged. |
 
 Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
 
 Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail siblings disable when the Equipment pane is **revealed** (`paneRevealed` — first **Z** after section select; same session as Inventory bag open), via `PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport` — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport). Revealing the pane is sufficient; floater-only member focus does not need a separate modal signal. Worn-slot engage on `CharacterDetail` still switches **hints** (`PartyEquipmentEngage` → `PartyEquipmentSlots`) and worn-slot **W/S** input; it does not gate section-rail modal.
 
-Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
+Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` / `PartyEquipmentPicker` when floater open ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
 
 ---
 
