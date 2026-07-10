@@ -259,13 +259,13 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | **Layout** | Hex ring on stage; UITK floater stays 2×4 `PartyFormationLayout` grid |
 | **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus; **equip inspect** keeps orbit with bone Look At when worn slots engaged ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)) |
 | **LookAt** | VRM 1.0 gaze on **focused** member only while floater docked (tracks orbit vcam) |
-| **Silhouette** | All members black silhouette on menu open; **focused** member reveals full color when floater docked + grid focus (`CharacterMaterialSilhouette` + `Silhouette` animator layer). **Traps:** inactive pose apply, stale material instances, re-cache after blacken — [centralized UI gotchas § silhouette reveal](centralized-ui-gotchas.md#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
+| **Silhouette** | All members black silhouette on menu open; **focused** member reveals full color when floater docked + grid focus (`CharacterMaterialSilhouette` + `Silhouette` animator layer). **Traps:** inactive pose apply, stale material instances, re-cache after blacken — [centralized UI gotchas § silhouette reveal](centralized-ui-gotchas.md#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette); equip idle / build stripping — [§ equip idle in player build](centralized-ui-gotchas.md#party-menu-3d--equip-idle-pose-missing-in-player-build) |
 | **Idle** | `PartyMenuStagePoseCatalog` + `AnimatorOverrideController` per slot; additive breathing layer on shared idle controller |
 | **Combat** | No party 3D models — arena layout is separate ([ADR 046](../../decisions/046-combat-arena-plates-camera.md)) |
 
 **Hub:** hide guild-town geo while party menu open (when hub backdrop active). **Exploration:** hide dungeon view + minimap chrome; keep floor art loaded; restore FPV on close. **Implementation:** `PartyMenuStagePresenter`, `PartyCharacterVisualRegistry` — [game #400](https://github.com/miramocha/griddungeon-game/issues/400) (closed).
 
-**Art paths:** `Assets/Art/Characters/PartyMenu/Idles/`, `Assets/Art/Characters/PartyMenu/Equipment/`, `Assets/Scenes/PartyMenu/party_menu_stage_greybox.prefab`, `Assets/Content/PartyMenu/PartyMenuStagePoseCatalog.asset`, `Assets/Content/PartyMenu/PartyMenuEquipPoseCatalog.asset`.
+**Art paths:** `Assets/Art/Characters/PartyMenu/Idles/`, `Assets/Art/Characters/PartyMenu/Equipment/`, `Assets/Scenes/PartyMenu/party_menu_stage_greybox.prefab`, `Assets/Content/PartyMenu/PartyMenuStagePoseCatalog.asset`, `Assets/Content/PartyMenu/PartyMenuEquipPoseCatalog.asset`, `Assets/Resources/PartyMenu/PartyMenuRuntimeContent.asset` (player-build bootstrap — see [gotchas § equip idle in player build](centralized-ui-gotchas.md#party-menu-3d--equip-idle-pose-missing-in-player-build)).
 
 ---
 

@@ -6,5 +6,20 @@
   },
   "productionTestSeams": {
     "rule": "unity-test-seams.mdc"
+  },
+  "uiGotchas": {
+    "centralizedDoc": "docs/04-dev/centralized-ui-gotchas.md",
+    "presentationShellDoc": "docs/04-dev/presentation-shell-gotchas.md",
+    "pathGlobs": [
+      "docs/04-dev/centralized-ui-gotchas.md",
+      "docs/04-dev/presentation-shell-gotchas.md",
+      "docs/04-dev/custom-party-ui.md",
+      "docs/04-dev/centralized-ui-services.md"
+    ],
+    "rules": [
+      "centralized-ui-services.mdc",
+      "presentation-shell.mdc",
+      "uitk-bem-transition.mdc"
+    ]
   }
 }

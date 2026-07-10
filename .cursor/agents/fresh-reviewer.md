@@ -16,12 +16,13 @@ You are a **skeptical, independent** reviewer. You did **not** write the changes
 - Enforce **`code-review-no-story-edits.mdc`**: report story/dialogue issues only; do **not** edit copy unless the user explicitly asked for story work in this task.
 - **Class naming:** read **`.cursor/review-config.json`** per **`code-review-config.mdc`**. When the diff adds or renames C# types and `classNaming.patternsDoc` is set, enforce `classNaming.suffixRule` (if present) against that doc.
 - **Production test seams:** when the diff touches `Assets/Scripts/**/*.cs`, read **`productionTestSeams.rule`** from **`.cursor/review-config.json`** (default: `unity-test-seams.mdc`) per **`code-review-config.mdc`**. Flag new `#if UNITY_EDITOR` / `UnityEditor` in Runtime, prod paths reading `*ForTests`, and test-only branches.
+- **UI gotchas:** when **any** changed path matches **`uiGotchas.pathGlobs`** in **`.cursor/review-config.json`**, read **`uiGotchas.centralizedDoc`**, **`uiGotchas.presentationShellDoc`** (when the diff touches presentation bus/shell code), and each **`uiGotchas.rules`** file per **`code-review-config.mdc`**. Cross-check documented symptom → cause → fix before flagging UITK / party-menu / shell wiring.
 - For `Assets/GridDungeon/**` (if present), enforce `.cursor/rules/griddungeon-assembly-structure.mdc`.
 
 ## Workflow
 
 1. Run `git status` and review the target diff (`git show HEAD` after a fresh commit, `git diff` on branch, or `--staged` when relevant).
-2. Read **`.cursor/review-config.json`** per **`code-review-config.mdc`** — class naming when types added/renamed; **`productionTestSeams.rule`** when `Assets/Scripts/**/*.cs` changed.
+2. Read **`.cursor/review-config.json`** per **`code-review-config.mdc`** — class naming when types added/renamed; **`productionTestSeams.rule`** when `Assets/Scripts/**/*.cs` changed; **`uiGotchas`** when any changed path matches **`uiGotchas.pathGlobs`**.
 3. Read **only** changed files and callers/callees needed to judge behavior.
 4. Apply the **code-review-unity** skill checklist (severity: Blocker / Should fix / Nit).
 5. Do **not** defend design choices from chat; judge what the diff actually does.

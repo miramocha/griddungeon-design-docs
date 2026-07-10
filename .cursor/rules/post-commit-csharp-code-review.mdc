@@ -28,7 +28,7 @@ If **none** of the above apply (docs-only repo), skip review and commit per the 
    - Launch the **fresh-reviewer** subagent (Task tool, `readonly: true`) with a prompt containing **only**:
      - Changed file paths
      - Paste or summary of the diff (if small)
-     - Applicable `.cursor/rules/` paths for touched areas (always include `code-review-no-story-edits.mdc` and `code-review-config.mdc`; include `unity-test-seams.mdc` or `productionTestSeams.rule` from review-config when `Assets/Scripts/**/*.cs` changed; when the diff adds or renames C# types, read `.cursor/review-config.json` and include `classNaming.suffixRule` when set)
+     - Applicable `.cursor/rules/` paths for touched areas (always include `code-review-no-story-edits.mdc` and `code-review-config.mdc`; include `unity-test-seams.mdc` or `productionTestSeams.rule` from review-config when `Assets/Scripts/**/*.cs` changed; when the diff adds or renames C# types, read `.cursor/review-config.json` and include `classNaming.suffixRule` when set; when any changed path matches `uiGotchas.pathGlobs`, include gotcha doc URLs/paths and each `uiGotchas.rules` file from review-config)
    - Do **not** pass implementation rationale, prior fix attempts, or chat history into the subagent prompt.
    - Apply **code-review-unity** standards via the subagent.
 6. **Report** the subagent's findings to the user grouped by severity (Blocker / Should fix / Nit).

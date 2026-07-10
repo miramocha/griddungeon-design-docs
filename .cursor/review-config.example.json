@@ -3,5 +3,19 @@
     "patternsDoc": "docs/CLASS-NAMING.md",
     "shippedTypesDoc": "docs/CLASS-DESIGN.md",
     "suffixRule": "csharp-class-suffix-patterns.mdc"
+  },
+  "productionTestSeams": {
+    "rule": "unity-test-seams.mdc"
+  },
+  "uiGotchas": {
+    "centralizedDoc": "docs/UI-GOTCHAS.md",
+    "presentationShellDoc": "docs/SHELL-GOTCHAS.md",
+    "pathGlobs": [
+      "Assets/Scripts/**/UI/**",
+      "Assets/UI/**"
+    ],
+    "rules": [
+      "centralized-ui-services.mdc"
+    ]
   }
 }

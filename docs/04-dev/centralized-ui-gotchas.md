@@ -28,6 +28,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Hover / click dead on a lower `UIDocument` (keyboard still works) | Read **Pointer dead — `sortingOrder` + `PickingMode`** — verify stack table + pass-through on full-screen chrome |
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 | Party menu 3D silhouette / VRM material reveal | Read [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
+| Party menu equip idle / grid pose **Editor OK, player build frozen or skipped** | Read [§ Party menu 3D — equip idle in player build](#party-menu-3d--equip-idle-pose-missing-in-player-build) |
 
 ---
 
@@ -529,6 +530,57 @@ silhouette.SetRevealAmount(revealAmount, immediate: true);
 
 ---
 
+## Party menu 3D — equip idle pose missing in player build
+
+**Symptom:** Equipment worn-slot engage (**Z**) works in the **Editor** (equip idle crossfade, member stays revealed) but **Build and Run** shows bind pose / black silhouette / no pose change. Player log (once):
+
+`[PartyMenu] Equip idle pose skipped — missing equip pose catalog on PartyCharacterVisualRegistry`
+
+(or `missing equip idle clip` / `missing grid idle clip` on later resolution paths).
+
+**Authority:** [ADR 048](../../decisions/048-party-menu-equipment-inspect.md) · [ADR 047](../../decisions/047-party-menu-3d-stage.md) · [custom party UI § Equipment menu](custom-party-ui.md#equipment-menu-party-pause).
+
+**Cause (layered):**
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Scene refs not in repo** | `DevBootstrap.unity` is gitignored; `PartyCharacterVisualRegistry` serialized refs (`m_poseCatalog`, `m_equipPoseCatalog`, `m_idleBaseController`) may be null in a build unless re-wired locally — Editor `Create Dev Bootstrap` masks this. |
+| **Nested SO refs stripped or null** | Pose/equip catalogs only referenced from scene wiring may not survive player build stripping; `FindObjectsOfTypeAll` is unreliable as the only fallback. |
+| **Multiple `[CreateAssetMenu]` types in one `.cs` file** | Unity assigns **one MonoScript GUID per file**. Assets such as `PartyMenuEquipPoseCatalog.asset` that share the same script file as `PartyMenuStagePoseCatalog` can fail to deserialize as the intended type in **player builds** — nested refs like `runtime.EquipPoseCatalog` or `poseCatalog.EquipPoseCatalog` return null even when YAML looks wired. **Rule:** one ScriptableObject type per file when the asset must load by type in builds. |
+| **Broken `m_Script` on content asset** | `PartyMenuEquipPoseCatalog.asset` with `m_Script: {fileID: 0}` loads in Editor sometimes but not as `PartyMenuEquipPoseCatalog` in builds. |
+| **Silhouette layer weight vs material reveal** | `CharacterMaterialSilhouette` sets `MemberRevealed` bool only; **Silhouette** animator layer default weight **1** (Override) flattens grid idle + equip inspect unless `PartyCharacterVisualPose.SyncMemberSilhouetteLayer` runs on every reveal path — Editor timing can hide this. |
+| **Dev-only skip logs** | Early returns in `EnterEquipInspect` used to log only under `DEVELOPMENT_BUILD` — release builds failed silently before one-shot warnings shipped. |
+
+**Fix (shipped — `PartyCharacterVisualRegistry`, `PartyMenuRuntimeContent`, `PartyCharacterVisualPose`):**
+
+1. **`Assets/Resources/PartyMenu/PartyMenuRuntimeContent.asset`** — committed bootstrap loaded via `Resources.Load` so pose catalog, equip catalog, idle controller, and **`m_defaultEquipIdleClip`** always ship in player builds (independent of DevBootstrap wiring).
+2. **`PartyMenuRuntimeContent` in its own script file** — dedicated MonoScript so `Resources.Load<PartyMenuRuntimeContent>` works in builds.
+3. **`ResolveEquipIdleClip`** — catalog → `PartyMenuRuntimeContent.ResolveDefaultEquipIdleClip()` (direct clip ref when nested catalog ref is null).
+4. **`SyncMemberSilhouetteLayer`** on `SetMemberRevealGridIndex` / equip exit / stage activation — silhouette layer weight **0** when revealed (material owns tint).
+5. **Animator override** — `Rebind()` + `Update(0)` after runtime `AnimatorOverrideController` assign; base layer weight **1** for grid idle (`PartyMenuIdleBase` base layer default weight **1**).
+6. **Authoring** — **GridDungeon → Party Menu → Ensure Idle Clips + Pose Catalog** refreshes `PartyMenuRuntimeContent` (including default equip clip).
+
+**Tests:** `PartyCharacterVisualPoseTests` (silhouette layer weight when revealed / silhouetted), `PartyCharacterVisualRegistryTests` (`EnterEquipInspect_RestoresFocusedMemberRevealAfterOverviewClear`).
+
+**Rule for party-menu animation work:**
+
+```csharp
+// ❌ BAD — assume scene-wired PartyMenuEquipPoseCatalog survives in player build
+var clip = m_equipPoseCatalog.ResolveIdleClip(weaponType);
+
+// ❌ BAD — three ScriptableObject types in one .cs; equip catalog asset shares MonoScript with stage catalog
+
+// ✅ GOOD — Resources bootstrap + direct clip fallback
+AnimationClip? clip = ResolveEquipIdleClip(weaponType, ResolveEquipPoseCatalog());
+PartyCharacterVisualPose.SyncMemberSilhouetteLayer(animator, memberRevealed: true);
+```
+
+**Verify:** Build and Run → Hub → Party → Equipment → **Z** on worn slot → equip idle blends (~2s InOutBack); focused member stays revealed. If still broken, check log for which resolution step failed, then re-run **Ensure Idle Clips + Pose Catalog** and **Create Dev Bootstrap**.
+
+**Cross-ref:** [custom party UI § Party menu 3D stage](custom-party-ui.md#party-menu-3d-stage), [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette).
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
@@ -545,3 +597,4 @@ silhouette.SetRevealAmount(revealAmount, immediate: true);
 | **Gotchas (this page)** | **Here** |
 | Pointer / `sortingOrder` / `PickingMode` pass-through | [§ Pointer dead](#pointer-dead--sortingorder-stack--pickingmode-pass-through) |
 | Party menu 3D silhouette reveal (VRM / MToon10) | [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
+| Party menu equip idle / grid pose in player build | [§ Party menu 3D — equip idle in player build](#party-menu-3d--equip-idle-pose-missing-in-player-build) |

@@ -46,7 +46,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `ticket-test-documentation.mdc` | **Shared** — record test plans on GitHub issues/PRs when closing work |
 | `format-before-handoff-and-commit.mdc` | **Shared** — CSharpier + Prettier on changed `.cs` / `.uxml` / `.uss` before handoff and commit |
 | `post-commit-csharp-code-review.mdc` | **Shared** — independent C# review after agent-created commits (skipped in docs-only repos) |
-| `code-review-config.mdc` | **Shared** — `.cursor/review-config.json` schema for review class-naming doc URLs |
+| `code-review-config.mdc` | **Shared** — `.cursor/review-config.json` schema (class naming, production test seams, UI gotchas) |
 | `pre-commit-csharpier-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.cs` |
 | `pre-commit-prettier-uitk-format.mdc` | **Shared** — pointer to `format-before-handoff-and-commit.mdc` for `.uxml` / `.uss` |
 | `git-commit-agent-workflow.mdc` | **Shared** — agent git commit order (format → commit → post-commit review → push) |
@@ -73,7 +73,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 
 | Agent | Notes |
 |-------|--------|
-| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1`; [review-config.json](../review-config.json) — class naming + `productionTestSeams` (`unity-test-seams.mdc`) |
+| [fresh-reviewer](../agents/fresh-reviewer.md) | Copied from game repo by `sync-cursor-config.ps1`; [review-config.json](../review-config.json) — class naming, `productionTestSeams` (`unity-test-seams.mdc`), `uiGotchas` (centralized + shell gotcha docs when UI/party-menu paths change) |
 
 ## Architecture mapping
 
