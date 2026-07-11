@@ -61,13 +61,11 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 |-------|---------|
 | [test-plan-grid-dungeon](../skills/test-plan-grid-dungeon/SKILL.md) | Consistent GitHub/PR test plans (tables, sign-off, N/A deferrals) |
 | [validate-unity-meta](../skills/validate-unity-meta/SKILL.md) | Unity `.meta` validation — runs in **griddungeon-game** |
-| [blender-bone-remap](../skills/blender-bone-remap/SKILL.md) | VRoid/VRM bone rename + mirror pairs (Blender MCP) |
-| [vroid-shapekey-remap](../skills/vroid-shapekey-remap/SKILL.md) | VRoid `Fcl_*` shape key → `vroid*` naming (Blender MCP) |
 | [audit-centralized-ui-services](../skills/audit-centralized-ui-services/SKILL.md) | Centralized UI + presentation shell gotcha audits |
 | [deslop](../skills/deslop/SKILL.md) | De-slop agent prose — AI-writing tell scan + rewrite loop |
 | [class-naming-grid-dungeon](../skills/class-naming-grid-dungeon/SKILL.md) | Pick suffix + assembly before creating or renaming C# types |
 
-**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `blender-bone-remap`, `vroid-shapekey-remap`, `audit-centralized-ui-services`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script).
+**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `audit-centralized-ui-services`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script). VRoid/Blender avatar skills live in global Cursor skills (`~/.cursor/skills/`), not in these repos.
 
 ## Agents
 

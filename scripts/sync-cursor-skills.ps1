@@ -24,8 +24,6 @@ $canonical = @{
     "pull-next-backlog-ticket" = "game"
     "editor-agent-test"        = "game"
     "editor-agent-action"      = "game"
-    "blender-bone-remap"       = "game"
-    "vroid-shapekey-remap"     = "game"
     "deslop"                   = "design-docs"
     "class-naming-grid-dungeon" = "design-docs"
 }
