@@ -1,0 +1,71 @@
+---
+description: Player-facing UITK colors must use palette USS tokens via var(--gd-*); dark/light themes under Assets/UI/Settings/Themes/.
+globs:
+  - Assets/UI/Screens/**/*.uss
+  - Assets/UI/Settings/Themes/**/*.uss
+---
+
+# UITK palette colors (Grid Dungeon)
+
+**Authority:** `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` (default) and `GridDungeonPaletteLight.uss` — imported by theme TSS assets → `GamePanelSettings`. Runtime swap: `GridDungeonUiThemeService`.
+
+C# mirror for 3D / fades: `GridDungeon.Runtime.Characters.GridDungeonPalette` (`Assets/Scripts/Runtime/Characters/GridDungeonUiPalette.cs`).
+
+## Rule
+
+| Layer | Color source |
+|-------|----------------|
+| **Player HUD / overlays** (`Assets/UI/Screens/**`) | `var(--gd-*)` only — **no** inline `rgb()`, `rgba()`, or `#hex` |
+| **New / changed tokens** | Add to **both** `GridDungeonPaletteDark.uss` and `GridDungeonPaletteLight.uss` (same `--gd-*` names), then reference from screen USS |
+| **Editor tools** (`Assets/UI/Editor/**`) | Exempt — may use editor-skin literals until a dedicated editor palette exists |
+| **Design mirror** (`Assets/UI/Editor/DesignMirror/**`) | Prefer palette vars when mirroring production screens; literals OK for throwaway sandbox chrome |
+
+## Token naming
+
+- **Swatches:** `--gd-swatch-01` … `--gd-swatch-10`
+- **Neutrals:** `--gd-base`, `--gd-surface`, `--gd-chrome`, `--gd-ink`, `--gd-muted`, alpha variants (`--gd-base-a78`, …)
+- **Semantic:** `--gd-accent`, `--gd-threat`, `--gd-ally`, `--gd-protocol`, `--gd-focus-bg`, …
+- **Feature-specific:** `--gd-map-*`, `--gd-story-*`, `--gd-bar-*` — add when a screen needs a role not covered by neutrals/semantic
+
+Reuse existing tokens before adding new ones. If the literal already matches a token value, swap — do not duplicate under a second name.
+
+## Allowed in screen USS without a token
+
+- `var(--gd-transparent)` instead of `rgba(0, 0, 0, 0)` for explicit clears
+- Non-color properties (`px`, `flex`, `translate`, …)
+
+## Agent / PR checklist
+
+- [ ] Touched screen USS uses `var(--gd-*)` for every color property (including `border-*-color`, `-unity-background-image-tint-color`, `text-shadow` color)
+- [ ] New colors land in dark + light palette USS with the same semantic token name
+- [ ] 3D / C# color that must match HUD → extend `GridDungeonPalette` C# mirror when adding a runtime-facing token
+- [ ] Editor-only USS left unchanged unless the task scopes editor UI
+
+## Examples
+
+```css
+/* ❌ BAD — literal in screen USS */
+.hud-overlay__title {
+    color: rgb(232, 234, 237);
+}
+
+/* ✅ GOOD */
+.hud-overlay__title {
+    color: var(--gd-ink);
+}
+```
+
+```css
+/* ❌ BAD — one-off alpha in feature file */
+.map-view__marker--foe {
+    background-color: rgba(247, 37, 133, 0.98);
+}
+
+/* ✅ GOOD — semantic alias in palette, threat swatch underneath */
+/* GridDungeonPaletteDark.uss: --gd-map-foe-marker: var(--gd-threat-a98); */
+.map-view__marker--foe {
+    background-color: var(--gd-map-foe-marker);
+}
+```
+
+Complements [`unity-ui-toolkit.mdc`](unity-ui-toolkit.mdc) (BEM / USS class toggles) and [`unity-uitk-uss-limits.mdc`](unity-uitk-uss-limits.mdc).

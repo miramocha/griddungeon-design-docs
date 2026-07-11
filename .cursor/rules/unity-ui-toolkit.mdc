@@ -136,7 +136,7 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 **Reminder:** USS is **not** full browser CSS — no `calc()`, limited selectors, flex-only layout. See [`unity-uitk-uss-limits.mdc`](unity-uitk-uss-limits.mdc) before assuming web CSS works.
 
 - Selectors target **BEM classes** — `.combat-log { }`, `.combat-log__entry { }`, `.combat-log__entry--selected { }`
-- **Theme / variables** for shared colours, spacing, fonts — `var(--spacing-md)` on blocks.
+- **Theme / variables** for shared colours, spacing, fonts — `var(--gd-*)` from `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` / `GridDungeonPaletteLight.uss`; see [`unity-uitk-palette-colors.mdc`](unity-uitk-palette-colors.mdc) (no inline `rgb`/`rgba`/`#hex` in screen USS).
 - Prefer **modifiers** (`--selected`, `--disabled`) over ad-hoc class names like `.selected-red`.
 - Pseudo-states: `:hover`, `:active` on BEM blocks/elements where USS supports them.
 - Keep selectors **shallow** — prefer one BEM class per node over long descendant chains.
@@ -218,7 +218,7 @@ UI/UX edits **mirror** UXML/USS in Unity UI Builder under `Assets/UI/Editor/Desi
 | UI/UX | `*.DesignMirror.uxml` / `*.DesignMirror.uss` in UI Builder |
 | Dev/agent | **sync-uitk-design-mirror** promotes mirror → production shell + USS |
 
-Do **not** open production `Screens/` USS in UI Builder alongside UXML (USS auto-reorder). See [`uitk-design-mirror.mdc`](uitk-design-mirror.mdc) and [uitk-design-mirror.md](../../docs/04-dev/uitk-design-mirror.md).
+Do **not** open production `Screens/` USS in UI Builder alongside UXML (USS auto-reorder). See [`uitk-design-mirror.mdc`](uitk-design-mirror.mdc) and [uitk-design-mirror.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/uitk-design-mirror.md).
 
 ## Global input hints
 
