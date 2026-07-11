@@ -7,7 +7,7 @@ globs:
 
 # UITK palette colors (Grid Dungeon)
 
-**Authority:** `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` (default) and `GridDungeonPaletteLight.uss` — imported by theme TSS assets → `GamePanelSettings`. Runtime swap: `GridDungeonUiThemeService`.
+**Authority:** `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` (default) and `GridDungeonPaletteLight.uss` — imported by theme TSS assets → `GamePanelSettings`. Runtime swap: `GridDungeonUiThemeSystem`.
 
 C# mirror for 3D / fades: `GridDungeon.Runtime.Characters.GridDungeonPalette` (`Assets/Scripts/Runtime/Characters/GridDungeonUiPalette.cs`).
 
