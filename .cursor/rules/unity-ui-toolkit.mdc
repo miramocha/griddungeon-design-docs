@@ -209,6 +209,17 @@ When a **service or section chip** opens a child modal (hub Buy/Sell, Heal/Reviv
 
 Recipe: domain helper → `SetModalOpen` → `SyncModalChipRail` / `ApplyModalChipEnables` → `ClearFocusItems` on service rail while modal open. See design-docs [shared menu § Modal rail sibling disable](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport) and [centralized UI gotchas § Hub service modal chip rail](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/centralized-ui-gotchas.md#hub-service-modal-chip-rail-commandpanelmodalsupportsyncmodalchiprail).
 
+## Design mirror (UX sandbox)
+
+UI/UX edits **mirror** UXML/USS in Unity UI Builder under `Assets/UI/Editor/DesignMirror/` (Editor folder — not in player builds). Production bindables stay in `Assets/UI/Screens/` with empty runtime hosts.
+
+| Role | Edits |
+|------|-------|
+| UI/UX | `*.DesignMirror.uxml` / `*.DesignMirror.uss` in UI Builder |
+| Dev/agent | **sync-uitk-design-mirror** promotes mirror → production shell + USS |
+
+Do **not** open production `Screens/` USS in UI Builder alongside UXML (USS auto-reorder). See [`uitk-design-mirror.mdc`](uitk-design-mirror.mdc) and [uitk-design-mirror.md](../../docs/04-dev/uitk-design-mirror.md).
+
 ## Global input hints
 
 **Input bind copy only** on `InputHintPresenter` (bottom-right strip) — not map legend, coords, or warnings. Publish via `InputHints`; constants in `TabbedPickerRailHints` (segment order: Z/X → Up/Down & Q/E → other keys). No duplicate bind footers on panels or pickers. See [`unity-global-input-hints.mdc`](unity-global-input-hints.mdc).

@@ -26,6 +26,8 @@ $canonical = @{
     "editor-agent-action"      = "game"
     "deslop"                   = "design-docs"
     "class-naming-grid-dungeon" = "design-docs"
+    "create-uitk-design-mirror" = "game"
+    "sync-uitk-design-mirror"   = "game"
 }
 
 function Get-RepoSkillsRoot([string]$repo) {
