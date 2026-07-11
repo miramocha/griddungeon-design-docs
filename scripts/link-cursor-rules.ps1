@@ -24,6 +24,7 @@ $ruleNames = @(
     "unity-csharp-unityengine-object.mdc",
     "unity-ui-toolkit.mdc",
     "unity-uitk-uss-limits.mdc",
+    "unity-uitk-palette-colors.mdc",
     "unity-meta-files.mdc",
     "ticket-test-documentation.mdc",
     "post-commit-csharp-code-review.mdc",
