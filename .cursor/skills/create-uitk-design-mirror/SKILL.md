@@ -34,7 +34,7 @@ description: >-
 
 ```
 Task Progress:
-- [ ] 1. Resolve component id (arg or default item-list-picker); read mirror-manifest.yaml
+- [ ] 1. Resolve component id from user arg or `mirror-manifest.yaml` — stop if manifest `components` is empty and no id was given
 - [ ] 2. Read production shellUxml + bindableNames from manifest
 - [ ] 3. Grep C# for code-built hosts (*Builder, RailMenuFocus) — annotate static mirror needs
 - [ ] 4. Read or create fixture YAML per state (primary `mirror.fixture` + each `states[]` entry — template.md schema)

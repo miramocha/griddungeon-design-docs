@@ -27,7 +27,7 @@ description: >-
 
 ```
 Task Progress:
-- [ ] 1. Read mirror-manifest.yaml; resolve component id (default item-list-picker)
+- [ ] 1. Read mirror-manifest.yaml; resolve component id from user arg — stop if not registered
 - [ ] 2. Read **primary** mirror UXML (`mirror.uxml`) + production shellUxml side by side — skip `states[]` with `syncToProduction: false`
 - [ ] 3. UXML shell sync (rules below) — strip stripHosts children
 - [ ] 4. USS merge — map mirror selectors → ussTargets files
@@ -53,23 +53,13 @@ Target: `production.shellUxml` (e.g. `ItemListPickerShell.uxml`).
 5. **Do not** add new `Button` elements to production unless manifest + `ItemListPickerView` (or owner) updated.
 6. **Reject** non–kebab-case `name` or non-BEM classes added in mirror — report blockers.
 
-### ItemListPicker stripHosts
+### stripHosts
 
-| Host `name` | Action |
-|-------------|--------|
-| `item-list-picker-tabs` | Remove all child buttons; keep empty `VisualElement` |
-| `windowed-list__slots` | Remove all child rows; keep empty `VisualElement` |
+For each `name` in manifest `stripHosts`: remove all children; keep the empty host `VisualElement`. See [examples.md](../create-uitk-design-mirror/examples.md) (ItemListPicker) for a worked table.
 
 ## USS merge
 
-Read `mirror.uss` and each path in `production.ussTargets`.
-
-| Mirror section prefix | Target file |
-|-----------------------|-------------|
-| `.tabbed-picker`, `.item-list-picker-shell` | `TabbedPicker.uss` |
-| `.tabbed-picker__tabs` (segment tab radius) | `RailMenu.uss` |
-| `.windowed-list` | `WindowedList.uss` |
-| `.item-row` | `ItemListRow.uss` |
+Read `mirror.uss` and each path in `production.ussTargets`. Map mirror selector prefixes to target files per manifest (see [examples.md](../create-uitk-design-mirror/examples.md) for ItemListPicker prefix table).
 
 For each selector block in mirror USS (skip `@import` lines):
 

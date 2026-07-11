@@ -1,4 +1,6 @@
-# Example — ItemListPicker first mirror
+# Example — ItemListPicker (reference)
+
+Reference layout for **create-uitk-design-mirror** / **sync-uitk-design-mirror**. Mirror assets are not checked in until a component is bootstrapped; use this doc when registering `item-list-picker` again.
 
 ## Inputs
 

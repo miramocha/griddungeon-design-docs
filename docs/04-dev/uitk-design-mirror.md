@@ -24,7 +24,7 @@ flowchart LR
   UX[UI Builder on mirror]
   Mirror[DesignMirror UXML/USS]
   Skill[sync-uitk-design-mirror]
-  Prod[ItemListPickerShell + USS]
+  Prod[Production shell + USS]
   UX --> Mirror
   Mirror --> Skill
   Skill --> Prod
@@ -75,7 +75,7 @@ After sync:
 | `states[]` | Optional extra mirror UXML/fixture pairs for UX (empty list, …); `syncToProduction: false` skips shell promote |
 | `rowTemplate.source` | C# builder documenting static row shape in mirror |
 
-First component: `item-list-picker` → `ItemListPicker.DesignMirror.*` (populated) + `ItemListPicker.Empty.DesignMirror.uxml` (empty list).
+Manifest `components` starts empty — run **create-uitk-design-mirror** to register the first component. Worked example (ItemListPicker): **create-uitk-design-mirror** `examples.md`.
 
 ## Sync rules (summary)
 
@@ -94,11 +94,11 @@ No `phase`, `MVP`, `mvp`, or `PoC` in `Assets/**` from mirror work. Use *initial
 
 - Play Mode preview / custom inspectors (deferred — separate issue if needed)
 - Bi-directional production → mirror auto-sync
-- Additional mirrored components beyond ItemListPicker (new issues when expanding)
+- Active mirror assets until a component is bootstrapped via **create-uitk-design-mirror**
 
 ## Generalization (later)
 
-After first mirror sync is proven, add manifest entries per component (CommandRail sample panel, PartyMenu dialog, CharacterDetail). For code-built hosts (`runtimeBuilt: true`), sync USS and shell chrome only.
+Add manifest entries per component (ItemListPicker, CommandRail sample panel, PartyMenu dialog, CharacterDetail). For code-built hosts (`runtimeBuilt: true`), sync USS and shell chrome only.
 
 ## Skills reference
 
