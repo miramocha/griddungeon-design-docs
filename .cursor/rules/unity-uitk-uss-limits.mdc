@@ -10,7 +10,7 @@ alwaysApply: false
 
 USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets and assume they compile or layout correctly.
 
-**Authority:** [USS supported properties (Unity 6)](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-SupportedProperties.html), [USS selectors](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-Selectors.html). When unsure, check the manual — not MDN.
+**Authority:** [USS supported properties (Unity 6)](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-SupportedProperties.html), [USS selectors](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-Selectors.html), [USS pseudo-classes](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-Selectors-Pseudo-Classes.html). When unsure, check the manual — not MDN.
 
 ## Common traps (not in USS or not like the web)
 
@@ -20,6 +20,7 @@ USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets 
 | `min()` / `max()` / `clamp()` | **Not supported** — discrete BEM modifiers or C# |
 | CSS Grid (`display: grid`) | **Flexbox only** — `display: flex` / default flex children |
 | `@media (max-width: …)` | **No responsive `@media`** — BEM modifiers toggled in C#, separate layout classes, or `UIDocument` / panel settings |
+| `:first-child`, `:last-child`, `:nth-child()` | **Not supported** — rules silently no-op; use BEM segment modifiers from C# (`--segment-start` / `--segment-mid` / `--segment-end`) or `ToggleButtonGroup` left/mid/right classes |
 | Complex selectors (`:not()`, `+`, `~`, deep chains) | **Limited** — prefer one BEM class per node; shallow selectors |
 | `::before` / `::after` content | **Limited / not for arbitrary content** — use extra `VisualElement` in UXML |
 | Orchestrated show/hide motion | **Do not rely on USS `transition-*` alone** — `UiToolkitTweens` + ADR 039 (`unity-ui-toolkit.mdc`) |
@@ -29,7 +30,7 @@ USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets 
 
 - Flex layout (`flex-direction`, `flex-grow`, `align-items`, `justify-content`, …)
 - Theme variables: `var(--spacing-md)`, `var(--color-*)` from project Theme StyleSheet
-- BEM class selectors, `:hover`, `:active`, `:focus` (where UITK exposes them)
+- BEM class selectors; state pseudo-classes only (`:hover`, `:active`, `:focus`, `:enabled`, `:disabled`, `:checked`, `:root` — see [pseudo-classes](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-Selectors-Pseudo-Classes.html))
 - Fixed units: `px`, `%`, and supported keywords (`auto`, `none`, … per manual)
 
 ## When math or responsiveness is needed
@@ -40,6 +41,7 @@ USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets 
 | Few discrete sizes | Mutually exclusive BEM modifiers (`map-view--panel-cell-24`) — C# picks one |
 | Value depends on measured layout | C# sets `style.left` / `style.width` once per layout pass — not USS `calc` |
 | Hide/show steady state | BEM `--hidden` / `--collapsed` — motion in C# tweens |
+| Segmented tab / chip end caps | C# adds `--segment-start` / `--segment-end` on build (`RailMenuView.SetItems`) — not `:first-child` / `:last-child` |
 
 ## Examples
 
@@ -65,8 +67,22 @@ USS **looks** like CSS but is a **Unity subset**. Do not paste web/CSS snippets 
 /* ✅ GOOD — C# toggles hub-hud--compact on root */
 ```
 
+```css
+/* ❌ BAD — structural pseudo-classes are not in USS; selector never matches */
+.tabbed-picker__tabs .rail-menu__item:first-child {
+    border-top-left-radius: 12px;
+}
+
+/* ✅ GOOD — segment modifier toggled in C# when tab buttons are built */
+.rail-menu__item--segment-start {
+    border-top-left-radius: 13px;
+    border-bottom-left-radius: 13px;
+}
+```
+
 ## Agent / PR checklist
 
 - [ ] New USS property verified in [supported properties](https://docs.unity3d.com/6000.4/Documentation/Manual/UIE-USS-SupportedProperties.html)
 - [ ] No `calc` / `clamp` / grid / `@media` without explicit team exception
+- [ ] No `:first-child`, `:last-child`, `:nth-child` — use BEM modifiers or `ToggleButtonGroup` segment classes
 - [ ] Dynamic layout → C# or discrete modifiers, not web-only CSS

@@ -12,7 +12,7 @@ tags:
 How to add a **new UI shell** on the [presentation bus](centralized-ui-services.md#presentation-bus) — swap art/layout or host world-space chrome without forking projectors or phase HUDs.
 
 **Authority:** [ADR 042 — Runtime presentation bus + shell catalog](../../decisions/042-presentation-bus.md)  
-**Related:** [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus), [UVS presentation hooks](../02-systems/uvs-phase-presentation.md#ui-presentation-hooks), [layered UITK panels](layered-uitk-panels.md)
+**Related:** [ui-event-contract § Presentation bus](ui-event-contract.md#presentation-bus), [UI camera stack](ui-camera-stack.md) (3D env / backdrop / character render order; [ADR 049](../../decisions/049-ui-camera-stack.md)), [UVS presentation hooks](../02-systems/uvs-phase-presentation.md#ui-presentation-hooks), [layered UITK panels](layered-uitk-panels.md)
 
 ---
 

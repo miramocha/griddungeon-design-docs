@@ -257,6 +257,7 @@ command-rail | center column (log-preview → arena-spacer → synchro) + PartyF
 - `SkillDefinition.presentation`: `Fixed` | `Cinematic` | `CinematicQTE`
 - `Fixed` — VFX at slots; optional subtle zoom to primary target, then reset
 - `Cinematic` / `CinematicQTE` — `PlayableDirector` + Timeline; end on `stopped`; QTE beats via Timeline **markers** ([ADR 027](../decisions/027-combat-cinematic-timeline-events.md))
+- Hub / party menu / story UI 3D sandwich — `UiCameraStackSession` + URP camera stack when backdrop UITK shown ([ADR 049](../decisions/049-ui-camera-stack.md) · [ui-camera-stack](04-dev/ui-camera-stack.md)); `PresentationCharacter` tag at spawn for future skill cinematics
 - `CinematicQTE` — `QTEController` tiers → damage bonus; skill always resolves base on miss/skip
 - At launch: all skills `Fixed`; cinematic + QTE stubbed
 - MVP2: 1— `CinematicQTE` party skill + 1— boss `Cinematic` sample
