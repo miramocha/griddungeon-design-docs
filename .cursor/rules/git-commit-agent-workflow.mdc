@@ -22,7 +22,7 @@ When the user asks you to **create a commit** or **commit and push**, follow thi
 
 1. Run in parallel: `git status`, `git diff` (staged + unstaged), `git log -3 --oneline`
 2. Draft a commit message (why, not just what); do not commit secrets
-3. **Before commit:** format changed `.cs`, `.uxml`, and `.uss` per `format-before-handoff-and-commit.mdc` (skip if already formatted this session and diff unchanged)
+3. **Before commit:** run full `format-before-handoff-and-commit.mdc` procedure (class naming, default scope language, `using` check, then format — skip steps that don't apply; skip entire procedure if already run this session and diff unchanged)
 4. `git add` relevant paths → `git commit` (HEREDOC message on bash; PowerShell here-string on Windows)
 5. **C# repos:** run post-commit review per `post-commit-csharp-code-review.mdc` (`git show HEAD`, **fresh-reviewer**)
 6. Fix **Blockers** in a follow-up commit (or amend only per rules above); do not push with known Blockers unless the user approves

@@ -85,6 +85,30 @@ public void SetContextForTests(InventoryContext ctx) => …;
 internal void OpenCombatItemForTests(PartyBag bag) { … } // prefer public OpenCombatItem if real API
 ```
 
+## Shipped refactors ([#418](https://github.com/miramocha/griddungeon-game/pull/418))
+
+Examples of replacing prod `*ForTests` reads with neutral APIs or injection — prefer these patterns before adding new seams.
+
+| Area | Avoid | Use instead |
+|------|-------|-------------|
+| Screen fade alpha | Prod path reads `OverlayAlphaForTests` | `ScreenFadePresenter.CurrentOverlayAlpha` / `ScreenFades` facade; tests assert through presenter or beat routine |
+| Autopilot navigation | `#if UNITY_EDITOR` branches in `AutopilotController` player path | `IAutopilotNavigation` + `DefaultAutopilotNavigation`; fixture ctor or `BindNavigationForTests` |
+| Map overlay anchor | Static `WorldBoundOverrideForTests` on `MapGridOverlayAnchor` | Optional `resolveWorldBound` parameter per call / presenter field injection in tests |
+| Action callout fixture gate | Hard-coded test branches in presenter hot path | Injectable gate resolver swapped in Edit Mode fixture setup |
+| Combat roll override | `public SetRollPercentOverride` | `internal SetRollPercentOverride` on `CombatController` + `InternalsVisibleTo` |
+| Null picker doubles | `NullCombatItemPicker` / `NullSkillUsePicker` in Runtime | `GridDungeon.TestShared` — reference from `Assets/Tests/` only |
+
+```csharp
+// ❌ BAD — production fade fail path reads test-only property
+if (presenter.OverlayAlphaForTests > 0f) { … }
+
+// ✅ GOOD — neutral prod surface
+if (presenter.CurrentOverlayAlpha > 0f) { … } // or GameState.ScreenFade when wired
+
+// ✅ GOOD — map anchor layout injection in fixture
+MapGridOverlayAnchor.SnapMarker(cell, overlay, resolveWorldBound: el => fixedRect);
+```
+
 ## PR / agent checklist
 
 - [ ] Rule under test could move to **Core** — move it before adding `*ForTests`

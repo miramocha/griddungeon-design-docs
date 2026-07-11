@@ -85,7 +85,8 @@ GridDungeon.Tests      → *Tests per domain folder
 |--------|----------|----------|
 | `Character*` | Reusable character prefab `MonoBehaviour` (`GridDungeon.Runtime.Characters`) | `VrmCharacterLookAt`, `CharacterMaterialSilhouette` |
 | `PartyCharacterVisual*` | `GameState` session pool / static helpers | `PartyCharacterVisualRegistry`, `PartyCharacterVisualPose` |
-| `PartyMenu*` | Stage rig / per-instance stage hooks | `PartyMenuHeadLookTarget`, `PartyMenuStageOrbitRig` |
+| `PartyMenu*` | Stage rig, content SOs, motion helpers, per-instance stage hooks | `PartyMenuStageOrbitRig`, `PartyMenuRuntimeContent`, `PartyMenuEquipPoseCatalog`, `PartyMenuEquipInspectMotion` |
+| `PartyMenu*Host` | Per-spawned-visual `MonoBehaviour` on party menu character prefab | `PartyMenuCharacterAnimatorOverrideHost` (cached override controller + equip layer blend) |
 
 ### UI Toolkit (`GridDungeon.UI`)
 

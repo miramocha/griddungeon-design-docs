@@ -65,7 +65,7 @@ In test plans, list **`<Domain>` + fixture classes touched by the ticket`** (fro
 
 ## Agent / PR workflow
 
-1. **Before handoff:** format changed `.cs`, `.uxml`, and `.uss` per `format-before-handoff-and-commit.mdc` (CSharpier, Prettier, **`using` check** — missing + duplicate — on changed `.cs` in **griddungeon-game**).
+1. **Before handoff:** per `format-before-handoff-and-commit.mdc` — **class naming** (add/rename types), **default scope language** (touched prose), **`using` check** (missing + duplicate on changed `.cs`), then **format** (CSharpier / Prettier on changed `.cs` / `.uxml` / `.uss` in **griddungeon-game**).
 2. Run applicable **Edit Mode** tests when the change touches `GridDungeon.Core` or testable rules — **`-Category <Domain>` via editor-agent-test** (not `-Fixture` / `-Test` for handoff).
 3. When C# or Unity assets changed, delegate **fresh-reviewer** (`.cursor/agents/fresh-reviewer.md`) after commits on the branch and before close-out — diff + issue AC only; ensure `.cursor/review-config.json` is honored when types were added/renamed; fix Blockers in follow-up commits (see **test-plan-grid-dungeon** skill).
 4. After implementation, **post the filled template** to the issue via `gh issue comment` (or PR body).

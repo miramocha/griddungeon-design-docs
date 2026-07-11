@@ -229,6 +229,34 @@ logPreviewRow.pickingMode = PickingMode.Position;
 
 ---
 
+## Combat planning — roster hover while skill picker open ([#415](https://github.com/miramocha/griddungeon-game/pull/415))
+
+**Symptom:** During command planning with **Skill** focused and the skill picker open, **mouse hover** on another core on the party floater switched `CommandTarget` / refreshed the picker — keyboard roster nav was already gated, but pointer hover was not.
+
+**Cause:** `PartyFormationGridTargetPicker` applied pointer **hover** and **click** through the same gate (`SetPointerFocusGate`). Planning needed **hover blocked** while the picker is open, but **click** still allowed to confirm a different core and refresh the picker.
+
+**Fix (shipped):**
+
+1. **Split gates** — `SetPointerHoverGate` (hover chrome + focus callback) vs `SetPointerConfirmGate` (LMB confirm). `CombatPlanningPartyPicker` forwards both to the shared grid picker.
+2. **Planning hover rule** — `CombatHudView.ShouldAllowPlanningPartyPointerHover`: active only when skill command focused **and** skill picker **closed**. While picker open, hover is ignored; confirm still routes through `ShouldAllowPlanningPartyPointerConfirm`.
+3. **Picker open guard** — `OnPlanningPartyPointerFocused` no-ops when `SkillUsePickerOverlay.Input.IsOpen` so stray focus events do not retarget mid-pick.
+4. **CommandTarget drift on Back** — `CombatSkillPickerHost` / `CombatItemPickerHost` pin `m_pickActor` on open, `SelectCommandTarget(actor)` before submit, and `StepBackCommandPlanning` notifies `OnCommandTargetChanged` so planning highlight matches the popped queue slot.
+
+```csharp
+// ❌ BAD — one gate blocks confirm when you only meant to block hover
+picker.SetPointerHoverGate(() => !skillPickerOpen); // also blocked LMB confirm
+
+// ✅ GOOD — hover gate only; confirm gate separate
+picker.SetPointerHoverGate(() => isSkillFocused && !skillPickerOpen);
+picker.SetPointerConfirmGate(() => isSkillFocused); // refresh picker on click when open
+```
+
+**Tests:** `CombatPlanningPartyPickerTests` (hover blocked when skill host open; confirm still works); `CombatPlayerCommandGateTests` / planning Back after skill+item pick.
+
+**Rule:** Modal child owns input → block **pointer hover** on sibling pickers that would retarget focus; keep **confirm** on a separate gate when click should still commit or refresh the modal.
+
+---
+
 ## `ItemListInventory` — one picker, three contexts
 
 Only one context active at a time. Opening bag while shop modal logic still thinks it owns the picker causes focus/picking-mode bugs.
@@ -596,5 +624,6 @@ PartyCharacterVisualPose.SyncMemberSilhouetteLayer(animator, memberRevealed: tru
 | Floor transition + map panel fade timing | [authoring-floor-transition-beats.md § Screen fade](authoring-floor-transition-beats.md#screen-fade-uitk) |
 | **Gotchas (this page)** | **Here** |
 | Pointer / `sortingOrder` / `PickingMode` pass-through | [§ Pointer dead](#pointer-dead--sortingorder-stack--pickingmode-pass-through) |
+| Combat planning roster hover vs skill picker | [§ Combat planning — roster hover](#combat-planning--roster-hover-while-skill-picker-open-415) |
 | Party menu 3D silhouette reveal (VRM / MToon10) | [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
 | Party menu equip idle / grid pose in player build | [§ Party menu 3D — equip idle in player build](#party-menu-3d--equip-idle-pose-missing-in-player-build) |

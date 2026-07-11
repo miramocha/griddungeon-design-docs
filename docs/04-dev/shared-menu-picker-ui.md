@@ -318,6 +318,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `PartyInventoryEngage` | [Z] Confirm · [X] Back · [Q/E] Tab |
 | `PartyEquipmentEngage` | [Z] Confirm · [X] Back · [Directional] Navigate |
 | `PartyEquipmentSlots` | [X] Back · [Up/Down] Navigate |
+| `PartyEquipmentPicker` | [Z] Confirm · [X] Back · [Up/Down] Navigate — worn-slot equip picker floater open |
 | `PartyFormationSwap` | [Z] Confirm · [X] Cancel · [Directional] Navigate — default when Formation pane is open (auto-engage on reveal) |
 | `PartyFormationEngage` | [Z] Confirm · [X] Back · [Directional] Navigate — after **X** backs out of swap mode while pane stays open |
 | `FieldItemUse` | [Z] Use · [X] Back · [Directional] Navigate — field item member pick (Inventory pane) |
@@ -326,7 +327,7 @@ The global strip answers: *what can I press right now?* It does **not** carry ma
 | `ForItemPickerEngage(backVerb)` | [Z] Confirm · [X] {backVerb} |
 | `ForItemPickerRows(multiTab, backVerb)` | [Z] Confirm · [X] {backVerb} · [Q/E] Tab · [Up/Down] Navigate — or [Z] Confirm · [X] {backVerb} · [Up/Down] Navigate when single tab |
 
-Party equipment (slots engaged): `[X] Back · [Up/Down] Navigate` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Member pick on the party floater uses **`[Directional]`** (`WASD` on PC) before slot engage (`PartyEquipmentEngage`).
+Party equipment (slots engaged): `[X] Back · [Up/Down] Navigate` — focused worn slot shown on the pane (`menu-item--focused`), not on the global strip. Equip picker floater open: `PartyEquipmentPicker` (`[Z] Confirm · [X] Back · [Up/Down] Navigate`). Member pick on the party floater uses **`[Directional]`** (`WASD` on PC) before slot engage (`PartyEquipmentEngage`).
 
 ---
 

@@ -28,9 +28,11 @@ Skip when the change set has **no** paths for that formatter.
 
 ## Procedure (agents)
 
-1. `git status` + `git diff` — list every changed `.cs`, `.uxml`, and `.uss` (staged + unstaged) under the task scope.
-2. If none, skip.
-3. From **griddungeon-game** root, in order:
+1. `git status` + `git diff` — list every changed `.cs`, `.uxml`, `.uss`, and touched prose under the task scope.
+2. **Class naming** — when the diff **adds or renames** a public type under `Assets/Scripts/` or `Assets/Tests/` (**griddungeon-game**): per `unity-csharp-class-creation.mdc` and **class-naming-grid-dungeon** skill; read `.cursor/review-config.json` → `classNaming.patternsDoc` and `classNaming.suffixRule`. Skip when no type add/rename.
+3. **Default scope language** — when the diff touches comments, README, `.md`, or other prose: per `default-release-scope-language.mdc` — use **default** / **required scope**, not MVP1 / MVP / spike in new or edited copy. Skip when no prose changed.
+4. **`using` directives** — on every changed `.cs` in **griddungeon-game**: `unity-common-pitfalls.mdc` § Handoff — fix **missing** imports (mirror sibling `using` lines) and remove **duplicate** identical `using` lines. Skip when no `.cs` changed.
+5. **Format** changed paths from **griddungeon-game** root (skip repo/file types with nothing to format — see table above):
    - **CSharpier** on changed `.cs` — skill **csharpier-format**:
      ```powershell
      dotnet tool restore
@@ -41,8 +43,7 @@ Skip when the change set has **no** paths for that formatter.
      npm install
      npx prettier --write path/to/Changed.uxml path/to/Changed.uss
      ```
-4. Re-run `git diff`. Include formatting-only changes in the handoff tree or commit unless the user excludes them.
-5. **Verify `using` directives** on every changed `.cs` — `unity-common-pitfalls.mdc` § Handoff — **missing** imports (mirror sibling `using` lines) and **duplicate** identical `using` lines (remove extras); run `tools/request-compile-status.ps1` when Editor may be open — see `unity-compile-status-agent.mdc`.
+6. Re-run `git diff`. Include formatting-only changes in the handoff tree or commit unless the user excludes them. Run `tools/request-compile-status.ps1` when Editor may be open after `.cs` changes — see `unity-compile-status-agent.mdc`.
 
 ## Editor parity
 

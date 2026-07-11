@@ -281,7 +281,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 | **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
 | **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. Floater **retracts**; 3D member plays equip idle (v1: OH sword loop); orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
 | **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, spine, left lower leg, left hand). |
-| **Z** (slot engaged) | Opens world-anchored **equipment picker floater** (sort **255**) beside focused slot bone — filtered bag rows + Remove when worn slot filled. |
+| **Z** (slot engaged) | Opens world-anchored **equipment picker floater** (sort **256**) beside focused slot bone — filtered bag rows + Remove when worn slot filled. |
 | **W/S** (picker open) | Move picker row focus (`WindowedListPaneView`, no `ScrollView`). |
 | **Z** (picker open) | Confirm row → `PartyEquipmentApply` equip/unequip. |
 | **X** (picker open) | Close picker; stay in worn-slot engage. |

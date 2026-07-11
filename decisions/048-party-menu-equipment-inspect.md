@@ -39,7 +39,25 @@ While worn slots engaged: **retract** party floater (`ApplyPartyMenuFloaterDock(
 | **Runtime v1** | **Always** OH sword idle for all five worn slots |
 | **Future** | Map `EquipmentDefinition.WeaponType` (heavy/greatsword → HeavySword, sword → OHSword); TODO in catalog resolver |
 
-Same `AnimatorOverrideController` path as grid idle (`PartyCharacterVisualPose.ApplyEquipInspect`).
+Same `AnimatorOverrideController` path as grid idle (`PartyCharacterVisualPose.ApplyEquipInspect`). **Equip layer blend** (~2s `InOutBack`, weight-scaled) owned by `PartyMenuCharacterAnimatorOverrideHost` on each spawned visual — do not snap layer weight while an active blend tween runs.
+
+### Focus motion (orbit + equip inspect)
+
+| Piece | Choice |
+|-------|--------|
+| **Member root Z** | `PartyMenuEquipInspectMotion` slides focused visual root to formation center (`PartyMenuStageFormationLayout.FocusCharacterLocalZ`) on orbit focus and equip inspect |
+| **Enter nudge** | Short scale punch on focus enter (`RootNudgeDurationSeconds` ~0.45s, `OutBack`) |
+| **Equip blend timing** | `EquipInspectMotionDurationSeconds` = **2s** baseline for root-Z slide and orbit pivot motion (separate from Cinemachine brain blend) |
+| **Defer** | Root-Z sync waits until equip pose applies successfully — avoids centering before idle clip binds |
+
+### Equip picker floater (slot confirm)
+
+| Rule | Choice |
+|------|--------|
+| **When** | **Z** on an engaged worn slot (`CharacterDetailView` slot focus) |
+| **UI** | `PartyEquipmentPickerFloater` centralized service — sort **256**, bone-projected via `UiWorldOverlayAnchor` |
+| **Not** | Party bag modal (`ItemListInventory`) — filtered rows for slot + class only |
+| **Exit** | **X** closes picker; worn-slot engage stays active |
 
 ### Camera
 
@@ -58,9 +76,13 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 | Layer | Owner |
 |-------|--------|
 | Slot engage / W/S | `PartyEquipmentToolkitView`, `CharacterDetailView` |
+| Equip picker floater | `PartyEquipmentPickerFloaterPresenter`, `PartyEquipmentPickerFloater` |
 | Floater retract + stage sync | `PartyMenuOverlayView.SyncPartyMenuStageMemberFocus` |
 | Equip inspect session | `PartyMenuStagePresenter` / `PartyMenuStage` facade |
-| Pose + bone targets | `PartyCharacterVisualRegistry`, `PartyMenuEquipPoseCatalog` |
+| Pose + bone targets | `PartyCharacterVisualRegistry`, `PartyMenuEquipPoseCatalog`, `PartyCharacterVisualPose` |
+| Animator override + equip blend | `PartyMenuCharacterAnimatorOverrideHost` |
+| Root Z / scale motion | `PartyMenuEquipInspectMotion` |
+| Player-build content bootstrap | `PartyMenuRuntimeContent` (`Resources/PartyMenu/PartyMenuRuntimeContent`) |
 | Orbit tween | `PartyMenuStageOrbitRig` |
 
 ### Content paths
@@ -69,7 +91,8 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 |-------|------|
 | Equip idle clips | `Assets/Art/Characters/PartyMenu/Equipment/PartyMenuEquip_*_Idle01.anim` |
 | Equip catalog | `Assets/Content/PartyMenu/PartyMenuEquipPoseCatalog.asset` |
-| Editor menu | `GridDungeon → Party Menu → Ensure Equip Clips + Pose Catalog` |
+| Player-build bootstrap | `Assets/Resources/PartyMenu/PartyMenuRuntimeContent.asset` |
+| Editor menu | `GridDungeon → Party Menu → Ensure Idle Clips + Pose Catalog` |
 
 ## Consequences
 
