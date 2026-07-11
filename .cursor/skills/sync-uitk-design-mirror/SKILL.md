@@ -46,7 +46,7 @@ Run from **griddungeon-game** root.
 
 Target: `production.shellUxml` (e.g. `ItemListPickerShell.uxml`).
 
-1. **Preserve** every `bindableNames` `name` attribute from manifest.
+1. **Preserve** every `shellBindableNames` `name` on `production.shellUxml` (wrapper-only hooks: `wrapperBindableNames`).
 2. **Copy** hierarchy and `class` on non-host nodes (title, detail, scroll bars, body layout).
 3. **Strip** all children under each `stripHosts` entry; leave empty hosts for runtime population.
 4. **Do not** copy placeholder `text` into production except existing em-dash defaults on labels.

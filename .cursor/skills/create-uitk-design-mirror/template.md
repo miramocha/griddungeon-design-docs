@@ -84,15 +84,16 @@ Append to `Assets/UI/Editor/DesignMirror/mirror-manifest.yaml`:
         - Assets/UI/Screens/Shared/TabbedPicker.uss
         - Assets/UI/Screens/Shared/WindowedList.uss
         - Assets/UI/Screens/Shared/ItemListRow.uss
-    bindableNames:
-      - item-list-picker
+    shellBindableNames:
       - item-list-picker-title
       - item-list-picker-tabs
       - item-list-picker-rows
       - item-list-picker-detail
+    wrapperBindableNames:
+      - item-list-picker
     stripHosts:
       - item-list-picker-tabs
-      - windowed-list__slots
+      - windowed-list-slots
     rowTemplate:
       source: ItemListRowBuilder
 ```
@@ -102,6 +103,9 @@ Append to `Assets/UI/Editor/DesignMirror/mirror-manifest.yaml`:
 | `mirror.uxml` / `mirror.fixture` | Primary populated specimen — **sync** promotes this shell layout |
 | `states[]` | Extra UX specimens (empty list, future disabled-row sample, …) |
 | `states[].syncToProduction` | When `false`, UXML is Builder-only; USS changes still merge from shared `mirror.uss` |
+| `shellBindableNames` | `name` hooks on `production.shellUxml` — must survive sync |
+| `wrapperBindableNames` | `name` hooks on `production.wrapperUxml` only (e.g. root overlay node) |
+| `stripHosts` | `name` values on shell hosts whose **children** are stripped in production |
 
 ## Naming convention
 

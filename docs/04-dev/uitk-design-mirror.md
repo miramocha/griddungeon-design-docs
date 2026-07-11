@@ -8,7 +8,7 @@ Related: [shared menu & picker UI](shared-menu-picker-ui.md), [unity-ui-toolkit 
 
 ## Problem
 
-Unity UI Builder rearranges and optimizes USS when production UXML and USS are open together. Production UITK must keep stable BEM `name` hooks and empty runtime hosts (for example `ItemListPickerShell.uxml` — empty `item-list-picker-tabs` and `windowed-list__slots`).
+Unity UI Builder rearranges and optimizes USS when production UXML and USS are open together. Production UITK must keep stable BEM `name` hooks and empty runtime hosts (for example `ItemListPickerShell.uxml` — empty `item-list-picker-tabs` and `windowed-list-slots`).
 
 ## Solution
 
@@ -16,7 +16,7 @@ Unity UI Builder rearranges and optimizes USS when production UXML and USS are o
 |-------|----------|------|
 | Mirror | `Assets/UI/Editor/DesignMirror/` | UX edits placeholder-filled UXML/USS in UI Builder |
 | Production | `Assets/UI/Screens/` | Runtime bindable shells; populated in C# |
-| Manifest | `mirror-manifest.yaml` | Maps mirror ↔ production paths, stripHosts, bindableNames |
+| Manifest | `mirror-manifest.yaml` | Maps mirror ↔ production paths, stripHosts, shell/wrapper bindables |
 | Skills | `create-uitk-design-mirror`, `sync-uitk-design-mirror` | Bootstrap mirror; promote to production |
 
 ```mermaid
@@ -70,16 +70,17 @@ After sync:
 | `production.shellUxml` | Bindable shell to update on sync |
 | `production.wrapperUxml` | Style imports only |
 | `production.ussTargets` | Production USS files receiving merged selectors |
-| `bindableNames` | `name` hooks that must survive sync |
-| `stripHosts` | Hosts whose children are stripped in production |
+| `shellBindableNames` | `name` hooks on `production.shellUxml` |
+| `wrapperBindableNames` | `name` hooks on `production.wrapperUxml` only |
+| `stripHosts` | Shell host `name` values whose children are stripped in production |
 | `states[]` | Optional extra mirror UXML/fixture pairs for UX (empty list, …); `syncToProduction: false` skips shell promote |
 | `rowTemplate.source` | C# builder documenting static row shape in mirror |
 
-Manifest `components` starts empty — run **create-uitk-design-mirror** to register the first component. Worked example (ItemListPicker): **create-uitk-design-mirror** `examples.md`.
+Manifest `components` starts empty — run **create-uitk-design-mirror** to register the first component. Worked example (ItemListPicker): [create-uitk-design-mirror/examples.md](../../.cursor/skills/create-uitk-design-mirror/examples.md).
 
 ## Sync rules (summary)
 
-1. **Shell UXML** — preserve `bindableNames`; copy non-host hierarchy/classes; empty `stripHosts`.
+1. **Shell UXML** — preserve `shellBindableNames`; copy non-host hierarchy/classes; empty `stripHosts`.
 2. **USS** — merge mirror selector blocks into `ussTargets` by BEM prefix; Prettier.
 3. **Wrapper** — `<Style src>` list only if imports changed.
 4. **No placeholder text** in production labels except existing defaults.
@@ -94,7 +95,7 @@ No `phase`, `MVP`, `mvp`, or `PoC` in `Assets/**` from mirror work. Use *initial
 
 - Play Mode preview / custom inspectors (deferred — separate issue if needed)
 - Bi-directional production → mirror auto-sync
-- Active mirror assets until a component is bootstrapped via **create-uitk-design-mirror**
+- No active mirror assets until a component is bootstrapped via **create-uitk-design-mirror**
 
 ## Generalization (later)
 

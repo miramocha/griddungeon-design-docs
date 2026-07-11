@@ -35,7 +35,7 @@ description: >-
 ```
 Task Progress:
 - [ ] 1. Resolve component id from user arg or `mirror-manifest.yaml` — stop if manifest `components` is empty and no id was given
-- [ ] 2. Read production shellUxml + bindableNames from manifest
+- [ ] 2. Resolve production paths — existing entry from manifest; **new** component from user arg + [template.md](../create-uitk-design-mirror/template.md) / [examples.md](../create-uitk-design-mirror/examples.md) (read `shellUxml`, `shellBindableNames`, `stripHosts`)
 - [ ] 3. Grep C# for code-built hosts (*Builder, RailMenuFocus) — annotate static mirror needs
 - [ ] 4. Read or create fixture YAML per state (primary `mirror.fixture` + each `states[]` entry — template.md schema)
 - [ ] 5. Ensure Assets/UI/Editor/DesignMirror/ exists; write DesignMirror.uxml for primary + each state
@@ -63,7 +63,7 @@ Static placeholder rows must match `rowTemplate.source` in manifest — [referen
 ## Create rules
 
 1. **Never write to `Assets/UI/Screens/`** during create — mirror paths only.
-2. **Preserve every `bindableNames` `name`** from production shell on the same nodes in mirror.
+2. **Preserve every `shellBindableNames` `name`** from production shell on the same nodes in mirror.
 3. **Expand only `stripHosts`** with static children — tabs, row slots (`windowed-list__slot` × 8, each wrapping one `item-row` when present), sample buttons.
 4. **Placeholder copy** from fixture YAML — realistic labels (Stim Draft, 50c, Buy/Sell). **Empty state** — `rows: []`, eight empty slots, blank detail; no `menu-item--focused` row.
 5. **Visible steady state** — mirror drops `--hidden` on root; add `pop-in--expanded` on panels with `pop-in` (Builder shows `scale: 0 1` otherwise); populated state includes one `menu-item--focused` row.

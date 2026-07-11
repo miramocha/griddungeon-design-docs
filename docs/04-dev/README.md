@@ -18,6 +18,7 @@ Forward-facing references for tooling, external HUD authors, and forks — **not
 | [UI event contract](ui-event-contract.md) | Runtime `public event` + command APIs for custom UI; **edit when game repo APIs change** |
 | [Custom skill picker UI](custom-skill-picker-ui.md) | Replace combat skill modal (`ISkillUsePickerView`, host wiring, UITK hooks, tests) |
 | [Shared menu & picker UI](shared-menu-picker-ui.md) | Rail menu, `ItemListPickerView`, skill picker — shared UITK components, diagrams, extension guide |
+| [UITK design mirror](uitk-design-mirror.md) | Editor-only UX sandbox + agent sync to production shells ([#422](https://github.com/miramocha/griddungeon-game/issues/422)) |
 | [Centralized UI services](centralized-ui-services.md) | Cross-phase overlays — `InputHintPresenter`, `CommandRail` + `CommandPanelModalSupport`, `PartyFormationFloater`, sort stack, bootstrap, add-new checklist; [ADR 038](../../decisions/038-centralized-ui-presentation-lifecycle.md) + [ADR 039](../../decisions/039-uitk-dotween-show-hide.md) |
 | [Presentation shell implementation](presentation-shell-implementation.md) | Add a new `ICommandRailShell` prefab + catalog row — bus subscribe, bootstrap, checklist ([ADR 042](../../decisions/042-presentation-bus.md)) |
 | [Presentation shell gotchas](presentation-shell-gotchas.md) | Bus/shell traps — stale DTO chrome, wire lifecycle, scene shell vs prefab, phase order, projector tests |

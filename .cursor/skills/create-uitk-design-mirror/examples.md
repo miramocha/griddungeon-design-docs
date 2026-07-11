@@ -33,7 +33,7 @@ Assets/UI/Editor/DesignMirror/
 - Root `item-list-picker` **without** `tabbed-picker--hidden` (visible in UI Builder)
 - Panel `item-list-picker-panel` with `pop-in pop-in--expanded`
 - `item-list-picker-tabs`: static Buy/Sell buttons
-- `windowed-list__slots`: 8 `windowed-list__slot` hosts; 5 filled from fixture, 3 empty trailing slots
+- `windowed-list-slots`: 8 `windowed-list__slot` hosts; 5 filled from fixture, 3 empty trailing slots
 - One `menu-item--focused` row
 - `item-list-picker-detail`: fixture detail string
 
@@ -57,3 +57,21 @@ Assets/UI/Editor/DesignMirror/
 ## After UX edit
 
 Run **sync-uitk-design-mirror** for component `item-list-picker` (primary populated UXML + shared USS).
+
+## stripHosts (ItemListPicker)
+
+| Host `name` | Action |
+|-------------|--------|
+| `item-list-picker-tabs` | Remove all tab `Button` children; keep empty host |
+| `windowed-list-slots` | Remove all `windowed-list__slot` children; keep empty host |
+
+Production shells must declare these `name` hooks (class `windowed-list__slots` stays for runtime queries).
+
+## USS prefix map (ItemListPicker)
+
+| Mirror selector prefix | Target USS file |
+|------------------------|-----------------|
+| `.tabbed-picker`, `.item-list-picker-shell` | `TabbedPicker.uss` |
+| `.tabbed-picker__tabs` (segment tab radius) | `RailMenu.uss` |
+| `.windowed-list` | `WindowedList.uss` |
+| `.item-row` | `ItemListRow.uss` |
