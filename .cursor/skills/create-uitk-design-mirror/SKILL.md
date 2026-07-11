@@ -37,8 +37,8 @@ Task Progress:
 - [ ] 1. Resolve component id (arg or default item-list-picker); read mirror-manifest.yaml
 - [ ] 2. Read production shellUxml + bindableNames from manifest
 - [ ] 3. Grep C# for code-built hosts (*Builder, RailMenuFocus) — annotate static mirror needs
-- [ ] 4. Read or create fixture YAML (template.md schema)
-- [ ] 5. Ensure Assets/UI/Editor/DesignMirror/ exists; write DesignMirror.uxml
+- [ ] 4. Read or create fixture YAML per state (primary `mirror.fixture` + each `states[]` entry — template.md schema)
+- [ ] 5. Ensure Assets/UI/Editor/DesignMirror/ exists; write DesignMirror.uxml for primary + each state
 - [ ] 6. Seed DesignMirror.uss from production ussTargets (copy selectors UX may edit)
 - [ ] 7. Wire Style src — HudOverlay read-only + mirror USS last
 - [ ] 8. Append manifest entry if new component
@@ -54,7 +54,7 @@ Run from **griddungeon-game** root.
 
 ### Fixture
 
-`Assets/UI/Editor/DesignMirror/Fixtures/{component-id}.fixture.yaml` — see [template.md](template.md).
+Primary: `mirror.fixture` in manifest. Additional visual states: `states[].fixture` — see [template.md](template.md).
 
 ### Row shapes
 
@@ -64,21 +64,24 @@ Static placeholder rows must match `rowTemplate.source` in manifest — [referen
 
 1. **Never write to `Assets/UI/Screens/`** during create — mirror paths only.
 2. **Preserve every `bindableNames` `name`** from production shell on the same nodes in mirror.
-3. **Expand only `stripHosts`** with static children — tabs, rows, sample buttons.
-4. **Placeholder copy** from fixture YAML — realistic labels (Stim Draft, 50c, Buy/Sell).
-5. **Visible steady state** — mirror drops `--hidden` on root; include one `menu-item--focused` row.
-6. **USS** — one editable `*.DesignMirror.uss` per component; UX never opens production USS.
-7. **Refresh mode** — merge new bindable names from prod; re-expand hosts from fixture; preserve UX edits outside `stripHosts`.
-8. **`.meta`** — Unity Editor generates; run **validate-unity-meta** before commit.
-9. **Wording** — no `phase`, `MVP`, `mvp`, or `PoC` in any `Assets/**` file.
+3. **Expand only `stripHosts`** with static children — tabs, row slots (`windowed-list__slot` × 8, each wrapping one `item-row` when present), sample buttons.
+4. **Placeholder copy** from fixture YAML — realistic labels (Stim Draft, 50c, Buy/Sell). **Empty state** — `rows: []`, eight empty slots, blank detail; no `menu-item--focused` row.
+5. **Visible steady state** — mirror drops `--hidden` on root; add `pop-in--expanded` on panels with `pop-in` (Builder shows `scale: 0 1` otherwise); populated state includes one `menu-item--focused` row.
+6. **States** — when manifest lists `states[]`, emit one `*.DesignMirror.uxml` per state; **share** the component `mirror.uss`. Only primary `mirror.uxml` (or states with `syncToProduction: true`) promote to production shell.
+7. **USS** — one editable `*.DesignMirror.uss` per component; UX never opens production USS.
+8. **Refresh mode** — merge new bindable names from prod; re-expand hosts from fixture; preserve UX edits outside `stripHosts`.
+9. **`.meta`** — Unity Editor generates; run **validate-unity-meta** before commit.
+10. **Wording** — no `phase`, `MVP`, `mvp`, or `PoC` in any `Assets/**` file.
 
 ## Output deliverables
 
 | Item | Path |
 |------|------|
-| Mirror UXML | `Assets/UI/Editor/DesignMirror/.../{Name}.DesignMirror.uxml` |
-| Mirror USS | `Assets/UI/Editor/DesignMirror/.../{Name}.DesignMirror.uss` |
-| Fixture | `Assets/UI/Editor/DesignMirror/Fixtures/{id}.fixture.yaml` |
+| Mirror UXML (primary) | `Assets/UI/Editor/DesignMirror/.../{Name}.DesignMirror.uxml` |
+| Mirror UXML (states) | `.../{Name}.{State}.DesignMirror.uxml` per `states[]` |
+| Mirror USS | `Assets/UI/Editor/DesignMirror/.../{Name}.DesignMirror.uss` (shared) |
+| Fixture (primary) | `Assets/UI/Editor/DesignMirror/Fixtures/{id}.fixture.yaml` |
+| Fixture (states) | `Assets/UI/Editor/DesignMirror/Fixtures/{id}-{state}.fixture.yaml` |
 | Manifest row | `mirror-manifest.yaml` `components[]` |
 | UX next step | Open `{Name}.DesignMirror.uxml` in Unity UI Builder |
 

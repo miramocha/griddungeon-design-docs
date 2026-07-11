@@ -28,7 +28,7 @@ description: >-
 ```
 Task Progress:
 - [ ] 1. Read mirror-manifest.yaml; resolve component id (default item-list-picker)
-- [ ] 2. Read mirror UXML + production shellUxml side by side
+- [ ] 2. Read **primary** mirror UXML (`mirror.uxml`) + production shellUxml side by side — skip `states[]` with `syncToProduction: false`
 - [ ] 3. UXML shell sync (rules below) — strip stripHosts children
 - [ ] 4. USS merge — map mirror selectors → ussTargets files
 - [ ] 5. Wrapper UXML — Style src list only if imports changed
@@ -39,6 +39,8 @@ Task Progress:
 ```
 
 Run from **griddungeon-game** root.
+
+**State mirrors** (`states[]` with `syncToProduction: false`, e.g. `ItemListPicker.Empty.DesignMirror.uxml`) are UX specimens only — do not copy their placeholder hosts into production. USS merge still uses the shared `mirror.uss`.
 
 ## UXML shell sync
 
@@ -65,6 +67,7 @@ Read `mirror.uss` and each path in `production.ussTargets`.
 | Mirror section prefix | Target file |
 |-----------------------|-------------|
 | `.tabbed-picker`, `.item-list-picker-shell` | `TabbedPicker.uss` |
+| `.tabbed-picker__tabs` (segment tab radius) | `RailMenu.uss` |
 | `.windowed-list` | `WindowedList.uss` |
 | `.item-row` | `ItemListRow.uss` |
 
@@ -74,6 +77,7 @@ For each selector block in mirror USS (skip `@import` lines):
 2. If new selector — append to appropriate target file.
 3. Report which file received each selector.
 4. Reject selectors that break BEM (`block__element--modifier`).
+5. **Flag** any `style=""` on mirror UXML — translate to USS before merge; do not copy inline styles to production.
 
 Do **not** open production USS in UI Builder to apply edits — edit files directly, then Prettier.
 

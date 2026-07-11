@@ -72,9 +72,10 @@ After sync:
 | `production.ussTargets` | Production USS files receiving merged selectors |
 | `bindableNames` | `name` hooks that must survive sync |
 | `stripHosts` | Hosts whose children are stripped in production |
+| `states[]` | Optional extra mirror UXML/fixture pairs for UX (empty list, …); `syncToProduction: false` skips shell promote |
 | `rowTemplate.source` | C# builder documenting static row shape in mirror |
 
-First component: `item-list-picker` → `ItemListPicker.DesignMirror.*`.
+First component: `item-list-picker` → `ItemListPicker.DesignMirror.*` (populated) + `ItemListPicker.Empty.DesignMirror.uxml` (empty list).
 
 ## Sync rules (summary)
 
