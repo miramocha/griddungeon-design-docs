@@ -1,0 +1,101 @@
+---
+name: sync-uitk-design-mirror
+description: >-
+  Promotes UITK design-mirror layout and USS from Assets/UI/Editor/DesignMirror/
+  into production bindable shells under Assets/UI/Screens/. Use when the user
+  asks to sync design mirror, promote mirror to production, or apply UX UITK changes.
+---
+
+# Sync UITK design mirror
+
+## When to use
+
+- UX finished editing mirror in **Unity UI Builder**
+- User asks: **sync design mirror**, **promote mirror to production**, **apply UX UITK changes**
+- After mirror refresh when production shell structure changed (verify bindable names still match)
+
+**Not this skill:** creating mirror assets — use **create-uitk-design-mirror**.
+
+## Authority
+
+- [uitk-design-mirror.mdc](../../rules/uitk-design-mirror.mdc)
+- [unity-ui-toolkit.mdc](../../rules/unity-ui-toolkit.mdc)
+- [docs/04-dev/uitk-design-mirror.md](https://github.com/miramocha/griddungeon-design-docs/blob/main/docs/04-dev/uitk-design-mirror.md)
+- [default-release-scope-language.mdc](../../rules/default-release-scope-language.mdc)
+
+## Workflow
+
+```
+Task Progress:
+- [ ] 1. Read mirror-manifest.yaml; resolve component id from user arg — stop if not registered
+- [ ] 2. Read **primary** mirror UXML (`mirror.uxml`) + production shellUxml side by side — skip `states[]` with `syncToProduction: false`
+- [ ] 3. UXML shell sync (rules below) — strip stripHosts children
+- [ ] 4. USS merge — map mirror selectors → ussTargets files
+- [ ] 5. Wrapper UXML — Style src list only if imports changed
+- [ ] 6. Prettier on touched .uxml / .uss (prettier-uitk-format)
+- [ ] 7. request-compile-status.ps1
+- [ ] 8. request-test-status.ps1 -Category UI (if production UITK touched)
+- [ ] 9. Emit change report (selectors, stripped nodes, bindable name check)
+```
+
+Run from **griddungeon-game** root.
+
+**State mirrors** (`states[]` with `syncToProduction: false`, e.g. `ItemListPicker.Empty.DesignMirror.uxml`) are UX specimens only — do not copy their placeholder hosts into production. USS merge still uses the shared `mirror.uss`.
+
+## UXML shell sync
+
+Target: `production.shellUxml` (e.g. `ItemListPickerShell.uxml`).
+
+1. **Preserve** every `shellBindableNames` `name` on `production.shellUxml` (wrapper-only hooks: `wrapperBindableNames`).
+2. **Copy** hierarchy and `class` on non-host nodes (title, detail, scroll bars, body layout).
+3. **Strip** all children under each `stripHosts` entry; leave empty hosts for runtime population.
+4. **Do not** copy placeholder `text` into production except existing em-dash defaults on labels.
+5. **Do not** add new `Button` elements to production unless manifest + `ItemListPickerView` (or owner) updated.
+6. **Reject** non–kebab-case `name` or non-BEM classes added in mirror — report blockers.
+
+### stripHosts
+
+For each `name` in manifest `stripHosts`: remove all children; keep the empty host `VisualElement`. See [examples.md](../create-uitk-design-mirror/examples.md) (ItemListPicker) for a worked table.
+
+## USS merge
+
+Read `mirror.uss` and each path in `production.ussTargets`. Map mirror selector prefixes to target files per manifest (see [examples.md](../create-uitk-design-mirror/examples.md) for ItemListPicker prefix table).
+
+For each selector block in mirror USS (skip `@import` lines):
+
+1. If selector exists in target — update rule properties to match mirror.
+2. If new selector — append to appropriate target file.
+3. Report which file received each selector.
+4. Reject selectors that break BEM (`block__element--modifier`).
+5. **Flag** any `style=""` on mirror UXML — translate to USS before merge; do not copy inline styles to production.
+
+Do **not** open production USS in UI Builder to apply edits — edit files directly, then Prettier.
+
+## Wrapper UXML
+
+`production.wrapperUxml` — update `<Style src="..."/>` only when mirror added/removed shared imports. Do not expand static tree.
+
+## Verification
+
+```powershell
+.\tools\request-compile-status.ps1
+.\tools\request-test-status.ps1 -Category UI
+```
+
+Manual: DevBootstrap F1 hub shop — picker layout matches synced production after UX mirror edit.
+
+## Change report (required)
+
+Deliver before handoff:
+
+- Bindable `name` hooks verified (list pass/fail)
+- UXML nodes copied vs stripped (count under each stripHost)
+- USS selectors merged per target file
+- Files touched list
+- Blockers (non-BEM classes, missing names, new buttons without dev review)
+
+## Related
+
+- **create-uitk-design-mirror** — bootstrap / refresh mirror
+- **audit-uitk-uss-class-toggles** — if C# style writes touched during same PR
+- **visualize-uitk-uxml** — diff aid via `uxml_tree.py`

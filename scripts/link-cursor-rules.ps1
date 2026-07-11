@@ -33,6 +33,7 @@ $ruleNames = @(
     "git-commit-agent-workflow.mdc",
     "code-review-no-story-edits.mdc",
     "code-review-config.mdc",
+    "uitk-design-mirror.mdc",
     "unity-csharp-class-creation.mdc",
     "github-backlog-project.mdc",
     "confirm-art-asset-deletion.mdc"

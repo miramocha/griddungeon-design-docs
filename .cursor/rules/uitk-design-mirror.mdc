@@ -1,0 +1,45 @@
+---
+description: UITK design mirror — UX edits Editor-only DesignMirror assets; agents sync to production Screens
+globs: "Assets/UI/Editor/DesignMirror/**"
+alwaysApply: false
+---
+
+# UITK design mirror (UX sandbox)
+
+Authority: [docs/04-dev/uitk-design-mirror.md](../../docs/04-dev/uitk-design-mirror.md). Tracking: [griddungeon-game#422](https://github.com/miramocha/griddungeon-game/issues/422).
+
+## Purpose
+
+UI/UX edits **placeholder-filled mirror UXML/USS** in Unity UI Builder under `Assets/UI/Editor/DesignMirror/`. Devs/agents promote layout and USS to production bindables in `Assets/UI/Screens/` via **sync-uitk-design-mirror** skill.
+
+**One-way flow:** mirror → production. Production shells keep empty runtime hosts and stable `name` hooks.
+
+## Who edits what
+
+| Role | Path | Tool |
+|------|------|------|
+| UI/UX | `Assets/UI/Editor/DesignMirror/**` | Unity UI Builder |
+| Dev/agent sync | `Assets/UI/Screens/**` (shell + USS) | **sync-uitk-design-mirror** |
+| Dev/agent bootstrap | `Assets/UI/Editor/DesignMirror/**` | **create-uitk-design-mirror** |
+
+**Never** ask UX to open production `Screens/` UXML or USS in UI Builder (USS auto-reorder risk).
+
+## Build exclusion
+
+Mirror assets live in Unity `Editor` folder — excluded from player builds. **No new asmdef.** No Runtime references to mirror assets from presenters.
+
+## Agent checklist
+
+- [ ] Read `Assets/UI/Editor/DesignMirror/mirror-manifest.yaml` before create/sync
+- [ ] Create/refresh mirror only with **create-uitk-design-mirror**
+- [ ] Promote UX edits only with **sync-uitk-design-mirror**
+- [ ] Strip `stripHosts` children when syncing to production shell
+- [ ] Prettier on touched `.uxml` / `.uss` before handoff
+- [ ] No `phase`, `MVP`, `mvp`, or `PoC` in `Assets/**` ([default-release-scope-language.mdc](default-release-scope-language.mdc))
+
+## Related skills
+
+- **create-uitk-design-mirror** — bootstrap mirror + fixture placeholders
+- **sync-uitk-design-mirror** — promote to production
+- **visualize-uitk-uxml** — production tree before editing
+- **prettier-uitk-format** — format changed UITK assets

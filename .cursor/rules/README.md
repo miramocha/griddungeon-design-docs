@@ -54,6 +54,7 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | `github-backlog-project.mdc` | **Shared** — read `.cursor/backlog-project.json` before backlog/ticket queries (project #3) |
 | `deslop-markdown.mdc` | **Shared** — deslop pass on `.md` prose before handoff (`**/*.md` glob) |
 | `deslop-player-facing-copy.mdc` | **Shared** — deslop pass on UI labels, item/skill descriptions, hints, help text before handoff (`alwaysApply`) |
+| `uitk-design-mirror.mdc` | **Shared** — UX mirror sandbox under `Assets/UI/Editor/DesignMirror/`; sync skills |
 
 ## Agent skills (design-docs repo)
 
@@ -64,8 +65,12 @@ Rules-only repair: `./scripts/link-cursor-rules.ps1`
 | [audit-centralized-ui-services](../skills/audit-centralized-ui-services/SKILL.md) | Centralized UI + presentation shell gotcha audits |
 | [deslop](../skills/deslop/SKILL.md) | De-slop agent prose — AI-writing tell scan + rewrite loop |
 | [class-naming-grid-dungeon](../skills/class-naming-grid-dungeon/SKILL.md) | Pick suffix + assembly before creating or renaming C# types |
+| [create-uitk-design-mirror](../skills/create-uitk-design-mirror/SKILL.md) | Bootstrap UITK design-mirror assets for UX UI Builder workflow |
+| [sync-uitk-design-mirror](../skills/sync-uitk-design-mirror/SKILL.md) | Promote mirror UXML/USS to production bindable shells |
+| [prettier-uitk-format](../skills/prettier-uitk-format/SKILL.md) | Format changed UXML/USS with Prettier |
+| [visualize-uitk-uxml](../skills/visualize-uitk-uxml/SKILL.md) | ASCII UXML trees and presenter maps |
 
-**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `audit-centralized-ui-services`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script). VRoid/Blender avatar skills live in global Cursor skills (`~/.cursor/skills/`), not in these repos.
+**Mirrored skills** — identical copies in both repos (`test-plan-grid-dungeon`, `validate-unity-meta`, `pull-next-backlog-ticket`, `stratum-floor-*`, `audit-centralized-ui-services`, `create-uitk-design-mirror`, `sync-uitk-design-mirror`, …). Run `./scripts/sync-cursor-skills.ps1` after edits (canonical source per skill is in that script). VRoid/Blender avatar skills live in global Cursor skills (`~/.cursor/skills/`), not in these repos.
 
 ## Agents
 
