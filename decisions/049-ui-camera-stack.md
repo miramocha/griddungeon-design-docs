@@ -21,7 +21,14 @@ Hub, party menu, floor-transition beats, and future story/skill cinematics show 
 - Exploration FPV and combat arena should not pay multi-camera cost unless UI stack is active.
 - Future cutscenes/skills must resolve actors without rebaking prefab layers.
 
-URP **camera stacking** (Base + Overlay cameras) supports sandwich ordering. **Screen Space - Overlay** UITK cannot sit between 3D layers; **Screen Space - Camera** on a dedicated overlay camera can.
+URP **camera stacking** (Base + Overlay cameras) sandwiches **3D** draw order. UITK is separate: [`PanelRenderMode`](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/UIElements.PanelRenderMode.html) exposes only **`ScreenSpaceOverlay`** and **`WorldSpace`** — there is **no** uGUI-style **Screen Space - Camera** mode.
+
+| UITK mode | Sandwich behavior |
+|-----------|-------------------|
+| **Screen Space - Overlay** (`GamePanelSettings`) | Composites **after** all cameras — always above 3D; cannot sit between env and characters. |
+| **World Space** | Renders as **3D panel geometry** (depth-sorted); layer culling applies, but it does **not** automatically slot into a URP overlay stack like a camera-attached canvas. |
+
+**Implication:** layer routing + char overlay ([#428](https://github.com/miramocha/griddungeon-game/issues/428)) ships first; **mid-stack hero backdrop** needs a follow-up render path ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) — UITK → `RenderTexture` → env-layer quad (or URP **Render Objects** — [#429](https://github.com/miramocha/griddungeon-game/issues/429) optional spike).
 
 ## Decision
 
@@ -33,7 +40,7 @@ Three automatic modes:
 |------|------|---------|
 | **Off** | Exploration FPV; combat (until combat backdrop ships) | Main camera only; overlays disabled |
 | **SingleCam** | UI 3D registered; **no backdrop UITK shown** | Main camera; base mask includes `UiEnvironment` + `UiCharacters` |
-| **Stack** | Backdrop UITK **shown** (`Screen Space - Camera` on overlay 1) | Base (env) → Overlay 1 (UITK) → Overlay 2 (chars, if any) |
+| **Stack** | Backdrop UITK **shown** (`SetBackdrop`) | Base (`UiEnvironment` 3D) → **backdrop composite** ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) → Overlay chars (`UiCharacters`, if any) |
 
 **Stack trigger:** only a **backdrop** `UIDocument` bound via `SetBackdrop` — not Overlay HUD (`InputHint`, command rail, etc.).
 
@@ -56,18 +63,23 @@ Prefabs stay on **Default** layer. **No** baked stack layers in assets.
 
 ### 3. UITK split
 
-| PanelSettings | Render mode | Role |
-|---------------|-------------|------|
-| `GamePanelSettings` | Screen Space - Overlay | Global HUD — always on top |
-| `UiBackdropPanelSettings` | Screen Space - Camera → overlay 1 cam | Stack trigger when shown |
+| PanelSettings | `PanelRenderMode` | Role |
+|---------------|-------------------|------|
+| `GamePanelSettings` | `ScreenSpaceOverlay` | Global HUD — always on top of camera stack |
+| `UiBackdropPanelSettings` | Authoring TBD ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) | Hero / modal backdrop between env and chars — **not** native overlay-camera UITK |
+
+`SetBackdrop` remains the **Stack mode trigger** even while [#428](https://github.com/miramocha/griddungeon-game/issues/428) only wires the `UIDocument` scaffold; visual sandwich completes in [#430](https://github.com/miramocha/griddungeon-game/issues/430).
 
 ### 4. Camera stack layout (Stack mode)
 
-| Pass | Culling | Content |
-|------|---------|---------|
-| Base | `UiEnvironment` | Town, backdrop sphere, stage floor, beat set |
-| Overlay 1 | (UITK cam) | Backdrop UITK panel |
-| Overlay 2 | `UiCharacters` | ≤10 character roots when registered |
+| Pass | Culling / source | Content |
+|------|------------------|---------|
+| Base | `UiEnvironment` | Town, stage floor, beat set; non-focused roster roots behind backdrop |
+| Backdrop composite | Env-layer quad or render pass ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) | UITK hero text / modal art between env and focused char |
+| Overlay chars | `UiCharacters` | Focused character roots (≤10 when registered) |
+| Above all | `GamePanelSettings` overlay | Command rail, hints, modals |
+
+`UiStackOverlay1_Backdrop` camera exists in Dev Bootstrap for forward compatibility; **[#428](https://github.com/miramocha/griddungeon-game/issues/428) keeps it disabled** — Cinemachine drives the base camera lens; a cloned overlay UITK target drifts from orbit/overview vcams.
 
 Char overlay camera **disabled** when zero characters registered.
 
@@ -156,29 +168,38 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 | **Overlay HUD as stack trigger** | Would force Stack during all hub/combat UI |
 | **Stack always on in hub** | Wastes passes when backdrop hidden — auto SingleCam |
 | **Screen Overlay for mid UITK sandwich** | Cannot render behind 3D characters |
+| **UITK as uGUI Screen Space - Camera** | `PanelRenderMode` has no equivalent — see Context |
+| **World Space UITK as default backdrop** | Depth/lens fragile for full-screen hero text; use RT quad or render pass instead |
 | **Tag every `GameObject` on `Instantiate`** | Tag soup; floor art / props are not presentation actors — see §6 |
 | **Ban Default layer entirely** | Huge prefab migration; conflicts with phase-1 restore; vendor/editor defaults — see §7 |
 
 ## Consequences
 
-- New Runtime type: `UiCameraStackSession`, helpers `GameObjectLayerScope`, `PresentationActorTags`.
-- DevBootstrap: main camera + two overlay cameras (disabled until Stack mode).
+- Runtime: `UiCameraStackSession`, `UiCameraStackRig`, `GameObjectLayerScope`, `PresentationActorTags` ([#428](https://github.com/miramocha/griddungeon-game/issues/428)).
+- DevBootstrap: main camera + two overlay cameras (char overlay enabled in Stack; backdrop overlay reserved/disabled until [#430](https://github.com/miramocha/griddungeon-game/issues/430)).
 - Project layers: `UiEnvironment`, `UiCharacters` (phase 1); `Exploration` (+ optional `PresentationIdle`) in phase 2; tags in `TagManager`.
 - Spawn sites tag roots; register/unregister with phase presenters.
-- Implementation: [griddungeon-game#428](https://github.com/miramocha/griddungeon-game/issues/428).
+- Party menu: `PartyMenuClassBackdrop` `UIDocument` + layer split (`SetCharacterDrawLayer`) ship on [#428](https://github.com/miramocha/griddungeon-game/issues/428); **visible** env → backdrop → focused char sandwich ships on [#430](https://github.com/miramocha/griddungeon-game/issues/430).
 - Dev guide: [ui-camera-stack.md](../docs/04-dev/ui-camera-stack.md).
+
+## Backdrop render pass ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) — required for visual sandwich
+
+Until [#430](https://github.com/miramocha/griddungeon-game/issues/430) lands, Stack mode correctly routes **3D** layers but backdrop UITK may still draw **above** focused characters (Unity composites overlay/world-space UITK outside the intended mid-stack slot).
+
+**Preferred spike order:**
+
+1. **UITK → `RenderTexture` → screen-aligned quad** on `UiEnvironment`, drawn after base env meshes, before char overlay — matches Unity’s documented workaround ([PanelSettings.targetTexture](https://docs.unity3d.com/ScriptReference/UIElements.PanelSettings-targetTexture.html)).
+2. **URP Render Objects** — layer-filtered pass injecting the same texture (or mesh) between `UiEnvironment` and `UiCharacters` ([Unity doc](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.1/manual/renderer-features/how-to-custom-effect-render-objects.html)).
+
+Compare pass count, post-processing, Cinemachine interaction, and UITK input vs overlay-only HUD.
 
 ## Future exploration (deferred)
 
-**URP Render Objects** renderer feature — explore whether a **single-camera** path can replace or complement the overlay stack for some surfaces:
+**URP Render Objects** and presentation VFX (e.g. character silhouette when occluded) — optional extensions ([#429](https://github.com/miramocha/griddungeon-game/issues/429)) after [#430](https://github.com/miramocha/griddungeon-game/issues/430) baseline.
 
-- World-space backdrop (mesh + UITK `targetTexture`) injected **between** `UiEnvironment` and `UiCharacters` via layer-filtered render passes ([Unity doc](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.1/manual/renderer-features/how-to-custom-effect-render-objects.html)).
-- Optional presentation VFX (e.g. character silhouette when occluded) on `UiCharacters` / `PresentationEnemy` without extra cameras.
-- Compare pass count, post-processing, Cinemachine interaction, and UITK input vs current `UiCameraStackSession` Stack mode.
+**Does not block [#428](https://github.com/miramocha/griddungeon-game/issues/428)** layer routing. Camera stack + session API remain authority for **3D** passes; backdrop composite is an add-on render step.
 
-**Does not block #428.** Camera stack remains authority until a follow-up ADR supersedes after spike.
-
-Tracked: [griddungeon-game#429](https://github.com/miramocha/griddungeon-game/issues/429).
+Tracked: [griddungeon-game#430](https://github.com/miramocha/griddungeon-game/issues/430).
 
 ## References
 
