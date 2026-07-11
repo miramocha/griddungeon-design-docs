@@ -7,6 +7,14 @@
   "productionTestSeams": {
     "rule": "unity-test-seams.mdc"
   },
+  "commonPitfalls": {
+    "rule": "unity-common-pitfalls.mdc",
+    "pathGlobs": [
+      "Assets/Scripts/**/*.cs",
+      "Assets/Tests/**/*.cs",
+      "Assets/PlayModeTests/**/*.cs"
+    ]
+  },
   "uiGotchas": {
     "centralizedDoc": "docs/UI-GOTCHAS.md",
     "presentationShellDoc": "docs/SHELL-GOTCHAS.md",

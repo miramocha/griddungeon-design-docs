@@ -37,8 +37,28 @@ Worth extra scrutiny in this project:
 | UI: per-frame `Q()`, inline styles | Cached queries; BEM in USS — `unity-ui-toolkit` |
 | New/touched `.cs` missing `using` | Mirror sibling file imports; Unity recompile — **Handoff — `using` directives** below |
 | New/touched `.cs` duplicate `using` | Scan top-of-file `using` block; remove identical lines — **Handoff — `using` directives** below |
+| Edit Mode test hangs (no assert) | See **Edit Mode — `EditModeCoroutineUtil` hangs** below — wait-loop `RunToEnd`, fade `duration > 0` |
 
 When touching legacy code, address smells in the area you are already changing — avoid unplanned repo-wide cleanups.
+
+## Edit Mode — `EditModeCoroutineUtil` hangs
+
+Authority: `Assets/Tests/EditModeCoroutineUtil.cs`, `Assets/Tests/README.md` § Edit Mode coroutines.
+
+**Symptom:** Edit Mode test never finishes — Test Runner spins, Editor wedges. No failed assert; the fixture just hangs.
+
+**Cause (two common patterns):**
+
+1. **`RunToEnd` on wait-for-callback nested coroutines** — `while (!ready) yield return null` loops forever in `EditModeCoroutineUtil`'s tight `while (MoveNext())` because callbacks are not invoked until *after* the drain. Helpers that auto-`RunToEnd` every nested `IEnumerator` (e.g. a `WalkRoutineSteps` helper) hit this before `Release()` / `onReady()` runs.
+2. **`RunToEnd` on timed fade/step coroutines** — `while (elapsed < duration)` never advances when `duration > 0` and `Time.deltaTime` / `Time.unscaledDeltaTime` stay 0 in Edit Mode.
+
+**Fix:**
+
+1. **Wait gates** (overlay prep dismiss, async ready flags): one `MoveNext` on the outer beat, one on the nested wait child, invoke the ready callback, then `RunToEnd` on the **outer** routine only. Never `RunToEnd` a nested wait loop before the callback fires.
+2. **Timed fades** (`UiFadeOverlay`, `ScreenFadePresenter`): `duration == 0` in the test harness (`PartyMenuEnvironmentFadePresenterTests`), early-exit when already at target (`ScreenFadePresenterTests`), or Play Mode.
+3. **Regression example:** `CombatTransitionPresenterTests.EnterCombatBeat_WaitsForOverlayPrepDismiss`.
+
+**Agents:** when an Edit Mode fixture hangs after `.cs` test changes, check this section before blaming unrelated tests (e.g. shader compile stalls).
 
 ## Handoff — `using` directives (missing and duplicate)
 
@@ -87,4 +107,4 @@ foreach ($path in $paths) {
 }
 ```
 
-**Agents:** run missing- and duplicate-`using` checks in `format-before-handoff-and-commit.mdc` procedure when changed `.cs` exists (after CSharpier, before posting test plan or committing).
+**Agents:** run missing- and duplicate-`using` checks in `format-before-handoff-and-commit.mdc` procedure when changed `.cs` exists (**before** CSharpier/Prettier, after class-naming and default-scope-language checks; before posting test plan or committing).

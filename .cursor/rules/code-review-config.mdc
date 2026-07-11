@@ -1,5 +1,5 @@
 ---
-description: review-config.json — classNaming, productionTestSeams, and uiGotchas rules; read before creating types and at review start.
+description: review-config.json — classNaming, productionTestSeams, commonPitfalls, and uiGotchas rules; read before creating types and at review start.
 alwaysApply: false
 ---
 
@@ -24,7 +24,8 @@ Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-o
 1. Read `.cursor/review-config.json` in any open workspace folder for the repo under review.
 2. **Class naming** — when the diff **adds or renames C# types** and `classNaming.patternsDoc` is set, enforce per below.
 3. **Production test seams** — when the diff touches `Assets/Scripts/**/*.cs` (Runtime, UI, Core, Campaign — not `Editor/` only), read **`productionTestSeams.rule`** (default: `unity-test-seams.mdc`) and flag new `#if UNITY_EDITOR` / `UnityEditor` in Runtime, prod paths reading `*ForTests`, and test-only branches.
-4. **UI gotchas** — when the diff touches any path in **`uiGotchas.pathGlobs`**, read **`uiGotchas.centralizedDoc`** and **`uiGotchas.presentationShellDoc`** (when set), plus each file in **`uiGotchas.rules`**. Cross-check symptom → cause → fix tables before judging UITK / party-menu / presentation-shell changes.
+4. **Common pitfalls** — when the diff touches any path in **`commonPitfalls.pathGlobs`**, read **`commonPitfalls.rule`** (default: `unity-common-pitfalls.mdc`). Cross-check Unity traps, handoff `using` rules, and Edit Mode `EditModeCoroutineUtil` hang patterns before judging C# / test changes.
+5. **UI gotchas** — when the diff touches any path in **`uiGotchas.pathGlobs`**, read **`uiGotchas.centralizedDoc`** and **`uiGotchas.presentationShellDoc`** (when set), plus each file in **`uiGotchas.rules`**. Cross-check symptom → cause → fix tables before judging UITK / party-menu / presentation-shell changes.
 
 Otherwise use the paths below — do **not** hardcode project-specific doc URLs in review prompts.
 
@@ -36,6 +37,8 @@ Otherwise use the paths below — do **not** hardcode project-specific doc URLs 
 | `classNaming.shippedTypesDoc` | No | Shipped type inventory — lookup only, not for inventing new suffixes |
 | `classNaming.suffixRule` | No | Filename under `.cursor/rules/` — compressed checklist (e.g. `unity-csharp-class-suffix-patterns.mdc`) |
 | `productionTestSeams.rule` | No | Filename under `.cursor/rules/` — prod test-seam / editor-branch gate (e.g. `unity-test-seams.mdc`) |
+| `commonPitfalls.rule` | No | Filename under `.cursor/rules/` — cross-cutting Unity / C# / Edit Mode test pitfalls (e.g. `unity-common-pitfalls.mdc`) |
+| `commonPitfalls.pathGlobs` | No | Glob list; gate activates when **any** changed path matches **any** glob |
 | `uiGotchas.centralizedDoc` | No | Centralized UITK gotchas — HTTPS URL or repo-relative path |
 | `uiGotchas.presentationShellDoc` | No | Presentation bus shell gotchas — HTTPS URL or repo-relative path |
 | `uiGotchas.pathGlobs` | No | Glob list; gate activates when **any** changed path matches **any** glob (`**` = any segment) |
@@ -55,6 +58,12 @@ When `productionTestSeams.rule` is set and the diff touches prod C# under `Asset
 1. Read that rule file before reviewing (section **`#if UNITY_EDITOR` in production Runtime — stop and ask first**).
 2. **Flag as Should fix or Blocker:** new `#if UNITY_EDITOR` / `using UnityEditor` / `EditorApplication` in Runtime/UI/Core/Campaign; prod hot paths reading `*ForTests`; public test-only types in Runtime asm.
 3. Pass **`productionTestSeams.rule`** in **fresh-reviewer** prompts whenever `Assets/Scripts/**/*.cs` is in the diff (alongside `code-review-no-story-edits.mdc`).
+
+When `commonPitfalls` is configured and **any** changed path matches **`commonPitfalls.pathGlobs`**:
+
+1. Read **`commonPitfalls.rule`** before reviewing (Unity-specific traps, handoff **`using`** checks, **Edit Mode — `EditModeCoroutineUtil` hangs**).
+2. **Flag as Should fix or Blocker:** missing/duplicate `using` on touched `.cs`; `Find*` / per-frame `GetComponent`; `RunToEnd` on nested wait-for-callback coroutines before ready callbacks; timed fade `RunToEnd` in Edit Mode without `duration == 0` or early-exit.
+3. Pass **`commonPitfalls.rule`** in **fresh-reviewer** prompts whenever the path gate matches.
 
 When `uiGotchas` is configured and **any** changed path matches **`uiGotchas.pathGlobs`**:
 
