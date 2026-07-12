@@ -12,7 +12,7 @@ How Grid Dungeon hosts **screen-wide overlays** that outlive a single phase HUD 
 
 **Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — `Assets/Scripts/Runtime/UI/`, `Assets/Scripts/UI/Views/`, `Assets/UI/Screens/Shared/`.
 
-**Related:** [UI event contract](ui-event-contract.md) (events/commands, not layout), [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints), [custom party UI](custom-party-ui.md) (formation grid API), [layered UITK panels](layered-uitk-panels.md) (future HUD splits), [04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
+**Related:** [UI event contract](ui-event-contract.md) (events/commands, not layout), [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints), [custom party UI](custom-party-ui.md) (formation grid API), [layered UITK panels](layered-uitk-panels.md) (future HUD splits), [UI camera stack](ui-camera-stack.md) (URP env / backdrop / character sandwich; [ADR 049](../../decisions/049-ui-camera-stack.md)), [04 — Tech notes § UI reactivity](../04-tech-notes.md#ui-reactivity).
 
 ---
 
