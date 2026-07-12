@@ -169,7 +169,8 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 | **Stack always on in hub** | Wastes passes when backdrop hidden — auto SingleCam |
 | **Screen Overlay for mid UITK sandwich** | Cannot render behind 3D characters |
 | **UITK as uGUI Screen Space - Camera** | `PanelRenderMode` has no equivalent — see Context |
-| **World Space UITK as default backdrop** | Depth/lens fragile for full-screen hero text; use RT quad or render pass instead |
+| **World Space UITK as default backdrop** | Depth/lens fragile for full-screen hero text; use RT quad on base pass instead |
+| **Single-camera merge (quad + focused MToon on base)** | Deferred — MToon queue not tunable; char overlay remains until quad SG proves otherwise |
 | **Tag every `GameObject` on `Instantiate`** | Tag soup; floor art / props are not presentation actors — see §6 |
 | **Ban Default layer entirely** | Huge prefab migration; conflicts with phase-1 restore; vendor/editor defaults — see §7 |
 
@@ -182,16 +183,24 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 - Party menu: `PartyMenuClassBackdrop` `UIDocument` + layer split (`SetCharacterDrawLayer`) ship on [#428](https://github.com/miramocha/griddungeon-game/issues/428); **visible** env → backdrop → focused char sandwich ships on [#430](https://github.com/miramocha/griddungeon-game/issues/430).
 - Dev guide: [ui-camera-stack.md](../docs/04-dev/ui-camera-stack.md).
 
-## Backdrop render pass ([#430](https://github.com/miramocha/griddungeon-game/issues/430)) — required for visual sandwich
+## Backdrop render pass ([#430](https://github.com/miramocha/griddungeon-game/issues/430))
 
-Until [#430](https://github.com/miramocha/griddungeon-game/issues/430) lands, Stack mode correctly routes **3D** layers but backdrop UITK may still draw **above** focused characters (Unity composites overlay/world-space UITK outside the intended mid-stack slot).
+**Goal:** `env 3D → hero UITK → focused character → overlay HUD`.
 
-**Preferred spike order:**
+**Stack stays two URP passes:** base (`UiEnvironment` env + composite quad) → char overlay (`UiCharacters` focused roster). **Do not** merge focused MToon characters onto the base pass — party roster uses **MToon**; render queue / depth on character materials is **not** tunable for stack ordering.
 
-1. **UITK → `RenderTexture` → screen-aligned quad** on `UiEnvironment`, drawn after base env meshes, before char overlay — matches Unity’s documented workaround ([PanelSettings.targetTexture](https://docs.unity3d.com/ScriptReference/UIElements.PanelSettings-targetTexture.html)).
-2. **URP Render Objects** — layer-filtered pass injecting the same texture (or mesh) between `UiEnvironment` and `UiCharacters` ([Unity doc](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.1/manual/renderer-features/how-to-custom-effect-render-objects.html)).
+**Composite quad material (Shader Graph — art/tech):** only the **env-layer quad** that samples the backdrop `RenderTexture` may change `ZTest`, render queue, and blend. That material controls how the scrim sits vs the char overlay pass. Character shaders are out of scope.
 
-Compare pass count, post-processing, Cinemachine interaction, and UITK input vs overlay-only HUD.
+**Deferred:** single-camera merge (quad + focused char on base) — spike only after quad SG validates in Frame Debugger on party menu member focus.
+
+**Implementation ([#430](https://github.com/miramocha/griddungeon-game/issues/430) agent scope):**
+
+1. Render `PartyMenuClassBackdrop` to `RenderTexture` (1920×1080) via `PanelSettings.targetTexture`.
+2. Draw on a screen-aligned quad on **`UiEnvironment`**, parented to the Cinemachine **base camera**; **object-fit: cover** scale (`UiBackdropCoverLayout`); plane distance `nearClip + offset` (serialized on `UiBackdropCompositePresenter`).
+3. Keep **char overlay** on `UiCharacters` with lens synced from base (`UiCameraStackRig.SyncCharacterOverlayLensFromBase`).
+4. Optional `m_quadMaterialTemplate` on `UiBackdropCompositePresenter` — assign Shader Graph material in Dev Bootstrap; runtime does not override queue/ZTest when template is set.
+
+**Do not assume** assigning `m_TargetCamera` on `PanelSettings` creates uGUI-style screen-space-camera compositing — Unity does not expose that mode for UITK.
 
 ## Future exploration (deferred)
 

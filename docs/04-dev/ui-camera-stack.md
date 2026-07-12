@@ -86,11 +86,26 @@ flowchart TB
 
 Char overlay clear flags: **Depth only** (do not wipe env color).
 
-### [#428](https://github.com/miramocha/griddungeon-game/issues/428) runtime notes
+### [#428](https://github.com/miramocha/griddungeon-game/issues/428) / [#430](https://github.com/miramocha/griddungeon-game/issues/430) runtime notes
 
-- `UiStackOverlay1_Backdrop` exists in Dev Bootstrap but stays **disabled**; backdrop `UIDocument` binds to the **Cinemachine-driven base camera** for panel setup only.
-- `SetCharacterDrawLayer(root, foreground)` moves roster roots between `UiEnvironment` (behind backdrop) and `UiCharacters` (in front).
-- **Visual sandwich is incomplete** until [#430](https://github.com/miramocha/griddungeon-game/issues/430) — backdrop UITK may still composite above focused characters without the RT/quad pass.
+- `UiStackOverlay1_Backdrop` exists in Dev Bootstrap but stays **disabled**; backdrop UITK renders off-screen to `targetTexture`.
+- `SetCharacterDrawLayer(root, foreground)` moves roster roots between `UiEnvironment` (behind backdrop) and `UiCharacters` (char overlay, in front).
+- **Char overlay stays enabled in Stack** when characters are registered — required for **MToon** roster (character render order is not tunable).
+- Composite quad: **`UiEnvironment`**, camera-child, cover layout 1920×1080, plane distance `nearClip + offset`; per-frame sync on base camera while composite is visible.
+- Assign **Shader Graph material** via `UiBackdropCompositePresenter.m_quadMaterialTemplate` for quad depth/queue vs char overlay (agent does not override template shader state).
+
+---
+
+## Composite quad tuning (Dev Bootstrap)
+
+| Field | Role |
+|-------|------|
+| `m_quadDistanceFromNearClip` | Offset from camera near clip to backdrop plane (world units) |
+| `m_quadMaterialTemplate` | Optional Shader Graph material — **ZTest / queue / blend** for mid-stack ordering |
+
+**MToon constraint:** only the composite quad material is fair game for shader ordering; roster characters use MToon as authored.
+
+**Deferred spike:** merge quad + focused char onto one base camera after SG validates in Frame Debugger.
 
 ---
 
@@ -242,12 +257,15 @@ Post: one camera only in stack modes. Geometry ≤10 chars is not the bottleneck
 
 **Do not assume** assigning `m_TargetCamera` on `PanelSettings` creates uGUI-style screen-space-camera compositing — Unity does not expose that mode for UITK.
 
-**Spike checklist:**
+**Checklist (shipped / in progress):**
 
-1. Render `PartyMenuClassBackdrop` to `RenderTexture` via `PanelSettings.targetTexture`.
-2. Draw texture on a screen-aligned quad (or UGUI `RawImage`) on `UiEnvironment`, after env meshes in the base pass.
-3. Keep char overlay on `UiCharacters` with lens synced from base (`UiCameraStackRig.SyncCharacterOverlayLensFromBase`).
-4. Verify input: backdrop root `pickingMode = Ignore`; global HUD unchanged.
+1. Render `PartyMenuClassBackdrop` to `RenderTexture` (1920×1080) via `PanelSettings.targetTexture`.
+2. Draw texture on a screen-aligned quad on `UiEnvironment`, parented to base camera; cover layout via `UiBackdropCoverLayout`; sync each base-camera frame while composite active.
+3. Keep char overlay on `UiCharacters` with lens synced from base — **required for MToon** (do not merge focused chars to base pass in this phase).
+4. Tune quad **Shader Graph** via `m_quadMaterialTemplate` on `UiBackdropCompositePresenter` (ZTest, queue, blend) — not character materials.
+5. Verify input: backdrop root `pickingMode = Ignore`; global HUD unchanged.
+
+**Manual Frame Debugger:** base pass → env + quad; char overlay → focused roster; Screen Overlay HUD last.
 
 ---
 
