@@ -639,6 +639,22 @@ Shared fade shell: `UiFadeOverlay` (internal). Default color/duration: `WorldBac
 
 ---
 
+### Party menu class backdrop — `PartyMenuClassBackdropPresenter` + `PartyMenuClassBackdrop`
+
+**Job:** Hero **class name** between 3D environment and focused party member during member focus — **not** a `ScreenSpaceOverlay` centralized service. Renders as **world-space** `UIDocument` on `UiBackdrop`, routed by [UI camera stack](ui-camera-stack.md) / [ADR 049](../../decisions/049-ui-camera-stack.md).
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/Runtime/UI/PartyMenuClassBackdropPresenter.cs` | `ICentralizedUiSurface`; `sortingOrder` 0 on world panel; `SetBackdrop` → Stack mode |
+| Facade | `PartyMenuClassBackdrop` (same file) | `Show` / `Hide` / `ActivateMemberFocus` / `SyncRosterNames` |
+| UXML | `Assets/UI/Screens/PartyMenu/PartyMenuClassBackdrop.uxml` | Single hero label; `pickingMode = Ignore` |
+| Panel settings | `Assets/UI/Settings/UiBackdropPanelSettings.asset` | Source; runtime clone via `UiBackdropDocumentSetup` |
+| Player fallback | `Assets/Resources/UI/UiBackdropRuntimeContent.asset` | Panel + UXML when scene refs missing |
+
+**Do not** add this tree to phase HUD UXML or the `sortingOrder` overlay table — visibility is owned by `PartyMenuStagePresenter` + `UiCameraStackSession`, not `GamePanelSettings` overlay stacking.
+
+---
+
 ### Party menu environment fade — `PartyMenuEnvironmentFadePresenter` + `PartyMenuEnvironmentFade`
 
 **Job:** UITK mask over the party menu **3D backdrop** (greybox sphere) — same material/color family as floor-transition stairs beats.
