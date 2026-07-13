@@ -246,7 +246,7 @@ Tab membership from **`InventorySlotKind`** — no `ItemCategory` on `ItemDefini
 
 ## Equipment pane
 
-**Visual reference (scratchpad):** [EO IV character status — equipment + stats layout](../refs/party-character-ui.md) — shipped on centralized **`CharacterDetailView`**: HP/MP meters, attribute bars, derived ATK/DEF/MAT/MDF grid, icon worn rows (single-column; 3D preview is a separate surface).
+**Visual reference (scratchpad):** [EO IV character status — equipment + stats layout](../refs/party-character-ui.md) — shipped on centralized **`CharacterDetailView`**: HP/MP meters, attribute bars, derived ATK/DEF/MATK/MDEF grid, icon worn rows (single-column; 3D preview is a separate surface).
 
 **Scope:** active party cores only (filled core slots). **Member select** uses the shared **party formation floater** (2×4 grid, sort **260**) — not inline member tabs. Right-docked **`CharacterDetailView`** (`PartyEquipDisplay`): structured stats + five worn rows with icons. **WASD** moves floater focus when slots are not engaged; **Z** engages worn-slot focus; **W/S** moves slot focus while engaged. **Z** on a focused slot opens **`PartyEquipmentPickerFloater`** (sort **256**) — bone-projected filtered list, not the party bag modal. Equip from **Inventory** pane still works. Stat preview: `PartyEquipmentStatPreviewFormatter` on `CharacterDetail`.
 

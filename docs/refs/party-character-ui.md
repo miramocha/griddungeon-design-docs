@@ -44,7 +44,7 @@ Upload PNG/JPG/WebP to [`assets/party-ui/`](assets/party-ui/) and add a row belo
 |------|------------|-------------------|
 | **Header bar** | `Lv. 36` + stars, class name (**Protector**), thin **NEXT** XP bar (`NEXT Lv 10447`) | `CharacterDetail` header: class display name + `Lv N` only — no XP bar on inspect pane |
 | **Class row** | Two pill capsules: main class + **SUB CLASS** (e.g. Imperial) | No subclass UI at launch |
-| **Stats panel (left)** | Bordered box: **HP** / **TP** current÷max with buff ▲ arrows; six **attribute bars** (STR, INT, VIT, WIS, AGI, LUC); four **derived** boxes (ATK, DEF, MAT, MDF) | **Shipped** `CharacterDetailView`: HP/MP `ProgressBar` rows, STR/TEC/AGI/VIT/LUC bar rows, ATK/DEF/MAT/MDF grid, five icon equip rows |
+| **Stats panel (left)** | Bordered box: **HP** / **TP** current÷max with buff ▲ arrows; six **attribute bars** (STR, INT, VIT, WIS, AGI, LUC); four **derived** boxes (ATK, DEF, MAT, MDF) | **Shipped** `CharacterDetailView`: HP/MP `ProgressBar` rows, STR/TEC/AGI/VIT/LUC bar rows, ATK/DEF/MATK/MDEF grid, five icon equip rows |
 | **Equipment (bottom-left)** | Four **horizontal** rounded slots with **item icons** + names (weapon + three armor lines) | Five vertical rows (`weapon` / `head` / `body` / `legs` / `accessory`) with icon + name on `CharacterDetail` |
 | **Portrait (right)** | Large character illustration | **Shipped direction** — 3D hex stage behind party menu ([ADR 047](../decisions/047-party-menu-3d-stage.md)); not inside `CharacterDetail` modal |
 | **Force gauge (far right)** | Circular **Force** meter at 100% | **Synchro Charge** lives on **combat HUD**, not character inspect ([Synchro Protocol](../02-systems/synchro-protocol.md)) |

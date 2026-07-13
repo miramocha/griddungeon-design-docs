@@ -27,7 +27,7 @@ Curated titles for **future design and tone checks**. **Launch authority** stays
 |---------|--------------|--------------|
 | **Single-character inspect** | Full-screen status: class, level, XP bar, stats, worn gear, portrait | Party menu **Equipment** / **Formation** → centralized **`CharacterDetail`** (stats + five text worn rows) + **formation floater** for member pick |
 | **Worn gear rows** | Icon + name per slot (weapon + three armor lines) | Text rows: `weapon` / `head` / `body` / `legs` / `accessory` — [items & inventory § Equipment pane](02-systems/items-and-inventory.md#equipment-pane) |
-| **Stat presentation** | HP/TP gauges, attribute bars, derived ATK/DEF/MAT/MDF grid | Compact two-line stats (HP/MP + STR/TEC/AGI/VIT/LUC); derived combat grid **not** on inspect at launch |
+| **Stat presentation** | HP/TP gauges, attribute bars, derived ATK/DEF/MATK/MDEF grid | Compact two-line stats (HP/MP + STR/TEC/AGI/VIT/LUC); derived combat grid **not** on inspect at launch |
 | **Subclass pills** | Main + sub class on status | No subclass at launch |
 | **Force gauge** | Per-character Force % on status (EO IV+) | **Synchro Charge** on combat HUD only — not character inspect |
 
