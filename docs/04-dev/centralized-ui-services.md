@@ -140,6 +140,7 @@ Lower draws first. Values are **convention** — keep new panels in the gaps or 
 | **250** | Party menu overlay (hub + exploration pause) | `PartyMenuOverlayView` |
 | **251** | Party bag modal + character detail (Formation / Equipment; rail offset) | `ItemListInventoryPresenter` (`PartyBag`), `CharacterDetailPresenter` |
 | **252** | Confirm modal (yes/no — exit, quit to title, …) | `ConfirmModalPresenter` |
+| **254** | World marker overlay (equipment bone markers) | `WorldMarkerOverlayPresenter` |
 | **255** | Party menu section rail (same `CommandRail` document; raised while overlay open) | `PartySectionRailPresenter` |
 | **256** | Party equipment picker floater (bone-projected bag rows; above section rail) | `PartyEquipmentPickerFloaterPresenter` |
 | **260** | Party floater while formation edit docked | `PartyFormationFloaterPresenter` |
@@ -364,6 +365,31 @@ CombatArenaPlate.HideImmediate();
 ```
 
 Integrator detail: [custom party UI § Enemy arena plates](custom-party-ui.md#enemy-arena-plates-combatarenaplate).
+
+---
+
+### World marker overlay — `WorldMarkerOverlayPresenter` + `WorldMarkerOverlay`
+
+**Job:** World-projected **worn-slot markers** on equipment bone transforms while the party menu Equipment pane is engaged. Weapon marker anchors on `RightHand` (camera Look At stays `RightLowerArm` per ADR 048); body on `Chest`. Ring/fill use `--gd-threat` (party class backdrop label). W/S focus expands the ring (36↔60 px) and shows a centered inner dot (15 px). Shares `UiWorldOverlayAnchor` with the equip picker floater.
+
+| Type | Path | Notes |
+|------|------|-------|
+| Presenter | `Assets/Scripts/UI/Views/WorldMarkerOverlayPresenter.cs` | `sortingOrder` **254** (above party menu **250**, below section rail **255** and equip picker **256**) |
+| Facade | `Assets/Scripts/UI/Views/WorldMarkerOverlay.cs` | `SyncEquipmentMarkers`, `SetFocusedSlot`, `ClearAllMarkers`, `Show` / `Hide` |
+| Motion | `Assets/Scripts/Runtime/UI/WorldMarkerFocusTransition.cs` | Focus size tween (~0.18s); palette via USS only |
+| View | `Assets/Scripts/UI/Views/WorldMarkerOverlayView.cs` | Layer + marker BEM hooks |
+| UXML / USS | `Assets/UI/Screens/Shared/WorldMarkerOverlay.uxml`, `.uss` | `picking-mode: Ignore` root; markers spawned in C# |
+| Bootstrap | `DevSceneWireGameState.WireWorldMarkerOverlay` | Sibling under `GameState` |
+
+```csharp
+WorldMarkerOverlay.SyncEquipmentMarkers(aimsBySlot); // EquipSlot → bone Transform
+WorldMarkerOverlay.SetFocusedSlot(focusedWornSlot);
+WorldMarkerOverlay.Show();
+WorldMarkerOverlay.ClearAllMarkers();
+WorldMarkerOverlay.HideImmediate();
+```
+
+Publisher: `PartyEquipmentToolkitView` on slot engagement, member rebuild, and W/S focus; clears on pane disengage / unbind.
 
 ---
 
