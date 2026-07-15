@@ -29,6 +29,7 @@ Living list of **non-obvious bugs and review traps** when wiring cross-phase UIT
 | Closed a related bug | Add a short entry (symptom → cause → fix → test) in the same PR or follow-up |
 | Party menu 3D silhouette / VRM material reveal | Read [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
 | Party menu equip idle / grid pose **Editor OK, player build frozen or skipped** | Read [§ Party menu 3D — equip idle in player build](#party-menu-3d--equip-idle-pose-missing-in-player-build) |
+| Party menu backdrop **equipment vanishes** or **opacity flashes** on member focus shift | Read [§ Party menu backdrop — worn equip rows](#party-menu-backdrop--worn-equip-rows-dual-dom-owners) |
 
 ---
 
@@ -609,6 +610,67 @@ PartyCharacterVisualPose.SyncMemberSilhouetteLayer(animator, memberRevealed: tru
 
 ---
 
+## Party menu backdrop — worn equip rows (dual DOM owners)
+
+**Symptom:** Equipment tag/value rows on the class backdrop **vanish** or **flash to wrong opacity** when shifting floater member focus (WASD on Equipment pane). Less often: party menu **reopen** restores the wrong member. Slot **focus highlight** on worn rows can lag when row DOM is created late (tracked separately).
+
+**Authority:** [custom party UI § Equipment menu](custom-party-ui.md#equipment-menu-party-pause) · [ADR 048](../../decisions/048-party-menu-equipment-inspect.md) · [game#441](https://github.com/miramocha/griddungeon-game/issues/441) (equip chrome consolidation).
+
+**Cause:** Two code paths share the **same slot host nodes** under `party-menu-class-backdrop-equipment`:
+
+| Owner | Job | Must not |
+|-------|-----|----------|
+| `PartyMenuBackdropEquipValueChrome` | Tag/value text, `--empty`, opacity, swap transitions | Own menu-focus chrome or `EngageSlotsAt` |
+| `PartyMenuBackdropWornSlotsView` | Row shell, `MenuFocusNavigator`, slot engage (**Z**) | Set equip value text/opacity (chrome owns copy) |
+
+Traps that shipped bugs:
+
+| Trap | What goes wrong |
+|------|-----------------|
+| **Bind labels before row DOM** | `PartyMenuBackdropEquipValueChrome.BindValueLabels` queries `.party-menu-class-backdrop__equip-value` under each slot host. If hosts are empty, `AreValueLabelsBound` stays false → `SyncFocusedEquipmentDisplay` / `PaintFocusedEquipment` no-op → rows look missing after focus shift. |
+| **`Bind(null)` clears hosts** | `PartyMenuEquipmentPaneHost.OnEquipmentMemberFocusChanged` calls `WornSlotsView.Bind(subject)`. When `BuildDetailSubject()` is **null** but the floater still has a valid **core** grid index (transient focus / stage sync), `Bind(null)` → `ClearSlots()` wipes row DOM chrome was about to bind. |
+| **Paint during in-flight swap** | `RefreshFocusedEquipmentAfterRowBind` after `ApplyFocusedLabel` focus-swap cancels equip fade tweens — use row-bind refresh only for **catch-up**, not after animated member swaps. |
+| **Re-engage slots from chrome bind** | Raising an event from `BindEquipmentHost` that calls `EngageSlotsAt` → `SlotsEngagementChanged` → `EnterEquipInspect` → `SyncMemberFocusRoster` → `BindEquipmentHost` → **StackOverflowException**. Never sync stage or engage worn slots from equip chrome materialization. |
+
+**Fix (shipped on [#441](https://github.com/miramocha/griddungeon-game/issues/441)):**
+
+1. **`EnsureSlotRowsOnHost()`** — before `BindValueLabels`, chrome creates missing row shells in empty slot hosts (tag/value labels only; picking mode `Ignore` on labels).
+2. **`keepEquipRows` on null subject** — when floater `FocusedGridIndex` is a core slot but `BuildDetailSubject()` is null, call `EnsureSlotRows()` + `SyncBackdropEquipmentFromFloater()` instead of `Bind(null)`.
+3. **Single opacity/text owner** — all equip value display goes through `PartyMenuBackdropEquipValueChrome.SetDisplay` / `SetRevealed`; worn-slots view does not toggle value opacity or item names.
+4. **Reopen focus** — `PartyMenuEquipmentPaneHost` saves `m_savedFloaterMemberId` on pane disengage; `ResolvePreferredEquipmentMemberId` prefers floater → formation grid → saved id on reopen.
+5. **Slot highlight (deferred)** — when chrome materializes rows before the worn-slots navigator runs, focus chrome / `pickingMode` on reused rows may need a **non-recursive** refresh — do **not** call `EngageSlotsAt` from `BindEquipmentHost` or equip-DOM events.
+
+```csharp
+// ❌ BAD — wipe row DOM while floater grid still points at a core member
+if (subject == null)
+    m_wornSlotsCoordinator.WornSlotsView?.Bind(null);
+
+// ✅ GOOD — preserve hosts; sync backdrop from floater grid
+if (subject == null && PartyFormationLayout.IsCoreGridSlot(floaterGrid))
+{
+    m_wornSlotsCoordinator.WornSlotsView?.EnsureSlotRows();
+    SyncBackdropEquipmentFromFloater();
+    return;
+}
+
+// ❌ BAD — slot engage from equip chrome bind (infinite recursion)
+void BindEquipmentHost()
+{
+    m_equipValueChrome.BindEquipmentHost(m_root, m_labelRevealed);
+    RaiseEquipSlotDomMaterialized(); // → EngageSlotsAt → … → BindEquipmentHost
+}
+```
+
+**Tests:** `PartyMenuBackdropEquipValueChromeTests`, `PartyMenuBackdropWornSlotsViewTests`, `PartyMenuClassBackdropFocusShiftTests` (equip opacity on focus shift).
+
+**Verify (manual):** Hub → Party → **Equipment** → **Z** (pane reveal) → **WASD** across floater cores — backdrop WPN/HEAD/BODY/LEGS/ACC values stay visible and opacity matches member name reveal; close party menu → reopen → same member focus restored. **Z** engage worn slot → no stack overflow; slot highlight may still be incomplete (deferred).
+
+**Rule for backdrop equip work:** Treat slot hosts as a **shared DOM contract** — chrome ensures row shells + owns tag/value paint; worn-slots coordinator owns navigator + engage. Any new listener on focus or bind paths must not call back into `BindEquipmentHost`, `ActivateMemberFocus`, or `EngageSlotsAt`.
+
+**Cross-ref:** [centralized UI services § Party menu class backdrop](centralized-ui-services.md#party-menu-class-backdrop--partymenuclassbackdroppresenter--partymenuclassbackdrop), [UI camera stack § Backdrop sandwich](ui-camera-stack.md#backdrop-sandwich-shipped).
+
+---
+
 ## Documentation map
 
 | Topic | Doc |
@@ -627,3 +689,4 @@ PartyCharacterVisualPose.SyncMemberSilhouetteLayer(animator, memberRevealed: tru
 | Combat planning roster hover vs skill picker | [§ Combat planning — roster hover](#combat-planning--roster-hover-while-skill-picker-open-415) |
 | Party menu 3D silhouette reveal (VRM / MToon10) | [§ Party menu 3D — silhouette reveal](#party-menu-3d--silhouette-reveal-stuck-black-charactermaterialsilhouette) |
 | Party menu equip idle / grid pose in player build | [§ Party menu 3D — equip idle in player build](#party-menu-3d--equip-idle-pose-missing-in-player-build) |
+| Party menu backdrop worn equip rows (dual DOM owners) | [§ Party menu backdrop — worn equip rows](#party-menu-backdrop--worn-equip-rows-dual-dom-owners) |

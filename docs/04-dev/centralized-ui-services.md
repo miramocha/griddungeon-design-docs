@@ -484,22 +484,22 @@ Implementation traps (rapid cancel/reopen, animated hide vs context switch): [ce
 
 ### Character detail — `CharacterDetailPresenter` + `CharacterDetail`
 
-**Job:** One **single-combatant inspect panel** (stats + optional worn equipment rows) for party menu **Formation** and **Equipment** sections. Separate `UIDocument` at sort **251** — same full-bleed + `tabbed-picker--rail-offset` modal chrome as party bag ([`ItemListInventoryOverlay.uxml`](https://github.com/miramocha/griddungeon-game/blob/main/Assets/UI/Screens/Shared/ItemListInventoryOverlay.uxml)). Not embedded in `PartyMenu.uxml`.
+**Job:** Single-combatant **field-item / use-skill inspect** panel (stats + read-only worn equipment) during party menu Inventory flows. Separate `UIDocument` at sort **251** — same full-bleed + `tabbed-picker--rail-offset` modal chrome as party bag. **Formation** and **Equipment** panes use backdrop worn rows instead; hub **hospital revive** pick is floater-only (no CharacterDetail dock).
 
 | Type | Path | Notes |
 |------|------|-------|
-| Presenter | `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Context: `Hidden` / `PartyMenuFormation` / `PartyMenuEquipment`; `sortingOrder` **251** when visible |
+| Presenter | `Assets/Scripts/UI/Views/CharacterDetailPresenter.cs` | Context: `Hidden` / `PartyMenuFormation` (field inspect); `sortingOrder` **251** when visible |
 | View | `Assets/Scripts/UI/Views/CharacterDetailView.cs` | Toolkit bind API; slot engage via `MenuFocusNavigator` |
 | Facade | `Assets/Scripts/UI/Views/CharacterDetail.cs` | `SetPartyMenuContext`, `Bind`, `Refresh`, `View`, `Hide` |
 | UXML / USS | `CharacterDetailOverlay.uxml` (hosts `CharacterDetail.uxml` instance), `CharacterDetail.uss` | Two-layer overlay: outer full bleed + inner rail-offset centered panel |
 | Bootstrap | `DevSceneComposition.WireCharacterDetail` | Child `CharacterDetail` GO under `GameState` |
 
-**Publishers:** `PartyMenuOverlayView.ShowActivePaneContent` — Formation → `PartyFormationInspect`; Equipment → `PartyEquipDisplay`; Inventory / Quit / close → `Hide`. Member bind from `PartyFormationToolkitView` / `PartyEquipmentFloaterToolkitView`.
+**Publishers:** `PartyMenuFormationInspectPane` (field item / use-skill member inspect → `PartyFormationInspect`). Inventory / Quit / close → `Hide`. Formation / Equipment worn slots → `PartyMenuClassBackdrop` + `PartyMenuBackdropWornSlotsView`.
 
 ```csharp
 CharacterDetail.SetPartyMenuContext(
-    CharacterDetailContext.PartyMenuEquipment,
-    CharacterDetailLayout.PartyEquipDisplay
+    CharacterDetailContext.PartyMenuFormation,
+    CharacterDetailLayout.PartyFormationInspect
 );
 CharacterDetail.Bind(subject);
 CharacterDetail.Hide();
@@ -667,7 +667,7 @@ Shared fade shell: `UiFadeOverlay` (internal). Default color/duration: `WorldBac
 
 ### Party menu class backdrop — `PartyMenuClassBackdropPresenter` + `PartyMenuClassBackdrop`
 
-**Job:** Hero **class name** between 3D environment and focused party member during member focus — **not** a `ScreenSpaceOverlay` centralized service. Renders as **world-space** `UIDocument` on `UiBackdrop`, routed by [UI camera stack](ui-camera-stack.md) / [ADR 049](../../decisions/049-ui-camera-stack.md).
+**Job:** Hero **class name** between 3D environment and focused party member during member focus — **not** a `ScreenSpaceOverlay` centralized service. Renders as **world-space** `UIDocument` on `UiBackdrop`, routed by [UI camera stack](ui-camera-stack.md) / [ADR 049](../../decisions/049-ui-camera-stack.md). Cover sizing: [world-space UITK cover-fit](world-space-uitk-cover-fit.md). **Frozen UI style reference** for screen migration — threat focus, flat corners, vitals meters: [menu threat focus & backdrop UI style](menu-threat-focus-style.md) ([#442](https://github.com/miramocha/griddungeon-game/issues/442)).
 
 | Type | Path | Notes |
 |------|------|-------|
@@ -678,6 +678,92 @@ Shared fade shell: `UiFadeOverlay` (internal). Default color/duration: `WorldBac
 | Player fallback | `Assets/Resources/UI/UiBackdropRuntimeContent.asset` | Panel + UXML when scene refs missing |
 
 **Do not** add this tree to phase HUD UXML or the `sortingOrder` overlay table — visibility is owned by `PartyMenuStagePresenter` + `UiCameraStackSession`, not `GamePanelSettings` overlay stacking.
+
+**Worn equipment rows** (Formation read-only / Equipment interactive) live in the same backdrop tree — see [§ Party menu backdrop worn equipment](#party-menu-backdrop-worn-equipment) below. Dual-owner traps: [centralized UI gotchas § worn equip rows](centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners).
+
+---
+
+### Party menu backdrop worn equipment
+
+**Job:** Top-right **worn-slot tag/value rows** on the world-space class backdrop during party menu **Formation** (read-only) and **Equipment** (interactive engage + picker). Member name / stats / vitals on the same backdrop panel are owned by `PartyMenuClassBackdropPresenter` member-focus chrome; equip **copy and opacity** are consolidated in `PartyMenuBackdropEquipValueChrome` ([#441](https://github.com/miramocha/griddungeon-game/issues/441)).
+
+**Not** `CharacterDetail` (sort **251**) — that panel is field-item / use-skill inspect only. Equipment pane uses floater member focus + backdrop rows ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)).
+
+#### DOM layout (UXML hosts)
+
+```
+party-menu-class-backdrop (root)
+└── party-menu-class-backdrop-equipment          ← EquipmentHostName
+    ├── party-menu-class-backdrop-slot-weapon    ← empty host; row added at runtime
+    ├── party-menu-class-backdrop-slot-head
+    ├── party-menu-class-backdrop-slot-body
+    ├── party-menu-class-backdrop-slot-legs
+    └── party-menu-class-backdrop-slot-accessory
+```
+
+Each slot host receives one `.party-menu-class-backdrop__equip-row` with tag (`__equip-tag`) + value (`__equip-value`) labels. Row shells may be created by **either** owner — see dual-owner rules below.
+
+#### Dual owners (same slot hosts)
+
+| Owner | Path | Responsibility |
+|-------|------|----------------|
+| Equip value chrome | `Assets/Scripts/Runtime/UI/PartyMenuBackdropMeterRows.cs` (`PartyMenuBackdropEquipValueChrome`) | Item name text, `--empty`, opacity, swap transitions (`PartyMenuBackdropEquipValueTransition`) |
+| Worn slots view | `Assets/Scripts/UI/Views/PartyEquipmentToolkitView.cs` (`PartyMenuBackdropWornSlotsView`) | `MenuFocusNavigator`, slot engage (**Z**), `pickingMode` on row when interactive |
+| Coordinator | `Assets/Scripts/UI/Views/PartyMenu/PartyMenuEquipmentPaneHost.cs` (`PartyMenuBackdropWornSlotsCoordinator`) | Binds view to live backdrop root on `PresentationChanged`; read-only vs interactive |
+| Pane host | `PartyMenuEquipmentPaneHost` | Floater ↔ backdrop sync, `keepEquipRows` on null subject, saved member id on disengage |
+
+```mermaid
+flowchart LR
+  Floater[PartyEquipmentFloaterToolkitView]
+  PaneHost[PartyMenuEquipmentPaneHost]
+  Coordinator[PartyMenuBackdropWornSlotsCoordinator]
+  WornView[PartyMenuBackdropWornSlotsView]
+  Facade[PartyMenuClassBackdrop facade]
+  Presenter[PartyMenuClassBackdropPresenter]
+  Chrome[PartyMenuBackdropEquipValueChrome]
+
+  Floater -->|MemberFocusChanged| PaneHost
+  PaneHost --> Coordinator
+  Coordinator --> WornView
+  PaneHost -->|SyncBackdropEquipmentFromFloater| Facade
+  Facade --> Presenter
+  Presenter --> Chrome
+  WornView -->|EnsureSlotRows| slotHosts[slot host DOM]
+  Chrome -->|EnsureSlotRowsOnHost + BindValueLabels| slotHosts
+```
+
+#### Member focus sync (Equipment pane)
+
+1. Floater **WASD** → `OnEquipmentMemberFocusChanged` → `WornSlotsView.Bind(subject)` when subject exists.
+2. `SyncBackdropEquipmentFromFloater` → `PartyMenuClassBackdrop.SyncEquipmentFloaterFocusGrid` + `SyncFocusedEquipmentDisplay`.
+3. `PartyMenuStagePresenter.SyncMemberFocusBackdrop` → `ActivateMemberFocus` or roster-only sync + `RefreshFocusedEquipmentAfterRowBind` for row catch-up.
+4. Presenter `BindEquipmentHost` → chrome `EnsureSlotRowsOnHost()` then `BindValueLabels` → `SetDisplay` / `SetRevealed`.
+
+**Catch-up vs animated swap:** `RefreshFocusedEquipmentAfterRowBind` repaints equip values when row DOM appears late — do **not** call it after `ApplyFocusedLabel` animated member swap (cancels equip fade tweens). See [gotchas § worn equip rows](centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners).
+
+#### Facade API (equip-specific)
+
+```csharp
+// Floater grid → member-focus backdrop session
+PartyMenuClassBackdrop.SyncEquipmentFloaterFocusGrid(focusedGridIndex);
+
+// Push loadout into chrome (animate: false on floater-driven sync)
+PartyMenuClassBackdrop.SyncFocusedEquipmentDisplay(equipment, animate: false);
+
+// After WornSlotsView.EnsureSlotRows — label bind catch-up only
+PartyMenuClassBackdrop.RefreshFocusedEquipmentAfterRowBind();
+
+PartyMenuClassBackdrop.SetEquipmentContentDatabase(contentDatabase);
+```
+
+#### Publishers
+
+| Pane | Worn rows | Chrome paint |
+|------|-----------|--------------|
+| Formation | Read-only (`SetEquipmentReadOnly(true)`) | Mirrors floater core focus |
+| Equipment | Interactive engage + picker | Same; opacity tied to `m_labelRevealed` with member name |
+
+**Tests:** `PartyMenuBackdropEquipValueChromeTests`, `PartyMenuBackdropWornSlotsViewTests`, `PartyMenuClassBackdropFocusShiftTests`.
 
 ---
 
@@ -1040,6 +1126,7 @@ Synced to game repo as of [#207](https://github.com/miramocha/griddungeon-game/i
 | Command rail population, modal sibling disable, hub shop row nav | [shared menu & picker UI § Rail menu](shared-menu-picker-ui.md#rail-menu--chips-and-command-buttons) |
 | Input hint copy table + picker policy | [shared menu & picker UI § Global input hints](shared-menu-picker-ui.md#global-input-hints) |
 | Party grid API, combat highlights, replace strategies | [custom party UI](custom-party-ui.md) |
+| Party menu backdrop worn equip (dual DOM owners, facade API) | **Here § Party menu backdrop worn equipment** + [gotchas § worn equip rows](centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners) |
 | Runtime events for custom HUD | [UI event contract](ui-event-contract.md) |
 | Splitting monolith HUD into more documents | [layered UITK panels](layered-uitk-panels.md) |
 | Input bind design (player-facing) | [input bindings § Global input hints](../02-systems/input-bindings.md#global-input-hints) |

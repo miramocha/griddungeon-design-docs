@@ -22,8 +22,8 @@ Unlike the [skill use picker](custom-skill-picker-ui.md), party UI has **no sing
 |---------|--------------|----------------|---------------|
 | **Exploration party strip** | `GamePhase.Exploration` | `PartyRuntime.CoreSlots` | `ExplorationHudView` → `PartyFormationFloater` facade → shared `PartyFormationGridView` |
 | **Combat party roster** | `GamePhase.Combat` | `CombatController.State.CoreSlots` (`BattleState` copy) | `CombatHudView` → `PartyFormationFloater.Grid` (combat-center inset) |
-| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → **`CharacterDetail`** facade (`PartyFormationInspect`, sort **251**) + `PartyFormationToolkitView` on shared floater (sort **260**) |
-| **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → **`CharacterDetail`** facade (sort **251**) + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
+| **Formation menu** | Hub / exploration pause | `PartyRuntime.CoreSlots` | `PartyMenuOverlayView` → backdrop worn equipment (read-only, top-right) + `PartyFormationToolkitView` on shared floater (sort **260**) |
+| **Equipment menu** | Hub / exploration pause | `PartyRuntime` + save equipment | `PartyMenuOverlayView` → backdrop worn slots (interactive, top-right) + `PartyEquipmentFloaterToolkitView` on floater (sort **260**) |
 | **Map party marker** | Exploration map open | `DungeonExplorer` cell + facing | `MapPartyMarkerPresenter` |
 
 **Out of scope for this doc:** Hub guild roster / party-ready gate (`S1_PARTY_READY`), inn save UI, and full-screen menus — those are hub/content flows ([party & classes](../02-systems/party-and-classes.md)), not the exploration strip or combat roster.
@@ -229,12 +229,12 @@ Reference: `PartyFormationFloaterPresenter.cs`, `PartyFormationExplorationSync.c
 
 ## Formation menu (party pause)
 
-Hub / exploration pause → **Formation** section shows right-docked **`CharacterDetailView`** (`PartyFormationInspect` — read-only worn gear) **and** the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**).
+Hub / exploration pause → **Formation** section shows read-only **backdrop worn equipment** (top-right) **and** the shared bottom floater (`PartyFormationFloaterPresenter`, sort **260**).
 
 | Step | Behaviour |
 |------|-----------|
 | **Z** on Formation (pane reveal) | Center dialog + floater slide in; **Z** again engages swap mode — front slot **0** gets `party-formation-grid__cell--focused`. |
-| **WASD** (engaged) | Move focus across the 2×4 grid; read-only detail mirrors focused **core** (`CharacterDetailView`). |
+| **WASD** (engaged) | Move focus across the 2×4 grid; backdrop equipment rows mirror focused **core**. |
 | **Z** (engaged) | Pick core slot or confirm swap (`PartyFormationCoordinator`). |
 | **X** | Cancel pending swap, or disengage swap mode; **X** again hides pane. |
 
@@ -242,7 +242,7 @@ Global bind copy: `TabbedPickerRailHints.PartyFormationSwap` while engaged; `Par
 
 Section rail siblings disable only while swap mode is **engaged** (`PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport`). Leaving the pane (`HideActivePane`) or switching sections calls `ResetPaneEngagement()` → `SyncSectionRailFocus()`.
 
-Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + **`CharacterDetail`** service overlay (sort **251**). Party menu floater context: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)`.
+Owner: `PartyMenuOverlayView` → `PartyFormationToolkitView` on `PartyFormationFloater.Grid` + backdrop worn rows via `PartyMenuBackdropWornSlotsCoordinator`. Party menu floater context: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: true)`.
 
 ---
 
@@ -254,7 +254,7 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 
 | Layer | Choice |
 |-------|--------|
-| **UITK** | Unchanged — `PartyMenuOverlayView` **250**, `CharacterDetail` **251**, floater **260** |
+| **UITK** | Unchanged — `PartyMenuOverlayView` **250**, `CharacterDetail` **251** (field-item inspect only), floater **260**, backdrop equipment on `PartyMenuClassBackdrop` |
 | **Models** | `PlayerCharacter_Default` per occupied slot; stashed under floor when menu closed |
 | **Layout** | Hex ring on stage; UITK floater stays 2×4 `PartyFormationLayout` grid |
 | **Camera** | `CM_Overview` when floater undocked; `CM_FormationOrbit` + `PartyMenuStageOrbitRig` (pivot yaw + head height) when floater docked + **core** member focus; **equip inspect** keeps orbit with bone Look At when worn slots engaged ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)) |
@@ -271,15 +271,13 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 
 ## Equipment menu (party pause)
 
-**Visual reference (scratchpad):** [EO IV character status](../refs/party-character-ui.md) — `CharacterDetail` single-column stats + equip rows. **3D character lineup** is the party menu hex stage ([ADR 047](../../decisions/047-party-menu-3d-stage.md)), not inside this modal.
-
-**Formation** and **Equipment** share the centralized **`CharacterDetail`** service (context switch — never visible together). Equipment uses `PartyEquipDisplay`: worn slots are focusable; **Z** on a focused slot opens a **bone-anchored picker floater** (not the party bag modal).
+**Worn equipment** lives on the world-space **class backdrop** (`PartyMenuClassBackdrop`) at **top-right** — flat threat-colored tag/value rows (WPN / HEAD / BODY / LEGS / ACC), matching derived-stat chrome. **Formation** shows read-only rows; **Equipment** enables slot focus and the bone-anchored picker. **3D character lineup** is the party menu hex stage ([ADR 047](../../decisions/047-party-menu-3d-stage.md)).
 
 | Step | Behaviour |
 |------|-----------|
-| **Z** on Equipment (pane reveal) | Right-docked `CharacterDetail` + floater dock (sort **260**). |
-| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + detail. |
-| **Z** (slots not engaged) | Engage worn-slot focus on `CharacterDetail`. Floater **retracts**; 3D member plays equip idle (v1: OH sword loop); orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
+| **Z** on Equipment (pane reveal) | Floater dock (sort **260**); backdrop equipment rows bind active member. |
+| **WASD** (slots not engaged) | Move floater focus; core focus updates active member + backdrop rows. |
+| **Z** (slots not engaged) | Engage worn-slot focus on backdrop rows. Floater **retracts**; 3D member plays equip idle; orbit camera **Look At** focused slot bone ([ADR 048](../../decisions/048-party-menu-equipment-inspect.md)). |
 | **W/S** (slots engaged) | Move worn-slot focus; camera reframes to slot bone (weapon arm, head, spine, left lower leg, left hand). |
 | **Z** (slot engaged) | Opens world-anchored **equipment picker floater** (sort **256**) beside focused slot bone — filtered bag rows + Remove when worn slot filled. |
 | **W/S** (picker open) | Move picker row focus (`WindowedListPaneView`, no `ScrollView`). |
@@ -290,9 +288,31 @@ Full-screen **3D hex formation** behind existing party UITK whenever Tab party m
 
 Member tabs removed — floater replaces `party-equipment-members`. Floater member focus uses `party-formation-grid__cell--focused` on the shared grid (`PartyEquipmentFloaterToolkitView`). **Switching sections** or hiding the pane must call `ClearMemberFocus()` (via `PartyMenuOverlayView.ResetPaneEngagement`) so the yellow outline does not persist on Equipment → Formation/Inventory.
 
-Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail siblings disable when the Equipment pane is **revealed** (`paneRevealed` — first **Z** after section select; same session as Inventory bag open), via `PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport` — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport). Revealing the pane is sufficient; floater-only member focus does not need a separate modal signal. Worn-slot engage on `CharacterDetail` still switches **hints** (`PartyEquipmentEngage` → `PartyEquipmentSlots`) and worn-slot **W/S** input; it does not gate section-rail modal.
+**Backdrop equip DOM:** tag/value opacity is owned by `PartyMenuBackdropEquipValueChrome`; worn-slot engage by `PartyMenuBackdropWornSlotsView`. Do not `Bind(null)` on the worn-slots view when the floater still has a valid core grid index — see [centralized UI gotchas § worn equip rows](centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners).
+
+### Backdrop worn equipment (implementation)
+
+| Type | Path |
+|------|------|
+| Equip value chrome | `Assets/Scripts/Runtime/UI/PartyMenuBackdropMeterRows.cs` — `PartyMenuBackdropEquipValueChrome` |
+| Worn slots view | `Assets/Scripts/UI/Views/PartyEquipmentToolkitView.cs` — `PartyMenuBackdropWornSlotsView` |
+| Coordinator | `Assets/Scripts/UI/Views/PartyMenu/PartyMenuEquipmentPaneHost.cs` — `PartyMenuBackdropWornSlotsCoordinator` |
+| Pane wiring | `PartyMenuEquipmentPaneHost` — floater focus, `SyncBackdropEquipmentFromFloater`, reopen `m_savedFloaterMemberId` |
+| Presenter bind | `PartyMenuClassBackdropPresenter.MemberFocusChrome.cs` — `BindEquipmentHost`, `PaintFocusedEquipment` |
+
+**Row materialization:** Chrome calls `EnsureSlotRowsOnHost()` before binding value labels so focus shifts do not leave empty slot hosts. Worn-slots view calls `EnsureSlotRows()` / `RebuildSlotRows()` for navigator targets — both may touch the same host; neither should clear hosts while floater grid is still on a core member.
+
+**Opacity:** Equip values fade with member-focus reveal (`SetRevealed`) and swap on animated member change (`PartyMenuBackdropEquipValueTransition.Swap`). Worn-slots view must not write value label text or opacity.
+
+Full wiring diagram and facade API: [centralized UI services § Party menu backdrop worn equipment](centralized-ui-services.md#party-menu-backdrop-worn-equipment).
+
+Party menu dock: `PartyFormationFloater.ApplyPartyMenuFloaterDock(docked: true, formationEdit: false)`. Section rail siblings disable when the Equipment pane is **revealed** (`paneRevealed` — first **Z** after section select; same session as Inventory bag open), via `PartyMenuSectionRailFocusRules` + `CommandPanelModalSupport` — see [modal rail sibling disable](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport). Revealing the pane is sufficient; floater-only member focus does not need a separate modal signal. Worn-slot engage on backdrop rows still switches **hints** (`PartyEquipmentEngage` → `PartyEquipmentSlots`) and worn-slot **W/S** input; it does not gate section-rail modal.
 
 Global hints: `PartyEquipmentEngage` / `PartyEquipmentSlots` / `PartyEquipmentPicker` when floater open ([`TabbedPickerRailHints`](../../griddungeon-game/Assets/Scripts/UI/Views/TabbedPickerRailHints.cs)).
+
+### Hub hospital revive pick
+
+**Revive** member selection uses **`PartyFormationFloater`** (`HubHospitalDock` context, sort **260**) only — no `CharacterDetail` right dock. `HubHospitalCharacterPicker` drives grid focus; **Z** confirms revive via `HubServices.TryReviveMemberAtHospital`. Global hint: `TabbedPickerRailHints.HubHospitalPick`.
 
 ---
 
