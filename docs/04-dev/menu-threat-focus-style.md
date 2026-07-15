@@ -84,7 +84,7 @@ Screen read-only rows (if any) mirror this with a BEM `--readonly` host modifier
 | Surface | Corner rule |
 |---------|-------------|
 | Menu rows (rail, picker, party section, equip slots) | Square — no pill caps, no `2px` reason chips |
-| Stat meter tracks / fills | Square — palette `--gd-stat-meter-radius: 0` after Phase 0 ([#443](https://github.com/miramocha/griddungeon-game/issues/443)) |
+| Stat meter tracks / fills | Square — USS default (no `border-radius`; Phase 0 [#443](https://github.com/miramocha/griddungeon-game/issues/443)) |
 | Command rail vertical chips | Remove semicircle caps (`0 26px 26px 0`) — Phase 2 ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
 
 **Exceptions (keep rounded):**
@@ -121,7 +121,7 @@ Vitals block uses fixed track width `360px` on backdrop; attribute rows use flex
 |-------|--------|
 | Control | `ProgressBar` with shared `StatMeterChrome.uss` |
 | Height | `var(--gd-stat-meter-height)` — **12px** on screen HUD |
-| Radius | `var(--gd-stat-meter-radius)` — **0** after Phase 0 |
+| Radius | Square — omit `border-radius` (USS default **0**) |
 | Track | Threat border, transparent background (match backdrop proportions at 12px) |
 | Fills | HP `var(--gd-bar-hp)` · MP `var(--gd-threat)` · XP `var(--gd-bar-xp)` |
 
@@ -161,7 +161,7 @@ Tracker: [#442](https://github.com/miramocha/griddungeon-game/issues/442). Pull 
 
 | Phase | Game issue | Surfaces | Style deliverables |
 |-------|------------|----------|-------------------|
-| **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; `MenuThreatFocus.uss` scaffold (unwired); `--gd-stat-meter-radius: 0`; MP fill `var(--gd-threat)`; backdrop **unchanged** |
+| **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; `MenuThreatFocus.uss` scaffold (unwired); square meters (no radius token); MP fill `var(--gd-threat)`; backdrop **unchanged** |
 | **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuThreatFocus.uss`; calibrate `--gd-menu-row-font` |
 | **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) | `RailMenu.uss`, `CommandPanel.uss` vertical chips | Flat caps (`border-radius: 0`); threat focus; keep bookmark `translate: -28px` |
 | **3** | [#446](https://github.com/miramocha/griddungeon-game/issues/446) | `HudOverlay.uss`, `SkillUsePicker.uss`, `CombatHud.uss` roster **focus** | Threat focus on overlay buttons, picker rows, targetable slot chrome (meters from Phase 0) |
