@@ -149,7 +149,7 @@ Screen rows should **read** like backdrop rows at a glance, not match 48px liter
 
 | Token | Starting range | Use |
 |-------|----------------|-----|
-| `--gd-menu-row-font` | **18–20px** | Party section rail, `ItemListRow`, command rail labels — calibrate in Play Mode during Phase 1 ([#444](https://github.com/miramocha/griddungeon-game/issues/444)); document final value in palette theme USS |
+| `--gd-menu-row-font` | **18px** (Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) | Party section rail, `ItemListRow`, command rail labels — calibrate in Play Mode; document final value in palette theme USS |
 
 Prefer theme variables over per-screen `font-size` literals. Backdrop keeps `PartyMenuHeroCosmicIndustry` + `best-fit` ranges — screen uses HUD theme fonts unless a screen explicitly mirrors hero typography.
 
@@ -162,7 +162,7 @@ Tracker: [#442](https://github.com/miramocha/griddungeon-game/issues/442). Pull 
 | Phase | Game issue | Surfaces | Style deliverables |
 |-------|------------|----------|-------------------|
 | **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; `MenuThreatFocus.uss` scaffold (unwired); square meters (no radius token); MP fill `var(--gd-threat)`; backdrop **unchanged** |
-| **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuThreatFocus.uss`; calibrate `--gd-menu-row-font` |
+| **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuThreatFocus.uss`; `--gd-menu-row-font` **18px** in palette |
 | **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) | `RailMenu.uss`, `CommandPanel.uss` vertical chips | Flat caps (`border-radius: 0`); threat focus; keep bookmark `translate: -28px` |
 | **3** | [#446](https://github.com/miramocha/griddungeon-game/issues/446) | `HudOverlay.uss`, `SkillUsePicker.uss`, `CombatHud.uss` roster **focus** | Threat focus on overlay buttons, picker rows, targetable slot chrome (meters from Phase 0) |
 | **4** | [#447](https://github.com/miramocha/griddungeon-game/issues/447) | `CharacterDetail.uss` equip slots | Remove `border-radius: 22px`; square threat-focus on `character-detail__equip-slot` |
@@ -227,7 +227,7 @@ Backdrop: `PartyMenuClassBackdropPresenter.MemberFocusAttrs`. Screen: `Character
 | Asset / type | Path |
 |--------------|------|
 | Frozen reference USS | `Assets/UI/Screens/PartyMenu/PartyMenuClassBackdrop.uss` |
-| Threat focus (screen) | `Assets/UI/Screens/Shared/MenuThreatFocus.uss` (Phase 0 scaffold) |
+| Threat focus (screen) | `Assets/UI/Screens/Shared/MenuThreatFocus.uss` (wired Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) |
 | Stat meters (screen) | `Assets/UI/Screens/Shared/StatMeterChrome.uss` |
 | Palette tokens | `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` / `GridDungeonPaletteLight.uss` |
 | Display math | `Assets/Scripts/Core/Progression/CharacterInspectDisplayFormat.cs` |
