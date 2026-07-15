@@ -8,7 +8,7 @@ tags:
 ---
 # Menu threat focus & backdrop UI style
 
-Authority for migrating **screen-space** UITK toward the frozen **party menu class backdrop** look: flat corners, threat-colored focus (transparent row → threat fill + white text), square threat-bordered HP/MP/XP meters.
+Authority for migrating **screen-space** UITK toward the frozen **party menu class backdrop** look: flat corners, threat-colored focus (default: transparent row → threat fill + white text; **command rail chips invert** that recipe — see [Command rail inverted focus](#command-rail-inverted-focus-phase-2)), square threat-bordered HP/MP/XP meters.
 
 **Epic:** [griddungeon-game#442](https://github.com/miramocha/griddungeon-game/issues/442)  
 **Phase 0 (game):** [#443](https://github.com/miramocha/griddungeon-game/issues/443) — pair with this doc in the same PR window  
@@ -61,7 +61,31 @@ Empty-value modifiers (e.g. `__equip-value--empty`) keep the same foreground rul
 }
 ```
 
-**Screen target:** `MenuThreatFocus.uss` — import from `PartyMenu.uss`, `RailMenu.uss`, `ItemListRow.uss`, `HudOverlay.uss`, etc. per [gap audit](#gap-audit-phase-tagged) below.
+**Screen target:** `MenuThreatFocus.uss` — import from `PartyMenu.uss`, `ItemListRow.uss`, `HudOverlay.uss`, etc. per [gap audit](#gap-audit-phase-tagged) below. **Command rail bookmark chips** use the [inverted recipe](#command-rail-inverted-focus-phase-2) in `CommandPanel.uss` / `RailMenu.uss`, not the base `.menu-threat-focus-row` colors from this file.
+
+### Command rail inverted focus (Phase 2)
+
+**Shipped:** [#445](https://github.com/miramocha/griddungeon-game/issues/445). Vertical bookmark chips (hub root menu, combat command rail, party section rail) **invert** the default threat-focus colors so the tucked rail reads as a solid threat column and the focused poke is a white bookmark.
+
+| State | Row background | Label color | Border |
+|-------|----------------|-------------|--------|
+| **Unfocused** (tucked `translate: -28px`) | `var(--gd-threat)` | `var(--gd-white)` | none (`border-width: 0`) |
+| **Focused** (`menu-item--focused`) or **selected** (`rail-menu__item--selected`) | `var(--gd-white)` | `var(--gd-threat)` | none |
+
+**Class hook:** `menu-threat-focus-row` — `RailMenuClasses.ThreatFocusRowClass`; toggled in C# by `CommandRailPanelBuilder` (hub/combat/party section chips). Same class name as `MenuThreatFocus.uss` rows, but **rail USS overrides** win via full selector chains (e.g. `.command-panel .command-panel__btn.rail-menu__item.unity-button.menu-threat-focus-row.menu-item--focused`) so generic `.rail-menu__item.unity-button.menu-item--focused` rules do not leak the default recipe.
+
+**Typography:** `font-size: var(--gd-menu-row-font)` (**18px**) + `-unity-font-definition: var(--gd-rail-menu-font)` (`PartyMenuHeroCosmicIndustry` in palette theme USS) — hero face at HUD row size.
+
+**Unity `Button` press dimming:** explicit `opacity: 1` on `:enabled:hover`, `:enabled:active`, and focused/selected states so engage does not grey the chip.
+
+**Modal rail sibling disable** ([`CommandPanelModalSupport`](shared-menu-picker-ui.md#modal-rail-sibling-disable-commandpanelmodalsupport)):
+
+| Chip | While modal open |
+|------|------------------|
+| Disabled siblings | Threat fill, white labels, **opacity 0.4** |
+| Selected owner (`rail-menu__item--selected:disabled`) | White fill, threat labels, **opacity 1** |
+
+Bookmark geometry (`translate`, chip width, flat caps) is unchanged — [shared menu § Vertical rail bookmark](shared-menu-picker-ui.md#vertical-rail-bookmark-focus-poke).
 
 ### Read-only focus variant
 
@@ -85,7 +109,7 @@ Screen read-only rows (if any) mirror this with a BEM `--readonly` host modifier
 |---------|-------------|
 | Menu rows (rail, picker, party section, equip slots) | Square — no pill caps, no `2px` reason chips |
 | Stat meter tracks / fills | Square — USS default (no `border-radius`; Phase 0 [#443](https://github.com/miramocha/griddungeon-game/issues/443)) |
-| Command rail vertical chips | Remove semicircle caps (`0 26px 26px 0`) — Phase 2 ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
+| Command rail vertical chips | Flat caps — `--command-rail-chip-cap-radius: 0` in `CommandRailTokens.uss` (shipped Phase 2 [#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
 
 **Exceptions (keep rounded):**
 
@@ -141,7 +165,7 @@ Backdrop panel is **1920×1080** world-space UI pixels ([world-space UITK cover-
 | Attr / vital value labels | **48px** font | **13–16px** | Pair with meter height |
 | Vital meter track | **16px** tall, 2px border | **12px** tall (`--gd-stat-meter-height`) | Width % from fill math |
 | Attr bar track (STR…) | **16px** tall | **6px** where shown | Out of vitals meter epic |
-| Command rail chip | N/A (screen) | **Bookmark geometry** unchanged | Flatten radius only ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
+| Command rail chip | N/A (screen) | **268px** chip + **28px** poke; flat caps | [Inverted focus](#command-rail-inverted-focus-phase-2); hero font via `--gd-rail-menu-font` ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
 
 ### Font compensation
 
@@ -149,9 +173,10 @@ Screen rows should **read** like backdrop rows at a glance, not match 48px liter
 
 | Token | Starting range | Use |
 |-------|----------------|-----|
-| `--gd-menu-row-font` | **18px** (Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) | Party section rail, `ItemListRow`, command rail labels — calibrate in Play Mode; document final value in palette theme USS |
+| `--gd-menu-row-font` | **18px** (Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) | Party section rows, `ItemListRow`, command rail label **size** — calibrate in Play Mode; document final value in palette theme USS |
+| `--gd-rail-menu-font` | `PartyMenuHeroCosmicIndustry` (Phase 2 [#445](https://github.com/miramocha/griddungeon-game/issues/445)) | Command rail bookmark chip labels only (`-unity-font-definition` paired with `--gd-menu-row-font`) |
 
-Prefer theme variables over per-screen `font-size` literals. Backdrop keeps `PartyMenuHeroCosmicIndustry` + `best-fit` ranges — screen uses HUD theme fonts unless a screen explicitly mirrors hero typography.
+Prefer theme variables over per-screen `font-size` literals. Backdrop keeps `PartyMenuHeroCosmicIndustry` + `best-fit` ranges. Screen rows default to HUD theme fonts; **command rail chips** explicitly mirror the hero face at 18px via `--gd-rail-menu-font`.
 
 ---
 
@@ -163,7 +188,7 @@ Tracker: [#442](https://github.com/miramocha/griddungeon-game/issues/442). Pull 
 |-------|------------|----------|-------------------|
 | **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; `MenuThreatFocus.uss` scaffold (unwired); square meters (no radius token); MP fill `var(--gd-threat)`; backdrop **unchanged** |
 | **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuThreatFocus.uss`; `--gd-menu-row-font` **18px** in palette |
-| **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) | `RailMenu.uss`, `CommandPanel.uss` vertical chips | Flat caps (`border-radius: 0`); threat focus; keep bookmark `translate: -28px` |
+| **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) **shipped** | `RailMenu.uss`, `CommandPanel.uss`, `CommandRailTokens.uss` vertical chips | Flat caps; **inverted** threat focus + `menu-threat-focus-row`; `--gd-rail-menu-font`; bookmark `translate: -28px` unchanged |
 | **3** | [#446](https://github.com/miramocha/griddungeon-game/issues/446) | `HudOverlay.uss`, `SkillUsePicker.uss`, `CombatHud.uss` roster **focus** | Threat focus on overlay buttons, picker rows, targetable slot chrome (meters from Phase 0) |
 | **4** | [#447](https://github.com/miramocha/griddungeon-game/issues/447) | `CharacterDetail.uss` equip slots | Remove `border-radius: 22px`; square threat-focus on `character-detail__equip-slot` |
 | **opt** | [#448](https://github.com/miramocha/griddungeon-game/issues/448) | — | `StatBarElement` `UxmlElement` if `ProgressBar` USS remains brittle |
@@ -228,6 +253,8 @@ Backdrop: `PartyMenuClassBackdropPresenter.MemberFocusAttrs`. Screen: `Character
 |--------------|------|
 | Frozen reference USS | `Assets/UI/Screens/PartyMenu/PartyMenuClassBackdrop.uss` |
 | Threat focus (screen) | `Assets/UI/Screens/Shared/MenuThreatFocus.uss` (wired Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) |
+| Command rail chips (inverted) | `Assets/UI/Screens/Shared/CommandPanel.uss`, `RailMenu.uss`, `CommandRailTokens.uss` (Phase 2 [#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
+| Rail focus class constant | `Assets/Scripts/UI/Views/RailMenuClasses.cs` — `ThreatFocusRowClass` |
 | Stat meters (screen) | `Assets/UI/Screens/Shared/StatMeterChrome.uss` |
 | Palette tokens | `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` / `GridDungeonPaletteLight.uss` |
 | Display math | `Assets/Scripts/Core/Progression/CharacterInspectDisplayFormat.cs` |

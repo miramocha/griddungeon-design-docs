@@ -164,7 +164,7 @@ flowchart TB
 | **Horizontal chips** | `RailMenuFocus.CreateHorizontal(host)` | `RailMenuView` builds `rail-menu__item` + `rail-menu__item-label` | **`--selected`** on active tab (Q/E or click) |
 | **Vertical focus rail** | `RailMenuFocus.CreateVerticalFocus()` | Existing UXML `Button`s; `ConfigureButton` adds `rail-menu__item` | **`menu-item--focused`** via `SetFocusItems`; optional **`--selected`** via `BindSelectionTargets` (party section) |
 
-**Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need the combined selectors (e.g. `.rail-menu__item.unity-button.menu-item--focused`, `.rail-menu__item.unity-button.rail-menu__item--selected`).
+**Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need combined selectors for focus/selected (e.g. `.rail-menu__item.unity-button.menu-threat-focus-row.menu-item--focused`). Vertical bookmark chips use the **inverted** color recipe in `CommandPanel.uss` — see [menu threat focus](menu-threat-focus-style.md#command-rail-inverted-focus-phase-2).
 
 ### Vertical rail bookmark (focus poke)
 
@@ -187,6 +187,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 - **No `overflow: hidden`** on the rail — left tuck is clipped by the screen edge.
 - **Combat pickers:** `.combat-hud > .tabbed-picker { left: 240px }` so the modal does not cover the rail bookmark.
 - **Labels:** `RailMenuFocus.ConfigureButton` migrates `Button.text` → child `rail-menu__item-label` so long names wrap with the chip (no fixed-width label hack).
+- **Focus colors (inverted):** unfocused tucked chips use threat fill + white labels; focused/selected pokes use white fill + threat labels — not the default `MenuThreatFocus.uss` recipe. Authority: [menu threat focus § Command rail inverted focus](menu-threat-focus-style.md#command-rail-inverted-focus-phase-2).
 
 ### Consumers (vertical)
 
