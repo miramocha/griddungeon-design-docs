@@ -12,7 +12,7 @@ How Grid Dungeon sandwiches **3D environment → UITK backdrop → 3D characters
 
 **Authority:** [ADR 049 — UI camera stack](../../decisions/049-ui-camera-stack.md)  
 **Shipped:** [griddungeon-game#428](https://github.com/miramocha/griddungeon-game/issues/428) (layer routing) · [griddungeon-game#430](https://github.com/miramocha/griddungeon-game/issues/430) / [PR #431](https://github.com/miramocha/griddungeon-game/pull/431) (party menu hero backdrop)  
-**Related:** [centralized UI services](centralized-ui-services.md), [presentation shell implementation](presentation-shell-implementation.md), [ADR 033 — Hub Cinemachine](../../decisions/033-hub-environment-cinemachine.md), [ADR 047 — Party menu 3D stage](../../decisions/047-party-menu-3d-stage.md)
+**Related:** [centralized UI services](centralized-ui-services.md), [presentation shell implementation](presentation-shell-implementation.md), [world-space UITK cover-fit](world-space-uitk-cover-fit.md), [ADR 033 — Hub Cinemachine](../../decisions/033-hub-environment-cinemachine.md), [ADR 047 — Party menu 3D stage](../../decisions/047-party-menu-3d-stage.md)
 
 ---
 
@@ -91,7 +91,7 @@ Char overlay clear flags: **Depth only** (do not wipe env color).
 ### Runtime notes (shipped)
 
 - `UiStackOverlay` child on base camera — legacy `UiStackOverlay1_Backdrop` / `UiStackOverlay2_Characters` names removed at runtime.
-- `SetBackdrop(UIDocument)` → Stack when document is active; `UiBackdropWorldPanelSync` assigns `UiBackdrop` layer and syncs cover transform from base camera each frame.
+- `SetBackdrop(UIDocument)` → Stack when document is active; `UiBackdropWorldPanelSync` assigns `UiBackdrop` layer and syncs cover from base camera each frame (`worldSpaceSize` + position/rotation; `localScale` 1).
 - `SetCharacterDrawLayer(root, foreground, backdropSplitActive)` — foreground → `UiCharacters`; non-focused during backdrop split → `UiEnvironment`.
 - **MToon roster** stays on char overlay pass — do not merge focused characters onto base pass in this phase.
 - `UiBackdropDefaults.PanelDistanceFromNearClip` (50 world units from near clip) + `UiBackdropCoverLayout` (1920×1080 reference, `WorldPanelPixelsPerUnit` 100).
@@ -101,12 +101,15 @@ Char overlay clear flags: **Depth only** (do not wipe env color).
 
 ## World-space backdrop tuning
 
+Full algorithm, aspect priority, and reuse checklist: **[world-space UITK cover-fit](world-space-uitk-cover-fit.md)** ([#439](https://github.com/miramocha/griddungeon-game/pull/439)).
+
 | Constant / type | Role |
 |-----------------|------|
 | `UiBackdropDefaults.PanelDistanceFromNearClip` | Offset from camera near clip to backdrop plane (world units) |
-| `UiBackdropDefaults.ReferenceWidth` / `ReferenceHeight` | 1920×1080 cover reference |
-| `UiBackdropCoverLayout` | CSS object-fit **cover** sizing from live camera aspect |
-| `UiBackdropWorldPanelSync` | Per-frame position/rotation/scale from base camera while Stack active |
+| `UiBackdropDefaults.ReferenceWidth` / `ReferenceHeight` | 1920×1080 bootstrap seed; runtime width = `1080 × liveAspect` |
+| `UiBackdropDefaults.WorldPanelPixelsPerUnit` | 100 — panel pixels → world units (`PanelSettings.referenceSpritePixelsPerUnit`) |
+| `UiBackdropCoverLayout` | CSS object-fit **cover** — `ComputeWorldSpacePanelSize`, `ComputeLiveAspect`, frustum measure |
+| `UiBackdropWorldPanelSync` | Per-frame `worldSpaceSize` + position/rotation from base camera while Stack active; **`localScale` stays 1** |
 
 **MToon constraint:** roster characters use MToon as authored; sandwich ordering uses layers + overlay pass, not character shader queue edits.
 
@@ -236,8 +239,8 @@ Only backdrop visibility affects SingleCam vs Stack — not overlay HUD document
 | `PartyMenuClassBackdrop` | Static facade (`Show` / `Hide` / `ActivateMemberFocus` / `SyncRosterNames`) |
 | `PartyMenuClassBackdropContentTransition` | Label fade timing aligned with silhouette reveal |
 | `UiBackdropDocumentSetup` | Runtime `PanelSettings` clone + `WorldSpace` bind |
-| `UiBackdropWorldPanelSync` | Layer + per-frame cover sync from base camera |
-| `UiBackdropCoverLayout` | Cover math (1920×1080 reference) |
+| `UiBackdropWorldPanelSync` | Layer + per-frame cover sync (`worldSpaceSize`, transform pose) |
+| `UiBackdropCoverLayout` | Cover math — see [world-space UITK cover-fit](world-space-uitk-cover-fit.md) |
 | `UiCameraStackRig` | Applies `OffMask` / `SingleCamMask` / `StackBaseMask`; syncs overlay lens |
 
 ---
@@ -281,10 +284,10 @@ Post: one camera only in stack modes. Geometry ≤10 chars is not the bottleneck
 **Verification checklist:**
 
 1. `PartyMenuClassBackdropPresenter` shows on member focus; `SetBackdrop` active in Stack.
-2. World-space panel on `UiBackdrop`; cover sync tracks Cinemachine base camera orbit/overview.
+2. World-space panel on `UiBackdrop`; cover sync tracks Cinemachine base camera orbit/overview (`worldSpaceSize` resize, not transform scale — [cover-fit](world-space-uitk-cover-fit.md)).
 3. Non-focused roster on `UiEnvironment`; focused on `UiCharacters`.
 4. Overlay lens matches base (`UiCameraStackRig.SyncStackOverlayLensFromBase`).
-5. Backdrop root `pickingMode = Ignore`; global HUD unchanged.
+5. Backdrop root `pickingMode = Ignore`; global HUD unchanged. Equip row labels use `Ignore`; interactive worn-slot rows opt into `Position` via `PartyMenuBackdropWornSlotsView` — see [backdrop worn equipment](centralized-ui-services.md#party-menu-backdrop-worn-equipment).
 
 **Manual Frame Debugger:** base pass → env + world backdrop sphere; stack overlay → hero UITK + focused roster; Screen Overlay HUD last.
 
@@ -308,7 +311,7 @@ RT quad on base pass, presentation VFX (occlusion silhouette) on `UiCharacters` 
 - `go.layer =` outside session helpers
 - Registering exploration `FloorArtPresenter` roots
 - **`m_RenderMode = 1` on UITK assuming Screen Space - Camera** — value `1` is `WorldSpace`
-- **Expecting overlay/world-space UITK to sandwich without `UiBackdrop` layer + per-frame sync**
+- **Expecting overlay/world-space UITK to sandwich without `UiBackdrop` layer + per-frame `worldSpaceSize` sync** — see [world-space UITK cover-fit](world-space-uitk-cover-fit.md)
 - **Tag-every-`Instantiate` policy** — use presentation spawn standard only ([ADR 049 §6](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/049-ui-camera-stack.md))
 - **Relying on Default for camera masks** — use explicit `Ui*` / `Exploration` layers ([ADR 049 §7](https://github.com/miramocha/griddungeon-design-docs/blob/main/decisions/049-ui-camera-stack.md))
 - **Ban Default layer entirely** — phased standard instead; see §7

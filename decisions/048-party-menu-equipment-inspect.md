@@ -14,7 +14,9 @@ tags:
 
 ## Context
 
-Equipment pane lets player engage worn slots (weapon/head/body/legs/accessory) on `CharacterDetailView`. ADR 047 ships member orbit on the hex stage when the party floater is docked, but worn-slot focus was UI-only — no pose change, no floater retract, no per-slot camera framing.
+Equipment pane lets player engage worn slots (weapon/head/body/legs/accessory) on the world-space **class backdrop** (`PartyMenuBackdropWornSlotsView` on `PartyMenuClassBackdrop`). ADR 047 ships member orbit on the hex stage when the party floater is docked, but worn-slot focus was UI-only — no pose change, no floater retract, no per-slot camera framing.
+
+**Implementation note (2026-07):** Formation / Equipment worn rows moved off `CharacterDetailView` onto the backdrop; equip tag/value opacity is owned by `PartyMenuBackdropEquipValueChrome` ([#441](https://github.com/miramocha/griddungeon-game/issues/441)). Dual-owner traps: [centralized UI gotchas § worn equip rows](../docs/04-dev/centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners).
 
 ## Decision
 
@@ -22,7 +24,7 @@ Equipment pane lets player engage worn slots (weapon/head/body/legs/accessory) o
 
 | Rule | Choice |
 |------|--------|
-| **When** | Player presses **Z** to engage worn slots on Equipment (`CharacterDetailView.IsSlotsEngaged`) |
+| **When** | Player presses **Z** to engage worn slots on Equipment (`PartyMenuBackdropWornSlotsView.IsSlotsEngaged`) |
 | **Member** | Focused core on party floater must already be selected (WASD on floater before engage) |
 | **Exit** | **X** disengage slots → floater re-docks, grid idle pose, head Look At orbit |
 
@@ -54,7 +56,7 @@ Same `AnimatorOverrideController` path as grid idle (`PartyCharacterVisualPose.A
 
 | Rule | Choice |
 |------|--------|
-| **When** | **Z** on an engaged worn slot (`CharacterDetailView` slot focus) |
+| **When** | **Z** on an engaged worn slot (`PartyMenuBackdropWornSlotsView` slot focus) |
 | **UI** | `PartyEquipmentPickerFloater` centralized service — sort **256**, bone-projected via `UiWorldOverlayAnchor` |
 | **Not** | Party bag modal (`ItemListInventory`) — filtered rows for slot + class only |
 | **Exit** | **X** closes picker; worn-slot engage stays active |
@@ -75,7 +77,9 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 
 | Layer | Owner |
 |-------|--------|
-| Slot engage / W/S | `PartyEquipmentToolkitView`, `CharacterDetailView` |
+| Backdrop equip value text / opacity | `PartyMenuBackdropEquipValueChrome` (`PartyMenuBackdropMeterRows.cs`) |
+| Slot engage / W/S | `PartyMenuBackdropWornSlotsView`, `PartyEquipmentToolkitView` coordinator |
+| Backdrop ↔ floater sync | `PartyMenuEquipmentPaneHost`, `PartyMenuBackdropWornSlotsCoordinator` |
 | Equip picker floater | `PartyEquipmentPickerFloaterPresenter`, `PartyEquipmentPickerFloater` |
 | Floater retract + stage sync | `PartyMenuOverlayView.SyncPartyMenuStageMemberFocus` |
 | Equip inspect session | `PartyMenuStagePresenter` / `PartyMenuStage` facade |
@@ -118,4 +122,6 @@ Reuse **`CM_FormationOrbit`** — no third vcam for v1.
 ## Related
 
 - [Custom party UI — Equipment menu](../docs/04-dev/custom-party-ui.md#equipment-menu-party-pause)
+- [Centralized UI services — backdrop worn equipment](../docs/04-dev/centralized-ui-services.md#party-menu-backdrop-worn-equipment)
+- [Centralized UI gotchas — worn equip rows](../docs/04-dev/centralized-ui-gotchas.md#party-menu-backdrop--worn-equip-rows-dual-dom-owners)
 - [ADR 047 — Party menu 3D stage](047-party-menu-3d-stage.md)

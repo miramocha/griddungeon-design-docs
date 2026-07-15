@@ -183,7 +183,7 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 - Project layers: `UiEnvironment`, `UiCharacters`, `UiBackdrop`, `UiWorldBackdrop` (phase 1); `Exploration` (+ optional `PresentationIdle`) in phase 2; tags in `TagManager`.
 - Spawn sites tag roots; register/unregister with phase presenters.
 - Party menu: `PartyMenuClassBackdropPresenter` + `PartyMenuClassBackdrop.uxml`; `SetCharacterDrawLayer` splits non-focused (`UiEnvironment`) vs focused (`UiCharacters`) during member focus; hero label on `UiBackdrop` overlay pass — shipped [#430](https://github.com/miramocha/griddungeon-game/issues/430) / [PR #431](https://github.com/miramocha/griddungeon-game/pull/431).
-- Dev guide: [ui-camera-stack.md](../docs/04-dev/ui-camera-stack.md).
+- Dev guide: [ui-camera-stack.md](../docs/04-dev/ui-camera-stack.md) · Cover math: [world-space-uitk-cover-fit.md](../docs/04-dev/world-space-uitk-cover-fit.md)
 
 ## Backdrop sandwich (shipped — [#430](https://github.com/miramocha/griddungeon-game/issues/430))
 
@@ -192,7 +192,7 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 **Shipped (world-space overlay pass):**
 
 1. `PartyMenuClassBackdropPresenter` binds `UiBackdropPanelSettings` + `PartyMenuClassBackdrop.uxml` via `UiBackdropDocumentSetup` (runtime clone, `WorldSpace`, `targetTexture = null`).
-2. `SetBackdrop` → Stack mode; backdrop root on `UiBackdrop`; `UiBackdropWorldPanelSync` applies CSS **object-fit: cover** sizing (`UiBackdropCoverLayout`, 1920×1080 reference) and syncs transform from base camera each frame while Stack is active.
+2. `SetBackdrop` → Stack mode; backdrop root on `UiBackdrop`; `UiBackdropWorldPanelSync` applies CSS **object-fit: cover** via `UIDocument.worldSpaceSize` (`UiBackdropCoverLayout`, 1920×1080 reference height + live aspect width) and syncs pose from base camera each frame while Stack is active — see [world-space UITK cover-fit](../docs/04-dev/world-space-uitk-cover-fit.md) ([#439](https://github.com/miramocha/griddungeon-game/pull/439)).
 3. `SetCharacterDrawLayer(root, foreground, backdropSplitActive)` — non-focused roster → `UiEnvironment` (base); focused → `UiCharacters` (overlay with backdrop).
 4. Stack overlay camera lens copied from base (`UiCameraStackRig.SyncStackOverlayLensFromBase`) — required for **MToon** roster (character render queue not tunable for manual sandwich ordering).
 5. Backdrop root `pickingMode = Ignore`; label reveal timed with silhouette (`PartyMenuClassBackdropContentTransition`).
@@ -214,5 +214,6 @@ Closed: [griddungeon-game#430](https://github.com/miramocha/griddungeon-game/iss
 ## References
 
 - [UI camera stack (dev)](../docs/04-dev/ui-camera-stack.md)
+- [World-space UITK cover-fit (dev)](../docs/04-dev/world-space-uitk-cover-fit.md)
 - [Centralized UI services](../docs/04-dev/centralized-ui-services.md)
 - [Party menu 3D stage (ADR 047)](047-party-menu-3d-stage.md)
