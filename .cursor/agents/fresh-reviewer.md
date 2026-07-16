@@ -18,12 +18,13 @@ You are a **skeptical, independent** reviewer. You did **not** write the changes
 - **Production test seams:** when the diff touches `Assets/Scripts/**/*.cs`, read **`productionTestSeams.rule`** from **`.cursor/review-config.json`** (default: `unity-test-seams.mdc`) per **`code-review-config.mdc`**. Flag new `#if UNITY_EDITOR` / `UnityEditor` in Runtime, prod paths reading `*ForTests`, and test-only branches.
 - **Common pitfalls:** when **any** changed path matches **`commonPitfalls.pathGlobs`** in **`.cursor/review-config.json`**, read **`commonPitfalls.rule`** (default: `unity-common-pitfalls.mdc`) per **`code-review-config.mdc`**. Cross-check Unity traps, handoff `using` rules, and Edit Mode `EditModeCoroutineUtil` hang patterns on C# / test changes.
 - **UI gotchas:** when **any** changed path matches **`uiGotchas.pathGlobs`** in **`.cursor/review-config.json`**, read **`uiGotchas.centralizedDoc`**, **`uiGotchas.presentationShellDoc`** (when the diff touches presentation bus/shell code), and each **`uiGotchas.rules`** file per **`code-review-config.mdc`**. Cross-check documented symptom → cause → fix before flagging UITK / party-menu / shell wiring.
+- **Sandbox isolation:** when **any** changed path matches **`sandboxIsolation.scanPathGlobs`**, or any changed path is outside **`sandboxIsolation.sandboxRoot`** (except `Assets/Sandbox/README.md`), read **`sandboxIsolation.rule`** per **`code-review-config.mdc`**. Grep the diff for `Assets/Sandbox` / production → Sandbox deps; flag matches as **Blocker**.
 - For `Assets/GridDungeon/**` (if present), enforce `.cursor/rules/griddungeon-assembly-structure.mdc`.
 
 ## Workflow
 
 1. Run `git status` and review the target diff (`git show HEAD` after a fresh commit, `git diff` on branch, or `--staged` when relevant).
-2. Read **`.cursor/review-config.json`** per **`code-review-config.mdc`** — class naming when types added/renamed; **`productionTestSeams.rule`** when `Assets/Scripts/**/*.cs` changed; **`commonPitfalls.rule`** when any changed path matches **`commonPitfalls.pathGlobs`**; **`uiGotchas`** when any changed path matches **`uiGotchas.pathGlobs`**.
+2. Read **`.cursor/review-config.json`** per **`code-review-config.mdc`** — class naming when types added/renamed; **`productionTestSeams.rule`** when `Assets/Scripts/**/*.cs` changed; **`commonPitfalls.rule`** when any changed path matches **`commonPitfalls.pathGlobs`**; **`uiGotchas`** when any changed path matches **`uiGotchas.pathGlobs`**; **`sandboxIsolation.rule`** when any changed path matches **`sandboxIsolation.scanPathGlobs`** or is outside **`sandboxIsolation.sandboxRoot`** (except Sandbox README).
 3. Read **only** changed files and callers/callees needed to judge behavior.
 4. Apply the **code-review-unity** skill checklist (severity: Blocker / Should fix / Nit).
 5. Do **not** defend design choices from chat; judge what the diff actually does.

@@ -25,5 +25,18 @@
     "rules": [
       "centralized-ui-services.mdc"
     ]
+  },
+  "sandboxIsolation": {
+    "rule": "unity-sandbox-isolation.mdc",
+    "sandboxRoot": "Assets/Sandbox",
+    "scanPathGlobs": [
+      "Assets/Scripts/**/*.cs",
+      "Assets/Tests/**/*.cs",
+      "Assets/PlayModeTests/**/*.cs",
+      "Assets/UI/**",
+      "Assets/Scenes/**",
+      "Assets/Content/**",
+      "Assets/**/*.asmdef"
+    ]
   }
 }
