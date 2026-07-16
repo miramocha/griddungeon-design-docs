@@ -11,6 +11,8 @@ globs:
 
 C# mirror for 3D / fades: `GridDungeon.Runtime.Characters.GridDungeonPalette` (`Assets/Scripts/Runtime/Characters/GridDungeonUiPalette.cs`).
 
+Editor color picker swatches: `Assets/UI/Settings/GridDungeonUiPalette.colors` — sync from dark palette USS via **GridDungeon → UI → Sync Color Presets from UITK Palette** (`GridDungeonUiPalettePresetSync`).
+
 ## Rule
 
 | Layer | Color source |
