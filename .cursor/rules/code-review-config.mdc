@@ -1,5 +1,5 @@
 ---
-description: review-config.json — classNaming, productionTestSeams, commonPitfalls, and uiGotchas rules; read before creating types and at review start.
+description: review-config.json — classNaming, productionTestSeams, commonPitfalls, uiGotchas, and sandboxIsolation rules; read before creating types and at review start.
 alwaysApply: false
 ---
 
@@ -26,6 +26,7 @@ Before **fresh-reviewer**, **code-review-unity**, post-commit review, or close-o
 3. **Production test seams** — when the diff touches `Assets/Scripts/**/*.cs` (Runtime, UI, Core, Campaign — not `Editor/` only), read **`productionTestSeams.rule`** (default: `unity-test-seams.mdc`) and flag new `#if UNITY_EDITOR` / `UnityEditor` in Runtime, prod paths reading `*ForTests`, and test-only branches.
 4. **Common pitfalls** — when the diff touches any path in **`commonPitfalls.pathGlobs`**, read **`commonPitfalls.rule`** (default: `unity-common-pitfalls.mdc`). Cross-check Unity traps, handoff `using` rules, and Edit Mode `EditModeCoroutineUtil` hang patterns before judging C# / test changes.
 5. **UI gotchas** — when the diff touches any path in **`uiGotchas.pathGlobs`**, read **`uiGotchas.centralizedDoc`** and **`uiGotchas.presentationShellDoc`** (when set), plus each file in **`uiGotchas.rules`**. Cross-check symptom → cause → fix tables before judging UITK / party-menu / presentation-shell changes.
+6. **Sandbox isolation** — when **any** changed path matches **`sandboxIsolation.scanPathGlobs`**, or any changed path is outside **`sandboxIsolation.sandboxRoot`** (except `Assets/Sandbox/README.md`), read **`sandboxIsolation.rule`** and grep the diff for production → Sandbox dependencies.
 
 Otherwise use the paths below — do **not** hardcode project-specific doc URLs in review prompts.
 
@@ -43,6 +44,9 @@ Otherwise use the paths below — do **not** hardcode project-specific doc URLs 
 | `uiGotchas.presentationShellDoc` | No | Presentation bus shell gotchas — HTTPS URL or repo-relative path |
 | `uiGotchas.pathGlobs` | No | Glob list; gate activates when **any** changed path matches **any** glob (`**` = any segment) |
 | `uiGotchas.rules` | No | Filenames under `.cursor/rules/` — domain rules to read with gotcha docs (e.g. `centralized-ui-services.mdc`) |
+| `sandboxIsolation.rule` | No | Filename under `.cursor/rules/` — block production deps on gitignored `Assets/Sandbox/` (e.g. `unity-sandbox-isolation.mdc`) |
+| `sandboxIsolation.sandboxRoot` | No | Sandbox folder root (default intent: `Assets/Sandbox`) |
+| `sandboxIsolation.scanPathGlobs` | No | Production path globs; gate also runs when any changed path is outside `sandboxRoot` |
 
 ## Review workflow
 
@@ -72,6 +76,13 @@ When `uiGotchas` is configured and **any** changed path matches **`uiGotchas.pat
 3. Read each file listed in **`uiGotchas.rules`** under `.cursor/rules/`.
 4. **Flag as Should fix or Blocker:** patterns that repeat documented gotchas (DevBootstrap-only refs in player builds, missing `Resources` bootstrap, silhouette layer weight, PopIn exit races, stale bus snapshots, USS hard cuts instead of `UiToolkitTweens`, etc.).
 5. Pass gotcha doc paths/URLs and **`uiGotchas.rules`** in **fresh-reviewer** prompts whenever the path gate matches.
+
+When `sandboxIsolation` is configured and **any** changed path matches **`sandboxIsolation.scanPathGlobs`**, or any changed path is outside **`sandboxIsolation.sandboxRoot`** (except `Assets/Sandbox/README.md`):
+
+1. Read **`sandboxIsolation.rule`** before reviewing.
+2. Grep **all changed files** in the diff for `Assets/Sandbox`, `Assets\\Sandbox`, and sandbox-only types/namespaces.
+3. **Flag as Blocker:** any production → Sandbox dependency (serialized refs, load paths, asmdef edges, shipped scenes requiring sandbox objects).
+4. Pass **`sandboxIsolation.rule`** in **fresh-reviewer** prompts whenever the path gate matches.
 
 **Path gate:** normalize changed paths to forward slashes; match each path against each glob (simple `**` segment wildcard — same intent as git pathspecs).
 

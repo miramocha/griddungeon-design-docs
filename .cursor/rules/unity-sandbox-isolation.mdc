@@ -1,0 +1,58 @@
+---
+description: Code review — block production dependencies on gitignored Assets/Sandbox experiments (griddungeon-game).
+alwaysApply: false
+---
+
+# Sandbox isolation (code review)
+
+Authority: [griddungeon-game — Assets/Sandbox/README.md](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Sandbox/README.md), game repo `.gitignore` (`Assets/Sandbox/*` except README).
+
+`Assets/Sandbox/` holds **local, gitignored** experiments. Production code, shipped assets, tests, and CI must **never** depend on sandbox content — clones and agents may not have those files.
+
+## One-way dependency
+
+| Direction | Allowed? |
+|-----------|----------|
+| Sandbox → production (`Assets/Scripts`, `Assets/UI`, …) | **Yes** — experiments compose shipped APIs |
+| Production → Sandbox | **No** — **Blocker** in review |
+
+## When to run
+
+Read this rule when **`sandboxIsolation`** is set in **`.cursor/review-config.json`** and **any changed path** matches **`sandboxIsolation.scanPathGlobs`** (or any changed path is **outside** `Assets/Sandbox/` except `Assets/Sandbox/README.md`).
+
+Scan **every changed file** in the diff (not only files matching `scanPathGlobs`) for sandbox dependency patterns below.
+
+## Blocker — production depends on Sandbox
+
+Flag **Blocker** when tracked / production paths reference sandbox assets or types:
+
+| Pattern | Examples |
+|---------|----------|
+| Asset path string | `Assets/Sandbox`, `Assets\\Sandbox`, `"Sandbox/Experiments/…"` |
+| C# type / namespace from sandbox scripts | `using GridDungeon.Sandbox`, `[SerializeField] Sandbox*` types defined only under `Assets/Sandbox/` |
+| `SerializeField` / prefab / scene YAML | GUID or path to `.cs`, `.unity`, `.prefab`, `.mat` under `Assets/Sandbox/` |
+| Asset load API | `AssetDatabase.LoadAssetAtPath<…>("Assets/Sandbox/…")`, `Resources.Load` paths into Sandbox |
+| asmdef edge | Production `.asmdef` `references` or `includePlatforms` pulling in a Sandbox-only asmdef |
+| Menu / bootstrap wiring | `DevBootstrapSceneCreator`, `GameState`, phase HUDs, or shipped scenes requiring a Sandbox scene/object to function |
+
+**Fix:** Move the type/asset into a tracked folder (`Assets/Scripts`, `Assets/UI`, …) or remove the reference; keep the experiment fully under `Assets/Sandbox/` with no inbound links.
+
+## OK (do not block)
+
+| Case | Why |
+|------|-----|
+| Changes **only** under `Assets/Sandbox/**` | Local experiment; not in git |
+| `Assets/Sandbox/README.md` | Tracked pointer doc |
+| Comment mentioning Sandbox as “do not reference” | Documentation only — no compile/load edge |
+| `.gitignore` / review-config / this rule | Policy, not a runtime dependency |
+
+## Reviewer checklist
+
+1. Grep changed files for `Assets/Sandbox`, `Assets\\Sandbox`, and `GridDungeon.Sandbox` (if used).
+2. For changed `.unity` / `.prefab` / `.asset` outside Sandbox: confirm no new `guid:` pointing at paths under `Assets/Sandbox/` (when path visible in diff or sidecar `.meta` in the same change set).
+3. For changed `.asmdef`: confirm no reference to a Sandbox assembly.
+4. **Block merge / close-out** until Blockers are removed or the dependency is promoted out of Sandbox into tracked assets.
+
+## Agent / PR
+
+Pass **`sandboxIsolation.rule`** in **fresh-reviewer** prompts when the path gate matches (**`code-review-config.mdc`**).
