@@ -203,7 +203,7 @@ Post-processing: **one** camera in the stack (base or char overlay — profile i
 
 ## Deferred alternatives
 
-**RT → env-layer quad:** UITK `PanelSettings.targetTexture` + screen-aligned quad on base pass — fallback if world-space backdrop depth proves fragile on a target platform. Spike assets may exist under `Assets/UITKBackdrop.*` but are **not** the shipped path.
+**RT → env-layer quad:** UITK `PanelSettings.targetTexture` + screen-aligned quad on base pass — fallback if world-space backdrop depth proves fragile on a target platform. Spike assets: `Assets/Shaders/Graph/UI/UITKBackdrop.shadergraph` + `Assets/UI/Materials/UITKBackdrop.mat` — **not** the shipped path.
 
 **URP Render Objects** and presentation VFX (e.g. character silhouette when occluded) — optional ([#429](https://github.com/miramocha/griddungeon-game/issues/429)).
 
