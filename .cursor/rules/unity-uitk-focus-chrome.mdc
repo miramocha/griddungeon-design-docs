@@ -1,0 +1,34 @@
+---
+description: UITK focus chrome — three shared USS variants (filled / invert / transparent) for menu rows and chips.
+globs:
+  - "**/*.{uxml,uss}"
+---
+
+# UITK focus chrome
+
+Authority: [uitk-focus-chrome.md](../docs/04-dev/uitk-focus-chrome.md). Focus class: `menu-item--focused` ([ADR 026](../decisions/026-combat-menu-focus-navigation.md)).
+
+## Three variants
+
+| Variant | Class | Unfocused | Focused |
+|---------|-------|-----------|---------|
+| **Filled** (default) | `menu-focus-filled` | primary bg · white labels | white bg · primary labels |
+| **Invert** | `menu-focus-invert` | white bg · primary labels | primary bg · white labels |
+| **Transparent** | `menu-focus-transparent` | transparent · primary labels | white bg · primary labels |
+
+Tokens: `var(--gd-primary)`, `var(--gd-white)`, `var(--gd-transparent)`. Combat harm only: `var(--gd-danger)` / `var(--gd-danger-muted)` — not focus chrome.
+
+Shared USS (game repo): `MenuFocusFilled.uss`, `MenuFocusInvert.uss`, `MenuFocusTransparent.uss`, `MenuFocusNestedAccent.uss`, `MenuFilledChipButton.uss`.
+
+## Agent checklist
+
+1. Pick variant **before** adding row/chip color rules — do not fork per-screen fill/label pairs.
+2. Add one variant class on row/button root; `MenuFocusNavigator` toggles `menu-item--focused`.
+3. Screen USS may override **layout** only; colors come from shared variant USS.
+4. Nested qty/MP badge on focused filled/transparent rows → `MenuFocusNestedAccent.uss`.
+5. Flat corners: `border-width: 0`, `border-radius: 0` unless documented exception ([uitk-focus-chrome.md § Flat corners](../docs/04-dev/uitk-focus-chrome.md)).
+6. **Opacity:** steady-state chrome `0` or `1` only; transitions may tween.
+
+## Tabbed pickers
+
+Item + skill: primary shell overlay, `ItemListRow.uss`, `menu-focus-filled`. C#: `FocusFilledClass`, `ConfigureFilledChipButton`.

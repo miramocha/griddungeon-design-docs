@@ -10,7 +10,7 @@ tags:
 
 How **rail menus**, **item list pickers**, and **skill use pickers** share UITK building blocks in [griddungeon-game](https://github.com/miramocha/griddungeon-game). Use this when skinning hub/combat/party chrome, adding a new tabbed modal, or deciding whether to extend an existing view vs fork.
 
-**Related:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md) (`MenuFocusNavigator`, `menu-item--focused`), [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md), [ADR 036 — Party inventory model](../../decisions/036-party-inventory-model.md), [custom skill picker UI](custom-skill-picker-ui.md), [UI event contract](ui-event-contract.md), [menu threat focus & backdrop UI style](menu-threat-focus-style.md) (threat focus recipe for rails and picker rows — [#442](https://github.com/miramocha/griddungeon-game/issues/442)).
+**Related:** [ADR 026 — Combat menu focus navigation](../../decisions/026-combat-menu-focus-navigation.md) (`MenuFocusNavigator`, `menu-item--focused`), [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md), [ADR 036 — Party inventory model](../../decisions/036-party-inventory-model.md), [custom skill picker UI](custom-skill-picker-ui.md), [UI event contract](ui-event-contract.md), [menu primary focus & backdrop UI style](menu-primary-focus-backdrop-style.md) (backdrop/meter epic — [#442](https://github.com/miramocha/griddungeon-game/issues/442); row focus: [UITK focus chrome](uitk-focus-chrome.md)).
 
 **Shipped ([#185](https://github.com/miramocha/griddungeon-game/issues/185)):** `WindowedListPaneView` (8-row windowing + `IListFocusNavigator`), unified `ItemListPickerView` / `RailMenuFocus` across hub shop, party bag, and combat item picker; tabbed overlays use a **transparent** full-screen host (no modal dim).
 
@@ -164,7 +164,7 @@ flowchart TB
 | **Horizontal chips** | `RailMenuFocus.CreateHorizontal(host)` | `RailMenuView` builds `rail-menu__item` + `rail-menu__item-label` | **`--selected`** on active tab (Q/E or click) |
 | **Vertical focus rail** | `RailMenuFocus.CreateVerticalFocus()` | Existing UXML `Button`s; `ConfigureButton` adds `rail-menu__item` | **`menu-item--focused`** via `SetFocusItems`; optional **`--selected`** via `BindSelectionTargets` (party section) |
 
-**Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need combined selectors for focus/selected (e.g. `.rail-menu__item.unity-button.menu-threat-focus-row.menu-item--focused`). Vertical bookmark chips use the **inverted** color recipe in `CommandPanel.uss` — see [menu threat focus](menu-threat-focus-style.md#command-rail-inverted-focus-phase-2).
+**Styles:** `Assets/UI/Screens/Shared/RailMenu.uss` (imported by `CommandPanel.uss` and `TabbedPicker.uss`). Unity `Button` rails need combined selectors for focus/selected (e.g. `.rail-menu__item.unity-button.menu-focus-filled.menu-item--focused`). Vertical bookmark chips use **filled chip button** overrides in `MenuFilledChipButton.uss` — see [menu primary focus § Command rail](menu-primary-focus-backdrop-style.md#command-rail-filled-chip-focus-phase-2).
 
 ### Vertical rail bookmark (focus poke)
 
@@ -187,7 +187,7 @@ Horizontal tab chips stay compact (`11px` / `26px` min-height). **Vertical** com
 - **No `overflow: hidden`** on the rail — left tuck is clipped by the screen edge.
 - **Combat pickers:** `.combat-hud > .tabbed-picker { left: 240px }` so the modal does not cover the rail bookmark.
 - **Labels:** `RailMenuFocus.ConfigureButton` migrates `Button.text` → child `rail-menu__item-label` so long names wrap with the chip (no fixed-width label hack).
-- **Focus colors (inverted):** unfocused tucked chips use threat fill + white labels; focused/selected pokes use white fill + threat labels — not the default `MenuThreatFocus.uss` recipe. Authority: [menu threat focus § Command rail inverted focus](menu-threat-focus-style.md#command-rail-inverted-focus-phase-2).
+- **Focus colors (filled):** unfocused tucked chips use primary fill + white labels; focused/selected pokes use white fill + primary labels via `menu-focus-filled`. Authority: [UITK focus chrome](uitk-focus-chrome.md).
 
 ### Consumers (vertical)
 
@@ -560,15 +560,16 @@ flowchart LR
 | Shared | Skill-specific |
 |--------|----------------|
 | `PickerTabStripView` + `RailMenu.uss` tabs | `SkillPickerPresentationModel` / `SkillPickerRowModel` |
-| `WindowedListPaneView` + `WindowedList.uss` | Row DOM: `skill-picker__row` in `SkillUsePicker.uss` |
-| `TabbedPicker.uss` shell | `CreateRowElement` inline in view (name, cost, disabled reason) |
-| `MenuFocusNavigator` on rows | `ISkillUsePickerView` / `ITabbedRowPickerKeyboardView` ports (shared keyboard contract — [#232](https://github.com/miramocha/griddungeon-game/issues/232); replaces deleted `ICombatSkillPickerKeyboardView` / `ICombatItemPickerKeyboardView`) |
+| `WindowedListPaneView` + `WindowedList.uss` | `SkillUsePickerOverlay.uxml` service host |
+| `TabbedPicker.uss` + primary shell overlay | `SkillUsePickerToolkitView` (not `ItemListPickerView`) |
+| `ItemListRow.uss` + `ItemListRowBuilder` rows (`menu-focus-filled`, MP badge) | `ISkillUsePickerView` / field + combat hosts |
+| `MenuFocusNavigator` on rows | `ITabbedRowPickerKeyboardView` (+ legacy `ICombatSkillPickerKeyboardView` alias) |
 
-**Not** using `ItemListPickerView` today — skill rows have a different column layout (MP cost, disabled reason) and a Runtime presentation type owned by ADR 035. A future refactor could introduce a generic `TabbedListPickerView<TRow>` or a row-builder delegate; Launch keeps **`SkillUsePickerToolkitView`** separate to avoid coupling item economy to combat skill catalog.
+**View split:** skill catalog/presentation differs from item economy, but **row chrome is shared** (`ItemListRowBuilder.AppendTextBadge` for `CostLabel`). See [UITK focus chrome](uitk-focus-chrome.md).
 
 ### UXML
 
-`Assets/UI/Screens/Combat/SkillUsePicker.uxml` — same shell classes as shop picker; row host `skill-picker-rows` (class `windowed-list`).
+`Assets/UI/Screens/Shared/SkillUsePickerOverlay.uxml` — same shell classes as item picker; row host `skill-picker-rows` (class `windowed-list`).
 
 ---
 
@@ -708,7 +709,7 @@ Manual: Dev bootstrap **F1** hub shop (W/S rows after Buy/Sell), **Tab** party i
 | `Assets/Scripts/UI/Views/ItemListInventoryPresenter.cs` | Context machine + single `ItemListPickerView` host |
 | `Assets/Scripts/UI/Views/ItemListInventory.cs` | Static facade for phase views |
 | `Assets/UI/Screens/Shared/ItemListPicker.uxml` | Reference shell / Edit Mode fixtures |
-| `Assets/UI/Screens/Combat/SkillUsePicker.uxml` | Skill modal template |
+| `Assets/UI/Screens/Shared/SkillUsePickerOverlay.uxml` | Skill picker service overlay |
 | `Assets/Scripts/UI/Views/RailMenuFocus.cs` | Rail facade |
 | `Assets/Scripts/UI/Views/PickerTabStripView.cs` | Horizontal tabs |
 | `Assets/Scripts/UI/Views/WindowedListPaneView.cs` | Windowed list + `IListFocusNavigator` (#185) |

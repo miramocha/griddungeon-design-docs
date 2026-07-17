@@ -26,7 +26,7 @@ Editor color picker swatches: `Assets/UI/Settings/GridDungeonUiPalette.colors` �
 
 - **Swatches:** `--gd-swatch-01` … `--gd-swatch-10`
 - **Neutrals:** `--gd-base`, `--gd-surface`, `--gd-chrome`, `--gd-ink`, `--gd-muted`, alpha variants (`--gd-base-a78`, …)
-- **Semantic:** `--gd-accent`, `--gd-threat`, `--gd-ally`, `--gd-protocol`, `--gd-focus-bg`, …
+- **Semantic:** `--gd-accent`, `--gd-primary`, `--gd-danger`, `--gd-danger-muted`, `--gd-ally`, `--gd-protocol`, `--gd-focus-bg`, …
 - **Feature-specific:** `--gd-map-*`, `--gd-story-*`, `--gd-bar-*` — add when a screen needs a role not covered by neutrals/semantic
 
 Reuse existing tokens before adding new ones. If the literal already matches a token value, swap — do not duplicate under a second name.
@@ -63,8 +63,8 @@ Reuse existing tokens before adding new ones. If the literal already matches a t
     background-color: rgba(247, 37, 133, 0.98);
 }
 
-/* ✅ GOOD — semantic alias in palette, threat swatch underneath */
-/* GridDungeonPaletteDark.uss: --gd-map-foe-marker: var(--gd-threat-a98); */
+/* ✅ GOOD — semantic alias in palette, primary swatch underneath */
+/* GridDungeonPaletteDark.uss: --gd-map-foe-marker: var(--gd-danger-a98); */
 .map-view__marker--foe {
     background-color: var(--gd-map-foe-marker);
 }

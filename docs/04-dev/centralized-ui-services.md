@@ -425,7 +425,7 @@ Publisher: `PartyEquipmentToolkitView` on worn-slot confirm; hides on member/slo
 |------|------|-------|
 | Presenter | `Assets/Scripts/UI/Views/SkillUsePickerPresenter.cs` | `sortingOrder` **200**; combat phase only |
 | Facade | `Assets/Scripts/UI/Views/SkillUsePickerOverlay.cs` | `Input` (`ICombatSkillPickerInput?`), `TabCount`, `OpenStateChanged` |
-| UXML / USS | `Assets/UI/Screens/Combat/SkillUsePicker.uxml`, `SkillUsePicker.uss` | `ui:Instance` → `ItemListPickerShell` |
+| UXML / USS | `SkillUsePickerOverlay.uxml`, `SkillUsePickerOverlay.uss`, `ItemListRow.uss`, `SkillUsePickerShell.uxml` | Primary shell + filled rows (parity with item picker) |
 | Host | `CombatSkillPickerHost` + `CombatSkillListPickerAdapter` | Wired inside presenter |
 | Bootstrap | `DevSceneComposition.WireSkillUsePicker` | Child of `GameState` |
 
@@ -667,7 +667,7 @@ Shared fade shell: `UiFadeOverlay` (internal). Default color/duration: `WorldBac
 
 ### Party menu class backdrop — `PartyMenuClassBackdropPresenter` + `PartyMenuClassBackdrop`
 
-**Job:** Hero **class name** between 3D environment and focused party member during member focus — **not** a `ScreenSpaceOverlay` centralized service. Renders as **world-space** `UIDocument` on `UiBackdrop`, routed by [UI camera stack](ui-camera-stack.md) / [ADR 049](../../decisions/049-ui-camera-stack.md). Cover sizing: [world-space UITK cover-fit](world-space-uitk-cover-fit.md). **Frozen UI style reference** for screen migration — threat focus, flat corners, vitals meters: [menu threat focus & backdrop UI style](menu-threat-focus-style.md) ([#442](https://github.com/miramocha/griddungeon-game/issues/442)).
+**Job:** Hero **class name** between 3D environment and focused party member during member focus — **not** a `ScreenSpaceOverlay` centralized service. Renders as **world-space** `UIDocument` on `UiBackdrop`, routed by [UI camera stack](ui-camera-stack.md) / [ADR 049](../../decisions/049-ui-camera-stack.md). Cover sizing: [world-space UITK cover-fit](world-space-uitk-cover-fit.md). **Frozen UI style reference** for screen migration — primary focus, flat corners, vitals meters: [menu primary focus & backdrop UI style](menu-primary-focus-backdrop-style.md) ([#442](https://github.com/miramocha/griddungeon-game/issues/442)); interactive row/chip chrome: [UITK focus chrome](uitk-focus-chrome.md).
 
 | Type | Path | Notes |
 |------|------|-------|

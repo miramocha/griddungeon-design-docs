@@ -11,9 +11,9 @@ tags:
 
 How to replace or extend the **combat skill selection modal** without changing catalog rules, combat queue logic, or `CombatController`. Locked behavior: [ADR 035 — Skill use picker](../../decisions/035-skill-use-picker.md). Player bindings: [input bindings § Skill use picker](../02-systems/input-bindings.md#skill-use-picker-modal).
 
-**Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — shipped UITK reference: `SkillUsePickerToolkitView` + `Assets/UI/Screens/Combat/SkillUsePicker.uxml`.
+**Implementation repo:** [griddungeon-game](https://github.com/miramocha/griddungeon-game) — shipped UITK reference: `SkillUsePickerToolkitView` + `SkillUsePickerOverlay.uxml` (centralized service; same row chrome as item picker).
 
-**Shared components:** Skill picker reuses the same **tab strip** (`PickerTabStripView` → `RailMenuFocus`) and **windowed list** (`WindowedListPaneView`) as hub shop / party bag item lists, but **not** `ItemListPickerView` (skill-specific row DOM). See [shared menu & picker UI](shared-menu-picker-ui.md).
+**Shared components:** Skill picker reuses **tab strip** (`PickerTabStripView`), **windowed list** (`WindowedListPaneView`), and **`ItemListRowBuilder`** (`item-row` + `menu-focus-filled`) with hub shop / party bag / combat item lists. View class differs (`SkillUsePickerToolkitView` vs `ItemListPickerView`). See [shared menu & picker UI](shared-menu-picker-ui.md) and [UITK focus chrome](uitk-focus-chrome.md).
 
 ---
 
@@ -99,24 +99,24 @@ Shipped host: `CombatSkillPickerHost` — you may subclass or duplicate the thin
 
 Copy or fork:
 
-- `Assets/UI/Screens/Combat/SkillUsePicker.uxml`
-- `Assets/UI/Screens/Combat/SkillUsePicker.uss`
+- `Assets/UI/Screens/Shared/SkillUsePickerOverlay.uxml`
+- `Assets/UI/Screens/Shared/SkillUsePickerOverlay.uss`
+- `Assets/UI/Screens/Shared/ItemListRow.uss` (row + focus chrome)
+- `Assets/UI/Screens/Combat/SkillUsePickerShell.uxml` (shell template inside overlay)
 
-Required `name` hooks (query in code):
+Required `name` hooks (query in code on `skill-picker` host or shell):
 
-- `skill-picker` — root; toggle `skill-picker--hidden` when closed
-- `skill-picker-tabs` — tab strip host
-- `skill-picker-rows` — `ScrollView` for rows
-- `skill-picker-detail` — focused-row mechanical description (`DescriptionEn`)
+- `skill-picker` — tabbed host; `tabbed-picker--hidden` when closed
+- `skill-picker-title`, `skill-picker-tabs`, `skill-picker-rows`, `skill-picker-detail`
 
-**Shipped row chrome** (bind from `SkillPickerRowModel` only):
+**Shipped row chrome** (via `ItemListRowBuilder` + `SkillPickerRowModel`):
 
 | Element | Source | Notes |
 |---------|--------|--------|
-| Name | `DisplayName` | Primary list label |
-| Cost | `CostLabel` | e.g. `6 MP` — from catalog (`SkillPickerRowCostLabel.Format`); do not rebuild from `MpCost` in the view |
-| Disabled hint | `DisabledReason` | Only when `IsEnabled == false` |
-| Detail panel | `DescriptionEn` | Update on row focus change; clear when nothing focused |
+| Name | `DisplayName` | `item-row__name` |
+| Cost | `CostLabel` | `ItemListRowBuilder.AppendTextBadge` → qty-style pill (`5 MP`) |
+| Disabled hint | `DisabledReason` | `item-row__reason` when `IsEnabled == false` |
+| Detail panel | `DescriptionEn` | Update on row focus change |
 
 BEM classes follow project UITK rules ([unity-ui-toolkit](https://github.com/miramocha/griddungeon-design-docs/blob/main/.cursor/rules/unity-ui-toolkit.mdc)).
 
@@ -141,18 +141,15 @@ public sealed class MySkillPickerView
 
 Use `MenuFocusNavigator` (same as command bar) for row focus if you want ADR 026 parity — see `SkillUsePickerToolkitView`.
 
-### 3. Mount in combat HUD
+### 3. Mount (shipped: centralized service)
 
-Reference: `CombatHudView.WireSkillPicker()`
+Production uses **`SkillUsePickerPresenter`** on a `GameState` child `UIDocument` with `SkillUsePickerOverlay.uxml` — not embedded under `CombatHudView`. See [centralized UI services § Skill use picker](centralized-ui-services.md#skill-use-picker--skillusepickerpresenter--skillusepickeroverlay).
 
-1. Clone `SkillUsePicker.uxml` under `combat-hud` root (or separate `UIDocument` with higher `sortingOrder`).
-2. `var view = new MySkillPickerView(root.Q<VisualElement>("skill-picker"));`
-3. `m_skillPickerHost = new CombatSkillPickerHost(m_combat, m_gameState.Content, view);`
-4. `m_skillPickerHost.OpenStateChanged += () => RefreshCommands();` — disable command bar while open.
-5. `new CommandPanelView(commandPanelRoot, m_combat, m_skillPickerHost);`
-6. On `OnDisable`: `m_skillPickerHost.OpenStateChanged -= …; m_skillPickerHost.Detach();` — **`Detach()` closes the modal and unsubscribes**.
+Custom integrators replacing only the view:
 
-Assign UXML/USS on `CombatHudView` serialized fields, or re-run **GridDungeon → Scenes → Create Dev Bootstrap** (`DevSceneComposition.WireCombatHud` sets `m_skillPickerLayout` / `m_skillPickerStyleSheet`).
+1. Implement `ISkillUsePickerView` + `ITabbedRowPickerKeyboardView`.
+2. Inject into `CombatSkillPickerHost` (or fork presenter wiring).
+3. Keep `SkillUsePickerOverlay` facade + phase gates unchanged unless explicitly replacing the service.
 
 ### 4. Input
 

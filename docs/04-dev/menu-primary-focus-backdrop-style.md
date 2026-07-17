@@ -6,9 +6,11 @@ tags:
   - status/active
   - domain/ui
 ---
-# Menu threat focus & backdrop UI style
+# Menu primary focus & backdrop UI style
 
-Authority for migrating **screen-space** UITK toward the frozen **party menu class backdrop** look: flat corners, threat-colored focus (default: transparent row → threat fill + white text; **command rail chips invert** that recipe — see [Command rail inverted focus](#command-rail-inverted-focus-phase-2)), square threat-bordered HP/MP/XP meters.
+> **Tabbed pickers (item + skill):** use [UITK focus chrome](uitk-focus-chrome.md) — `menu-focus-filled` rows on primary shell. This doc covers **backdrop / meter** migration history and world-space party menu chrome.
+
+Authority for migrating **screen-space** UITK toward the frozen **party menu class backdrop** look: flat corners, primary-colored focus (default: transparent row → primary fill + white text; **command rail chips** use filled focus — see [Command rail filled chip focus](#command-rail-filled-chip-focus-phase-2)), square primary-bordered HP/MP/XP meters.
 
 **Epic:** [griddungeon-game#442](https://github.com/miramocha/griddungeon-game/issues/442)  
 **Phase 0 (game):** [#443](https://github.com/miramocha/griddungeon-game/issues/443) — pair with this doc in the same PR window  
@@ -25,32 +27,34 @@ Authority for migrating **screen-space** UITK toward the frozen **party menu cla
 | Rule | Detail |
 |------|--------|
 | **No style edits** | Do **not** change `PartyMenuClassBackdrop.uxml`, `PartyMenuClassBackdrop.uss`, or backdrop presenter **chrome** (`MemberFocusChrome`, `MemberFocusVitals`, `MemberFocusAttrs`, `PartyMenuBackdropEquipValueChrome`) to match screen UI. |
-| **Screen migrates toward backdrop** | New shared USS (`MenuThreatFocus.uss`, `StatMeterChrome.uss`) and per-screen imports replicate backdrop recipes at HUD scale. |
-| **Allowed backdrop work** | Behavior, data bind, camera/stack, cover-fit, equipment dual-owner fixes — not threat/focus/meter/corner restyling. |
+| **Screen migrates toward backdrop** | Shared USS (`MenuFocusFilled.uss`, `StatMeterChrome.uss`) and per-screen imports replicate backdrop recipes at HUD scale. Row/chip focus chrome: [UITK focus chrome](uitk-focus-chrome.md). |
+| **Allowed backdrop work** | Behavior, data bind, camera/stack, cover-fit, equipment dual-owner fixes — not focus/meter/corner restyling. |
 | **Regression** | Epic [#442](https://github.com/miramocha/griddungeon-game/issues/442) done when backdrop is **pixel-identical** before/after all screen phases. |
 
 Worn equipment rows stay on the backdrop per [ADR 048](../../decisions/048-party-menu-equipment-inspect.md); `CharacterDetail` equip slots are screen-space only ([#447](https://github.com/miramocha/griddungeon-game/issues/447)).
 
 ---
 
-## Threat focus recipe
+## Primary focus recipe
 
-Shared focus class: `menu-item--focused` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)). Threat focus replaces legacy accent fills on migrated surfaces.
+> **Canonical focus chrome:** [UITK focus chrome](uitk-focus-chrome.md) — three shared variants (`menu-focus-filled`, `menu-focus-invert`, `menu-focus-transparent`) replace per-screen focus row recipes. Token: `var(--gd-primary)` (was `--gd-threat`). This section documents the **backdrop** recipe and migration history.
+
+Shared focus class: `menu-item--focused` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)). Primary focus replaces legacy accent fills on migrated surfaces.
 
 ### Interactive (default)
 
 | State | Row background | Label color |
 |-------|----------------|---------------|
-| **Unfocused** | `transparent` (no fill) | `var(--gd-threat)` |
-| **Focused** (`menu-item--focused`) | `var(--gd-threat)` | `var(--gd-white)` |
+| **Unfocused** | `transparent` (no fill) | `var(--gd-primary)` |
+| **Focused** (`menu-item--focused`) | `var(--gd-primary)` | `var(--gd-white)` |
 
-Empty-value modifiers (e.g. `__equip-value--empty`) keep the same foreground rules; focused empty values use white at full opacity, unfocused empty at reduced threat opacity (~0.55 on backdrop).
+Empty-value modifiers (e.g. `__equip-value--empty`) keep the same foreground rules; focused empty values use white at full opacity, unfocused empty at reduced primary opacity (~0.55 on backdrop).
 
 **Backdrop reference** — `PartyMenuClassBackdrop.uss`:
 
 ```css
 .party-menu-class-backdrop__equip-row.menu-item--focused {
-    background-color: var(--gd-threat);
+    background-color: var(--gd-primary);
 }
 .party-menu-class-backdrop__equip-row.menu-item--focused
     .party-menu-class-backdrop__equip-tag,
@@ -61,18 +65,18 @@ Empty-value modifiers (e.g. `__equip-value--empty`) keep the same foreground rul
 }
 ```
 
-**Screen target:** `MenuThreatFocus.uss` — import from `PartyMenu.uss`, `ItemListRow.uss`, `HudOverlay.uss`, etc. per [gap audit](#gap-audit-phase-tagged) below. **Command rail bookmark chips** use the [inverted recipe](#command-rail-inverted-focus-phase-2) in `CommandPanel.uss` / `RailMenu.uss`, not the base `.menu-threat-focus-row` colors from this file.
+**Screen target:** [UITK focus chrome](uitk-focus-chrome.md) — `MenuFocusFilled.uss` imported from `PartyMenu.uss`, `ItemListRow.uss`, picker overlays, etc. per [gap audit](#gap-audit-phase-tagged) below. **Command rail bookmark chips** use the [filled invert recipe](#command-rail-filled-chip-focus-phase-2) via `MenuFilledChipButton.uss` in `CommandPanel.uss` / `RailMenu.uss`.
 
-### Command rail inverted focus (Phase 2)
+### Command rail filled chip focus (Phase 2)
 
-**Shipped:** [#445](https://github.com/miramocha/griddungeon-game/issues/445). Vertical bookmark chips (hub root menu, combat command rail, party section rail) **invert** the default threat-focus colors so the tucked rail reads as a solid threat column and the focused poke is a white bookmark.
+**Shipped:** [#445](https://github.com/miramocha/griddungeon-game/issues/445). Vertical bookmark chips (hub root menu, combat command rail, party section rail) use **`menu-focus-filled`** with **button overrides** in `MenuFilledChipButton.uss` so the tucked rail reads as a solid primary column and the focused poke is a white bookmark.
 
 | State | Row background | Label color | Border |
 |-------|----------------|-------------|--------|
-| **Unfocused** (tucked `translate: -28px`) | `var(--gd-threat)` | `var(--gd-white)` | none (`border-width: 0`) |
-| **Focused** (`menu-item--focused`) or **selected** (`rail-menu__item--selected`) | `var(--gd-white)` | `var(--gd-threat)` | none |
+| **Unfocused** (tucked `translate: -28px`) | `var(--gd-primary)` | `var(--gd-white)` | none (`border-width: 0`) |
+| **Focused** (`menu-item--focused`) or **selected** (`rail-menu__item--selected`) | `var(--gd-white)` | `var(--gd-primary)` | none |
 
-**Class hook:** `menu-threat-focus-row` — `RailMenuClasses.ThreatFocusRowClass`; toggled in C# by `CommandRailPanelBuilder` (hub/combat/party section chips). Same class name as `MenuThreatFocus.uss` rows, but **rail USS overrides** win via full selector chains (e.g. `.command-panel .command-panel__btn.rail-menu__item.unity-button.menu-threat-focus-row.menu-item--focused`) so generic `.rail-menu__item.unity-button.menu-item--focused` rules do not leak the default recipe.
+**Class hook:** `menu-focus-filled` — `RailMenuClasses.FocusFilledClass`; toggled in C# by `CommandRailPanelBuilder` (hub/combat/party section chips). `MenuFilledChipButton.uss` overrides win via full selector chains (e.g. `.command-panel .command-panel__btn.rail-menu__item.unity-button.menu-focus-filled.menu-item--focused`) so generic `.rail-menu__item.unity-button.menu-item--focused` rules do not leak the default recipe.
 
 **Typography:** `font-size: var(--gd-menu-row-font)` (**18px**) + `-unity-font-definition: var(--gd-rail-menu-font)` (`PartyMenuHeroCosmicIndustry` in palette theme USS) — hero face at HUD row size.
 
@@ -82,8 +86,8 @@ Empty-value modifiers (e.g. `__equip-value--empty`) keep the same foreground rul
 
 | Chip | While modal open |
 |------|------------------|
-| Disabled siblings | Threat fill, white labels, **opacity 0.4** |
-| Selected owner (`rail-menu__item--selected:disabled`) | White fill, threat labels, **opacity 1** |
+| Disabled siblings | Primary fill, white labels, **opacity 0.4** |
+| Selected owner (`rail-menu__item--selected:disabled`) | White fill, primary labels, **opacity 1** |
 
 Bookmark geometry (`translate`, chip width, flat caps) is unchanged — [shared menu § Vertical rail bookmark](shared-menu-picker-ui.md#vertical-rail-bookmark-focus-poke).
 
@@ -93,7 +97,7 @@ When a row can receive focus highlight but must **not** show interactive fill (F
 
 | State | Row background | Label color |
 |-------|----------------|---------------|
-| **Focused** | `transparent` | `var(--gd-threat)` (empty slots ~0.55 opacity) |
+| **Focused** | `transparent` | `var(--gd-primary)` (empty slots ~0.55 opacity) |
 
 **Backdrop modifier:** `party-menu-class-backdrop--equipment-readonly` on root — see `.party-menu-class-backdrop--equipment-readonly .party-menu-class-backdrop__equip-row.menu-item--focused` in shipped USS.
 
@@ -116,7 +120,7 @@ Screen read-only rows (if any) mirror this with a BEM `--readonly` host modifier
 | Element | Why |
 |---------|-----|
 | `party-menu-class-backdrop__frame-circle` | Hero silhouette frame — decorative circle, not a list row |
-| World / map markers | Exploration map cells, arena plates — not menu threat-focus surfaces |
+| World / map markers | Exploration map cells, arena plates — not menu primary-focus surfaces |
 | Tabbed picker **panel** chrome | Modal shell colors out of epic scope ([#442](https://github.com/miramocha/griddungeon-game/issues/442)) |
 
 STR/TEC/AGI/VIT/LUC **attribute** bars (6px backdrop / screen analog) stay square-bordered; epic meter work is **vitals only** (HP/MP/XP).
@@ -125,16 +129,16 @@ STR/TEC/AGI/VIT/LUC **attribute** bars (6px backdrop / screen analog) stay squar
 
 ## Stat meter recipe
 
-Square threat-bordered track, **transparent interior**, colored fill inside.
+Square primary-bordered track, **transparent interior**, colored fill inside.
 
 ### Backdrop (reference — 1920×1080 UI-space)
 
 | Piece | USS / token |
 |-------|-------------|
-| Track | `.party-menu-class-backdrop__attr-bar-track` — `height: 16px`, `border-width: 2px`, `border-color: var(--gd-threat)`, no background fill |
+| Track | `.party-menu-class-backdrop__attr-bar-track` — `height: 16px`, `border-width: 2px`, `border-color: var(--gd-primary)`, no background fill |
 | Fill | `.party-menu-class-backdrop__attr-bar-fill` — width driven in C# (see [Fill math](#fill-math)) |
 | HP fill | `--hp` modifier → `background-color: var(--gd-bar-hp)` |
-| MP fill | default threat → `background-color: var(--gd-threat)` |
+| MP fill | default primary → `background-color: var(--gd-primary)` |
 | XP fill | `--xp` modifier → `background-color: var(--gd-bar-xp)` |
 
 Vitals block uses fixed track width `360px` on backdrop; attribute rows use flex-grown track between tag and value.
@@ -146,8 +150,8 @@ Vitals block uses fixed track width `360px` on backdrop; attribute rows use flex
 | Control | `ProgressBar` with shared `StatMeterChrome.uss` |
 | Height | `var(--gd-stat-meter-height)` — **12px** on screen HUD |
 | Radius | Square — omit `border-radius` (USS default **0**) |
-| Track | Threat border, transparent background (match backdrop proportions at 12px) |
-| Fills | HP `var(--gd-bar-hp)` · MP `var(--gd-threat)` · XP `var(--gd-bar-xp)` |
+| Track | Primary border, transparent background (match backdrop proportions at 12px) |
+| Fills | HP `var(--gd-bar-hp)` · MP `var(--gd-primary)` · XP `var(--gd-bar-xp)` |
 
 **Dedup imports:** `CharacterDetail.uss`, `PartyFormationSlot.uss`, `CombatHud.uss` → `@import` `StatMeterChrome.uss` only; remove per-file pill radius duplicates.
 
@@ -165,7 +169,7 @@ Backdrop panel is **1920×1080** world-space UI pixels ([world-space UITK cover-
 | Attr / vital value labels | **48px** font | **13–16px** | Pair with meter height |
 | Vital meter track | **16px** tall, 2px border | **12px** tall (`--gd-stat-meter-height`) | Width % from fill math |
 | Attr bar track (STR…) | **16px** tall | **6px** where shown | Out of vitals meter epic |
-| Command rail chip | N/A (screen) | **268px** chip + **28px** poke; flat caps | [Inverted focus](#command-rail-inverted-focus-phase-2); hero font via `--gd-rail-menu-font` ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
+| Command rail chip | N/A (screen) | **268px** chip + **28px** poke; flat caps | [Filled chip focus](#command-rail-filled-chip-focus-phase-2); hero font via `--gd-rail-menu-font` ([#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
 
 ### Font compensation
 
@@ -184,13 +188,15 @@ Prefer theme variables over per-screen `font-size` literals. Backdrop keeps `Par
 
 Tracker: [#442](https://github.com/miramocha/griddungeon-game/issues/442). Pull order is sequential; each phase assumes the prior shipped.
 
+> **Focus chrome (shipped):** screen rows/chips use [UITK focus chrome](uitk-focus-chrome.md) (`MenuFocusFilled.uss`, `MenuFilledChipButton.uss`). Phase table below retains original issue wording; treat `MenuThreatFocus.uss` / `menu-threat-focus-row` / `SkillUsePicker.uss` as superseded names.
+
 | Phase | Game issue | Surfaces | Style deliverables |
 |-------|------------|----------|-------------------|
-| **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; `MenuThreatFocus.uss` scaffold (unwired); square meters (no radius token); MP fill `var(--gd-threat)`; backdrop **unchanged** |
-| **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuThreatFocus.uss`; `--gd-menu-row-font` **18px** in palette |
-| **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) **shipped** | `RailMenu.uss`, `CommandPanel.uss`, `CommandRailTokens.uss` vertical chips | Flat caps; **inverted** threat focus + `menu-threat-focus-row`; `--gd-rail-menu-font`; bookmark `translate: -28px` unchanged |
-| **3** | [#446](https://github.com/miramocha/griddungeon-game/issues/446) | `HudOverlay.uss`, `SkillUsePicker.uss`, `CombatHud.uss` roster **focus** | Threat focus on overlay buttons, picker rows, targetable slot chrome (meters from Phase 0) |
-| **4** | [#447](https://github.com/miramocha/griddungeon-game/issues/447) | `CharacterDetail.uss` equip slots | Remove `border-radius: 22px`; square threat-focus on `character-detail__equip-slot` |
+| **0** | [#443](https://github.com/miramocha/griddungeon-game/issues/443) | `ProgressBar` vitals on `CharacterDetail`, `PartyFormationSlot`, `CombatHud` | `StatMeterChrome.uss` rewrite; focus scaffold → `MenuFocusFilled.uss`; square meters (no radius token); MP fill `var(--gd-primary)`; backdrop **unchanged** |
+| **1** | [#444](https://github.com/miramocha/griddungeon-game/issues/444) | `PartyMenu.uss` section rail, `ItemListRow` windowed rows | Wire `MenuFocusFilled.uss`; `--gd-menu-row-font` **18px** in palette |
+| **2** | [#445](https://github.com/miramocha/griddungeon-game/issues/445) **shipped** | `RailMenu.uss`, `CommandPanel.uss`, `CommandRailTokens.uss` vertical chips | Flat caps; **filled** focus + `menu-focus-filled` + `MenuFilledChipButton.uss`; `--gd-rail-menu-font`; bookmark `translate: -28px` unchanged |
+| **3** | [#446](https://github.com/miramocha/griddungeon-game/issues/446) | `HudOverlay.uss`, `SkillUsePickerOverlay.uss`, `CombatHud.uss` roster **focus** | Primary focus on overlay buttons, picker rows, targetable slot chrome (meters from Phase 0) |
+| **4** | [#447](https://github.com/miramocha/griddungeon-game/issues/447) | `CharacterDetail.uss` equip slots | Remove `border-radius: 22px`; square primary-focus on `character-detail__equip-slot` |
 | **opt** | [#448](https://github.com/miramocha/griddungeon-game/issues/448) | — | `StatBarElement` `UxmlElement` if `ProgressBar` USS remains brittle |
 
 ### Out of scope (epic)
@@ -243,7 +249,7 @@ ResolveVitalFill(index, vitals, out float fillCurrent, out float fillMax);
 new Length(CharacterInspectAttributeBarScale.FillPercent(statValue), LengthUnit.Percent)
 ```
 
-Backdrop: `PartyMenuClassBackdropPresenter.MemberFocusAttrs`. Screen: `CharacterDetailStatsBinder` attr rows. Fill color stays `var(--gd-threat)`; only vitals use HP/MP/XP palette tokens.
+Backdrop: `PartyMenuClassBackdropPresenter.MemberFocusAttrs`. Screen: `CharacterDetailStatsBinder` attr rows. Fill color stays `var(--gd-primary)`; only vitals use HP/MP/XP palette tokens.
 
 ---
 
@@ -252,9 +258,9 @@ Backdrop: `PartyMenuClassBackdropPresenter.MemberFocusAttrs`. Screen: `Character
 | Asset / type | Path |
 |--------------|------|
 | Frozen reference USS | `Assets/UI/Screens/PartyMenu/PartyMenuClassBackdrop.uss` |
-| Threat focus (screen) | `Assets/UI/Screens/Shared/MenuThreatFocus.uss` (wired Phase 1 [#444](https://github.com/miramocha/griddungeon-game/issues/444)) |
-| Command rail chips (inverted) | `Assets/UI/Screens/Shared/CommandPanel.uss`, `RailMenu.uss`, `CommandRailTokens.uss` (Phase 2 [#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
-| Rail focus class constant | `Assets/Scripts/UI/Views/RailMenuClasses.cs` — `ThreatFocusRowClass` |
+| Focus chrome (screen) | `Assets/UI/Screens/Shared/MenuFocusFilled.uss`, `MenuFilledChipButton.uss` — see [uitk-focus-chrome.md](uitk-focus-chrome.md) |
+| Command rail chips (filled button overrides) | `Assets/UI/Screens/Shared/CommandPanel.uss`, `RailMenu.uss`, `CommandRailTokens.uss` (Phase 2 [#445](https://github.com/miramocha/griddungeon-game/issues/445)) |
+| Rail focus class constant | `Assets/Scripts/UI/Views/RailMenuClasses.cs` — `FocusFilledClass` |
 | Stat meters (screen) | `Assets/UI/Screens/Shared/StatMeterChrome.uss` |
 | Palette tokens | `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` / `GridDungeonPaletteLight.uss` |
 | Display math | `Assets/Scripts/Core/Progression/CharacterInspectDisplayFormat.cs` |

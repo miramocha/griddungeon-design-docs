@@ -137,6 +137,7 @@ Use **kebab-case** within each segment. A BEM name should convey **what** it is,
 
 - Selectors target **BEM classes** — `.combat-log { }`, `.combat-log__entry { }`, `.combat-log__entry--selected { }`
 - **Theme / variables** for shared colours, spacing, fonts — `var(--gd-*)` from `Assets/UI/Settings/Themes/GridDungeonPaletteDark.uss` / `GridDungeonPaletteLight.uss`; see [`unity-uitk-palette-colors.mdc`](unity-uitk-palette-colors.mdc) (no inline `rgb`/`rgba`/`#hex` in screen USS).
+- **Focus chrome** (menu rows/chips) — [`unity-uitk-focus-chrome.mdc`](unity-uitk-focus-chrome.mdc) + [uitk-focus-chrome.md](../docs/04-dev/uitk-focus-chrome.md); shared `MenuFocus*.uss` under `Assets/UI/Screens/Shared/`.
 - Prefer **modifiers** (`--selected`, `--disabled`) over ad-hoc class names like `.selected-red`.
 - Pseudo-states: `:hover`, `:active` on BEM blocks/elements where USS supports them.
 - Keep selectors **shallow** — prefer one BEM class per node over long descendant chains.
