@@ -65,4 +65,4 @@ State briefly (in chat or PR):
 
 - [unity-csharp-class-creation.mdc](../../rules/unity-csharp-class-creation.mdc) — always-on reminder
 - [code-review-config.mdc](../../rules/code-review-config.mdc) — review gate on adds/renames
-- [class naming patterns](../../docs/04-dev/class-naming-patterns.md) — full authority (design-docs)
+- [class naming patterns](../../../docs/04-dev/class-naming-patterns.md) — full authority (design-docs)

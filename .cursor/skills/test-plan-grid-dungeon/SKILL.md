@@ -54,15 +54,15 @@ Do **not** place drafts in `.cursor/test-plan-issue-*.md` (tracked in the game r
 |-------|---------|
 | Scene | `DevBootstrap.unity` — regenerate **GridDungeon → Scenes → Create Dev Bootstrap** |
 | Phase keys | **F1** Hub, **F2** Exploration, **F3** Combat, **F4** flee, **F6** party ready, **F7** stratum entry |
-| Exploration timing | Normal: step **0.28s**, turn **0.26s** ([ADR 018](../../decisions/018-exploration-animation-speed.md)) |
+| Exploration timing | Normal: step **0.28s**, turn **0.26s** ([ADR 018](../../../decisions/018-exploration-animation-speed.md)) |
 | F3 dev roster | 2 cores + slime when party empty — [game README](https://github.com/miramocha/griddungeon-game/blob/main/Assets/Scripts/README.md) |
-| Combat highlight | Core command pick → **party roster**, not AGI strip ([combat.md](../../docs/02-systems/combat.md#turn-order-strip-agi-queue-ui)) |
+| Combat highlight | Core command pick → **party roster**, not AGI strip ([combat.md](../../../docs/02-systems/combat.md#turn-order-strip-agi-queue-ui)) |
 | Edit Mode (agent) | `request-test-status.ps1 -Category <Domain>` — one domain per run; see **editor-agent-test** |
 | Edit Mode (manual) | Test Runner → `Tests → <Domain> → <Fixture>` — classes from the ticket diff |
-| Exploration **Esc** (map not fullscreen) | Pause: **Resume** / **Quit to title** (confirm). **No** hub from pause ([ADR 014](../../decisions/014-mvp1-exploration-map.md) §7) |
-| Exploration **Esc** (map fullscreen) | Closes fullscreen map only ([ADR 014](../../decisions/014-mvp1-exploration-map.md)) |
-| Return to **hub** from exploration | In-world only: stairs (gate), items, exits/gates, events, defeat — not pause ([game phase](../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
-| Combat **Esc** | Resume / Settings only ([ADR 015](../../decisions/015-mvp1-combat.md)) |
+| Exploration **Esc** (map not fullscreen) | Pause: **Resume** / **Quit to title** (confirm). **No** hub from pause ([ADR 014](../../../decisions/014-mvp1-exploration-map.md) §7) |
+| Exploration **Esc** (map fullscreen) | Closes fullscreen map only ([ADR 014](../../../decisions/014-mvp1-exploration-map.md)) |
+| Return to **hub** from exploration | In-world only: stairs (gate), items, exits/gates, events, defeat — not pause ([game phase](../../../docs/02-systems/game-phase.md#return-to-hub-exploration-only)) |
+| Combat **Esc** | Resume / Settings only ([ADR 015](../../../decisions/015-mvp1-combat.md)) |
 
 ## Section letters (manual primary)
 

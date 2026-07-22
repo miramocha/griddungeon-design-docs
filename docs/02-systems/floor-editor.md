@@ -149,7 +149,7 @@ Wall/walkable **Populate** buttons remain on **Floor Art Grid** in prefab/previe
 **Exit topology (parallel track):** stratum **connectivity graph** compiles `FloorExitLink[]` — see [ADR 040](../../decisions/040-floor-exit-topology-graph.md) and [game #249](https://github.com/miramocha/griddungeon-game/issues/249). Distinct from ADR 031 event gating.
 
 ## Related docs
-- [04-tech-notes — Map authoring](04-tech-notes.md#map-authoring--hud-adr-002)
-- [05-class-design — `FloorEditorWindow`](05-class-design.md)
+- [04-tech-notes — Map authoring](../04-tech-notes.md#map-authoring--hud-adr-002)
+- [05-class-design — `FloorEditorWindow`](../05-class-design.md)
 - [ADR 040 — Floor exit topology graph](../../decisions/040-floor-exit-topology-graph.md)
 - [ADR 041 — Floor Connector (GTK wiring)](../../decisions/041-floor-connector-toolkit-wiring.md)

@@ -204,7 +204,7 @@ Hub is reached from exploration only through **events**, **items**, **exits/gate
 
 While `Current == Exploration`, `ExplorationPhaseController` owns event subscriptions. A single step can end in map reveal, FOE contact combat, or a random encounter.
 
-**FOE patrol advance** — implemented ([ADR 003](../decisions/003-foe-step-patrol.md)). `ExplorationPhaseController.HandlePartyStep` calls `FoeSystem.OnPartyStepDisplacement()` after each party displacement step. `FoePatrolCalculator` advances living FOEs when `partyStepCount % stepsPerMove == 0` and `PatrolPath` has more than one waypoint. Contact is checked **before** patrol (party stepped onto FOE) and **after** (FOE patrolled onto party).
+**FOE patrol advance** — implemented ([ADR 003](../../decisions/003-foe-step-patrol.md)). `ExplorationPhaseController.HandlePartyStep` calls `FoeSystem.OnPartyStepDisplacement()` after each party displacement step. `FoePatrolCalculator` advances living FOEs when `partyStepCount % stepsPerMove == 0` and `PatrolPath` has more than one waypoint. Contact is checked **before** patrol (party stepped onto FOE) and **after** (FOE patrolled onto party).
 
 ```mermaid
 sequenceDiagram
