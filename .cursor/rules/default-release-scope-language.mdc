@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Default release-scope language
 
-Authority: [docs/00-release-scope.md](../docs/00-release-scope.md) (`required` / `optional` / `later`).
+Authority: [docs/00-release-scope.md](../../docs/00-release-scope.md) (`required` / `optional` / `later`).
 
 Grid Dungeon no longer uses **MVP1**, **MVP**, or **spike** in new comments, READMEs, skills, rules, or design prose. Say **default** (or **required scope**) for the first-playable slice.
 
@@ -22,7 +22,7 @@ Grid Dungeon no longer uses **MVP1**, **MVP**, or **spike** in new comments, REA
 
 Link ADRs by number or title — not “MVP1 combat ADR”:
 
-- ✅ [ADR 014](../decisions/014-mvp1-exploration-map.md) (exploration map)
+- ✅ [ADR 014](../../decisions/014-mvp1-exploration-map.md) (exploration map)
 - ❌ “MVP1 exploration map ADR”
 
 ## Exceptions (do not “fix” blindly)

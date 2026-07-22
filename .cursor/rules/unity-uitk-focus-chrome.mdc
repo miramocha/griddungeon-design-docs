@@ -6,7 +6,7 @@ globs:
 
 # UITK focus chrome
 
-Authority: [uitk-focus-chrome.md](../docs/04-dev/uitk-focus-chrome.md). Focus class: `menu-item--focused` ([ADR 026](../decisions/026-combat-menu-focus-navigation.md)).
+Authority: [uitk-focus-chrome.md](../../docs/04-dev/uitk-focus-chrome.md). Focus class: `menu-item--focused` ([ADR 026](../../decisions/026-combat-menu-focus-navigation.md)).
 
 ## Three variants
 
@@ -26,9 +26,8 @@ Shared USS (game repo): `MenuFocusFilled.uss`, `MenuFocusInvert.uss`, `MenuFocus
 2. Add one variant class on row/button root; `MenuFocusNavigator` toggles `menu-item--focused`.
 3. Screen USS may override **layout** only; colors come from shared variant USS.
 4. Nested qty/MP badge on focused filled/transparent rows → `MenuFocusNestedAccent.uss`.
-5. Flat corners: `border-width: 0`, `border-radius: 0` unless documented exception ([uitk-focus-chrome.md § Flat corners](../docs/04-dev/uitk-focus-chrome.md)).
+5. Flat corners: `border-width: 0`, `border-radius: 0` unless documented exception ([uitk-focus-chrome.md § Flat corners](../../docs/04-dev/uitk-focus-chrome.md)).
 6. **Opacity:** steady-state chrome `0` or `1` only; transitions may tween.
-
 ## Tabbed pickers
 
 Item + skill: primary shell overlay, `ItemListRow.uss`, `menu-focus-filled`. C#: `FocusFilledClass`, `ConfigureFilledChipButton`.
